@@ -1,0 +1,7 @@
+All the bosses from ExampleMod, with more loot and without ExampleMod's cheats!
+
+Test your fighting prowess against two difficult end-game bosses: the Abomination and the Spirit of Purity.
+
+Now with a new third boss not found in ExampleMod: the Spirit of Chaos! Guaranteed to be the most challenging boss you'll fight.
+
+I am also currently in the process of porting everything from my old tAPI mod over to this mod.

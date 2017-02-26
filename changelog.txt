@@ -1,0 +1,8 @@
+mushroom-infested blocks are now placeable
+fixed bug with chaotic soul recipe
+buffed cleanser beam damage
+cleanser beam now ignores defense
+added aiming marker to cleanser beam
+buffed expert abomination's lasers
+shroomsand can be fired by sandgun
+fixed bug where undead debuff does nothing
