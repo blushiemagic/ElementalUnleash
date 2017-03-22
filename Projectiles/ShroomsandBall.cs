@@ -72,7 +72,7 @@ namespace Bluemagic.Projectiles
 			Lighting.AddLight((int)(projectile.Center.X / 16f), (int)(projectile.Center.Y / 16f), 0.1f, 0.2f, 0.7f);
 		}
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool NewTileCollideStyle(ref int width, ref int height, ref bool fallThrough)
 		{
 			if (falling)
 			{

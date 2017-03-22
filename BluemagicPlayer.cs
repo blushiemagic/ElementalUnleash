@@ -42,8 +42,8 @@ namespace Bluemagic
 		public float ammoCost = 0f;
 
 		//permanent data
-		public int chaosPoints = 0;
-		public int cataclysmPoints = 0;
+		//public int chaosPoints = 0;
+		//public int cataclysmPoints = 0;
 
 		public override void ResetEffects()
 		{
@@ -73,7 +73,7 @@ namespace Bluemagic
 			reviveTime = 0;
 		}
 
-		public override TagCompound Save()
+		/*public override TagCompound Save()
 		{
 			TagCompound tag = new TagCompound();
 			tag["version"] = 0;
@@ -85,7 +85,7 @@ namespace Bluemagic
 		{
 			chaosPoints = tag.GetInt("chaosPoints");
 			cataclysmPoints = tag.getInt("cataclysmPoints");
-		}
+		}*/
 
 		private bool AnyChaosSpirit()
 		{

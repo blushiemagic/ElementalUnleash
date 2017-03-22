@@ -11,16 +11,26 @@ namespace Bluemagic
 		public int Points = 0;
 		public List<CustomStat> Stats = new List<CustomStat>();
 
-		public int UsedPoints => {
-			int total = 0;
-			foreach (CustomStat stat in Stats)
+		public int UsedPoints
+		{
+			get
 			{
-				total += stat.Points;
+				int total = 0;
+				foreach (CustomStat stat in Stats)
+				{
+					total += stat.Points;
+				}
+				return total;
 			}
-			return total;
-		};
+		}
 
-		public int MaxPoints => CustomStat.MaxPoints * Stats.Count;
+		public int MaxPoints
+		{
+			get
+			{
+				return CustomStat.MaxPoints * Stats.Count;
+			}
+		}
 	}
 
 	public class CustomStat
@@ -124,7 +134,7 @@ namespace Bluemagic
 
 		public const string MaxMinionsTip = "level 1: + 1 max minions\nlevel 3: + 2 max minions\nlevel 5: + 3 max minions";
 
-		public static void ThrownCritTip(Player player, int points)
+		public static void ThrownCrit(Player player, int points)
 		{
 			player.thrownCrit += 4 * points;
 		}
@@ -140,6 +150,7 @@ namespace Bluemagic
 
 		public static void AmmoCost(Player player, int points)
 		{
+			Mod mod = ModLoader.GetMod("Bluemagic");
 			player.GetModPlayer<BluemagicPlayer>(mod).ammoCost += 0.08f * points;
 		}
 

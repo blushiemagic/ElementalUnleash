@@ -12,6 +12,8 @@ namespace Bluemagic.Items.ChaosSpirit
 		public override void SetDefaults()
 		{
 			item.name = "Chaos Crystal";
+			item.toolTip = "Grants one chaos point";
+			item.toolTip2 = "WIP";
 			item.width = 28;
 			item.height = 28;
 			item.maxStack = 99;
@@ -31,12 +33,12 @@ namespace Bluemagic.Items.ChaosSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			return true;
+			return false;
 		}
 
 		public override bool UseItem(Player player)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).chaosPoints++;
+			//player.GetModPlayer<BluemagicPlayer>(mod).chaosPoints++;
 			return true;
 		}
 
