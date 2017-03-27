@@ -1,0 +1,1 @@
+fixed bug where bosses don't get checked on boss checklist in multiplayer

@@ -37,6 +37,32 @@ namespace Bluemagic
 			downedChaosSpirit = tag.GetBool("downedChaosSpirit");
 		}
 
+		public override void NetSend(BinaryWriter writer)
+		{
+			byte flags = 0;
+			if (downedAbomination)
+			{
+				flags |= 1;
+			}
+			if (downedPuritySpirit)
+			{
+				flags |= 2;
+			}
+			if (downedChaosSpirit)
+			{
+				flags |= 4;
+			}
+			writer.Write(flags):
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			byte flags = reader.ReadByte();
+			downedAbomination = ((flags & 1) == 1);
+			downedPuritySpirit = ((flags & 2) == 2);
+			downedChaosSpirit = ((flags & 4) == 4);
+		}
+
 		public override void LoadLegacy(BinaryReader reader)
 		{
 			reader.ReadInt32();
