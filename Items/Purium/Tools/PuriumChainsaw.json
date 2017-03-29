@@ -1,0 +1,28 @@
+{
+    "displayName": "Purium Chainsaw",
+    "width": 20,
+    "height": 12,
+    "useStyle": 5,
+    "useAnimation": 25,
+    "useTime": 7,
+    "channel": true,
+    "maxStack": 1,
+    "axe": 140,
+    "tileBoost": 1,
+    "damage": 60,
+    "knockback": 5,
+    "rare": 9,
+    "shootSpeed": 46,
+    "noUseGraphic": true,
+    "melee": true,
+    "value": [0, 22, 50, 0],
+    "noMelee": true,
+    "useSound": 23,
+    "shoot": "Bluemagic:PuriumChainsaw",
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 20},
+        "tiles": ["Purium Anvil"],
+        "creates": 1
+    }]
+}

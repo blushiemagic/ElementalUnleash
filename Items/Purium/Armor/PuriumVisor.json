@@ -1,0 +1,17 @@
+{
+    "displayName": "Purium Visor",
+    "width": 18,
+    "height": 18,
+    "tooltip": ["5% increased ranged damage and critical strike chance", "20% chance to not consume ammo"],
+    "maxStack": 1,
+    "defense": 15,
+    "rare": 9,
+    "value": [0, 30, 0, 0],
+    "armorHead": true,
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 12},
+        "tiles": ["Purium Anvil"],
+        "creates": 1
+    }]
+}

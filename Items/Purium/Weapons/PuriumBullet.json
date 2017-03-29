@@ -1,0 +1,22 @@
+{
+    "displayName": "Purium Bullet",
+    "width": 8,
+    "height": 8,
+    "tooltip": ["Bounces at high speeds"],
+    "maxStack": 999,
+    "damage": 14,
+    "knockback": 4,
+    "consumable": true,
+    "ammo": 14,
+    "rare": 9,
+    "ranged": true,
+    "value": [0, 0, 5, 0],
+    "shoot": "Bluemagic:PuriumBullet",
+    "shootSpeed": 2,
+    "recipes":
+    [{
+        "items": {"Musket Ball": 70, "Bluemagic:PuriumBar": 1},
+        "tiles": ["Purium Anvil"],
+        "creates": 70
+    }]
+}

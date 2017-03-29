@@ -17,6 +17,23 @@ namespace Bluemagic.Abomination
 			}
 		}
 
+		private int difficulty
+		{
+			get
+			{
+				int result = 0;
+				if (Main.expertMode)
+				{
+					result++;
+				}
+				if (NPC.downedMoonlord)
+				{
+					result++;
+				}
+				return result;
+			}
+		}
+
 		private int captiveType
 		{
 			get
@@ -73,6 +90,12 @@ namespace Bluemagic.Abomination
 			npc.lifeMax = 15000;
 			npc.damage = 100;
 			npc.defense = 55;
+			if (NPC.downedMoonlord)
+			{
+				npc.lifeMax = 30000;
+				npc.damage = 120;
+				npc.defense = 80;
+			}
 			npc.knockBackResist = 0f;
 			npc.width = 100;
 			npc.height = 100;
@@ -116,10 +139,6 @@ namespace Bluemagic.Abomination
 				if (captiveType == 1)
 				{
 					npc.alpha = 100;
-				}
-				if (Main.expertMode)
-				{
-					npc.damage = 60;
 				}
 				if (captiveType == 2)
 				{
@@ -267,6 +286,10 @@ namespace Bluemagic.Abomination
 			{
 				LookToPlayer();
 				attackCool -= 1f;
+				if (difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0 && Main.netMode != 1)
+				{
+					Shoot();
+				}
 				if (attackCool <= 0f && Main.netMode != 1)
 				{
 					if (captiveType == 3)
@@ -285,17 +308,7 @@ namespace Bluemagic.Abomination
 					attackCool *= (float)count / 5f;
 					if (captiveType != 3 || (jungleAI != -5 && jungleAI != 1))
 					{
-						int damage = npc.damage / 2;
-						if (Main.expertMode)
-						{
-							damage = (int)(damage / Main.expertDamage);
-						}
-						float speed = 5f;
-						if (captiveType != 1)
-						{
-							speed = Main.expertMode ? 9f : 7f;
-						}
-						Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 5f * (float)Math.Cos(npc.rotation), speed * (float)Math.Sin(npc.rotation), mod.ProjectileType("PixelBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
+						Shoot();
 					}
 					npc.TargetClosest(false);
 					npc.netUpdate = true;
@@ -306,6 +319,10 @@ namespace Bluemagic.Abomination
 				attackCool -= 1f;
 				if (attackCool <= 0f)
 				{
+					if (difficulty > 1)
+					{
+						Shoot();
+					}
 					attackCool = 80f + 40f * (float)npc.life / (float)npc.lifeMax;
 					attackCool *= (float)count / 5f;
 					npc.TargetClosest(false);
@@ -320,6 +337,21 @@ namespace Bluemagic.Abomination
 				}
 			}
 			CreateDust();
+		}
+
+		private void Shoot()
+		{
+			int damage = npc.damage / 2;
+			if (Main.expertMode)
+			{
+				damage = (int)(damage / Main.expertDamage);
+			}
+			float speed = 5f;
+			if (captiveType != 1)
+			{
+				speed = difficulty > 0 ? 9f : 7f;
+			}
+			Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed * (float)Math.Cos(npc.rotation), speed * (float)Math.Sin(npc.rotation), mod.ProjectileType("PixelBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
 		}
 
 		private void CreateDust()
@@ -370,7 +402,7 @@ namespace Bluemagic.Abomination
 		{
 			if (npc.life <= 0)
 			{
-				if (Main.expertMode)
+				if (difficulty > 0)
 				{
 					int next = NPC.NewNPC((int)npc.Center.X, (int)npc.position.Y + npc.height * 3 / 4, mod.NPCType("FreedElement"));
 					Main.npc[next].ai[0] = captiveType;
@@ -448,9 +480,12 @@ namespace Bluemagic.Abomination
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenDrill"));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DimensionalChest"));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"));
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementResidue"));
 			}
 			BluemagicWorld.downedAbomination = true;
+			if (Main.netMode != 1 && NPC.downedMoonlord)
+			{
+				BluemagicWorld.GenPurium();
+			}
 		}
 
 		public override void BossLoot(ref string name, ref int potionType)
@@ -461,7 +496,7 @@ namespace Bluemagic.Abomination
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			if (captiveType == 2 && Main.expertMode)
+			if (captiveType == 2 && difficulty > 0)
 			{
 				cooldownSlot = 1;
 			}

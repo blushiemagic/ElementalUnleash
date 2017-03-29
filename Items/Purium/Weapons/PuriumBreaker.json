@@ -1,0 +1,26 @@
+{
+    "displayName": "Purium Breaker",
+    "width": 40,
+    "height": 40,
+    "scale": 1.25,
+    "useStyle": 1,
+    "useAnimation": 30,
+    "useTime": 52,
+    "maxStack": 1,
+    "damage": 140,
+    "knockback": 6,
+    "autoReuse": false,
+    "useTurn": false,
+    "rare": 9,
+    "melee": true,
+    "value": [0, 30, 0, 0],
+    "useSound": 1,
+    "shoot": "Bluemagic:PuriumBoom",
+    "shootSpeed": 6,
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 12},
+        "tiles": ["Purium Anvil"],
+        "creates": 1
+    }]
+}

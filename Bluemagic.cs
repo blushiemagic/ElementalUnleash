@@ -16,6 +16,8 @@ namespace Bluemagic
 {
 	public class Bluemagic : Mod
 	{
+		public static Mod Instance;
+
 		public const string captiveElementHead = "Bluemagic/Abomination/CaptiveElement_Head_Boss_";
 		public const string captiveElement2Head = "Bluemagic/Abomination/CaptiveElement2_Head_Boss_";
 		public static bool freezeHeroLives = false;
@@ -31,6 +33,7 @@ namespace Bluemagic
 
 		public override void Load()
 		{
+			Instance = this;
 			foreach (string checkMod in ModLoader.GetLoadedMods())
 			{
 				if (checkMod == "ExampleMod")
@@ -57,6 +60,7 @@ namespace Bluemagic
 			if (bossList != null)
 			{
 				bossList.Call("AddBoss", "The Abomination", 12.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination));
+				bossList.Call("AddBoss", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination2 > 0));
 				bossList.Call("AddBoss", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit));
 				bossList.Call("AddBoss", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit));
 			}

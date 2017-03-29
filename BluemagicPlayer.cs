@@ -566,6 +566,7 @@ namespace Bluemagic
 				{
 					player.statLife = player.statLifeMax2;
 					player.HealEffect(player.statLifeMax2);
+					StartBadHeal();
 					player.immune = true;
 					player.immuneTime = player.longInvince ? 180 : 120;
 					for (int k = 0; k < player.hurtCooldowns.Length; k++)

@@ -18,6 +18,23 @@ namespace Bluemagic.Abomination
 			}
 		}
 
+		private int difficulty
+		{
+			get
+			{
+				int result = 0;
+				if (Main.expertMode)
+				{
+					result++;
+				}
+				if (NPC.downedMoonlord)
+				{
+					result++;
+				}
+				return result;
+			}
+		}
+
 		private const int sphereRadius = 300;
 
 		private float attackCool
@@ -83,6 +100,12 @@ namespace Bluemagic.Abomination
 			npc.lifeMax = 40000;
 			npc.damage = 100;
 			npc.defense = 55;
+			if (NPC.downedMoonlord)
+			{
+				npc.lifeMax = 80000;
+				npc.damage = 120;
+				npc.defense = 80;
+			}
 			npc.knockBackResist = 0f;
 			npc.width = 100;
 			npc.height = 100;
@@ -201,28 +224,17 @@ namespace Bluemagic.Abomination
 				captiveRotation -= 2f * (float)Math.PI;
 			}
 			attackCool -= 1f;
-			if (Main.netMode != 1 && attackCool <= 0f)
+			if (Main.netMode != 1 && difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0)
+			{
+				Shoot(player);
+			}
+			if (Main.netMode != 1 && attackCool <= 0)
 			{
 				attackCool = 200f + 200f * (float)npc.life / (float)npc.lifeMax + (float)Main.rand.Next(200);
-				Vector2 delta = player.Center - npc.Center;
-				float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
-				if (magnitude > 0)
-				{
-					delta *= 5f / magnitude;
-				}
-				else
-				{
-					delta = new Vector2(0f, 5f);
-				}
-				int damage = (npc.damage - 30) / 2;
-				if (Main.expertMode)
-				{
-					damage = (int)(damage / Main.expertDamage);
-				}
-				Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, mod.ProjectileType("ElementBall"), damage, 3f, Main.myPlayer, BuffID.OnFire, 600f);
+				Shoot(player);
 				npc.netUpdate = true;
 			}
-			if (Main.expertMode)
+			if (difficulty > 0)
 			{
 				ExpertLaser();
 			}
@@ -232,6 +244,26 @@ namespace Bluemagic.Abomination
 				double angle = Main.rand.NextDouble() * 2.0 * Math.PI;
 				Dust.NewDust(new Vector2(npc.Center.X + radius * (float)Math.Cos(angle), npc.Center.Y + radius * (float)Math.Sin(angle)), 0, 0, mod.DustType("Sparkle"), 0f, 0f, 0, default(Color), 1.5f);
 			}
+		}
+
+		private void Shoot(Player player)
+		{
+			Vector2 delta = player.Center - npc.Center;
+			float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
+			if (magnitude > 0)
+			{
+				delta *= 5f / magnitude;
+			}
+			else
+			{
+				delta = new Vector2(0f, 5f);
+			}
+			int damage = (npc.damage - 30) / 2;
+			if (Main.expertMode)
+			{
+				damage = (int)(damage / Main.expertDamage);
+			}
+			Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, mod.ProjectileType("ElementBall"), damage, 3f, Main.myPlayer, BuffID.OnFire, 600f);
 		}
 
 		private void ExpertLaser()
@@ -324,6 +356,10 @@ namespace Bluemagic.Abomination
 			{
 				npc.frame.Y = frameHeight;
 			}
+			else if (difficulty > 1 && attackCool < 110f)
+			{
+				npc.frame.Y = frameHeight;
+			}
 			else
 			{
 				npc.frame.Y = 0;
@@ -384,7 +420,7 @@ namespace Bluemagic.Abomination
 		{
 			spriteBatch.Draw(mod.GetTexture("Abomination/HolySphere"), npc.Center - Main.screenPosition, null, Color.White * (70f / 255f), 0f, new Vector2(sphereRadius, sphereRadius), 1f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(mod.GetTexture("Abomination/HolySphereBorder"), npc.Center - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(sphereRadius, sphereRadius), 1f, SpriteEffects.None, 0f);
-			if (Main.expertMode && laserTimer <= 60 && (laser1 == -1 || laser2 == -1))
+			if (difficulty > 0 && laserTimer <= 60 && (laser1 == -1 || laser2 == -1))
 			{
 				float rotation = laserTimer / 30f;
 				if (laser1 == -1)

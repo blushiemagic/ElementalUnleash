@@ -1,0 +1,26 @@
+{
+    "displayName": "Purium Hammer",
+    "width": 24,
+    "height": 28,
+    "scale": 1.25,
+    "useStyle": 1,
+    "useAnimation": 23,
+    "useTime": 7,
+    "maxStack": 1,
+    "hammer": 95,
+    "tileBoost": 1,
+    "damage": 80,
+    "knockback": 7,
+    "autoReuse": true,
+    "useTurn": true,
+    "rare": 9,
+    "melee": true,
+    "value": [0, 22, 50, 0],
+    "useSound": 1,
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 20},
+        "tiles": ["Purium Anvil"],
+        "creates": 1
+    }]
+}

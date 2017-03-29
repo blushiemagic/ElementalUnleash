@@ -35,7 +35,6 @@ namespace Bluemagic.Items.Abomination
 			player.QuickSpawnItem(mod.ItemType("MoltenDrill"));
 			player.QuickSpawnItem(mod.ItemType("DimensionalChest"));
 			player.QuickSpawnItem(mod.ItemType("MoltenBar"));
-			player.QuickSpawnItem(mod.ItemType("ElementResidue"));
 			player.QuickSpawnItem(mod.ItemType("SixColorShield"));
 		}
 	}

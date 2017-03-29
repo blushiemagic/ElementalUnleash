@@ -16,7 +16,7 @@ namespace Bluemagic.Items.PurityCraft
 			item.width = 26;
 			item.height = 26;
 			item.ranged = true;
-			item.ammo = ProjectileID.Bullet;
+			item.ammo = AmmoID.Bullet;
 			item.knockBack = 3f;
 			item.rare = 11;
 			item.value = Item.sellPrice(0, 20, 0, 0);

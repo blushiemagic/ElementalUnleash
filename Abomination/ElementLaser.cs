@@ -14,7 +14,7 @@ namespace Bluemagic.Abomination
 			projectile.name = "Elemental Laser";
 			projectile.width = 4;
 			projectile.height = 4;
-			projectile.timeLeft = 60;
+			projectile.timeLeft = 630;
 			projectile.penetrate = -1;
 			projectile.hostile = true;
 			projectile.magic = true;
@@ -25,9 +25,14 @@ namespace Bluemagic.Abomination
 		public override void AI()
 		{
 			NPC npc = Main.npc[(int)projectile.ai[0]];
+			if (!npc.active || npc.type != mod.NPCType("CaptiveElement"))
+			{
+				projectile.Kill();
+				return;
+			}
 			if (projectile.localAI[0] == 0f)
 			{
-				if (npc.type == mod.NPCType("CaptiveElement") && npc.ai[1] == 2f && Main.expertMode)
+				if (npc.type == mod.NPCType("CaptiveElement") && npc.ai[1] == 2f && (Main.expertMode || NPC.downedMoonlord))
 				{
 					cooldownSlot = 1;
 				}
@@ -35,12 +40,13 @@ namespace Bluemagic.Abomination
 			}
 			projectile.Center = npc.Center;
 			projectile.localAI[0] += 1f;
-			if (projectile.localAI[0] > 300f)
+			float maxTime = Main.expertMode && NPC.downedMoonlord ? 450f : 300f;
+			if (projectile.localAI[0] > maxTime)
 			{
 				projectile.damage = 0;
-				projectile.alpha = (int)((projectile.localAI[0] - 300f) / 30f);
+				projectile.alpha = (int)((projectile.localAI[0] - maxTime) / 30f);
 			}
-			if (projectile.localAI[0] > 330f)
+			if (projectile.localAI[0] > maxTime + 30f)
 			{
 				projectile.Kill();
 			}

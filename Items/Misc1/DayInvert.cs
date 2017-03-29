@@ -26,8 +26,14 @@ namespace Bluemagic.Items.Misc1
 		{
 			if (Main.netMode != 1)
 			{
-				Main.dayTime = !Main.dayTime;
-				Main.time = 0;
+				if (Main.dayTime)
+				{
+					Main.time = 54000;
+				}
+				else
+				{
+					Main.time = 32400;
+				}
 				if (Main.netMode == 2)
 				{
 					NetMessage.SendData(MessageID.WorldInfo);

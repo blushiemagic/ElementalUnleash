@@ -10,6 +10,23 @@ namespace Bluemagic.Abomination
 {
 	public class CaptiveElement : ModNPC
 	{
+		private int difficulty
+		{
+			get
+			{
+				int result = 0;
+				if (Main.expertMode)
+				{
+					result++;
+				}
+				if (NPC.downedMoonlord)
+				{
+					result++;
+				}
+				return result;
+			}
+		}
+
 		private int center
 		{
 			get
@@ -66,6 +83,12 @@ namespace Bluemagic.Abomination
 			npc.lifeMax = 15000;
 			npc.damage = 100;
 			npc.defense = 55;
+			if (NPC.downedMoonlord)
+			{
+				npc.lifeMax = 30000;
+				npc.damage = 120;
+				npc.defense = 80;
+			}
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = true;
 			npc.width = 100;
@@ -155,27 +178,36 @@ namespace Bluemagic.Abomination
 			}
 			SetPosition(npc);
 			attackCool -= 1f;
+			if (Main.netMode != 1 && difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0)
+			{
+				Shoot(abomination);
+			}
 			if (Main.netMode != 1 && attackCool <= 0f)
 			{
 				attackCool = 200f + 200f * (float)abomination.life / (float)abomination.lifeMax + (float)Main.rand.Next(200);
-				Vector2 delta = Main.player[abomination.target].Center - npc.Center;
-				float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
-				if (magnitude > 0)
-				{
-					delta *= 5f / magnitude;
-				}
-				else
-				{
-					delta = new Vector2(0f, 5f);
-				}
-				int damage = (npc.damage - 30) / 2;
-				if (Main.expertMode)
-				{
-					damage = (int)(damage / Main.expertDamage);
-				}
-				Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, mod.ProjectileType("ElementBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
+				Shoot(abomination);
 				npc.netUpdate = true;
 			}
+		}
+
+		private void Shoot(NPC abomination)
+		{
+			Vector2 delta = Main.player[abomination.target].Center - npc.Center;
+			float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
+			if (magnitude > 0)
+			{
+				delta *= 5f / magnitude;
+			}
+			else
+			{
+				delta = new Vector2(0f, 5f);
+			}
+			int damage = (npc.damage - 30) / 2;
+			if (Main.expertMode)
+			{
+				damage = (int)(damage / Main.expertDamage);
+			}
+			Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, mod.ProjectileType("ElementBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
 		}
 
 		public static void SetPosition(NPC npc)
@@ -200,11 +232,15 @@ namespace Bluemagic.Abomination
 			{
 				npc.frame.Y += 5 * frameHeight;
 			}
+			else if (difficulty > 1 && attackCool < 110f)
+			{
+				npc.frame.Y += 5 * frameHeight;
+			}
 		}
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			if (captiveType == 2 && Main.expertMode)
+			if (captiveType == 2 && difficulty > 0)
 			{
 				cooldownSlot = 1;
 			}
@@ -291,7 +327,7 @@ namespace Bluemagic.Abomination
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 			Abomination abomination = Main.npc[center].modNPC as Abomination;
-			if (Main.expertMode && abomination != null && abomination.npc.active && abomination.laserTimer <= 60 && (abomination.laser1 == captiveType || abomination.laser2 == captiveType))
+			if (difficulty > 0 && abomination != null && abomination.npc.active && abomination.laserTimer <= 60 && (abomination.laser1 == captiveType || abomination.laser2 == captiveType))
 			{
 				Color? color = GetColor();
 				if (!color.HasValue)

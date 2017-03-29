@@ -71,6 +71,12 @@ namespace Bluemagic.Abomination
 			npc.lifeMax = 15000;
 			npc.damage = 100;
 			npc.defense = 55;
+			if (NPC.downedMoonlord)
+			{
+				npc.lifeMax = 30000;
+				npc.damage = 120;
+				npc.defense = 80;
+			}
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = true;
 			npc.alpha = 255;
@@ -176,7 +182,7 @@ namespace Bluemagic.Abomination
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			if (elementType == 2 && Main.expertMode)
+			if (elementType == 2 && (Main.expertMode || NPC.downedMoonlord))
 			{
 				cooldownSlot = 1;
 			}
@@ -202,7 +208,7 @@ namespace Bluemagic.Abomination
 				case 0:
 					return BuffID.Frostburn;
 				case 1:
-					return BuffID.Frostburn;//BuffDef.byName["Bluemagic:EtherealFlames"];
+					return mod.BuffType("EtherealFlames");
 				case 3:
 					return BuffID.Venom;
 				case 4:
@@ -221,7 +227,7 @@ namespace Bluemagic.Abomination
 					time = 400;
 					break;
 				case 1:
-					time = 400;//300;
+					time = 300;
 					break;
 				case 3:
 					time = 400;

@@ -1,0 +1,22 @@
+{
+    "displayName": "Purium Arrow",
+    "width": 10,
+    "height": 28,
+    "tooltip": ["Leaves a trail in its path"],
+    "maxStack": 999,
+    "damage": 16,
+    "knockback": 4,
+    "consumable": true,
+    "ammo": 1,
+    "rare": 9,
+    "ranged": true,
+    "value": [0, 0, 10, 0],
+    "shoot": "Bluemagic:PuriumArrow",
+    "shootSpeed": 6,
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 1},
+        "tiles": ["Purium Anvil"],
+        "creates": 50
+    }]
+}

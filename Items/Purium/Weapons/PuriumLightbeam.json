@@ -1,0 +1,28 @@
+{
+    "displayName": "Purium Lightbeam",
+    "width": 40,
+    "height": 40,
+    "scale": 1.1,
+    "useStyle": 5,
+    "useAnimation": 25,
+    "useTime": 25,
+    "noUseGraphic": true,
+    "maxStack": 1,
+    "noMelee": true,
+    "damage": 110,
+    "knockback": 5,
+    "autoReuse": false,
+    "useTurn": false,
+    "rare": 9,
+    "melee": true,
+    "value": [0, 30, 0, 0],
+    "useSound": 9,
+    "shoot": "Bluemagic:PuriumSpear",
+    "shootSpeed": 5,
+    "recipes":
+    [{
+        "items": {"Bluemagic:PuriumBar": 12},
+        "tiles": ["Purium Anvil"],
+        "creates": 1
+    }]
+}
