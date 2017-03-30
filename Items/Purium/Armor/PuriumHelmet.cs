@@ -1,31 +1,46 @@
 using System;
+using System.Collections.Generic;
 using Terraria;
-using TAPI;
+using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace Bluemagic.Items
+namespace Bluemagic.Items.Purium.Armor
 {
 	public class PuriumHelmet : ModItem
 	{
-		public override void Effects(Player player)
+		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
 		{
-			player.meleeDamage += 0.05f;
-			player.meleeCrit += 5;
-			player.meleeSpeed += 0.05f;
+			equips.Add(EquipType.Head);
+			return base.Autoload(ref name, ref texture, equips);
 		}
 
-		public override void ArmorSetBonus(Player player)
+		public override void SetDefaults()
 		{
-			player.statDefense += 20;
-			player.meleeDamage += 0.1f;
-			player.meleeCrit += 5;
-			player.moveSpeed += 0.07f;
-			player.meleeSpeed += 0.1f;
-			player.setBonus = "+20 defense, Greatly increased melee capabilities";
+			item.name = "Purium Helmet";
+			item.toolTip = "15% increased melee damage, 10% increased melee critical strike chance";
+			item.toolTip2 = "16% increased melee speed, 4% increased movement speed";
+			item.width = 18;
+			item.height = 18;
+			item.defense = 34;
+			item.rare = 11;
+			item.value = Item.sellPrice(0, 6, 0, 0);
 		}
 
-		public override bool IsArmorSet(Player player, bool vanity)
+		public override void UpdateEquip(Player player)
 		{
-			return !vanity && player.armor[1].type == Bluemagic.ItemID("PuriumBreastplate") && player.armor[2].type == Bluemagic.ItemID("PuriumLeggings");
+			player.meleeDamage += 0.15f;
+			player.meleeCrit += 10;
+			player.meleeSpeed += 0.16f;
+			player.moveSpeed += 0.04f;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(null, "PuriumBar", 12);
+			recipe.AddTile(null, "PuriumAnvil");
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

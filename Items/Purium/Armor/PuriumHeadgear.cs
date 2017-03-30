@@ -1,31 +1,46 @@
 using System;
+using System.Collections.Generic;
 using Terraria;
-using TAPI;
+using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace Bluemagic.Items
+namespace Bluemagic.Items.Purium.Armor
 {
 	public class PuriumHeadgear : ModItem
 	{
-		public override void Effects(Player player)
+		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
 		{
-			player.statManaMax2 += 40;
-			player.magicDamage += 0.05f;
-			player.magicCrit += 5;
-			player.manaCost -= 0.05f;
+			equips.Add(EquipType.Head);
+			return base.Autoload(ref name, ref texture, equips);
 		}
 
-		public override void ArmorSetBonus(Player player)
+		public override void SetDefaults()
 		{
-			player.statManaMax2 += 40;
-			player.magicDamage += 0.1f;
-			player.magicCrit += 5;
-			player.manaCost -= 0.1f;
-			player.setBonus = "+40 maximum mana, Greatly increased magic capabilities";
+			item.name = "Purium Headgear";
+			item.toolTip = "15% increased magic damage, 10% increased magic critical strike chance";
+			item.toolTip2 = "+80 maximum mana and 15% reduced mana usage";
+			item.width = 18;
+			item.height = 18;
+			item.defense = 14;
+			item.rare = 11;
+			item.value = Item.sellPrice(0, 6, 0, 0);
 		}
 
-		public override bool IsArmorSet(Player player, bool vanity)
+		public override void UpdateEquip(Player player)
 		{
-			return !vanity && player.armor[1].type == Bluemagic.ItemID("PuriumBreastplate") && player.armor[2].type == Bluemagic.ItemID("PuriumLeggings");
+			player.magicDamage += 0.15f;
+			player.magicCrit += 10;
+			player.statManaMax2 += 80;
+			player.manaCost -= 0.15f;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(null, "PuriumBar", 12);
+			recipe.AddTile(null, "PuriumAnvil");
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

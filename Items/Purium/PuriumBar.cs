@@ -10,7 +10,7 @@ namespace Bluemagic.Items.Purium
 		public override void SetDefaults()
 		{
 			item.name = "Purium Bar";
-			item.toolTip = "\"Flowing with power\"";
+			item.toolTip = "'Flowing with power'";
 			item.width = 20;
 			item.height = 20;
 			item.maxStack = 99;

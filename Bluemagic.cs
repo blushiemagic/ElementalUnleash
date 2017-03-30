@@ -148,7 +148,7 @@ namespace Bluemagic
 
 		public override void ModifyInterfaceLayers(List<MethodSequenceListItem> layers)
 		{
-			
+			InterfaceHelper.ModifyInterfaceLayers(layers);
 		}
 	}
 

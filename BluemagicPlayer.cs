@@ -21,6 +21,15 @@ namespace Bluemagic
 		private int elementShieldTimer = 0;
 		public int elementShieldPos = 0;
 		public bool voidMonolith = false;
+
+		public bool puriumShield = false;
+		public const float puriumShieldChargeMax = 1200f;
+		public const float puriumShieldDamageEffectiveness = 0.002f;
+		public int[] buffImmuneCounter;
+		public const float buffImmuneCost = 50f;
+		public const float reviveCost = 1000f;
+		private int miscTimer = 0;
+
 		public int heroLives = 0;
 		public int reviveTime = 0;
 		public int constantDamage = 0;
@@ -32,24 +41,33 @@ namespace Bluemagic
 		public int healHurt = 0;
 		public bool nullified = false;
 		public int purityDebuffCooldown = 0;
+
 		public bool manaMagnet2 = false;
 		public bool crystalCloak = false;
 		public bool lifeMagnet2 = false;
 		public bool voidEmissary = false;
+
 		private int chaosWarningCooldown = 0;
 		public int chaosPressure = 0;
 		public float suppression = 0f;
 		public float ammoCost = 0f;
 
 		//permanent data
+		public float puriumShieldCharge = 0f;
 		//public int chaosPoints = 0;
 		//public int cataclysmPoints = 0;
+
+		public override void Initialize()
+		{
+			buffImmuneCounter = new int[player.buffImmune.Length];
+		}
 
 		public override void ResetEffects()
 		{
 			eFlames = false;
 			customMeleeEnchant = 0;
 			elementShield = false;
+			puriumShield = false;
 			constantDamage = 0;
 			percentDamage = 0f;
 			defenseEffect = -1f;
@@ -70,22 +88,22 @@ namespace Bluemagic
 		{
 			eFlames = false;
 			badHeal = false;
+			puriumShieldCharge = 0;
 			reviveTime = 0;
 		}
 
-		/*public override TagCompound Save()
+		public override TagCompound Save()
 		{
 			TagCompound tag = new TagCompound();
 			tag["version"] = 0;
-			tag["chaosPoints"] = chaosPoints;
-			tag["cataclysmPoints"] = cataclysmPoints;
+			tag["puriumShieldCharge"] = puriumShieldCharge;
+			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
-			chaosPoints = tag.GetInt("chaosPoints");
-			cataclysmPoints = tag.getInt("cataclysmPoints");
-		}*/
+			puriumShieldCharge = tag.GetFloat("puriumShieldCharge");
+		}
 
 		private bool AnyChaosSpirit()
 		{
@@ -213,7 +231,7 @@ namespace Bluemagic
 				int hurt = 2 * (player.statLife - prevLife);
 				player.statLife -= hurt;
 				CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, hurt.ToString(), false, false);
-				if (player.statLife <= 0)
+				if (player.statLife <= 0 && player.whoAmI == Main.myPlayer)
 				{
 					player.KillMe(PlayerDeathReason.ByCustomReason(" was dissolved by holy powers"), hurt, 0, false);
 				}
@@ -358,7 +376,10 @@ namespace Bluemagic
 		{
 			int damage = 100 * player.statLifeMax2;
 			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
-			player.KillMe(PlayerDeathReason.ByCustomReason(" was crushed by chaotic pressure!"), damage, 0, false);
+			if (player.whoAmI == Main.myPlayer)
+			{
+				player.KillMe(PlayerDeathReason.ByCustomReason(" was crushed by chaotic pressure!"), damage, 0, false);
+			}
 		}
 
 		public override void PostUpdateBuffs()
@@ -402,12 +423,57 @@ namespace Bluemagic
 			{
 				reviveTime--;
 			}
+			if (puriumShield)
+			{
+				puriumShieldCharge += 0.001f;
+				if (puriumShieldCharge > puriumShieldChargeMax)
+				{
+					puriumShieldCharge = puriumShieldChargeMax;
+				}
+				for (int k = 0; k < Player.maxBuffs; k++)
+				{
+					if (puriumShieldCharge < buffImmuneCost)
+					{
+						break;
+					}
+					if (player.buffType[k] > 0 && player.buffTime[k] > 0 && Main.debuff[player.buffType[k]] && BuffLoader.CanBeCleared(player.buffType[k]))
+					{
+						buffImmuneCounter[player.buffType[k]] = 600;
+						puriumShieldCharge -= buffImmuneCost;
+					}
+				}
+				for (int k = 0; k < buffImmuneCounter.Length; k++)
+				{
+					if (buffImmuneCounter[k] > 0)
+					{
+						player.buffImmune[k] = true;
+						buffImmuneCounter[k]--;
+					}
+				}
+				player.endurance += PuriumShieldEndurance();
+			}
+			else
+			{
+				//puriumShieldCharge = 0;
+			}
 			CheckBadHeal();
+		}
+
+		private float PuriumShieldEndurance()
+		{
+			float enduranceFill = puriumShieldCharge / reviveCost;
+			if (enduranceFill > 1f)
+			{
+				enduranceFill = 1f;
+			}
+			return 0.2f * enduranceFill;
 		}
 
 		public override void PostUpdate()
 		{
 			StartBadHeal();
+			miscTimer++;
+			miscTimer %= 60;
 		}
 
 		public override void FrameEffects()
@@ -515,6 +581,21 @@ namespace Bluemagic
 					Main.projectile[proj].ai[1] = player.position.Y;
 				}
 			}
+			if (puriumShield)
+			{
+				float effectiveEndurance = player.endurance;
+				if (effectiveEndurance >= 0.995f)
+				{
+					effectiveEndurance = 0.995f;
+				}
+				double fullDamage = damage / (1f - effectiveEndurance);
+				float shieldDamage = (float)(fullDamage * PuriumShieldEndurance() * 0.1f);
+				puriumShieldCharge -= shieldDamage;
+				if (puriumShieldCharge < 0f)
+				{
+					puriumShieldCharge = 0f;
+				}
+			}
 			if (heroLives > 0)
 			{
 				for (int k = 0; k < 200; k++)
@@ -551,6 +632,12 @@ namespace Bluemagic
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
+			if (puriumShield && puriumShieldCharge >= reviveCost)
+			{
+				puriumShieldCharge -= reviveCost;
+				player.statLife = 1;
+				return false;
+			}
 			if (heroLives > 0)
 			{
 				heroLives--;
@@ -632,6 +719,14 @@ namespace Bluemagic
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 			}
+			if (puriumShield && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
+			{
+				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
+				if (puriumShieldCharge > puriumShieldChargeMax)
+				{
+					puriumShieldCharge = puriumShieldChargeMax;
+				}
+			}
 		}
 
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -651,6 +746,14 @@ namespace Bluemagic
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 				}
 			}
+			if (puriumShield && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
+			{
+				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
+				if (puriumShieldCharge > puriumShieldChargeMax)
+				{
+					puriumShieldCharge = puriumShieldChargeMax;
+				}
+			}
 		}
 
 		public override void OnHitPvp(Item item, Player target, int damage, bool crit)
@@ -658,6 +761,14 @@ namespace Bluemagic
 			if (customMeleeEnchant == 1)
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
+			}
+			if (puriumShield)
+			{
+				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
+				if (puriumShieldCharge > puriumShieldChargeMax)
+				{
+					puriumShieldCharge = puriumShieldChargeMax;
+				}
 			}
 		}
 
@@ -668,6 +779,14 @@ namespace Bluemagic
 				if (customMeleeEnchant == 1)
 				{
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
+				}
+			}
+			if (puriumShield)
+			{
+				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
+				if (puriumShieldCharge > puriumShieldChargeMax)
+				{
+					puriumShieldCharge = puriumShieldChargeMax;
 				}
 			}
 		}
@@ -731,6 +850,20 @@ namespace Bluemagic
 						Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
 						Main.playerDrawDust.Add(dust);
 					}
+				}
+				if (modPlayer.puriumShield && modPlayer.puriumShieldCharge > 0f)
+				{
+					Texture2D texture = mod.GetTexture("PuriumShield");
+					int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+					int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
+					float strength = (modPlayer.miscTimer % 30f) / 15f;
+					if (strength > 1f)
+					{
+						strength = 2f - strength;
+					}
+					strength = 0.1f + strength * 0.2f;
+					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+					Main.playerDrawData.Add(data);
 				}
 			});
 		public static readonly PlayerLayer RedLine = new PlayerLayer("Bluemagic", "RedLine", delegate(PlayerDrawInfo drawInfo)

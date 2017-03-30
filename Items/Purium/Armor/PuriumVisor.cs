@@ -1,29 +1,45 @@
 using System;
+using System.Collections.Generic;
 using Terraria;
-using TAPI;
+using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace Bluemagic.Items
+namespace Bluemagic.Items.Purium.Armor
 {
 	public class PuriumVisor : ModItem
 	{
-		public override void Effects(Player player)
+		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
 		{
-			player.rangedDamage += 0.05f;
-			player.rangedCrit += 5;
-			player.ammoCost80 = true;
+			equips.Add(EquipType.Head);
+			return base.Autoload(ref name, ref texture, equips);
 		}
 
-		public override void ArmorSetBonus(Player player)
+		public override void SetDefaults()
 		{
-			player.statDefense += 10;
-			player.rangedDamage += 0.1f;
-			player.rangedCrit += 5;
-			player.setBonus = "+10 defense, Greatly increased ranged capabilities";
+			item.name = "Purium Visor";
+			item.toolTip = "15% increased ranged damage, 10% increased ranged critical strike chance";
+			item.toolTip2 = "25% chance to not consume ammo";
+			item.width = 18;
+			item.height = 18;
+			item.defense = 24;
+			item.rare = 11;
+			item.value = Item.sellPrice(0, 6, 0, 0);
 		}
 
-		public override bool IsArmorSet(Player player, bool vanity)
+		public override void UpdateEquip(Player player)
 		{
-			return !vanity && player.armor[1].type == Bluemagic.ItemID("PuriumBreastplate") && player.armor[2].type == Bluemagic.ItemID("PuriumLeggings");
+			player.rangedDamage += 0.15f;
+			player.rangedCrit += 10;
+			player.ammoCost75 = true;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(null, "PuriumBar", 12);
+			recipe.AddTile(null, "PuriumAnvil");
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }
