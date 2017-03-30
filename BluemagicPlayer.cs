@@ -26,6 +26,16 @@ namespace Bluemagic
 		public const float puriumShieldChargeMax = 1200f;
 		public const float puriumShieldDamageEffectiveness = 0.002f;
 		public int[] buffImmuneCounter;
+		public static List<int> buffImmuneBlacklist = new List<int>(new int[]
+		{
+			BuffID.Wet,
+			BuffID.Lovestruck,
+			BuffID.Stinky,
+			BuffID.Slimed,
+			BuffID.Sunflower,
+			BuffID.MonsterBanner,
+			BuffID.PeaceCandle
+		});
 		public const float buffImmuneCost = 50f;
 		public const float reviveCost = 1000f;
 		private int miscTimer = 0;
@@ -436,7 +446,7 @@ namespace Bluemagic
 					{
 						break;
 					}
-					if (player.buffType[k] > 0 && player.buffTime[k] > 0 && Main.debuff[player.buffType[k]] && BuffLoader.CanBeCleared(player.buffType[k]))
+					if (player.buffType[k] > 0 && player.buffTime[k] > 0 && Main.debuff[player.buffType[k]] && BuffLoader.CanBeCleared(player.buffType[k]) && !buffImmuneBlacklist.Contains(player.buffType[k]))
 					{
 						buffImmuneCounter[player.buffType[k]] = 600;
 						puriumShieldCharge -= buffImmuneCost;
