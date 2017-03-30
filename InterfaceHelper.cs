@@ -18,6 +18,11 @@ namespace Bluemagic
 				{
 					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar, layers[k]));
 				}
+				else if (layers[k].Name == "Vanilla: Mouse Over")
+				{
+					layers.Insert(k, new MethodSequenceListItem("Bluemagic: Mouse Over", DrawMouseOver, layers[k]));
+					k++;
+				}
 			}
 		}
 
@@ -31,7 +36,7 @@ namespace Bluemagic
 			}
 			Mod mod = Bluemagic.Instance;
 			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
-			if (!modPlayer.puriumShield)
+			if (modPlayer.puriumShieldChargeMax <= 0f)
 			{
 				return true;
 			}
@@ -41,18 +46,60 @@ namespace Bluemagic
 			const int chargeSize = barSize - 2 * padding;
 			const int chargeHeight = 20;
 			SpriteFont font = Main.fontMouseText;
-			string chargeText = (int)modPlayer.puriumShieldCharge + "/" + (int)BluemagicPlayer.puriumShieldChargeMax;
-			string maxText = "Purity Shield Charge: " + (int)BluemagicPlayer.puriumShieldChargeMax + "/" + (int)BluemagicPlayer.puriumShieldChargeMax;
+			float puriumShieldCharge = Math.Min(modPlayer.puriumShieldCharge, modPlayer.puriumShieldChargeMax);
+			string chargeText = (int)puriumShieldCharge + "/" + (int)modPlayer.puriumShieldChargeMax;
+			string maxText = "Purity Shield Charge: " + (int)modPlayer.puriumShieldChargeMax + "/" + (int)modPlayer.puriumShieldChargeMax;
 			Vector2 maxTextSize = font.MeasureString(maxText);
 			Color textColor = new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor);
 			Main.spriteBatch.DrawString(font, "Purity Shield Charge:", new Vector2(anchorX + barSize / 2 - maxTextSize.X / 2f, 6f), textColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 			Main.spriteBatch.DrawString(font, chargeText, new Vector2(anchorX + barSize / 2 + maxTextSize.X / 2f, 6f), textColor, 0f, new Vector2(font.MeasureString(chargeText).X, 0f), 1f, SpriteEffects.None, 0f);
 
-			float fill = modPlayer.puriumShieldCharge / BluemagicPlayer.puriumShieldChargeMax;
+			float fill = puriumShieldCharge / modPlayer.puriumShieldChargeMax;
 			Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldBar"), new Vector2(anchorX, 32f), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldCharge"), new Vector2(anchorX + padding, 32f + padding), new Rectangle(0, 0, (int)(fill * chargeSize), chargeHeight), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
 			return true;
+		}
+
+		private static bool DrawMouseOver()
+		{
+			DrawPuriumShieldMouseOver();
+			return true;
+		}
+
+		private static void DrawPuriumShieldMouseOver()
+		{
+			if (Main.mouseText)
+			{
+				return;
+			}
+			Player player = Main.player[Main.myPlayer];
+			if (player.ghost)
+			{
+				return;
+			}
+			Mod mod = Bluemagic.Instance;
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			if (modPlayer.puriumShieldChargeMax <= 0f)
+			{
+				return;
+			}
+
+			int screenAnchorX = Main.screenWidth / 2;
+			const int barSize = 128;
+			const int barHeight = 28;
+			if (Main.mouseX > screenAnchorX && Main.mouseX < screenAnchorX + barSize && Main.mouseY > 32 && Main.mouseY < 32 + barHeight)
+			{
+				Main.player[Main.myPlayer].showItemIcon = false;
+				string text = "Damaging enemies powers a purity shield around you";
+				text += "\nShield also regenerates over time";
+				text += "\nReduces damage by up to 20% depending on charge";
+				text += "\nTaking damage consumes shield depending on damage";
+				text += "\nShield can consume 50 charge to protect you from debuffs";
+				text += "\nShield can consume 1,000 charge to protect you from fatal damage";
+				Main.instance.MouseText(text);
+				Main.mouseText = true;
+			}
 		}
 	}
 }

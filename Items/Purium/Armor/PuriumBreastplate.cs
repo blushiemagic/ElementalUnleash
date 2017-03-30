@@ -47,13 +47,8 @@ namespace Bluemagic.Items.Purium.Armor
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).puriumShield = true;
-			player.setBonus = "Damaging enemies powers a purity shield around you";
-			player.setBonus += "\nShield also regenerates over time";
-			player.setBonus += "\nShield reduces damage by up to 20% depending on charge";
-			player.setBonus += "\nTaking damage consumes shield depending on damage";
-			player.setBonus += "\nShield can consume 50 charge to protect you from debuffs";
-			player.setBonus += "\nShield can consume 1,000 charge to protect you from fatal damage";
+			player.GetModPlayer<BluemagicPlayer>(mod).puriumShieldChargeMax += 1200f;
+			player.setBonus = "Increases purity shield capacity by 1200";
 		}
 
 		public override void AddRecipes()

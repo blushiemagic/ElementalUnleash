@@ -22,8 +22,8 @@ namespace Bluemagic
 		public int elementShieldPos = 0;
 		public bool voidMonolith = false;
 
-		public bool puriumShield = false;
-		public const float puriumShieldChargeMax = 1200f;
+		public float puriumShieldChargeMax = 0f;
+		public float puriumShieldChargeRate = 1f;
 		public const float puriumShieldDamageEffectiveness = 0.002f;
 		public int[] buffImmuneCounter;
 		public static List<int> buffImmuneBlacklist = new List<int>(new int[]
@@ -77,7 +77,8 @@ namespace Bluemagic
 			eFlames = false;
 			customMeleeEnchant = 0;
 			elementShield = false;
-			puriumShield = false;
+			puriumShieldChargeMax = 0f;
+			puriumShieldChargeRate = 1f;
 			constantDamage = 0;
 			percentDamage = 0f;
 			defenseEffect = -1f;
@@ -98,7 +99,7 @@ namespace Bluemagic
 		{
 			eFlames = false;
 			badHeal = false;
-			puriumShieldCharge = 0;
+			puriumShieldCharge = 0f;
 			reviveTime = 0;
 		}
 
@@ -433,13 +434,9 @@ namespace Bluemagic
 			{
 				reviveTime--;
 			}
-			if (puriumShield)
+			if (puriumShieldChargeMax > 0f)
 			{
-				puriumShieldCharge += 0.001f;
-				if (puriumShieldCharge > puriumShieldChargeMax)
-				{
-					puriumShieldCharge = puriumShieldChargeMax;
-				}
+				ChargePuriumShield(0.001f);
 				for (int k = 0; k < Player.maxBuffs; k++)
 				{
 					if (puriumShieldCharge < buffImmuneCost)
@@ -462,11 +459,21 @@ namespace Bluemagic
 				}
 				player.endurance += PuriumShieldEndurance();
 			}
-			else
-			{
-				//puriumShieldCharge = 0;
-			}
 			CheckBadHeal();
+		}
+
+		private void ChargePuriumShield(float charge)
+		{
+			charge *= puriumShieldChargeRate;
+			if (puriumShieldCharge + charge > puriumShieldChargeMax)
+			{
+				charge = puriumShieldChargeMax - puriumShieldCharge;
+			}
+			if (charge < 0f)
+			{
+				charge = 0f;
+			}
+			puriumShieldCharge += charge;
 		}
 
 		private float PuriumShieldEndurance()
@@ -591,7 +598,7 @@ namespace Bluemagic
 					Main.projectile[proj].ai[1] = player.position.Y;
 				}
 			}
-			if (puriumShield)
+			if (puriumShieldChargeMax > 0f)
 			{
 				float effectiveEndurance = player.endurance;
 				if (effectiveEndurance >= 0.995f)
@@ -642,10 +649,17 @@ namespace Bluemagic
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
-			if (puriumShield && puriumShieldCharge >= reviveCost)
+			if (puriumShieldChargeMax > 0f && puriumShieldCharge >= reviveCost)
 			{
 				puriumShieldCharge -= reviveCost;
 				player.statLife = 1;
+				StartBadHeal();
+				player.immune = true;
+				player.immuneTime = player.longInvince ? 180 : 120;
+				for (int k = 0; k < player.hurtCooldowns.Length; k++)
+				{
+					player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
+				}
 				return false;
 			}
 			if (heroLives > 0)
@@ -729,13 +743,9 @@ namespace Bluemagic
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 			}
-			if (puriumShield && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
+			if (puriumShieldChargeMax > 0f && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
 			{
-				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
-				if (puriumShieldCharge > puriumShieldChargeMax)
-				{
-					puriumShieldCharge = puriumShieldChargeMax;
-				}
+				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
 			}
 		}
 
@@ -756,13 +766,9 @@ namespace Bluemagic
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 				}
 			}
-			if (puriumShield && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
+			if (puriumShieldChargeMax > 0f && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
 			{
-				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
-				if (puriumShieldCharge > puriumShieldChargeMax)
-				{
-					puriumShieldCharge = puriumShieldChargeMax;
-				}
+				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
 			}
 		}
 
@@ -772,13 +778,9 @@ namespace Bluemagic
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
 			}
-			if (puriumShield)
+			if (puriumShieldChargeMax > 0f)
 			{
-				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
-				if (puriumShieldCharge > puriumShieldChargeMax)
-				{
-					puriumShieldCharge = puriumShieldChargeMax;
-				}
+				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
 			}
 		}
 
@@ -791,13 +793,9 @@ namespace Bluemagic
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
 				}
 			}
-			if (puriumShield)
+			if (puriumShieldChargeMax > 0f)
 			{
-				puriumShieldCharge += damage * puriumShieldDamageEffectiveness;
-				if (puriumShieldCharge > puriumShieldChargeMax)
-				{
-					puriumShieldCharge = puriumShieldChargeMax;
-				}
+				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
 			}
 		}
 
@@ -861,7 +859,7 @@ namespace Bluemagic
 						Main.playerDrawDust.Add(dust);
 					}
 				}
-				if (modPlayer.puriumShield && modPlayer.puriumShieldCharge > 0f)
+				if (modPlayer.puriumShieldChargeMax > 0f && modPlayer.puriumShieldCharge > 0f)
 				{
 					Texture2D texture = mod.GetTexture("PuriumShield");
 					int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
