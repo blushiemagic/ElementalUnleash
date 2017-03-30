@@ -871,6 +871,7 @@ namespace Bluemagic
 					}
 					strength = 0.1f + strength * 0.2f;
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+					data.shader = drawInfo.bodyArmorShader;
 					Main.playerDrawData.Add(data);
 				}
 			});
