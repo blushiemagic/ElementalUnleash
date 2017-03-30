@@ -5,4 +5,4 @@ homepage = http://forums.terraria.org/index.php?threads/bluemagics-mod-endgame-b
 hideCode = false
 hideResources = false
 includeSource = true
-buildIgnore = Items\Purium\Weapons\*, Items\Purium\Tools\*
+buildIgnore = Items\Purium\Weapons\*
