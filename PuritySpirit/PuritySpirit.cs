@@ -411,10 +411,10 @@ namespace Bluemagic.PuritySpirit
 			{
 				float angle = 2f * (float)Math.PI / 10f * k;
 				Vector2 pos = center + radius * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-				int damage = 100;
+				int damage = 120;
 				if (Main.expertMode)
 				{
-					damage = (int)(75 / Main.expertDamage);
+					damage = (int)(150 / Main.expertDamage);
 				}
 				int proj = Projectile.NewProjectile(pos.X, pos.Y, 0f, 0f, mod.ProjectileType("PureCrystal"), damage, 0f, Main.myPlayer, npc.whoAmI, angle);
 				Main.projectile[proj].localAI[0] = radius;
@@ -564,7 +564,7 @@ namespace Bluemagic.PuritySpirit
 				int numAttacks = 3 + difficulty / 2;
 				float timer = 30f + 20f * timeMultiplier;
 				float totalTime = numAttacks * timer + 120f;
-				int damage = Main.expertMode ? 60 : 80;
+				int damage = Main.expertMode ? 70 : 100;
 				for (int k = 0; k < numAttacks; k++)
 				{
 					int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("NullLaser"), damage, 0f, Main.myPlayer, npc.whoAmI, (int)(60f + k * timer));
@@ -590,7 +590,7 @@ namespace Bluemagic.PuritySpirit
 		{
 			if (attackProgress == 0)
 			{
-				int damage = Main.expertMode ? 75 : 100;
+				int damage = Main.expertMode ? 75 : 120;
 				float time = 60f + 60f * timeMultiplier;
 				int rotationSpeed = Main.rand.Next(2) * 2 - 1;
 				int numSpheres = 3 + difficulty / 2;
@@ -659,6 +659,10 @@ namespace Bluemagic.PuritySpirit
 
 		public override bool CheckDead()
 		{
+			if (Main.netMode == 1 && stage < 13)
+			{
+				return false;
+			}
 			if (stage < 10)
 			{
 				npc.active = true;
@@ -670,10 +674,7 @@ namespace Bluemagic.PuritySpirit
 					netMessage.Write(true);
 					netMessage.Send();
 				}
-				if (Main.netMode != 1)
-				{
-					stage = 10;
-				}
+				stage = 10
 				return false;
 			}
 			return true;
