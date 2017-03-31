@@ -1,0 +1,11 @@
+{
+    "displayName": "Purium Arrow",
+    "width": 10,
+    "height": 10,
+    "aiStyle": 1,
+    "ranged": true,
+    "penetrate": -1,
+    "friendly": true,
+    "tileCollide": true,
+    "ignoreWater": false
+}

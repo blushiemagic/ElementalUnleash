@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles
+namespace Bluemagic.Items.Purium.Tools.Projectiles
 {
 	public class PuriumDrill : ModProjectile
 	{

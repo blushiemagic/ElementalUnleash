@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles.PuritySpiritWeap
+namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
 	public class PrismaticShocker : ModProjectile
 	{

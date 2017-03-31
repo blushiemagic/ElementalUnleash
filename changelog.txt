@@ -5,4 +5,5 @@ defeating the abomination post-moonlord now generates purium
 elemental purge now requres purium bars instead of element residue
 fixed bug where reviving under undead debuff counts as healing
 fixed bug where endless items don't work
+added purium equipment
 minor fixes and improvements

@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
+namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 {
 	public class VoidPortal : ModProjectile
 	{

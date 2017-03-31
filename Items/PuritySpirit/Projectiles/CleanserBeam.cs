@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles.PuritySpiritWeap
+namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
 	public class CleanserBeam : ModProjectile
 	{

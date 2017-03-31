@@ -6,32 +6,31 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
+namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
-	public class VoidLaser : ModProjectile
+	public class CleanserLaser : ModProjectile
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Void Laser";
-			projectile.width = 20;
-			projectile.height = 20;
+			projectile.name = "Cleanser Laser";
+			projectile.width = 4;
+			projectile.height = 4;
 			projectile.aiStyle = 84;
-			projectile.penetrate = -1;
 			projectile.friendly = true;
 			projectile.ranged = true;
+			projectile.alpha = 255;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
+			projectile.hide = true;
 		}
 
 		public override bool PreAI()
 		{
-			Projectile minion = Main.projectile[(int)projectile.ai[1]];
-			if (minion.active && minion.type == mod.ProjectileType("VoidEmissary") && minion.ai[0] == 2f)
+			Projectile cannon = Main.projectile[(int)projectile.ai[1]];
+			if (cannon.active && cannon.type == mod.ProjectileType("CleanserBeam"))
 			{
-				Vector2 direction = minion.ai[1].ToRotationVector2();
-				projectile.Center = minion.Center + 30f * direction + new Vector2(0f, -minion.gfxOffY);
+				Vector2 direction = Vector2.Normalize(cannon.velocity);
+				projectile.Center = cannon.Center + 16f * direction + new Vector2(0f, -cannon.gfxOffY);
 				projectile.velocity = direction;
 			}
 			else
@@ -83,16 +82,31 @@ namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
 		{
 			float point = 0f;
 			Vector2 endPoint = projectile.Center + projectile.velocity * projectile.localAI[1];
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, endPoint, 20f, ref point);
+			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, endPoint, 4f, ref point);
+		}
+
+		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			damage += target.defense / 2;
+		}
+
+		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			projectile.penetrate++;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texture = Main.projectileTexture[projectile.type];
-			Vector2 position = projectile.Center - Main.screenPosition;
-			Vector2 origin = new Vector2(0, texture.Height / 2);
-			Vector2 scale = new Vector2(projectile.localAI[1] / 2f, 1f);
-			spriteBatch.Draw(texture, position, null, Color.White, projectile.velocity.ToRotation(), origin, scale, SpriteEffects.None, 0f);
+			Vector2 unit = projectile.velocity * projectile.localAI[1];
+			float length = unit.Length();
+			unit.Normalize();
+			byte colorStrength = (byte)(100f + 100f * Math.Sin(projectile.localAI[0] / 40f * MathHelper.TwoPi));
+			Color color = new Color(colorStrength, 255, colorStrength) * 0.8f;
+			for (float k = 0; k <= length; k += 4f)
+			{
+				Vector2 drawPos = projectile.Center + unit * k - Main.screenPosition;
+				spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, new Vector2(2, 2), 1f, SpriteEffects.None, 0f);
+			}
 			return false;
 		}
 	}

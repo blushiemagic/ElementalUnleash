@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles
+namespace Bluemagic.Items.Abomination.Projectiles
 {
 	public class MoltenDrill : ModProjectile
 	{

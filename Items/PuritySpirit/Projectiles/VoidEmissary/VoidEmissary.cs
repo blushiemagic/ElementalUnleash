@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Bluemagic.Projectiles;
 
-namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
+namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 {
 	public class VoidEmissary : Minion
 	{
@@ -421,7 +422,7 @@ namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
 			DrawHand(hand2, spriteBatch);
 			if (projectile.ai[0] == 3f)
 			{
-				Texture2D texture = mod.GetTexture("Projectiles/PuritySpiritWeap/VoidEmissary/VoidEmissaryCharge");
+				Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryCharge");
 				Vector2 position = projectile.Center - Main.screenPosition;
 				float alpha = Math.Abs((projectile.localAI[1] % 10f) / 5f - 1f);
 				alpha = 0.1f + 0.9f * alpha;
@@ -432,7 +433,7 @@ namespace Bluemagic.Projectiles.PuritySpiritWeap.VoidEmissary
 
 		private void DrawHand(VoidEmissaryHand hand, SpriteBatch spriteBatch)
 		{
-			Texture2D texture = mod.GetTexture("Projectiles/PuritySpiritWeap/VoidEmissary/VoidEmissaryHand");
+			Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryHand");
 			Vector2 position = hand.offset;
 			Rectangle frame = new Rectangle(0, 0, texture.Width, texture.Height / 2 - 2);
 			if (handsOpen)
