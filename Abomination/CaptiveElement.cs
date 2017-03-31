@@ -107,8 +107,8 @@ namespace Bluemagic.Abomination
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.6f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
+			npc.damage = (int)(npc.damage * 0.75f);
 		}
 
 		public override void AI()
@@ -165,6 +165,14 @@ namespace Bluemagic.Abomination
 				if (GetDebuff() >= 0f)
 				{
 					npc.buffImmune[GetDebuff()] = true;
+				}
+				if (captiveType == 2f)
+				{
+					npc.damage += 20;
+					if (Main.expertMode)
+					{
+						npc.damage += 20;
+					}
 				}
 				if (captiveType == 3f)
 				{

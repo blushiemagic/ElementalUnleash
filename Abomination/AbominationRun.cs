@@ -46,8 +46,8 @@ namespace Bluemagic.Abomination
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
+			npc.damage = (int)(npc.damage * 0.75f);
 		}
 
 		public override void AI()

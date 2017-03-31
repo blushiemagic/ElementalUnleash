@@ -21,9 +21,9 @@ namespace Bluemagic.PuritySpirit
 			npc.name = "PuritySpirit";
 			npc.displayName = "Spirit of Purity";
 			npc.aiStyle = -1;
-			npc.lifeMax = 200000;
+			npc.lifeMax = 400000;
 			npc.damage = 0;
-			npc.defense = 70;
+			npc.defense = 100;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = true;
 			npc.width = size;

@@ -124,8 +124,8 @@ namespace Bluemagic.Abomination
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
+			npc.damage = (int)(npc.damage * 0.75f);
 		}
 
 		public override void AI()
@@ -138,10 +138,6 @@ namespace Bluemagic.Abomination
 					Main.npc[captive].ai[0] = npc.whoAmI;
 					Main.npc[captive].ai[1] = k;
 					Main.npc[captive].ai[2] = 50 * (k + 1);
-					if (k == 2)
-					{
-						Main.npc[captive].damage += 20;
-					}
 					CaptiveElement.SetPosition(Main.npc[captive]);
 					Main.npc[captive].netUpdate = true;
 				}
