@@ -6,4 +6,6 @@ elemental purge now requres purium bars instead of element residue
 fixed bug where reviving under undead debuff counts as healing
 fixed bug where endless items don't work
 added purium equipment
+fixed bug where purity spirit stats don't scale in expert mode
+buffed the purity spirit to account for purium gear
 minor fixes and improvements

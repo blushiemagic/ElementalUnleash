@@ -27,7 +27,7 @@ namespace Bluemagic.PuritySpirit
 			projectile.alpha = 120;
 			Main.projFrames[projectile.type] = 4;
 			cooldownSlot = 1;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailingMode[projectile.type] = 2;
 			ProjectileID.Sets.TrailCacheLength[projectile.type] = 20;
 		}
 
@@ -124,19 +124,13 @@ namespace Bluemagic.PuritySpirit
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			for (int k = 0; k < projectile.oldPos.Length; k++)
+			Texture2D texture = Main.projectileTexture[projectile.type];
+			for (int k = projectile.oldPos.Length - 1; k >= 0; k--)
 			{
-				Vector2 previous = projectile.position;
-				if (k > 0)
+				if (k % 2 == 0)
 				{
-					previous = projectile.oldPos[k - 1];
-				}
-				Color alpha = new Color(0, 190, 0) * ((PuritySphere.strikeTime - k) / (float)PuritySphere.strikeTime);
-				Vector2 drawPos = projectile.oldPos[k] + projectile.Size / 2f - Main.screenPosition;
-				for (int j = 0; j < 4; j++)
-				{
-					spriteBatch.Draw(mod.GetTexture("Abomination/ElementLaser"), drawPos, null, alpha, k, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-					drawPos += (previous - projectile.oldPos[k]) / 4;
+					Color alpha = lightColor * (1f - (float)k / (float)projectile.oldPos.Length);
+					spriteBatch.Draw(texture, projectile.oldPos[k] + projectile.Size / 2f - Main.screenPosition, new Rectangle(0, projectile.frame * texture.Height / 4, texture.Width, texture.Height / 4), alpha, projectile.oldRot[k], new Vector2(20, 20), 1f, SpriteEffects.None, 0f);
 				}
 			}
 			return true;

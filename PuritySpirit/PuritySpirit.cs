@@ -42,14 +42,15 @@ namespace Bluemagic.PuritySpirit
 				npc.buffImmune[k] = true;
 			}
 			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
 			music = MusicID.Title;
 			bossBag = mod.ItemType("PuritySpiritBag");
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * 1.2f * bossLifeScale);
-			npc.defense = 72;
+			npc.lifeMax = (int)(npc.lifeMax * 0.6f * bossLifeScale);
+			npc.defense = 102;
 		}
 
 		private int difficulty
@@ -158,7 +159,7 @@ namespace Bluemagic.PuritySpirit
 
 		private IList<Particle> particles = new List<Particle>();
 		private float[,] aura = new float[size, size];
-		internal const int dpsCap = 5000;
+		internal const int dpsCap = 10000;
 		private int damageTotal = 0;
 		private bool saidRushMessage = false;
 		public readonly IList<int> targets = new List<int>();
@@ -410,10 +411,10 @@ namespace Bluemagic.PuritySpirit
 			{
 				float angle = 2f * (float)Math.PI / 10f * k;
 				Vector2 pos = center + radius * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-				int damage = 80;
+				int damage = 100;
 				if (Main.expertMode)
 				{
-					damage = (int)(100 / Main.expertDamage);
+					damage = (int)(75 / Main.expertDamage);
 				}
 				int proj = Projectile.NewProjectile(pos.X, pos.Y, 0f, 0f, mod.ProjectileType("PureCrystal"), damage, 0f, Main.myPlayer, npc.whoAmI, angle);
 				Main.projectile[proj].localAI[0] = radius;
@@ -563,7 +564,7 @@ namespace Bluemagic.PuritySpirit
 				int numAttacks = 3 + difficulty / 2;
 				float timer = 30f + 20f * timeMultiplier;
 				float totalTime = numAttacks * timer + 120f;
-				int damage = Main.expertMode ? 55 : 80;
+				int damage = Main.expertMode ? 60 : 80;
 				for (int k = 0; k < numAttacks; k++)
 				{
 					int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("NullLaser"), damage, 0f, Main.myPlayer, npc.whoAmI, (int)(60f + k * timer));
@@ -589,7 +590,7 @@ namespace Bluemagic.PuritySpirit
 		{
 			if (attackProgress == 0)
 			{
-				int damage = Main.expertMode ? 60 : 80;
+				int damage = Main.expertMode ? 75 : 100;
 				float time = 60f + 60f * timeMultiplier;
 				int rotationSpeed = Main.rand.Next(2) * 2 - 1;
 				int numSpheres = 3 + difficulty / 2;
@@ -787,10 +788,6 @@ namespace Bluemagic.PuritySpirit
 
 		public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			if (ProjectileID.Sets.StardustDragon[projectile.type])
-			{
-				damage /= 2;
-			}
 			ModifyHit(ref damage);
 		}
 

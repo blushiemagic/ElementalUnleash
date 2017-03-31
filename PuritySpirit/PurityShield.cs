@@ -16,7 +16,7 @@ namespace Bluemagic.PuritySpirit
 			npc.aiStyle = -1;
 			npc.lifeMax = PuritySpirit.dpsCap;
 			npc.damage = 0;
-			npc.defense = 70;
+			npc.defense = 100;
 			npc.knockBackResist = 0f;
 			npc.width = 80;
 			npc.height = 80;
@@ -31,12 +31,13 @@ namespace Bluemagic.PuritySpirit
 			}
 			Main.npcFrameCount[npc.type] = 4;
 			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
 			npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * bossLifeScale);
-			npc.defense = 72;
+			npc.defense = 102;
 		}
 
 		public override void AI()

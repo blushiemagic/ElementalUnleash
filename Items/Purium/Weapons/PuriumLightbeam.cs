@@ -19,9 +19,9 @@ namespace Bluemagic.Items.Purium.Weapons
 			item.useTime = 25;
 			item.noUseGraphic = true;
 			item.noMelee = true;
-			item.damage = 67;
+			item.damage = 79;
 			item.knockBack = 5f;
-			item.autoReuse = true;
+			item.autoReuse = false;
 			item.useTurn = false;
 			item.rare = 11;
 			item.melee = true;
