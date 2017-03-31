@@ -19,8 +19,8 @@ namespace Bluemagic.ChaosSpirit
 			npc.name = "ChaosSpirit";
 			npc.displayName = "Spirit of Chaos";
 			npc.aiStyle = -1;
-			npc.lifeMax = 200000;
-			npc.damage = 150;
+			npc.lifeMax = 400000;
+			npc.damage = 200;
 			npc.defense = 0;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = false;
@@ -536,7 +536,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
 			modPlayer.constantDamage = npc.damage;
-			modPlayer.percentDamage = 0.25f;
+			modPlayer.percentDamage = 1f / 3f;
 			if (Main.expertMode)
 			{
 				modPlayer.percentDamage *= 1.5f;

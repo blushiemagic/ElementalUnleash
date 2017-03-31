@@ -19,8 +19,8 @@ namespace Bluemagic.ChaosSpirit
 			npc.name = "ChaosSpiritArm";
 			npc.displayName = "Spirit of Chaos - Arm";
 			npc.aiStyle = -1;
-			npc.lifeMax = 200000;
-			npc.damage = 150;
+			npc.lifeMax = 400000;
+			npc.damage = 200;
 			npc.defense = 0;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = false;
@@ -292,7 +292,7 @@ namespace Bluemagic.ChaosSpirit
 			if (Main.netMode != 1 && attackTimer % 30 == 0 && attackTimer < 90)
 			{
 				const int numBits = 10;
-				int damage = 75;
+				int damage = 100;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -325,7 +325,7 @@ namespace Bluemagic.ChaosSpirit
 				if (difference != Vector2.Zero)
 				{
 					difference.Normalize();
-					int damage = 75;
+					int damage = 100;
 					if (Main.expertMode)
 					{
 						damage = (int)(damage * 1.5f / 2f);
@@ -356,7 +356,7 @@ namespace Bluemagic.ChaosSpirit
 					startRot = endRot;
 					endRot = temp;
 				}
-				int damage = 300;
+				int damage = 360;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -387,7 +387,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
 			modPlayer.constantDamage = npc.damage;
-			modPlayer.percentDamage = 0.25f;
+			modPlayer.percentDamage = 1f / 3f;
 			if (Main.expertMode)
 			{
 				modPlayer.percentDamage *= 1.5f;

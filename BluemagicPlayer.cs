@@ -530,7 +530,7 @@ namespace Bluemagic
 				if (chaosDefense)
 				{
 					double cap = Main.expertMode ? 75.0 : 50.0;
-					int reduction = (int)(cap * (1.0 - Math.Exp(-player.statDefense / 100.0)));
+					int reduction = (int)(cap * (1.0 - Math.Exp(-player.statDefense / 150.0)));
 					if (reduction < 0)
 					{
 						reduction = player.statDefense / 2;

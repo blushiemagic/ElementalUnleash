@@ -19,7 +19,7 @@ namespace Bluemagic.ChaosSpirit
 			npc.name = "ChaosSpirit";
 			npc.displayName = "Spirit of Chaos";
 			npc.aiStyle = -1;
-			npc.lifeMax = 200000;
+			npc.lifeMax = 400000;
 			npc.damage = 0;
 			npc.defense = 0;
 			npc.knockBackResist = 0f;
@@ -40,6 +40,7 @@ namespace Bluemagic.ChaosSpirit
 				npc.buffImmune[k] = true;
 			}
 			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
 			music = MusicID.Title;
 			bossBag = mod.ItemType("ChaosSpiritBag");
 		}

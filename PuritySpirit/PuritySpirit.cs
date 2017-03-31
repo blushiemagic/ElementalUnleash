@@ -674,7 +674,7 @@ namespace Bluemagic.PuritySpirit
 					netMessage.Write(true);
 					netMessage.Send();
 				}
-				stage = 10
+				stage = 10;
 				return false;
 			}
 			return true;

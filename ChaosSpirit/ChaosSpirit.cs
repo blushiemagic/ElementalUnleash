@@ -21,9 +21,9 @@ namespace Bluemagic.ChaosSpirit
 			npc.name = "ChaosSpirit";
 			npc.displayName = "Spirit of Chaos";
 			npc.aiStyle = -1;
-			npc.lifeMax = 200000;
-			npc.damage = 150;
-			npc.defense = 100;
+			npc.lifeMax = 400000;
+			npc.damage = 200;
+			npc.defense = 120;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = false;
 			npc.width = size;
@@ -47,7 +47,7 @@ namespace Bluemagic.ChaosSpirit
 		}
 
 		private List<ChaosOrb> orbs = new List<ChaosOrb>();
-		internal const int dpsCap = 5000;
+		internal const int dpsCap = 10000;
 		private int damageTotal = 0;
 		private bool saidRushMessage = false;
 		internal List<int> targets = new List<int>();
@@ -105,7 +105,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * 1.2f * bossLifeScale);
 			npc.damage = (int)(npc.damage * 0.75f);
-			npc.defense = 120;
+			npc.defense = 140;
 		}
 
 		public override void SendExtraAI(BinaryWriter writer)
@@ -505,7 +505,7 @@ namespace Bluemagic.ChaosSpirit
 				Player player = Main.player[target];
 				Vector2 targetPos = player.Center;
 				float rotation = MathHelper.TwoPi * Main.rand.NextFloat();
-				int damage = 150;
+				int damage = 200;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -549,7 +549,7 @@ namespace Bluemagic.ChaosSpirit
 				{
 					rotation = player.velocity.ToRotation();
 				}
-				int damage = 150;
+				int damage = 200;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -570,7 +570,7 @@ namespace Bluemagic.ChaosSpirit
 			if (attackProgress == 0 && Main.netMode != 1)
 			{
 				int target = RandomTarget();
-				int damage = 150;
+				int damage = 200;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -591,7 +591,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			if (attackProgress == 0 && Main.netMode != 1)
 			{
-				int damage = 150;
+				int damage = 200;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
@@ -650,7 +650,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
 			modPlayer.constantDamage = npc.damage;
-			modPlayer.percentDamage = 0.25f;
+			modPlayer.percentDamage = 1f / 3f;
 			if (Main.expertMode)
 			{
 				modPlayer.percentDamage *= 1.5f;
