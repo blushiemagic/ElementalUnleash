@@ -23,6 +23,7 @@ namespace Bluemagic.Tiles
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.addTile(Type);
 			dustType = 128;
+			animationFrameHeight = 38;
 			adjTiles = new int[] { TileID.Furnaces, TileID.Hellforge, TileID.AdamantiteForge };
 			AddMapEntry(new Color(100, 210, 100), "Purium Forge");
 		}
@@ -42,6 +43,7 @@ namespace Bluemagic.Tiles
 		public override void AnimateTile(ref int frame, ref int frameCounter)
 		{
 			frame = Main.tileFrame[TileID.AdamantiteForge];
+			Main.NewText(frame.ToString());
 		}
 
 		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height)
