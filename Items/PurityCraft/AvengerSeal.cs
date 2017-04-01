@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Avenger Seal";
-			item.toolTip = "22% increased damage";
+			item.toolTip = "27% increased damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;
@@ -20,11 +20,11 @@ namespace Bluemagic.Items.PurityCraft
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.meleeDamage += 0.22f;
-			player.rangedDamage += 0.22f;
-			player.magicDamage += 0.22f;
-			player.minionDamage += 0.22f;
-			player.thrownDamage += 0.22f;
+			player.meleeDamage += 0.27f;
+			player.rangedDamage += 0.27f;
+			player.magicDamage += 0.27f;
+			player.minionDamage += 0.27f;
+			player.thrownDamage += 0.27f;
 		}
 
 		public override void AddRecipes()

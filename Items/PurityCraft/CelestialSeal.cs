@@ -11,7 +11,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Celestial Seal";
-			item.toolTip = "25% increased magic damage";
+			item.toolTip = "30% increased magic damage";
 			item.toolTip2 = "Greatly increases pickup range and effectiveness of stars";
 			item.width = 24;
 			item.height = 24;
@@ -23,7 +23,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.manaMagnet = true;
-			player.magicDamage += 0.25f;
+			player.magicDamage += 0.3f;
 			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
 			modPlayer.manaMagnet2 = true;
 		}

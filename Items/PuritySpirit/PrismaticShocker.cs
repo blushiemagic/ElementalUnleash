@@ -11,7 +11,7 @@ namespace Bluemagic.Items.PuritySpirit
 		public override void SetDefaults()
 		{
 			item.name = "Prismatic Shocker";
-			item.damage = 164;
+			item.damage = 409;
 			item.magic = true;
 			item.width = 48;
 			item.height = 48;

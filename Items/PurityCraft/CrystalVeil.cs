@@ -17,7 +17,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Crystal Veil";
-			item.toolTip = "Causes crystals to fall and increases length of invincibility after taking damage";
+			item.toolTip = "Causes crystals to fall and greatly increases length of invincibility after taking damage";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;

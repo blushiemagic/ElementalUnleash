@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Warrior Seal";
-			item.toolTip = "25% increased melee damage";
+			item.toolTip = "30% increased melee damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;
@@ -20,7 +20,7 @@ namespace Bluemagic.Items.PurityCraft
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.meleeDamage += 0.25f;
+			player.meleeDamage += 0.3f;
 		}
 
 		public override void AddRecipes()

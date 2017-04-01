@@ -29,20 +29,20 @@ namespace Bluemagic.Items.PurityCraft
 				player.hideMerman = true;
 				player.hideWolf = true;
 			}
-			player.lifeRegen += 5;
-			player.statDefense += 10;
+			player.lifeRegen += 6;
+			player.statDefense += 12;
 			player.meleeSpeed += 0.2f;
-			player.meleeDamage += 0.14f;
-			player.meleeCrit += 5;
-			player.rangedDamage += 0.14f;
-			player.rangedCrit += 5;
-			player.magicDamage += 0.14f;
-			player.magicCrit += 5;
+			player.meleeDamage += 0.15f;
+			player.meleeCrit += 10;
+			player.rangedDamage += 0.15f;
+			player.rangedCrit += 10;
+			player.magicDamage += 0.15f;
+			player.magicCrit += 10;
 			player.pickSpeed -= 0.25f;
-			player.minionDamage += 0.14f;
+			player.minionDamage += 0.15f;
 			player.minionKB += 0.75f;
-			player.thrownDamage += 0.14f;
-			player.thrownCrit += 5;
+			player.thrownDamage += 0.15f;
+			player.thrownCrit += 10;
 		}
 
 		public override DrawAnimation GetAnimation()

@@ -1,12 +1,24 @@
-/*using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
-using TAPI;
+using Terraria.ModLoader;
 
-namespace Bluemagic.Projectiles
+namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PuriumStaff : ModProjectile
 	{
+		public override void SetDefaults()
+		{
+			projectile.name = "Purium Staff";
+			projectile.width = 10;
+			projectile.height = 10;
+			projectile.alpha = 255;
+			projectile.magic = true;
+			projectile.friendly = true;
+			projectile.tileCollide = false;
+			projectile.ignoreWater = true;
+		}
+
 		public override void AI()
 		{
 			if (projectile.soundDelay == 0 && System.Math.Abs(projectile.velocity.X) + System.Math.Abs(projectile.velocity.Y) > 2f)
@@ -23,12 +35,12 @@ namespace Bluemagic.Projectiles
 				Main.dust[dust].position.Y = projectile.Center.Y + (float)Main.rand.Next(-2, 3);
 				Main.dust[dust].noGravity = true;
 			}
-			Lighting.AddLight(projectile.Center, Bluemagic.PureColor);
+			Lighting.AddLight(projectile.Center, Bluemagic.PureColor.ToVector3());
 			if (Main.myPlayer == projectile.owner && projectile.ai[0] == 0f)
 			{
 				if (Main.player[projectile.owner].channel)
 				{
-					float num146 = 12f;
+					float num146 = 16f;
 					Vector2 vector10 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
 					float num147 = (float)Main.mouseX + Main.screenPosition.X - vector10.X;
 					float num148 = (float)Main.mouseY + Main.screenPosition.Y - vector10.Y;
@@ -109,7 +121,7 @@ namespace Bluemagic.Projectiles
 			}
 		}
 
-		public override void Kill()
+		public override void Kill(int timeLeft)
 		{
 			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
 			for (int k = 0; k < 20; k++)
@@ -120,4 +132,4 @@ namespace Bluemagic.Projectiles
 			}
 		}
 	}
-}*/
+}

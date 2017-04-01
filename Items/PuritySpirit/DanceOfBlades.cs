@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PuritySpirit
 		public override void SetDefaults()
 		{
 			item.name = "Dance of Blades";
-			item.damage = 200;
+			item.damage = 500;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;

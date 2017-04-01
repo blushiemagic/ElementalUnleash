@@ -16,7 +16,7 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.scale = 1.4f;
 			projectile.alpha = 100;
 			projectile.friendly = true;
-			projectile.tileCollide = true;
+			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.penetrate = -1;
 			projectile.melee = true;

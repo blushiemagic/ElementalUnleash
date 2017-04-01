@@ -9,7 +9,7 @@ namespace Bluemagic.Items.PuritySpirit
 		public override void SetDefaults()
 		{
 			item.name = "Emblem of the Void";
-			item.damage = 162;
+			item.damage = 612;
 			item.summon = true;
 			item.mana = 10;
 			item.width = 28;

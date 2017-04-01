@@ -22,9 +22,9 @@ namespace Bluemagic.Items.PurityCraft
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.minionDamage += 0.25f;
+			player.minionDamage += 0.3f;
 			player.minionKB += 2.5f;
-			player.maxMinions += 2;
+			player.maxMinions += 3;
 		}
 
 		public override void AddRecipes()

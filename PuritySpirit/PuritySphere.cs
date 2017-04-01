@@ -127,9 +127,9 @@ namespace Bluemagic.PuritySpirit
 			Texture2D texture = Main.projectileTexture[projectile.type];
 			for (int k = projectile.oldPos.Length - 1; k >= 0; k--)
 			{
-				if (k % 2 == 0)
+				if (k % 4 == 0)
 				{
-					Color alpha = lightColor * (1f - (float)k / (float)projectile.oldPos.Length);
+					Color alpha = GetAlpha(lightColor).Value * (1f - (float)k / (float)projectile.oldPos.Length);
 					spriteBatch.Draw(texture, projectile.oldPos[k] + projectile.Size / 2f - Main.screenPosition, new Rectangle(0, projectile.frame * texture.Height / 4, texture.Width, texture.Height / 4), alpha, projectile.oldRot[k], new Vector2(20, 20), 1f, SpriteEffects.None, 0f);
 				}
 			}

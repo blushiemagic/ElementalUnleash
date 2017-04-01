@@ -15,6 +15,7 @@ namespace Bluemagic.Buffs
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
+			Main.buffNoTimeDisplay[Type] = true;
 			longerExpertDebuff = true;
 			canBeCleared = false;
 		}

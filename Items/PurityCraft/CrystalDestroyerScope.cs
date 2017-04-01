@@ -12,7 +12,7 @@ namespace Bluemagic.Items.PurityCraft
 		{
 			item.name = "Crystal Destroyer Scope";
 			item.toolTip = "Increases view range for guns (Right click to zoom out)";
-			item.toolTip2 = "+20% ranged damage, +18% critical strike chance";
+			item.toolTip2 = "+25% ranged damage, +25% critical strike chance";
 			item.width = 14;
 			item.height = 28;
 			item.accessory = true;
@@ -23,8 +23,8 @@ namespace Bluemagic.Items.PurityCraft
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.scope = true;
-			player.rangedDamage += 0.2f;
-			player.rangedCrit += 18;
+			player.rangedDamage += 0.25f;
+			player.rangedCrit += 25;
 		}
 
 		public override void AddRecipes()

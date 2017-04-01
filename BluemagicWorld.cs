@@ -84,6 +84,11 @@ namespace Bluemagic
 			modPlayer.voidMonolith = false;
 		}
 
+		public override void PostUpdate()
+		{
+			Bluemagic.UpdatePureColor();
+		}
+
 		public static void GenPurium()
 		{
 			if (Main.netMode == 1 || WorldGen.noTileActions || WorldGen.gen || !NPC.downedMoonlord)

@@ -39,6 +39,7 @@ namespace Bluemagic
 		public const float buffImmuneCost = 50f;
 		public const float reviveCost = 1000f;
 		private int miscTimer = 0;
+		public bool purityMinion = false;
 
 		public int heroLives = 0;
 		public int reviveTime = 0;
@@ -74,11 +75,17 @@ namespace Bluemagic
 
 		public override void ResetEffects()
 		{
+			if (lifeMagnet2)
+			{
+				player.potionDelayTime = (int)(player.potionDelayTime * 0.8f);
+				player.restorationDelayTime = (int)(player.restorationDelayTime * 0.8f);
+			}
 			eFlames = false;
 			customMeleeEnchant = 0;
 			elementShield = false;
 			puriumShieldChargeMax = 0f;
 			puriumShieldChargeRate = 1f;
+			purityMinion = false;
 			constantDamage = 0;
 			percentDamage = 0f;
 			defenseEffect = -1f;
@@ -647,6 +654,33 @@ namespace Bluemagic
 			}
 		}
 
+		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		{
+			if (!pvp && crystalCloak)
+			{
+				int immuneTime = 0;
+				if (damage == 1.0)
+				{
+					immuneTime = 40;
+				}
+				else
+				{
+					immuneTime = 80;
+				}
+				if (player.immuneTime == immuneTime)
+				{
+					player.immuneTime += 20;
+				}
+				for (int k = 0; k < player.hurtCooldowns.Length; k++)
+				{
+					if (player.hurtCooldowns[k] == immuneTime)
+					{
+						player.hurtCooldowns[k] += 20;
+					}
+				}
+			}
+		}
+
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
 			if (puriumShieldChargeMax > 0f && puriumShieldCharge >= reviveCost)
@@ -656,6 +690,10 @@ namespace Bluemagic
 				StartBadHeal();
 				player.immune = true;
 				player.immuneTime = player.longInvince ? 180 : 120;
+				if (crystalCloak)
+				{
+					player.immuneTime += 60;
+				}
 				for (int k = 0; k < player.hurtCooldowns.Length; k++)
 				{
 					player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
@@ -680,6 +718,10 @@ namespace Bluemagic
 					StartBadHeal();
 					player.immune = true;
 					player.immuneTime = player.longInvince ? 180 : 120;
+					if (crystalCloak)
+					{
+						player.immuneTime += 60;
+					}
 					for (int k = 0; k < player.hurtCooldowns.Length; k++)
 					{
 						player.hurtCooldowns[k] = player.longInvince ? 180 : 120;

@@ -8,4 +8,6 @@ fixed bug where endless items don't work
 added purium equipment
 fixed bug where purity spirit stats don't scale in expert mode
 buffed the purity spirit to account for purium gear
+buffed most of the purity spirit drops
+buffed the chaos spirit to account for everything else getting buffed
 minor fixes and improvements

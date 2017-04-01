@@ -19,7 +19,7 @@ namespace Bluemagic.Items.PurityCraft
 		{
 			item.name = "Flaming Crystal Gauntlet";
 			item.toolTip = "Increases melee knockback and inflicts fire damage on attack";
-			item.toolTip2 = "20% increased melee damage and speed";
+			item.toolTip2 = "25% increased melee damage and speed";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;
@@ -30,8 +30,8 @@ namespace Bluemagic.Items.PurityCraft
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.kbGlove = true;
-			player.meleeSpeed += 0.2f;
-			player.meleeDamage += 0.2f;
+			player.meleeSpeed += 0.25f;
+			player.meleeDamage += 0.25f;
 			player.magmaStone = true;
 		}
 

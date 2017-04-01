@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PuritySpirit
 		public override void SetDefaults()
 		{
 			item.name = "Cleanser Beam";
-			item.damage = 136;
+			item.damage = 212;
 			item.ranged = true;
 			item.width = 64;
 			item.height = 24;

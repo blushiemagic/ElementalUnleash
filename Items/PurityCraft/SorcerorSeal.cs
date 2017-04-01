@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Sorceror Seal";
-			item.toolTip = "25% increased magic damage";
+			item.toolTip = "30% increased magic damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;
@@ -20,7 +20,7 @@ namespace Bluemagic.Items.PurityCraft
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.magicDamage += 0.25f;
+			player.magicDamage += 0.3f;
 		}
 
 		public override void AddRecipes()

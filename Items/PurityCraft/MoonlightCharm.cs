@@ -17,7 +17,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Moonlight Charm";
-			item.toolTip = "Provides huge life regeneration and reduces the cooldown of healing potions";
+			item.toolTip = "Provides huge life regeneration and greatly reduces the cooldown of healing potions";
 			item.toolTip2 = "Increases pickup range and effectiveness of hearts";
 			item.width = 16;
 			item.height = 24;

@@ -13,6 +13,7 @@ namespace Bluemagic.Buffs
 			Main.buffTip[this.Type] = "You are a hero of Terraria!";
 			Main.buffNoSave[Type] = true;
 			Main.debuff[Type] = true;
+			Main.buffNoTimeDisplay[Type] = true;
 			canBeCleared = false;
 		}
 	}

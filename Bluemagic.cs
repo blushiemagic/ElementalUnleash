@@ -18,9 +18,20 @@ namespace Bluemagic
 	{
 		public static Mod Instance;
 
+		private static Color pureColor = new Color(100, 255, 100);
+		private static int pureColorStyle = 0;
+
 		public const string captiveElementHead = "Bluemagic/Abomination/CaptiveElement_Head_Boss_";
 		public const string captiveElement2Head = "Bluemagic/Abomination/CaptiveElement2_Head_Boss_";
 		public static bool freezeHeroLives = false;
+
+		public static Color PureColor
+		{
+			get
+			{
+				return pureColor;
+			}
+		}
 
 		public Bluemagic()
 		{
@@ -149,6 +160,13 @@ namespace Bluemagic
 		public override void ModifyInterfaceLayers(List<MethodSequenceListItem> layers)
 		{
 			InterfaceHelper.ModifyInterfaceLayers(layers);
+		}
+
+		public static void UpdatePureColor()
+		{
+			pureColor.R = (byte)(255 - 155f * Math.Abs(Math.Cos(pureColorStyle * Math.PI / 200.0)));
+			pureColor.B = pureColor.R;
+			pureColorStyle = (pureColorStyle + 1) % 200;
 		}
 	}
 
