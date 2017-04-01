@@ -29,6 +29,8 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 			projectile.minion = true;
 			projectile.minionSlots = 1;
 			projectile.penetrate = -1;
+			projectile.usesLocalNPCImmunity = true;
+			projectile.localNPCHitCooldown = 10;
 			projectile.timeLeft = 18000;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;

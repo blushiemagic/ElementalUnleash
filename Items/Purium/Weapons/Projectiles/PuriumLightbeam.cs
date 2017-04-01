@@ -13,7 +13,7 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 
 		public override bool Autoload(ref string name, ref string texture)
 		{
-			texture = "Bluemagic/Items/Purium/Weapons/PuriumBullet";
+			texture = "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
 			return base.Autoload(ref name, ref texture);
 		}
 

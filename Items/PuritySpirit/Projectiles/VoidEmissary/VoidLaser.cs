@@ -17,6 +17,8 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 			projectile.height = 20;
 			projectile.aiStyle = 84;
 			projectile.penetrate = -1;
+			projectile.usesLocalNPCImmunity = true;
+			projectile.localNPCHitCooldown = 10;
 			projectile.friendly = true;
 			projectile.ranged = true;
 			projectile.tileCollide = false;

@@ -15,6 +15,8 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			projectile.height = 220;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
+			projectile.usesLocalNPCImmunity = true;
+			projectile.localNPCHitCooldown = 10;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.hide = true;
