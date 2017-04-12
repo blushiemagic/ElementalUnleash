@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace Bluemagic
+namespace Bluemagic.Interface
 {
 	public static class InterfaceHelper
 	{
@@ -17,6 +17,10 @@ namespace Bluemagic
 				if (layers[k].Name == "Vanilla: Resource Bars")
 				{
 					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar, layers[k]));
+				}
+				else if (layers[k].Name == "Vanilla: Inventory")
+				{
+					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Custom Stats", DrawCustomStats, layers[k]));
 				}
 				else if (layers[k].Name == "Vanilla: Mouse Over")
 				{
@@ -61,9 +65,16 @@ namespace Bluemagic
 			return true;
 		}
 
+		private static bool DrawCustomStats()
+		{
+			CustomStatsGUI.Draw();
+			return true;
+		}
+
 		private static bool DrawMouseOver()
 		{
 			DrawPuriumShieldMouseOver();
+			CustomStatsGUI.DrawMouseOver();
 			return true;
 		}
 
@@ -91,9 +102,10 @@ namespace Bluemagic
 			if (Main.mouseX > screenAnchorX && Main.mouseX < screenAnchorX + barSize && Main.mouseY > 32 && Main.mouseY < 32 + barHeight)
 			{
 				Main.player[Main.myPlayer].showItemIcon = false;
+				float enduranceCap = (int)(20 * modPlayer.puriumShieldEnduranceMult);
 				string text = "Damaging enemies powers a purity shield around you";
 				text += "\nShield also regenerates over time";
-				text += "\nReduces damage by up to 20% depending on charge";
+				text += "\nReduces damage by up to " + enduranceCap + "% depending on charge";
 				text += "\nTaking damage consumes shield depending on damage";
 				text += "\nShield can consume 50 charge to protect you from debuffs";
 				text += "\nShield can consume 1,000 charge to protect you from fatal damage";

@@ -24,7 +24,7 @@ namespace Bluemagic.Items.Purium.Weapons
 			item.autoReuse = false;
 			item.useTurn = false;
 			item.rare = 11;
-			item.melee = true;
+			item.magic = true;
 			item.value = Item.sellPrice(0, 12, 0, 0);
 			item.UseSound = SoundID.Item28;
 			item.shoot = mod.ProjectileType("PuriumStaff");

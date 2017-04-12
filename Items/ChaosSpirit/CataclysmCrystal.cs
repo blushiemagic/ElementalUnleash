@@ -13,7 +13,6 @@ namespace Bluemagic.Items.ChaosSpirit
 		{
 			item.name = "Cataclysm Crystal";
 			item.toolTip = "Grants one cataclysm point";
-			item.toolTip2 = "WIP";
 			item.width = 28;
 			item.height = 28;
 			item.maxStack = 99;
@@ -34,12 +33,14 @@ namespace Bluemagic.Items.ChaosSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			return false;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).cataclysmStats;
+			return stats.CanUpgrade();
 		}
 
 		public override bool UseItem(Player player)
 		{
-			//player.GetModPlayer<BluemagicPlayer>(mod).cataclysmPoints++;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).cataclysmStats;
+			stats.Points++;
 			return true;
 		}
 

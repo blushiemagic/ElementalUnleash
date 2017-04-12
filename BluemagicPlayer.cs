@@ -24,6 +24,7 @@ namespace Bluemagic
 
 		public float puriumShieldChargeMax = 0f;
 		public float puriumShieldChargeRate = 1f;
+		public float puriumShieldEnduranceMult = 1f;
 		public const float puriumShieldDamageEffectiveness = 0.002f;
 		public int[] buffImmuneCounter;
 		public static List<int> buffImmuneBlacklist = new List<int>(new int[]
@@ -62,15 +63,19 @@ namespace Bluemagic
 		public int chaosPressure = 0;
 		public float suppression = 0f;
 		public float ammoCost = 0f;
+		public float thrownCost = 0f;
+		public int cancelBadRegen = 0;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
-		//public int chaosPoints = 0;
-		//public int cataclysmPoints = 0;
+		public CustomStats chaosStats;
+		public CustomStats cataclysmStats;
 
 		public override void Initialize()
 		{
 			buffImmuneCounter = new int[player.buffImmune.Length];
+			chaosStats = CustomStats.CreateChaosStats();
+			cataclysmStats = CustomStats.CreateCataclysmStats();
 		}
 
 		public override void ResetEffects()
@@ -85,6 +90,7 @@ namespace Bluemagic
 			elementShield = false;
 			puriumShieldChargeMax = 0f;
 			puriumShieldChargeRate = 1f;
+			puriumShieldEnduranceMult = 1f;
 			purityMinion = false;
 			constantDamage = 0;
 			percentDamage = 0f;
@@ -100,6 +106,8 @@ namespace Bluemagic
 			chaosPressure = 0;
 			suppression = 0f;
 			ammoCost = 0f;
+			thrownCost = 0f;
+			cancelBadRegen = 0;
 		}
 
 		public override void UpdateDead()
@@ -115,12 +123,24 @@ namespace Bluemagic
 			TagCompound tag = new TagCompound();
 			tag["version"] = 0;
 			tag["puriumShieldCharge"] = puriumShieldCharge;
+			tag["chaosStats"] = chaosStats.Save();
+			tag["cataclysmStats"] = cataclysmStats.Save();
 			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
 			puriumShieldCharge = tag.GetFloat("puriumShieldCharge");
+			TagCompound tagStats = tag.GetCompound("chaosStats");
+			if (tagStats != null)
+			{
+				chaosStats.Load(tagStats);
+			}
+			tagStats = tag.GetCompound("cataclysmStats");
+			if (tagStats != null)
+			{
+				cataclysmStats.Load(tagStats);
+			}
 		}
 
 		private bool AnyChaosSpirit()
@@ -170,6 +190,18 @@ namespace Bluemagic
 				if (player.lifeRegenTime < 0)
 				{
 					player.lifeRegenTime = 0;
+				}
+			}
+		}
+
+		public override void UpdateLifeRegen()
+		{
+			if (player.lifeRegen < 0 && cancelBadRegen > 0)
+			{
+				player.lifeRegen += cancelBadRegen;
+				if (player.lifeRegen > 0)
+				{
+					player.lifeRegen = 0;
 				}
 			}
 		}
@@ -433,6 +465,11 @@ namespace Bluemagic
 			}
 			elementShieldPos++;
 			elementShieldPos %= 300;
+			chaosStats.Update(player);
+			if (Main.expertMode)
+			{
+				cataclysmStats.Update(player);
+			}
 		}
 
 		public override void PostUpdateMiscEffects()
@@ -486,9 +523,9 @@ namespace Bluemagic
 		private float PuriumShieldEndurance()
 		{
 			float enduranceFill = puriumShieldCharge / reviveCost;
-			if (enduranceFill > 1f)
+			if (enduranceFill > puriumShieldEnduranceMult)
 			{
-				enduranceFill = 1f;
+				enduranceFill = puriumShieldEnduranceMult;
 			}
 			return 0.2f * enduranceFill;
 		}
@@ -601,7 +638,7 @@ namespace Bluemagic
 					Vector2 offset = player.Center - crystalPos;
 					offset.X += (float)Main.rand.Next(-50, 51);
 					offset *= 28f / offset.Length();
-					int proj = Projectile.NewProjectile(crystalPos.X, crystalPos.Y, offset.X, offset.Y, mod.ProjectileType("CrystalStar"), 80, 6f, player.whoAmI, 0f, 0f);
+					int proj = Projectile.NewProjectile(crystalPos.X, crystalPos.Y, offset.X, offset.Y, mod.ProjectileType("CrystalStar"), 100, 6f, player.whoAmI, 0f, 0f);
 					Main.projectile[proj].ai[1] = player.position.Y;
 				}
 			}
@@ -945,6 +982,18 @@ namespace Bluemagic
 					}
 				}
 			});
+		public static readonly PlayerLayer PreHeldItem = new PlayerLayer("Bluemagic", "PreHeldItem", PlayerLayer.HeldItem, delegate(PlayerDrawInfo drawInfo)
+			{
+				Mod mod = Bluemagic.Instance;
+				Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystalNoAnim");
+				Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystalNoAnim");
+			});
+		public static readonly PlayerLayer PostHeldItem = new PlayerLayer("Bluemagic", "PostHeldItem", PlayerLayer.HeldItem, delegate(PlayerDrawInfo drawInfo)
+			{
+				Mod mod = Bluemagic.Instance;
+				Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystal");
+				Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystal");
+			});
 
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
@@ -954,6 +1003,16 @@ namespace Bluemagic
 			layers.Insert(0, MiscEffectsBack);
 			MiscEffects.visible = true;
 			layers.Add(MiscEffects);
+			for (int k = 0; k < layers.Count; k++)
+			{
+				if (layers[k] == PlayerLayer.HeldItem)
+				{
+					layers.Insert(k, PreHeldItem);
+					k++;
+					layers.Insert(k + 1, PostHeldItem);
+					k++;
+				}
+			}
 		}
 	}
 }

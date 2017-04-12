@@ -8,6 +8,16 @@ namespace Bluemagic
 {
 	public class BluemagicItem : GlobalItem
 	{
+		public override bool ConsumeItem(Item item, Player player)
+		{
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			if (item.thrown && Main.rand.NextFloat() < modPlayer.thrownCost)
+			{
+				return false;
+			}
+			return base.ConsumeItem(item, player);
+		}
+
 		public override void GrabRange(Item item, Player player, ref int grabRange)
 		{
 			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);

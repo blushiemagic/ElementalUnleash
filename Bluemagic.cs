@@ -9,6 +9,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Bluemagic.ChaosSpirit;
+using Bluemagic.Interface;
 using Bluemagic.PuritySpirit;
 using Bluemagic.Tiles;
 
