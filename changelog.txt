@@ -1,2 +1,3 @@
 fixed bug where purium stuff does melee damage
 spirit of chaos drops can now be used to permanenty upgrade stats
+elemental purge and purium ore spread the purity

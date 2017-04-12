@@ -28,6 +28,23 @@ namespace Bluemagic.Tiles
 			AddMapEntry(new Color(100, 210, 100), "Purium");
 		}
 
+		public override void RandomUpdate(int i, int j)
+		{
+			for (int x = -5; x <= 5; x++)
+			{
+				for (int y = -5; y <= 5; y++)
+				{
+					WorldGen.Convert(i + x, j + y, 0, 0);
+					Tile tile = Main.tile[i + x, j + y];
+					if (tile.active() && (tile.type == TileID.Demonite || tile.type == TileID.Crimtane))
+					{
+						tile.type = (ushort)mod.TileType("PuriumOre");
+						NetMessage.SendTileRange(Main.myPlayer, i + x, j + y, 1, 1);
+					}
+				}
+			}
+		}
+
 		public override bool CanExplode(int i, int j)
 		{
 			return false;
