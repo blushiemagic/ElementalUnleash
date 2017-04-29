@@ -58,6 +58,7 @@ namespace Bluemagic
 		public bool crystalCloak = false;
 		public bool lifeMagnet2 = false;
 		public bool voidEmissary = false;
+		public bool purityShieldMount = false;
 
 		private int chaosWarningCooldown = 0;
 		public int chaosPressure = 0;
@@ -103,6 +104,7 @@ namespace Bluemagic
 			crystalCloak = false;
 			lifeMagnet2 = false;
 			voidEmissary = false;
+			purityShieldMount = false;
 			chaosPressure = 0;
 			suppression = 0f;
 			ammoCost = 0f;
@@ -535,6 +537,12 @@ namespace Bluemagic
 			StartBadHeal();
 			miscTimer++;
 			miscTimer %= 60;
+			if (purityShieldMount)
+			{
+				player.hairFrame.Y = 5 * player.hairFrame.Height;
+				player.headFrame.Y = 5 * player.headFrame.Height;
+				player.legFrame.Y = 5 * player.legFrame.Height;
+			}
 		}
 
 		public override void FrameEffects()
@@ -938,7 +946,7 @@ namespace Bluemagic
 						Main.playerDrawDust.Add(dust);
 					}
 				}
-				if (modPlayer.puriumShieldChargeMax > 0f && modPlayer.puriumShieldCharge > 0f)
+				if (modPlayer.puriumShieldChargeMax > 0f && modPlayer.puriumShieldCharge > 0f && !modPlayer.purityShieldMount)
 				{
 					Texture2D texture = mod.GetTexture("PuriumShield");
 					int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
@@ -951,6 +959,21 @@ namespace Bluemagic
 					strength = 0.1f + strength * 0.2f;
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
 					data.shader = drawInfo.bodyArmorShader;
+					Main.playerDrawData.Add(data);
+				}
+				if (modPlayer.purityShieldMount)
+				{
+					Texture2D texture = mod.GetTexture("Mounts/PurityShield");
+					int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+					int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
+					float strength = (modPlayer.miscTimer % 30f) / 15f;
+					if (strength > 1f)
+					{
+						strength = 2f - strength;
+					}
+					strength = 0.4f + strength * 0.2f;
+					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+					data.shader = drawInfo.drawPlayer.miscDyes[3].dye;
 					Main.playerDrawData.Add(data);
 				}
 			});
