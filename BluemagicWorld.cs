@@ -123,6 +123,18 @@ namespace Bluemagic
 		public override void PostUpdate()
 		{
 			Bluemagic.UpdatePureColor();
+			if (Main.eclipse)
+			{
+				eclipsePassed = true;
+			}
+			if (Main.pumpkinMoon && NPC.waveNumber >= 15)
+			{
+				pumpkinMoonPassed = true;
+			}
+			if (Main.snowMoon && NPC.waveNumber >= 15)
+			{
+				snowMoonPassed = true;
+			}
 		}
 
 		public static void GenPurium()
