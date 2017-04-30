@@ -936,7 +936,7 @@ namespace Bluemagic
 				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>(mod);
 				if (modPlayer.badHeal)
 				{
-					Texture2D texture = mod.GetTexture("Buffs/Skull");
+					Texture2D texture = mod.GetTexture("Buffs/PuritySpirit/Skull");
 					int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 					int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);

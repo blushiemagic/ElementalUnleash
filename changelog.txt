@@ -1,2 +1,4 @@
 Added the Purity Shield mount
 Added the Hardmode Guide
+Added phantom weapons
+Support for boss checklist summoning info
