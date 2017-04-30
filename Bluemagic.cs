@@ -71,10 +71,10 @@ namespace Bluemagic
 			Mod bossList = ModLoader.GetMod("BossChecklist");
 			if (bossList != null)
 			{
-				bossList.Call("AddBoss", "The Abomination", 12.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination));
-				bossList.Call("AddBoss", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination2 > 0));
-				bossList.Call("AddBoss", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit));
-				bossList.Call("AddBoss", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit));
+				bossList.Call("AddBossWithInfo", "The Abomination", 12.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination), string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", ItemType("FoulOrb")));
+				bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination2 > 0), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated)", ItemType("FoulOrb")));
+				bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
+				bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
 			}
 		}
 
