@@ -16,6 +16,7 @@ namespace Bluemagic
 	{
 		public bool eFlames = false;
 		public int customMeleeEnchant = 0;
+		public bool paladinMinion = false;
 		public bool elementShield = false;
 		public int elementShields = 0;
 		private int elementShieldTimer = 0;
@@ -88,6 +89,7 @@ namespace Bluemagic
 			}
 			eFlames = false;
 			customMeleeEnchant = 0;
+			paladinMinion = false;
 			elementShield = false;
 			puriumShieldChargeMax = 0f;
 			puriumShieldChargeRate = 1f;
