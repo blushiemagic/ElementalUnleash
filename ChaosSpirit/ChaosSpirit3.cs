@@ -89,6 +89,12 @@ namespace Bluemagic.ChaosSpirit
 			npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * 1.2f * bossLifeScale);
 		}
 
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			scale = 2f;
+			return null;
+		}
+
 		public override void AI()
 		{
 			Bluemagic.freezeHeroLives = false;

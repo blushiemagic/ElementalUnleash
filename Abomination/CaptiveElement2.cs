@@ -118,6 +118,12 @@ namespace Bluemagic.Abomination
 			npc.damage = (int)(npc.damage * 0.75f);
 		}
 
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			scale = 1.5f;
+			return null;
+		}
+
 		public override void AI()
 		{
 			Player player = Main.player[npc.target];

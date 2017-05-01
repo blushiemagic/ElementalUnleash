@@ -40,6 +40,12 @@ namespace Bluemagic.PuritySpirit
 			npc.defense = 102;
 		}
 
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			scale = 1.5f;
+			return null;
+		}
+
 		public override void AI()
 		{
 			NPC owner = Main.npc[(int)npc.ai[0]];

@@ -104,6 +104,12 @@ namespace Bluemagic.ChaosSpirit
 			npc.damage = (int)(npc.damage * 0.75f);
 		}
 
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			scale = 2f;
+			return null;
+		}
+
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			writer.Write(npc.localAI[0]);
