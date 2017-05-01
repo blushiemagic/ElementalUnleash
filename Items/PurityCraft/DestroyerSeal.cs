@@ -38,7 +38,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(null, "AvengerSeal");
 			recipe.AddIngredient(ItemID.DestroyerEmblem);
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

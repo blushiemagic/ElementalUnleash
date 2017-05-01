@@ -36,8 +36,8 @@ namespace Bluemagic.Items.PurityCraft
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.StarVeil);
-			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddIngredient(null, "InfinityCrystal", 2);
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

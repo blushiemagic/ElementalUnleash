@@ -41,7 +41,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(ItemID.FireGauntlet);
 			recipe.AddIngredient(null, "WarriorSeal");
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

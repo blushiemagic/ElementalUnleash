@@ -55,7 +55,7 @@ namespace Bluemagic.Items.PurityCraft
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.CelestialShell);
 			recipe.AddIngredient(null, "InfinityCrystal", 4);
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

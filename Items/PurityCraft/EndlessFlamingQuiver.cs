@@ -28,7 +28,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(ItemID.EndlessQuiver);
 			recipe.AddIngredient(null, "InfinityCrystal");
 			recipe.AddIngredient(ItemID.FlamingArrow, 3996);
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

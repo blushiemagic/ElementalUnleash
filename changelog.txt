@@ -2,3 +2,5 @@ Added the Purity Shield mount
 Added the Hardmode Guide
 Added phantom weapons
 Support for boss checklist summoning info
+Rebalanced recipes and effects of infinity crystal items
+infinity crystal items now require purium anvil instead of elemental purge

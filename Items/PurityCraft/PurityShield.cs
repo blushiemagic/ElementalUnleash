@@ -28,7 +28,7 @@ namespace Bluemagic.Items.PurityCraft
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(null, "InfinityCrystal", 2);
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

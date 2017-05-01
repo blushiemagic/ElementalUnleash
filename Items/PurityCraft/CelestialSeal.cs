@@ -34,7 +34,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(ItemID.CelestialEmblem);
 			recipe.AddIngredient(null, "SorcerorSeal");
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

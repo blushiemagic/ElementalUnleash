@@ -28,14 +28,14 @@ namespace Bluemagic.Items.PurityCraft
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.SorcererEmblem);
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 
 			recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.AvengerEmblem);
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

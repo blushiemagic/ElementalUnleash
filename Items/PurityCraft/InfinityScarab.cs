@@ -33,7 +33,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(ItemID.PapyrusScarab);
 			recipe.AddIngredient(null, "SummonerSeal");
 			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

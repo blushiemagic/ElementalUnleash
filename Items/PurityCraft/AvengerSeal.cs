@@ -10,7 +10,7 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetDefaults()
 		{
 			item.name = "Avenger Seal";
-			item.toolTip = "27% increased damage";
+			item.toolTip = "30% increased damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;
@@ -20,11 +20,11 @@ namespace Bluemagic.Items.PurityCraft
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.meleeDamage += 0.27f;
-			player.rangedDamage += 0.27f;
-			player.magicDamage += 0.27f;
-			player.minionDamage += 0.27f;
-			player.thrownDamage += 0.27f;
+			player.meleeDamage += 0.3f;
+			player.rangedDamage += 0.3f;
+			player.magicDamage += 0.3f;
+			player.minionDamage += 0.3f;
+			player.thrownDamage += 0.3f;
 		}
 
 		public override void AddRecipes()
@@ -34,7 +34,7 @@ namespace Bluemagic.Items.PurityCraft
 			recipe.AddIngredient(null, "RangerSeal");
 			recipe.AddIngredient(null, "SorcerorSeal");
 			recipe.AddIngredient(null, "SummonerSeal");
-			recipe.AddTile(null, "ElementalPurge");
+			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
