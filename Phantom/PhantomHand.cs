@@ -82,6 +82,98 @@ namespace Bluemagic.Phantom
 
 		public override void AI()
 		{
+			if (Head.Enraged)
+			{
+				
+			}
+
+			if (AttackID == 1 || AttackID == 4)
+			{
+				if (Direction == -1f)
+				{
+					HammerAttack();
+				}
+				else
+				{
+					WispAttack();
+				}
+			}
+			else if (AttackID == 2 || AttackID == 5)
+			{
+				if (Direction == -1f)
+				{
+					BladeAttack();
+				}
+				else
+				{
+					HammerAttack();
+				}
+			}
+			else if (AttackID == 3)
+			{
+				ChargeAttack();
+			}
+			AttackTimer += 1f;
+			if (AttackTimer >= MaxAttackTimer)
+			{
+				ChooseAttack();
+			}
+		}
+
+		private void ChooseAttack()
+		{
+			AttackID += 1f;
+			if (AttackID >= 6f)
+			{
+				AttackID = 1f;
+			}
+			if (AttackID == 1f || AttackID == 4f)
+			{
+				if (Direction == -1f)
+				{
+					AttackTimer = -120f;
+				}
+				else
+				{
+					AttackTimer = -120f;
+				}
+			}
+			else if (AttackID == 2f || AttackID == 5f)
+			{
+				if (Direction == -1f)
+				{
+					AttackTimer = -120f;
+				}
+				else
+				{
+					AttackTimer = -120f;
+				}
+			}
+			else if (AttackID == 3f)
+			{
+				AttackTimer = -60f;
+			}
+			npc.TargetClosest(false);
+			npc.netUpdate = true;
+		}
+
+		private void HammerAttack()
+		{
+			
+		}
+
+		private void BladeAttack()
+		{
+			
+		}
+
+		private void WispAttack()
+		{
+			
+		}
+
+		private void ChargeAttack()
+		{
 			
 		}
 	}

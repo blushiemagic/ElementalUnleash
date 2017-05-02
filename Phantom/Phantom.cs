@@ -47,19 +47,15 @@ namespace Bluemagic.Phantom
 			return null;
 		}
 
-		public PhantomHand LeftHand
+		public bool Enraged
 		{
 			get
 			{
-				return (PhantomHand)Main.npc[(int)npc.ai[0]];
+				return npc.ai[0] != 0f;
 			}
-		}
-
-		public PhantomHand RightHand
-		{
-			get
+			set
 			{
-				return (PhantomHand)Main.npc[(int)npc.ai[1]];
+				npc.ai[0] = value ? 1f : 0f;
 			}
 		}
 
@@ -119,11 +115,47 @@ namespace Bluemagic.Phantom
 		public override void AI()
 		{
 			Initialize();
+
+			if (Main.netMode != 1 && !Enraged && (!npc.HasValidTarget || !Main.player[npc.target].ZoneDungeon))
+			{
+				Enraged = true;
+				npc.netUpdate = true;
+				Talk("You thought you could escape...");
+			}
+			if (Enranged)
+			{
+				
+			}
+
+			if (AttackID == 1f || AttackID == 2f)
+			{
+				ChargeAttack();
+			}
+			else if (AttackID == 3f)
+			{
+				SphereAttack();
+			}
+			AttackTimer += 1f;
+			if (AttackTimer >= MaxAttackTimer)
+			{
+				ChooseAttack();
+			}
+
+			if (Main.netMode != 1 && (npc.life <= npc.lifeMax / 2 || (Main.expertMode && npc.lifeMax * 2 / 3)))
+			{
+				PaladinTimer += 1f;
+				if (PaladinTimer >= MaxPaladinTimer)
+				{
+					SpawnPaladin();
+					PaladinTimer = 0f;
+					npc.netUpdate = true;
+				}
+			}
 		}
 
 		private void Initialize()
 		{
-			if (npc.localAI[0] == 0f)
+			if (Main.netMode != 1 && npc.localAI[0] == 0f)
 			{
 				npc.localAI[0] = 1f;
 				int spawnX = (int)npc.Bottom.X;
@@ -133,6 +165,53 @@ namespace Bluemagic.Phantom
 				npc.npetUpdate = true;
 				LeftHand.npc.netUpdate = true;
 				RightHand.npc.netUpdate = true;
+			}
+		}
+
+		private void ChooseAttack()
+		{
+			AttackID += 1f;
+			if (AttackID >= 4f)
+			{
+				AttackID = 1f;
+			}
+			if (AttackID == 3f)
+			{
+				AttackTimer = -120f;
+			}
+			else
+			{
+				AttackTimer = -120f;
+			}
+			npc.TargetClosest(false);
+			npc.netUpdate = true;
+		}
+
+		private void ChargeAttack()
+		{
+			
+		}
+
+		private void SphereAttack()
+		{
+			
+		}
+
+		private void SpawnPaladin()
+		{
+			
+		}
+
+		private void Talk(string message)
+		{
+			message = "<" + npc.displayName + "> " + message;
+			if (Main.netMode == 0)
+			{
+				Main.NewText(message, 50, 150, 200);
+			}
+			else
+			{
+				NetMessage.SendData(MessageID.ChatText, -1, -1, message, 255, 50, 150, 200);
 			}
 		}
 	}
