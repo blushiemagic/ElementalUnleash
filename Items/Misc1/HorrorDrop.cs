@@ -12,7 +12,7 @@ namespace Bluemagic.Items.Misc1
 			item.width = 8;
 			item.height = 8;
 			item.toolTip = "Red as blood";
-			item.maxStack = 99;
+			item.maxStack = 999;
 			item.rare = 3;
 			item.value = 1000;
 		}
