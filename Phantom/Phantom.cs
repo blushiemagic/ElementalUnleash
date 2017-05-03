@@ -8,6 +8,8 @@ namespace Bluemagic.Phantom
 {
 	public class Phantom : ModNPC
 	{
+		private const float maxSpeed = 12f;
+
 		public override void SetDefaults()
 		{
 			npc.name = "Phantom";
@@ -116,15 +118,20 @@ namespace Bluemagic.Phantom
 		{
 			Initialize();
 
+			if (!npc.HasValidTarget || !Main.player[npc.target].ZoneDungeon)
+			{
+				npc.TargetClosest(false);
+			}
 			if (Main.netMode != 1 && !Enraged && (!npc.HasValidTarget || !Main.player[npc.target].ZoneDungeon))
 			{
 				Enraged = true;
 				npc.netUpdate = true;
 				Talk("You thought you could escape...");
 			}
-			if (Enranged)
+			if (Enraged)
 			{
-				
+				npc.damage = npc.defDamage * 2;
+				npc.defense = npc.defDefense * 2;
 			}
 
 			if (AttackID == 1f || AttackID == 2f)
@@ -135,10 +142,18 @@ namespace Bluemagic.Phantom
 			{
 				SphereAttack();
 			}
+			else
+			{
+				IdleBehavior();
+			}
 			AttackTimer += 1f;
 			if (AttackTimer >= MaxAttackTimer)
 			{
 				ChooseAttack();
+			}
+			else if (AttackTimer >= 0f)
+			{
+				AttackID = 0f;
 			}
 
 			if (Main.netMode != 1 && (npc.life <= npc.lifeMax / 2 || (Main.expertMode && npc.lifeMax * 2 / 3)))
@@ -187,6 +202,19 @@ namespace Bluemagic.Phantom
 			npc.netUpdate = true;
 		}
 
+		private void IdleBehavior()
+		{
+			Vector2 offset = npc.Center - Main.player[npc.target].Center;
+			Vector2 target = offset.RotatedBy(Main.expertMode ? 0.03f : 0.02f);
+			Vector2 change = target - offset;
+			if (change.Length() > maxSpeed)
+			{
+				change.Normalize();
+				change *= maxSpeed;
+			}
+			ModifyVelocity(change);
+		}
+
 		private void ChargeAttack()
 		{
 			
@@ -200,6 +228,11 @@ namespace Bluemagic.Phantom
 		private void SpawnPaladin()
 		{
 			
+		}
+
+		private void ModifyVelocity(Vector2 modify, float weight = 0.2f)
+		{
+			npc.velocity = Vector2.Lerp(npc.velocity, modify, weight);
 		}
 
 		private void Talk(string message)

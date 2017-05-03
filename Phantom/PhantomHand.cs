@@ -8,6 +8,8 @@ namespace Bluemagic.Phantom
 {
 	public class PhantomHand : ModNPC
 	{
+		private const float maxSpeed = 12f;
+
 		public override void SetDefaults()
 		{
 			npc.name = "Phantom Hand";
@@ -17,6 +19,7 @@ namespace Bluemagic.Phantom
 			npc.damage = 120;
 			npc.defense = 50;
 			npc.knockBackResist = 0f;
+			npc.dontTakeDamage = true;
 			npc.width = 80;
 			npc.height = 80;
 			npc.alpha = 70;
@@ -84,7 +87,14 @@ namespace Bluemagic.Phantom
 		{
 			if (Head.Enraged)
 			{
-				
+				npc.damage = npc.defDamage * 2;
+				npc.defense = npc.defDefense * 2;
+			}
+			projectile.direction = (int)Direction;
+			projectile.spriteDirection == (int)Direction;
+			if (!npc.HasValidTarget)
+			{
+				npc.TargetClosest(false);
 			}
 
 			if (AttackID == 1 || AttackID == 4)
@@ -113,10 +123,18 @@ namespace Bluemagic.Phantom
 			{
 				ChargeAttack();
 			}
+			else
+			{
+				IdleBehavior();
+			}
 			AttackTimer += 1f;
 			if (AttackTimer >= MaxAttackTimer)
 			{
 				ChooseAttack();
+			}
+			else if (AttackTimer >= 0)
+			{
+				AttackID = 0f;
 			}
 		}
 
@@ -157,6 +175,18 @@ namespace Bluemagic.Phantom
 			npc.netUpdate = true;
 		}
 
+		private void IdleBehavior()
+		{
+			Vector2 target = Head.npc.Bottom + new Vector2(64f, Direction * 128f);
+			Vector2 change = target - npc.Bottom;
+			if (change.Length() > maxSpeed)
+			{
+				change.Normalize();
+				change *= maxSpeed;
+			}
+			ModifyVelocity(change);
+		}
+
 		private void HammerAttack()
 		{
 			
@@ -175,6 +205,11 @@ namespace Bluemagic.Phantom
 		private void ChargeAttack()
 		{
 			
+		}
+
+		private void ModifyVelocity(Vector2 modify, float weight = 0.2f)
+		{
+			npc.velocity = Vector2.Lerp(npc.velocity, modify, weight);
 		}
 	}
 }
