@@ -16,7 +16,7 @@ namespace Bluemagic.Interface
 			{
 				if (layers[k].Name == "Vanilla: Resource Bars")
 				{
-					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar, layers[k]));
+					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar));
 				}
 				else if (layers[k].Name == "Vanilla: Inventory")
 				{

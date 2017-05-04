@@ -27,7 +27,8 @@ namespace Bluemagic.Items.PurityCraft
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "InfinityCrystal", 2);
+			recipe.AddIngredient(ItemID.CosmicCarKey);
+			recipe.AddIngredient(null, "InfinityCrystal", 3);
 			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
