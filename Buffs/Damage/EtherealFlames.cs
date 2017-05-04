@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Bluemagic;
 
-namespace Bluemagic.Buffs
+namespace Bluemagic.Buffs.Damage
 {
 	public class EtherealFlames : ModBuff
 	{

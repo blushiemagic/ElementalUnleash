@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Buffs
+namespace Bluemagic.Buffs.PuritySpirit
 {
 	public class HeroThree : ModBuff
 	{

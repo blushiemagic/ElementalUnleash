@@ -62,11 +62,11 @@ namespace Bluemagic.ChaosSpirit
 			projectile.localAI[0] += projectile.localAI[1];
 			if (projectile.localAI[1] > 0f)
 			{
-				projectile.localAI[1] += 0.0002f;
+				projectile.localAI[1] += 0.0003f;
 			}
 			else
 			{
-				projectile.localAI[1] -= 0.0002f;
+				projectile.localAI[1] -= 0.0003f;
 			}
 			hue += 0.01f;
 			hue %= 1f;

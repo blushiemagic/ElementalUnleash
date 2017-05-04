@@ -518,6 +518,12 @@ namespace Bluemagic.ChaosSpirit
 				}
 				int numOrbs = Main.expertMode ? 5 : 3;
 				int[] laserOrbs = new int[numOrbs];
+				float ai0 = target;
+				if (Main.rand.Next(2) == 0)
+				{
+					target *= -1;
+					target -= 1;
+				}
 				for (int k = 0; k < numOrbs; k++)
 				{
 					Vector2 offset = 320f * (rotation + MathHelper.TwoPi * k / (float)numOrbs).ToRotationVector2();

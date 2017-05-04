@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Bluemagic;
 
-namespace Bluemagic.Buffs
+namespace Bluemagic.Buffs.ChaosSpirit
 {
 	public class ChaosPressure4 : ModBuff
 	{

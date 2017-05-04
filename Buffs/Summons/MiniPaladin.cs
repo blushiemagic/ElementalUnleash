@@ -2,7 +2,7 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Buffs
+namespace Bluemagic.Buffs.Summons
 {
 	public class MiniPaladin : ModBuff
 	{

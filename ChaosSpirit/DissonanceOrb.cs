@@ -35,25 +35,23 @@ namespace Bluemagic.ChaosSpirit
 				NetMessage.SendData(27, -1, -1, "", projectile.whoAmI);
 				synced = true;
 			}
-			Player player = Main.player[(int)projectile.ai[0]];
 			if (timer == 0)
 			{
-				projectile.localAI[0] = player.Center.X;
-				projectile.localAI[1] = player.Center.Y;
+				float direction = 1f;
+				if (projectile.ai[0] < 0f)
+				{
+					projectile.ai[0] += 1f;
+					projectile.ai[0] *= -1f;
+					direction = -1f;
+				}
+				Vector2 target = Main.player[(int)projectile.ai[0]].Center;
+				projectile.ai[0] = (target - projectile.Center).ToRotation();
+				projectile.localAI[0] = direction;
 			}
 			timer++;
 			if (timer > 180)
 			{
-				Vector2 currentTarget = new Vector2(projectile.localAI[0], projectile.localAI[1]);
-				Vector2 offset = player.Center - currentTarget;
-				if (offset.Length() > 4f)
-				{
-					offset.Normalize();
-					offset *= 4f;
-				}
-				currentTarget += offset;
-				projectile.localAI[0] = currentTarget.X;
-				projectile.localAI[1] = currentTarget.Y;
+				projectile.ai[0] += projectile.localAI[0] * (0.005f + ((timer - 180f) / 180f * 0.015f));
 			}
 			if (timer > 360)
 			{
@@ -108,17 +106,10 @@ namespace Bluemagic.ChaosSpirit
 						return true;
 					}
 				}
-				if (projectile.ai[0] == Main.myPlayer)
 				{
 					num = 0f;
-					Vector2 laserTarget = new Vector2(projectile.localAI[0], projectile.localAI[1]);
-					Vector2 offset = laserTarget - projectile.Center;
-					if (offset == Vector2.Zero)
-					{
-						offset = new Vector2(0f, 1f);
-					}
-					offset.Normalize();
-					Vector2 end = projectile.Center + 2400f * offset;
+					Vector2 direction = projectile.ai[0].ToRotationVector2();
+					Vector2 end = projectile.Center + 2400f * direction;
 					if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, end, 16, ref num))
 					{
 						return true;
@@ -172,17 +163,10 @@ namespace Bluemagic.ChaosSpirit
 					}
 				}
 
-				if (projectile.ai[0] == Main.myPlayer)
 				{
-					Vector2 laserTarget = new Vector2(projectile.localAI[0], projectile.localAI[1]);
-					Vector2 direction = laserTarget - projectile.Center;
-					if (direction == Vector2.Zero)
-					{
-						direction = new Vector2(0f, 1f);
-					}
-					direction.Normalize();
+					Vector2 direction = projectile.ai[0].ToRotationVector2();
 					float length = 2400f;
-					float rotation = direction.ToRotation();
+					float rotation = projectile.ai[0];
 					for (float k = 8f; k < length; k += 16f)
 					{
 						drawPos = projectile.Center + k * direction - Main.screenPosition;
