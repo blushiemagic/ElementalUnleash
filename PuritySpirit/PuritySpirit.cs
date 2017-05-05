@@ -667,6 +667,9 @@ namespace Bluemagic.PuritySpirit
 		{
 			if (Main.netMode == 1 && stage < 13)
 			{
+				npc.active = true;
+				npc.life = 1;
+				npc.dontTakeDamage = true;
 				return false;
 			}
 			if (stage < 10)
