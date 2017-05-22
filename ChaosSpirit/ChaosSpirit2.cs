@@ -505,8 +505,8 @@ namespace Bluemagic.ChaosSpirit
 		public void Damage()
 		{
 			npc.dontTakeDamage = true;
-			int damage = npc.lifeMax / 10;
-			if (damage < npc.lifeMax / 10f)
+			int damage = npc.lifeMax / 8;
+			if (damage < npc.lifeMax / 8f)
 			{
 				damage++;
 			}
