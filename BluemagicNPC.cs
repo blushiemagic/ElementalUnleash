@@ -50,7 +50,7 @@ namespace Bluemagic
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LunarDrop"));
 					}
 				}
-				else if (Main.invasionType == 0 && !DD2Event.Ongoing && (Main.bloodMoon || Main.eclipse) && Main.rand.Next(25) == 0)
+				else if (Main.invasionType == 0 && !DD2Event.Ongoing && (Main.bloodMoon || Main.eclipse) && Main.rand.Next(20) == 0)
 				{
 					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("HorrorDrop"));
 				}
