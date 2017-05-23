@@ -8,7 +8,7 @@ namespace Bluemagic.Phantom
 {
 	public class PhantomHand : ModNPC
 	{
-		private const float maxSpeed = 12f;
+		private const float maxSpeed = 8f;
 
 		public override void SetDefaults()
 		{
@@ -185,39 +185,71 @@ namespace Bluemagic.Phantom
 
 		private void IdleBehavior()
 		{
-			Vector2 target = Head.npc.Bottom + new Vector2(64f, Direction * 128f);
+			Vector2 target = Head.npc.Bottom + new Vector2(Direction * 128f, 64f);
 			Vector2 change = target - npc.Bottom;
-			if (change.Length() > maxSpeed)
-			{
-				change.Normalize();
-				change *= maxSpeed;
-			}
+			CapVelocity(ref change, maxSpeed * 2f);
 			ModifyVelocity(change);
+			CapVelocity(ref npc.velocity, maxSpeed * 2f);
 		}
 
 		private void HammerAttack()
 		{
-			
+			Vector2 target = Main.player[npc.target].Center;
+			Vector2 moveTarget = target + new Vector2(Direction * 240f, -240f);
+			Vector2 offset = moveTarget - npc.Center;
+			CapVelocity(ref offset, maxSpeed);
+			ModifyVelocity(offset);
+			CapVelocity(ref npc.velocity, maxSpeed);
 		}
 
 		private void BladeAttack()
 		{
-			
+			Vector2 target = Main.player[npc.target].Center;
+			Vector2 moveTarget = target + new Vector2(Direction * 240f, 0f);
+			Vector2 offset = moveTarget - npc.Center;
+			CapVelocity(ref offset, maxSpeed);
+			ModifyVelocity(offset);
+			CapVelocity(ref npc.velocity, maxSpeed);
 		}
 
 		private void WispAttack()
 		{
-			
+			Vector2 target = Main.player[npc.target].Center;
+			Vector2 moveTarget = target + new Vector2(Direction * 240f, 0f);
+			Vector2 offset = moveTarget - npc.Center;
+			CapVelocity(ref offset, maxSpeed);
+			ModifyVelocity(offset);
+			CapVelocity(ref npc.velocity, maxSpeed);
 		}
 
 		private void ChargeAttack()
 		{
-			
+			if (AttackTimer < -40f)
+			{
+				Vector2 offset = Main.player[npc.target].Center - npc.Center;
+				CapVelocity(ref offset, maxSpeed);
+				ModifyVelocity(offset, 0.1f);
+				CapVelocity(ref npc.velocity, maxSpeed);
+			}
 		}
 
-		private void ModifyVelocity(Vector2 modify, float weight = 0.2f)
+		private void ModifyVelocity(Vector2 modify, float weight = 0.05f)
 		{
 			npc.velocity = Vector2.Lerp(npc.velocity, modify, weight);
+		}
+
+		private void CapVelocity(ref Vector2 velocity, float max)
+		{
+			if (velocity.Length() > max)
+			{
+				velocity.Normalize();
+				velocity *= max;
+			}
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White * 0.8f;
 		}
 	}
 }

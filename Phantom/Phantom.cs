@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +9,7 @@ namespace Bluemagic.Phantom
 {
 	public class Phantom : ModNPC
 	{
-		private const float maxSpeed = 12f;
+		private const float maxSpeed = 8f;
 
 		public override void SetDefaults()
 		{
@@ -134,6 +135,10 @@ namespace Bluemagic.Phantom
 				npc.defense = npc.defDefense * 2;
 			}
 
+			if (AttackTimer >= 0f)
+			{
+				IdleBehavior();
+			}
 			if (AttackID == 1f || AttackID == 2f)
 			{
 				ChargeAttack();
@@ -150,10 +155,6 @@ namespace Bluemagic.Phantom
 			if (AttackTimer >= MaxAttackTimer)
 			{
 				ChooseAttack();
-			}
-			else if (AttackTimer >= 0f)
-			{
-				AttackID = 0f;
 			}
 
 			if (Main.netMode != 1 && (npc.life <= npc.lifeMax / 2 || (Main.expertMode && npc.life <= npc.lifeMax * 2 / 3)))
@@ -192,7 +193,7 @@ namespace Bluemagic.Phantom
 			}
 			if (AttackID == 3f)
 			{
-				AttackTimer = -120f;
+				AttackTimer = -180f;
 			}
 			else
 			{
@@ -205,24 +206,29 @@ namespace Bluemagic.Phantom
 		private void IdleBehavior()
 		{
 			Vector2 offset = npc.Center - Main.player[npc.target].Center;
+			offset *= 0.9f;
 			Vector2 target = offset.RotatedBy(Main.expertMode ? 0.03f : 0.02f);
+			CapVelocity(ref target, 320f);
 			Vector2 change = target - offset;
-			if (change.Length() > maxSpeed)
-			{
-				change.Normalize();
-				change *= maxSpeed;
-			}
+			CapVelocity(ref change, maxSpeed);
 			ModifyVelocity(change);
+			CapVelocity(ref npc.velocity, maxSpeed);
 		}
 
 		private void ChargeAttack()
 		{
-			
+			if (AttackTimer < -90f)
+			{
+				Vector2 offset = Main.player[npc.target].Center - npc.Center;
+				CapVelocity(ref offset, maxSpeed);
+				ModifyVelocity(offset, 0.1f);
+				CapVelocity(ref npc.velocity, maxSpeed);
+			}
 		}
 
 		private void SphereAttack()
 		{
-			
+			IdleBehavior();
 		}
 
 		private void SpawnPaladin()
@@ -230,9 +236,18 @@ namespace Bluemagic.Phantom
 			
 		}
 
-		private void ModifyVelocity(Vector2 modify, float weight = 0.2f)
+		private void ModifyVelocity(Vector2 modify, float weight = 0.05f)
 		{
 			npc.velocity = Vector2.Lerp(npc.velocity, modify, weight);
+		}
+
+		private void CapVelocity(ref Vector2 velocity, float max)
+		{
+			if (velocity.Length() > max)
+			{
+				velocity.Normalize();
+				velocity *= max;
+			}
 		}
 
 		private void Talk(string message)
@@ -246,6 +261,15 @@ namespace Bluemagic.Phantom
 			{
 				NetMessage.SendData(MessageID.ChatText, -1, -1, message, 255, 50, 150, 200);
 			}
+		}
+
+		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			Texture2D texture = mod.GetTexture("Phantom/PhantomBody");
+			spriteBatch.Draw(texture, npc.Bottom - new Vector2(0f, 20f) - Main.screenPosition, null, Color.White * 0.6f, 0f, new Vector2(texture.Width / 2, 0f), 1f, SpriteEffects.None, 0f);
+			texture = Main.npcTexture[npc.type];
+			spriteBatch.Draw(texture, npc.position - Main.screenPosition, Color.White * 0.8f);
+			return false;
 		}
 	}
 }
