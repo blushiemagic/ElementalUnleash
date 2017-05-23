@@ -11,6 +11,16 @@ namespace Bluemagic
 		public static void AddRecipes(Mod mod)
 		{
 			AddClentamistationRecipes(mod);
+
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.EnchantedNightcrawler);
+			recipe.AddIngredient(ItemID.GlowingMushroom, 20);
+			recipe.AddIngredient(ItemID.Ectoplasm, 2);
+			recipe.AddIngredient(ItemID.DarkBlueSolution, 5);
+			recipe.AddTile(TileID.DemonAltar);
+			recipe.AddTile(mod.TileType("Clentamistation"));
+			recipe.SetResult(ItemID.TruffleWorm);
+			recipe.AddRecipe();
 		}
 
 		private static void AddClentamistationRecipes(Mod mod)
