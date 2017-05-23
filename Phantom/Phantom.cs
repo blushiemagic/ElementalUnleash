@@ -128,6 +128,7 @@ namespace Bluemagic.Phantom
 				Enraged = true;
 				npc.netUpdate = true;
 				Talk("You thought you could escape...");
+				Main.PlaySound(15, (int)npc.position.X, (int)npc.position.Y, 0);
 			}
 			if (Enraged)
 			{
@@ -139,7 +140,7 @@ namespace Bluemagic.Phantom
 			{
 				IdleBehavior();
 			}
-			if (AttackID == 1f || AttackID == 2f)
+			else if (AttackID == 1f || AttackID == 2f)
 			{
 				ChargeAttack();
 			}
@@ -173,7 +174,6 @@ namespace Bluemagic.Phantom
 		{
 			if (Main.netMode != 1 && npc.localAI[0] == 0f)
 			{
-				npc.localAI[0] = 1f;
 				int spawnX = (int)npc.Bottom.X;
 				int spawnY = (int)npc.Bottom.Y + 64;
 				int left = NPC.NewNPC(spawnX - 128, spawnY, mod.NPCType("PhantomHand"), 0, npc.whoAmI, -1f, 0f, -30f);
@@ -182,6 +182,11 @@ namespace Bluemagic.Phantom
 				Main.npc[left].netUpdate = true;
 				Main.npc[right].netUpdate = true;
 			}
+			if (Main.netMode != 2 && npc.localAI[0] == 0f)
+			{
+				Main.PlaySound(15, (int)npc.position.X, (int)npc.position.Y, 0);
+			}
+			npc.localAI[0] = 1f;
 		}
 
 		private void ChooseAttack()
@@ -193,7 +198,7 @@ namespace Bluemagic.Phantom
 			}
 			if (AttackID == 3f)
 			{
-				AttackTimer = -180f;
+				AttackTimer = -300f;
 			}
 			else
 			{
@@ -229,6 +234,23 @@ namespace Bluemagic.Phantom
 		private void SphereAttack()
 		{
 			IdleBehavior();
+
+			int attackTimer = (int)AttackTimer + 300;
+			if (attackTimer % 30 == 0 && attackTimer < 150)
+			{
+				int damage = (npc.damage - 10) / 2;
+				if (Main.expertMode)
+				{
+					damage /= 2;
+				}
+				Vector2 offset = npc.Center - Main.player[npc.target].Center;
+				if (offset != Vector2.Zero)
+				{
+					offset.Normalize();
+					offset *= 320f;
+				}
+				Projectile.NewProjectile(Main.player[npc.target].Center + offset, Vector2.Zero, mod.ProjectileType("PhantomSphereHostile"), damage, 6f, Main.myPlayer, npc.whoAmI);
+			}
 		}
 
 		private void SpawnPaladin()

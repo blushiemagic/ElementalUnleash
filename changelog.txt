@@ -8,3 +8,5 @@ increased stack size of solar/lunar/horror drops
 improved the spirit of chaos's attacks
 spirit of chaos phase 2 only requires 8 hits
 slightly increased drop rate of horror drops
+added recipe for truffle worm
+added more dimensional chest recipes

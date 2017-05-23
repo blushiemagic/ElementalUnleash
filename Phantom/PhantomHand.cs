@@ -20,8 +20,8 @@ namespace Bluemagic.Phantom
 			npc.defense = 50;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = true;
-			npc.width = 80;
-			npc.height = 80;
+			npc.width = 32;
+			npc.height = 40;
 			npc.alpha = 70;
 			npc.value = Item.buyPrice(0, 15, 0, 0);
 			npc.npcSlots = 0f;
@@ -105,7 +105,11 @@ namespace Bluemagic.Phantom
 				npc.TargetClosest(false);
 			}
 
-			if (AttackID == 1 || AttackID == 4)
+			if (AttackTimer >= 0f)
+			{
+				IdleBehavior();
+			}
+			else if (AttackID == 1 || AttackID == 4)
 			{
 				if (Direction == -1f)
 				{
@@ -140,10 +144,8 @@ namespace Bluemagic.Phantom
 			{
 				ChooseAttack();
 			}
-			else if (AttackTimer >= 0)
-			{
-				AttackID = 0f;
-			}
+
+			CreateDust();
 		}
 
 		private void ChooseAttack()
@@ -157,7 +159,7 @@ namespace Bluemagic.Phantom
 			{
 				if (Direction == -1f)
 				{
-					AttackTimer = -120f;
+					AttackTimer = -210f;
 				}
 				else
 				{
@@ -172,7 +174,7 @@ namespace Bluemagic.Phantom
 				}
 				else
 				{
-					AttackTimer = -120f;
+					AttackTimer = -210f;
 				}
 			}
 			else if (AttackID == 3f)
@@ -200,6 +202,17 @@ namespace Bluemagic.Phantom
 			CapVelocity(ref offset, maxSpeed);
 			ModifyVelocity(offset);
 			CapVelocity(ref npc.velocity, maxSpeed);
+
+			int attackTimer = (int)AttackTimer + 210;
+			if (attackTimer % 20 == 0 && attackTimer < 100)
+			{
+				int damage = (npc.damage - 20) / 2;
+				if (Main.expertMode)
+				{
+					damage /= 2;
+				}
+				Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("PhantomHammer"), damage, 6f, Main.myPlayer, npc.whoAmI);
+			}
 		}
 
 		private void BladeAttack()
@@ -230,6 +243,26 @@ namespace Bluemagic.Phantom
 				CapVelocity(ref offset, maxSpeed);
 				ModifyVelocity(offset, 0.1f);
 				CapVelocity(ref npc.velocity, maxSpeed);
+			}
+		}
+
+		private void CreateDust()
+		{
+			Vector2 target = Head.npc.Center;
+			target += new Vector2(Direction * 60f, 60f);
+			Vector2 offset = target - npc.Center;
+			float length = offset.Length();
+			if (offset != Vector2.Zero)
+			{
+				offset.Normalize();
+			}
+			for (float k = 0f; k < length - 10f; k += 4f)
+			{
+				if (Main.rand.Next(10) == 0)
+				{
+					int dust = Dust.NewDust(npc.Center + offset * k, 0, 0, mod.DustType("Phantom"));
+					Main.dust[dust].alpha = 100;
+				}
 			}
 		}
 
