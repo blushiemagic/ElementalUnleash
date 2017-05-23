@@ -47,7 +47,7 @@ namespace Bluemagic.Phantom
 		{
 			get
 			{
-				return (Phantom)Main.npc[(int)npc.ai[0]];
+				return (Phantom)Main.npc[(int)npc.ai[0]].modNPC;
 			}
 		}
 
@@ -83,6 +83,14 @@ namespace Bluemagic.Phantom
 			}
 		}
 
+		public float MaxAttackTimer
+		{
+			get
+			{
+				return 60f * (float)Head.npc.life / (float)Head.npc.lifeMax;
+			}
+		}
+
 		public override void AI()
 		{
 			if (Head.Enraged)
@@ -90,8 +98,8 @@ namespace Bluemagic.Phantom
 				npc.damage = npc.defDamage * 2;
 				npc.defense = npc.defDefense * 2;
 			}
-			projectile.direction = (int)Direction;
-			projectile.spriteDirection == (int)Direction;
+			npc.direction = (int)Direction;
+			npc.spriteDirection = (int)Direction;
 			if (!npc.HasValidTarget)
 			{
 				npc.TargetClosest(false);

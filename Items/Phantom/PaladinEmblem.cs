@@ -42,8 +42,7 @@ namespace Bluemagic.Items.Phantom
 		{
 			if (Main.netMode != 1)
 			{
-				int npc = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("PhantomSoul"), 0);
-				Main.npc[npc].target = player.whoAmI;
+				int npc = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("PhantomSoul"), 0, 0f, 0f, 0f, 0f, player.whoAmI);
 				if (Main.netMode == 2)
 				{
 					NetMessage.SendData(MessageID.SyncNPC, -1, -1, "", npc);
@@ -57,8 +56,7 @@ namespace Bluemagic.Items.Phantom
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddIngredient(ItemID.SpectreBar, 4);
-			recipe.AddIngredient(ItemID.Ectoplasm, 3);
+			recipe.AddIngredient(ItemID.SpectreBar, 5);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

@@ -156,7 +156,7 @@ namespace Bluemagic.Phantom
 				AttackID = 0f;
 			}
 
-			if (Main.netMode != 1 && (npc.life <= npc.lifeMax / 2 || (Main.expertMode && npc.lifeMax * 2 / 3)))
+			if (Main.netMode != 1 && (npc.life <= npc.lifeMax / 2 || (Main.expertMode && npc.life <= npc.lifeMax * 2 / 3)))
 			{
 				PaladinTimer += 1f;
 				if (PaladinTimer >= MaxPaladinTimer)
@@ -175,11 +175,11 @@ namespace Bluemagic.Phantom
 				npc.localAI[0] = 1f;
 				int spawnX = (int)npc.Bottom.X;
 				int spawnY = (int)npc.Bottom.Y + 64;
-				npc.ai[0] = NPC.NewNPC(spawnX - 128, spawnY, mod.NPCType("PhantomHand"), 0, npc.whoAmI, -1f, 0f, -30f);
-				npc.ai[1] = NPC.NewNPC(spawnX + 128, spawnY, mod.NPCType("PhantomHand"), 0, npc.whoAmI, 1f, 0f, -60f);
-				npc.npetUpdate = true;
-				LeftHand.npc.netUpdate = true;
-				RightHand.npc.netUpdate = true;
+				int left = NPC.NewNPC(spawnX - 128, spawnY, mod.NPCType("PhantomHand"), 0, npc.whoAmI, -1f, 0f, -30f);
+				int right = NPC.NewNPC(spawnX + 128, spawnY, mod.NPCType("PhantomHand"), 0, npc.whoAmI, 1f, 0f, -60f);
+				npc.netUpdate = true;
+				Main.npc[left].netUpdate = true;
+				Main.npc[right].netUpdate = true;
 			}
 		}
 
