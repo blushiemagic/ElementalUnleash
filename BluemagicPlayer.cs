@@ -574,6 +574,14 @@ namespace Bluemagic
 			nullified = true;
 		}
 
+		public override void OnHitByNPC(NPC npc, int damage, bool crit)
+		{
+			if (npc.type == NPCID.DungeonSpirit && Main.rand.Next(4) == 0)
+			{
+				player.AddBuff(mod.BuffType("EtherealFlames"), Main.rand.Next(120, 180), true);
+			}
+		}
+
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit,
 			ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
