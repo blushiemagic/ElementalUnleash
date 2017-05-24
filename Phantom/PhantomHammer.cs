@@ -16,7 +16,7 @@ namespace Bluemagic.Phantom
 			projectile.timeLeft = 600;
 			projectile.maxPenetrate = -1;
 			projectile.hostile = true;
-			projectile.melee = true;
+			projectile.thrown = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 		}

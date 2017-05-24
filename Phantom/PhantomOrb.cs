@@ -12,7 +12,7 @@ namespace Bluemagic.Phantom
 		{
 			npc.name = "Phantom Orb";
 			npc.aiStyle = -1;
-			npc.lifeMax = 1000;
+			npc.lifeMax = 500;
 			npc.defense = 50;
 			npc.knockBackResist = 0f;
 			npc.width = 40;
@@ -41,22 +41,54 @@ namespace Bluemagic.Phantom
 			NPC follow = Main.npc[(int)npc.ai[1]];
 			npc.Center = follow.Center + new Vector2(npc.ai[2], npc.ai[3]);
 			npc.localAI[0] += 1f;
-			npc.netUpdate = true;
 			if (npc.localAI[0] >= 180f)
 			{
 				if (Main.netMode != 1 && npc.ai[0] == 1f)
 				{
-					
+					WispAttack();
 				}
-				else if (Main.netMode != 1 && npc.ai[0] == -1f)
+				else if (Main.netMode != 1 && npc.ai[0] == 2f)
 				{
-					
+					BladeAttack();
 				}
-				else if (Main.netMode != 1)
+				else if (Main.netMode != 1 && npc.ai[0] == 3f)
 				{
-					
+					SpawnPaladin();
 				}
 				npc.active = false;
+			}
+		}
+
+		private void WispAttack()
+		{
+			NPC hand = Main.npc[(int)npc.ai[1]];
+			int damage = hand.damage / 6;
+			if (Main.expertMode)
+			{
+				damage /= 2;
+			}
+			for (int k = 0; k < 4; k++)
+			{
+				Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("WispHostile"), damage, 3f, Main.myPlayer, npc.ai[1], k * 15);
+			}
+		}
+
+		private void BladeAttack()
+		{
+			NPC hand = Main.npc[(int)npc.ai[1]];
+			int damage = (hand.damage - 10) / 2;
+			if (Main.expertMode)
+			{
+				damage /= 2;
+			}
+			Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("PhantomBladeHostile"), damage, 6f, Main.myPlayer, npc.ai[1]);
+		}
+
+		private void SpawnPaladin()
+		{
+			if (NPC.CountNPCS(NPCID.Paladin) < 5)
+			{
+				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y + 32, NPCID.Paladin);
 			}
 		}
 

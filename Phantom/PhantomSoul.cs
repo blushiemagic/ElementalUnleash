@@ -82,10 +82,6 @@ namespace Bluemagic.Phantom
 				}
 			}
 			npc.ai[0] += 1f;
-			if (npc.ai[0] == 800f && Main.netMode == 2)
-			{
-				npc.netUpdate = true;
-			}
 			if (npc.ai[0] >= 900)
 			{
 				npc.active = false;

@@ -90,7 +90,7 @@ namespace Bluemagic.Phantom
 		{
 			get
 			{
-				return 60f * (float)npc.life / (float)npc.lifeMax;
+				return 60f + 120f * (float)npc.life / (float)npc.lifeMax;
 			}
 		}
 
@@ -122,6 +122,17 @@ namespace Bluemagic.Phantom
 			if (!npc.HasValidTarget || !Main.player[npc.target].ZoneDungeon)
 			{
 				npc.TargetClosest(false);
+			}
+			if (!npc.HasValidTarget || AttackID == 100)
+			{
+				npc.velocity = new Vector2(0f, maxSpeed);
+				if (npc.timeLeft > 10)
+				{
+					npc.timeLeft = 10;
+				}
+				AttackID = 100;
+				npc.netUpdate = true;
+				return;
 			}
 			if (Main.netMode != 1 && !Enraged && (!npc.HasValidTarget || !Main.player[npc.target].ZoneDungeon))
 			{
@@ -185,6 +196,7 @@ namespace Bluemagic.Phantom
 			if (Main.netMode != 2 && npc.localAI[0] == 0f)
 			{
 				Main.PlaySound(15, (int)npc.position.X, (int)npc.position.Y, 0);
+				Main.NewText("The Phantom has awoken!", 50, 150, 200);
 			}
 			npc.localAI[0] = 1f;
 		}
@@ -222,9 +234,9 @@ namespace Bluemagic.Phantom
 
 		private void ChargeAttack()
 		{
-			if (AttackTimer < -90f)
+			Vector2 offset = Main.player[npc.target].Center - npc.Center;
+			if (AttackTimer < -90f || offset.Length() > 320f)
 			{
-				Vector2 offset = Main.player[npc.target].Center - npc.Center;
 				CapVelocity(ref offset, maxSpeed);
 				ModifyVelocity(offset, 0.1f);
 				CapVelocity(ref npc.velocity, maxSpeed);
@@ -255,7 +267,8 @@ namespace Bluemagic.Phantom
 
 		private void SpawnPaladin()
 		{
-			
+			int x = Main.rand.Next(2) == 0 ? -160 : 160;
+			NPC.NewNPC((int)npc.Bottom.X + x, (int)npc.Bottom.Y + 80, mod.NPCType("PhantomOrb"), 0, 3f, npc.whoAmI, x, 80f, npc.target);
 		}
 
 		private void ModifyVelocity(Vector2 modify, float weight = 0.05f)
@@ -283,6 +296,16 @@ namespace Bluemagic.Phantom
 			{
 				NetMessage.SendData(MessageID.ChatText, -1, -1, message, 255, 50, 150, 200);
 			}
+		}
+
+		public override void NPCLoot()
+		{
+			
+		}
+
+		public override void BossLoot(ref string name, ref int potionType)
+		{
+			potionType = ItemID.GreaterHealingPotion;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

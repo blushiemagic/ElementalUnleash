@@ -25,7 +25,6 @@ namespace Bluemagic.Phantom
 			npc.alpha = 70;
 			npc.value = Item.buyPrice(0, 15, 0, 0);
 			npc.npcSlots = 0f;
-			npc.boss = true;
 			npc.lavaImmune = true;
 			npc.noGravity = true;
 			npc.noTileCollide = true;
@@ -87,12 +86,20 @@ namespace Bluemagic.Phantom
 		{
 			get
 			{
-				return 60f * (float)Head.npc.life / (float)Head.npc.lifeMax;
+				return 60f + 120f * (float)Head.npc.life / (float)Head.npc.lifeMax;
 			}
 		}
 
 		public override void AI()
 		{
+			NPC headNPC = Main.npc[(int)npc.ai[0]];
+			if (!headNPC.active || headNPC.type != mod.NPCType("Phantom"))
+			{
+				npc.active = false;
+				return;
+			}
+			headNPC.timeLeft = headNPC.timeLeft;
+
 			if (Head.Enraged)
 			{
 				npc.damage = npc.defDamage * 2;
@@ -163,14 +170,14 @@ namespace Bluemagic.Phantom
 				}
 				else
 				{
-					AttackTimer = -120f;
+					AttackTimer = -240f;
 				}
 			}
 			else if (AttackID == 2f || AttackID == 5f)
 			{
 				if (Direction == -1f)
 				{
-					AttackTimer = -120f;
+					AttackTimer = -240f;
 				}
 				else
 				{
@@ -223,6 +230,11 @@ namespace Bluemagic.Phantom
 			CapVelocity(ref offset, maxSpeed);
 			ModifyVelocity(offset);
 			CapVelocity(ref npc.velocity, maxSpeed);
+
+			if (AttackTimer == -240f)
+			{
+				NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 2f, npc.whoAmI, 0f, 0f, npc.target);
+			}
 		}
 
 		private void WispAttack()
@@ -233,6 +245,11 @@ namespace Bluemagic.Phantom
 			CapVelocity(ref offset, maxSpeed);
 			ModifyVelocity(offset);
 			CapVelocity(ref npc.velocity, maxSpeed);
+
+			if (AttackTimer == -240f)
+			{
+				NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 1f, npc.whoAmI, 0f, 0f, npc.target);
+			}
 		}
 
 		private void ChargeAttack()
