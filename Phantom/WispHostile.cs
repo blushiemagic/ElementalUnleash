@@ -53,11 +53,14 @@ namespace Bluemagic.Phantom
 				AdjustMagnitude(ref projectile.velocity);
 				if (projectile.Hitbox.Intersects(target.Hitbox))
 				{
-					if (target.immuneTime > 1)
-					{
-						target.immuneTime = 1;
-					}
+					target.immune = false;
+					target.immuneTime = 0;
 					projectile.Damage();
+					if (!target.immune && target.immuneTime <= 0)
+					{
+						target.immune = true;
+						target.immuneTime = 60;
+					}
 				}
 			}
 			for (int k2 = 0; k2 < 3; k2++)

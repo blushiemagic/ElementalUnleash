@@ -45,6 +45,9 @@ namespace Bluemagic.Tiles
 				case 5:
 					item = mod.ItemType("CataclysmTrophy");
 					break;
+				case 6:
+					item = mod.ItemType("PhantomTrophy");
+					break;
 			}
 			if (item > 0)
 			{

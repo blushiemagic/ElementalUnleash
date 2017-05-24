@@ -36,6 +36,7 @@ namespace Bluemagic.Phantom
 				npc.buffImmune[k] = true;
 			}
 			music = MusicID.Boss3;
+			bossBag = mod.ItemType("PhantomBag");
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
@@ -123,7 +124,7 @@ namespace Bluemagic.Phantom
 			{
 				npc.TargetClosest(false);
 			}
-			if (!npc.HasValidTarget || AttackID == 100)
+			if (!npc.HasValidTarget || AttackID == 100 || (!Main.player[npc.target].ZoneDungeon && Vector2.Distance(Main.player[npc.target].Center, npc.Center) >= 1600f))
 			{
 				npc.velocity = new Vector2(0f, maxSpeed);
 				if (npc.timeLeft > 10)
@@ -248,7 +249,7 @@ namespace Bluemagic.Phantom
 			IdleBehavior();
 
 			int attackTimer = (int)AttackTimer + 300;
-			if (attackTimer % 30 == 0 && attackTimer < 150)
+			if (attackTimer % 30 == 0 && attackTimer < 150 && Main.netMode != 1)
 			{
 				int damage = (npc.damage - 10) / 2;
 				if (Main.expertMode)
@@ -267,8 +268,11 @@ namespace Bluemagic.Phantom
 
 		private void SpawnPaladin()
 		{
-			int x = Main.rand.Next(2) == 0 ? -160 : 160;
-			NPC.NewNPC((int)npc.Bottom.X + x, (int)npc.Bottom.Y + 80, mod.NPCType("PhantomOrb"), 0, 3f, npc.whoAmI, x, 80f, npc.target);
+			if (Main.netMode != 1)
+			{
+				int x = Main.rand.Next(2) == 0 ? -160 : 160;
+				NPC.NewNPC((int)npc.Bottom.X + x, (int)npc.Bottom.Y + 80, mod.NPCType("PhantomOrb"), 0, 3f, npc.whoAmI, x, 80f, npc.target);
+			}
 		}
 
 		private void ModifyVelocity(Vector2 modify, float weight = 0.05f)
@@ -300,7 +304,40 @@ namespace Bluemagic.Phantom
 
 		public override void NPCLoot()
 		{
-			
+			if (Main.rand.Next(10) == 0)
+			{
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PhantomTrophy"));
+			}
+			if (Main.expertMode)
+			{
+				npc.DropBossBags();
+			}
+			else
+			{
+				if (Main.rand.Next(7) == 0)
+				{
+					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PhantomMask"));
+				}
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PhantomPlate"), Main.rand.Next(5, 8));
+				int reward = 0;
+				switch (Main.rand.Next(4))
+				{
+				case 0:
+					reward = mod.ItemType("PhantomBlade");
+					break;
+				case 1:
+					reward = mod.ItemType("SpectreGun");
+					break;
+				case 2:
+					reward = mod.ItemType("PhantomSphere");
+					break;
+				case 3:
+					reward = mod.ItemType("PaladinStaff");
+					break;
+				}
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, reward);
+			}
+			BluemagicWorld.downedPhantom = true;
 		}
 
 		public override void BossLoot(ref string name, ref int potionType)

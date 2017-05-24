@@ -211,7 +211,7 @@ namespace Bluemagic.Phantom
 			CapVelocity(ref npc.velocity, maxSpeed);
 
 			int attackTimer = (int)AttackTimer + 210;
-			if (attackTimer % 20 == 0 && attackTimer < 100)
+			if (attackTimer % 20 == 0 && attackTimer < 100 && Main.netMode != 1)
 			{
 				int damage = (npc.damage - 20) / 2;
 				if (Main.expertMode)
@@ -231,7 +231,7 @@ namespace Bluemagic.Phantom
 			ModifyVelocity(offset);
 			CapVelocity(ref npc.velocity, maxSpeed);
 
-			if (AttackTimer == -240f)
+			if (AttackTimer == -240f && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 2f, npc.whoAmI, 0f, 0f, npc.target);
 			}
@@ -246,7 +246,7 @@ namespace Bluemagic.Phantom
 			ModifyVelocity(offset);
 			CapVelocity(ref npc.velocity, maxSpeed);
 
-			if (AttackTimer == -240f)
+			if (AttackTimer == -240f && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 1f, npc.whoAmI, 0f, 0f, npc.target);
 			}

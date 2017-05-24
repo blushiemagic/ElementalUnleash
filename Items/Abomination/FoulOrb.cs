@@ -41,7 +41,7 @@ namespace Bluemagic.Items.Abomination
 			recipe.AddIngredient(null, "ScytheBlade");
 			recipe.AddIngredient(null, "Icicle");
 			recipe.AddIngredient(null, "Bubble");
-			recipe.AddIngredient(ItemID.Ectoplasm, 5);
+			recipe.AddIngredient(null, "PhantomPlate");
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

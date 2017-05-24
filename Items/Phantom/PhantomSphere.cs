@@ -18,6 +18,7 @@ namespace Bluemagic.Items.Phantom
 			item.useTime = 28;
 			item.damage = 53;
 			item.knockBack = 2f;
+			item.value = Item.sellPrice(0, 10, 0, 0);
 			item.autoReuse = false;
 			item.useTurn = false;
 			item.rare = 8;
