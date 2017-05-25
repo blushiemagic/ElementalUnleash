@@ -994,7 +994,7 @@ namespace Bluemagic
 					return;
 				}
 				Player drawPlayer = drawInfo.drawPlayer;
-				if (drawPlayer.itemAnimation > 0 || Main.gamePaused)
+				if (drawPlayer.whoAmI != Main.myPlayer || drawPlayer.itemAnimation > 0 || Main.gamePaused)
 				{
 					return;
 				}

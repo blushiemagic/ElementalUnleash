@@ -12,3 +12,5 @@ added recipe for truffle worm
 added more dimensional chest recipes
 added the phantom
 dungeon spirits inflict ethereal flames
+fixed bug where prismatic shocker doesn't work
+fixed bug where cleanser beam's aim marker draws for other players
