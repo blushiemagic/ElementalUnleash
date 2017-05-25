@@ -102,7 +102,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 
 		private void DrawBeamTo(SpriteBatch spriteBatch, Projectile proj, Color lightColor)
 		{
-			Texture2D texture = mod.GetTexture("Projectiles/PuritySpiritWeap/PrismaticShockerBeam");
+			Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/PrismaticShockerBeam");
 			Vector2 unit = proj.Center - projectile.Center;
 			float length = unit.Length();
 			unit.Normalize();
