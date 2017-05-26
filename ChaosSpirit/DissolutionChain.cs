@@ -25,7 +25,6 @@ namespace Bluemagic.ChaosSpirit
 
 		private int timer = 0;
 		private Color color;
-		private bool synced = false;
 
 		private float Length
 		{
@@ -67,10 +66,15 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void AI()
 		{
-			if (Main.netMode == 2 && !synced)
+			if (projectile.velocity.X != 0f)
 			{
-				NetMessage.SendData(27, -1, -1, "", projectile.whoAmI);
-				synced = true;
+				projectile.localAI[0] = projectile.velocity.X == -1f ? 0f : projectile.velocity.X;
+				projectile.velocity.X = 0f;
+			}
+			if (projectile.velocity.Y != 0f)
+			{
+				projectile.localAI[1] = projectile.velocity.Y;
+				projectile.velocity.Y = 0f;
 			}
 			if (timer == 0)
 			{

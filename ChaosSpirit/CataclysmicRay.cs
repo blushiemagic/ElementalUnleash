@@ -34,7 +34,6 @@ namespace Bluemagic.ChaosSpirit
 		}
 
 		private float hue = 0f;
-		private bool synced = false;
 
 		public override void SendExtraAI(BinaryWriter writer)
 		{
@@ -48,10 +47,10 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void AI()
 		{
-			if (Main.netMode == 2 && !synced)
+			if (projectile.knockBack != 0f)
 			{
-				NetMessage.SendData(27, -1, -1, "", projectile.whoAmI);
-				synced = true;
+				projectile.localAI[1] = projectile.knockBack;
+				projectile.knockBack = 0f;
 			}
 			NPC npc = Main.npc[(int)projectile.ai[0]];
 			if (!npc.active || (npc.type != mod.NPCType("ChaosSpirit") && npc.type != mod.NPCType("ChaosSpirit2")) || projectile.localAI[0] > 2f * MathHelper.TwoPi || projectile.localAI[0] < -2f * MathHelper.TwoPi)

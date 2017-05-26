@@ -47,6 +47,21 @@ namespace Bluemagic.PuritySpirit
 
 		public override void AI()
 		{
+			if (projectile.velocity.X != 0f)
+			{
+				projectile.localAI[0] = projectile.velocity.X == -1f ? 0f : projectile.velocity.X;
+				projectile.velocity.X = 0f;
+			}
+			if (projectile.velocity.Y != 0f)
+			{
+				projectile.localAI[1] = projectile.velocity.Y;
+				projectile.velocity.Y = 0f;
+			}
+			if (projectile.knockBack != 0f)
+			{
+				maxTimer = (int)projectile.knockBack;
+				projectile.knockBack = 0f;
+			}
 			if (timer < 0)
 			{
 				projectile.alpha = -timer * 3;

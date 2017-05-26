@@ -22,11 +22,12 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.hide = true;
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override bool PreAI()
 		{
-			Projectile cannon = Main.projectile[(int)projectile.ai[1]];
+			Projectile cannon = Main.projectile[Projectile.GetByUUID(projectile.owner, projectile.ai[1])];
 			if (cannon.active && cannon.type == mod.ProjectileType("CleanserBeam"))
 			{
 				Vector2 direction = Vector2.Normalize(cannon.velocity);

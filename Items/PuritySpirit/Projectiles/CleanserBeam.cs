@@ -22,6 +22,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			projectile.ignoreWater = true;
 			projectile.hide = true;
 			projectile.ranged = true;
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override void AI()
@@ -41,7 +42,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 						direction = -Vector2.UnitY;
 					}
 					int laser = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, direction.X, direction.Y, mod.ProjectileType("CleanserLaser"), projectile.damage, projectile.knockBack, projectile.owner, 0f, projectile.whoAmI);
-					projectile.ai[1] = laser;
+					projectile.ai[1] = Main.projectile[laser].identity;
 					projectile.netUpdate = true;
 				}
 				if (!player.channel || player.noItems || player.CCed)
@@ -83,9 +84,10 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			if (projectile.ai[0] > maxTime && Main.projectile[(int)projectile.ai[1]].type == mod.ProjectileType("CleanserLaser"))
+			int byUUID = Projectile.GetByUUID(projectile.owner, projectile.ai[1]);
+			if (projectile.ai[0] > maxTime && Main.projectile[byUUID].type == mod.ProjectileType("CleanserLaser"))
 			{
-				Main.instance.DrawProj((int)projectile.ai[1]);
+				Main.instance.DrawProj(byUUID);
 			}
 			return true;
 		}

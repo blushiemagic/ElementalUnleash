@@ -375,15 +375,8 @@ namespace Bluemagic.ChaosSpirit
 					{
 						damage = (int)(damage * 1.5f / 2f);
 					}
-					int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("CataclysmicRay"), damage, 0f, Main.myPlayer, npc.whoAmI, rotation);
-					if (newRotation > rotation)
-					{
-						Main.projectile[proj].localAI[1] = 0.001f;
-					}
-					else
-					{
-						Main.projectile[proj].localAI[1] = -0.001f;
-					}
+					float rotSpeed = newRotation > rotation ? 0.001f : -0.001f;
+					int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("CataclysmicRay"), damage, rotSpeed, Main.myPlayer, npc.whoAmI, rotation);
 					npc.localAI[3] = proj;
 					npc.netUpdate = true;
 				}

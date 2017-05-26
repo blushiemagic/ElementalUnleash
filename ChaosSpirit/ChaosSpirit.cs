@@ -434,15 +434,8 @@ namespace Bluemagic.ChaosSpirit
 					{
 						damage = (int)(damage * 1.5f / 2f);
 					}
-					int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("CataclysmicRay"), damage, 0f, Main.myPlayer, npc.whoAmI, rotation);
-					if (newRotation > rotation)
-					{
-						Main.projectile[proj].localAI[1] = 0.001f;
-					}
-					else
-					{
-						Main.projectile[proj].localAI[1] = -0.001f;
-					}
+					float rotSpeed = newRotation > rotation ? 0.001f : -0.001f;
+					int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("CataclysmicRay"), damage, rotSpeed, Main.myPlayer, npc.whoAmI, rotation);
 					npc.localAI[3] = proj;
 					npc.netUpdate = true;
 				}
@@ -532,6 +525,7 @@ namespace Bluemagic.ChaosSpirit
 				for (int k = 0; k < numOrbs; k++)
 				{
 					Main.projectile[laserOrbs[k]].ai[1] = Main.projectile[laserOrbs[(k + 1) % numOrbs]].projUUID;
+					NetMessage.SendData(27, -1, -1, "", laserOrbs[k]);
 				}
 			}
 			if (attackProgress % 20 == 0 && attackProgress < 120)
@@ -582,14 +576,17 @@ namespace Bluemagic.ChaosSpirit
 			if (attackProgress == 0 && Main.netMode != 1)
 			{
 				int target = RandomTarget();
+				float syncTarget = target;
+				if (syncTarget == 0f)
+				{
+					syncTarget = -1f;
+				}
 				int damage = 200;
 				if (Main.expertMode)
 				{
 					damage = (int)(damage * 1.5f / 2f);
 				}
-				int proj = Projectile.NewProjectile(Main.player[target].Center, Vector2.Zero, mod.ProjectileType("DissolutionChain"), damage, 0f, Main.myPlayer, npc.Center.X, npc.Center.Y);
-				Main.projectile[proj].localAI[0] = target;
-				Main.projectile[proj].localAI[1] = 300f;
+				Projectile.NewProjectile(Main.player[target].Center, new Vector2(syncTarget, 300f), mod.ProjectileType("DissolutionChain"), damage, 0f, Main.myPlayer, npc.Center.X, npc.Center.Y);
 			}
 			attackProgress++;
 			if (attackProgress >= 300)

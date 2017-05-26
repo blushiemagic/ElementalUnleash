@@ -48,6 +48,11 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void AI()
 		{
+			if (projectile.knockBack != 0f)
+			{
+				projectile.localAI[0] = projectile.knockBack;
+				projectile.knockBack = 0f;
+			}
 			NPC npc = Main.npc[(int)projectile.ai[0]];
 			if (!npc.active || npc.type != mod.NPCType("ChaosSpiritArm") || projectile.localAI[0] > 2f * MathHelper.TwoPi || projectile.localAI[0] < -2f * MathHelper.TwoPi)
 			{

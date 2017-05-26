@@ -422,10 +422,7 @@ namespace Bluemagic.PuritySpirit
 				{
 					damage = (int)(150 / Main.expertDamage);
 				}
-				int proj = Projectile.NewProjectile(pos.X, pos.Y, 0f, 0f, mod.ProjectileType("PureCrystal"), damage, 0f, Main.myPlayer, npc.whoAmI, angle);
-				Main.projectile[proj].localAI[0] = radius;
-				Main.projectile[proj].localAI[1] = clockwise ? 1 : -1;
-				NetMessage.SendData(27, -1, -1, "", proj);
+				Projectile.NewProjectile(pos.X, pos.Y, radius, clockwise ? 1 : -1, mod.ProjectileType("PureCrystal"), damage, 0f, Main.myPlayer, npc.whoAmI, angle);
 			}
 		}
 
@@ -573,10 +570,7 @@ namespace Bluemagic.PuritySpirit
 				int damage = Main.expertMode ? 70 : 100;
 				for (int k = 0; k < numAttacks; k++)
 				{
-					int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("NullLaser"), damage, 0f, Main.myPlayer, npc.whoAmI, (int)(60f + k * timer));
-					Main.projectile[proj].localAI[0] = (int)totalTime;
-					((NullLaser)Main.projectile[proj].modProjectile).warningTime = timer;
-					NetMessage.SendData(27, -1, -1, "", proj);
+					Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (int)totalTime, timer, mod.ProjectileType("NullLaser"), damage, 0f, Main.myPlayer, npc.whoAmI, (int)(60f + k * timer));
 				}
 				attackProgress = (int)totalTime;
 			}
@@ -621,11 +615,7 @@ namespace Bluemagic.PuritySpirit
 					{
 						Vector2 pos = center + radius * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 						angle += 2f * (float)Math.PI / numSpheres;
-						int proj = Projectile.NewProjectile(pos.X, pos.Y, 0f, 0f, mod.ProjectileType("PuritySphere"), damage, 0f, Main.myPlayer, center.X, center.Y);
-						Main.projectile[proj].localAI[0] = target;
-						Main.projectile[proj].localAI[1] = rotationSpeed;
-						((PuritySphere)Main.projectile[proj].modProjectile).maxTimer = (int)time;
-						NetMessage.SendData(27, -1, -1, "", proj);
+						Projectile.NewProjectile(pos.X, pos.Y, target == 0f ? -1f : target, rotationSpeed, mod.ProjectileType("PuritySphere"), damage, (int)time, Main.myPlayer, center.X, center.Y);
 					}
 				}
 				attackProgress = 60 + (int)time + PuritySphere.strikeTime;

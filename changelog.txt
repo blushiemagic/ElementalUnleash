@@ -14,3 +14,5 @@ added the phantom
 dungeon spirits inflict ethereal flames
 fixed bug where prismatic shocker doesn't work
 fixed bug where cleanser beam's aim marker draws for other players
+fixed bug where cleanser beam is invisible to other players
+fixed several spirit of purity/chaos attacks not working in multiplayer

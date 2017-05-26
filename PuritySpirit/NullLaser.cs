@@ -40,6 +40,16 @@ namespace Bluemagic.PuritySpirit
 
 		public override void AI()
 		{
+			if (projectile.velocity.X != 0f)
+			{
+				projectile.localAI[0] = projectile.velocity.X;
+				projectile.velocity.X = 0f;
+			}
+			if (projectile.velocity.Y != 0f)
+			{
+				warningTime = projectile.velocity.Y;
+				projectile.velocity.Y = 0f;
+			}
 			NPC npc = Main.npc[(int)projectile.ai[0]];
 			if (!npc.active || npc.type != mod.NPCType("PuritySpirit") || projectile.localAI[0] <= 0f)
 			{
