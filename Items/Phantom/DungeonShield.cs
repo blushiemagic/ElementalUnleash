@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,6 +9,12 @@ namespace Bluemagic.Items.Phantom
 {
 	public class DungeonShield : ModItem
 	{
+		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		{
+			equips.Add(EquipType.Shield);
+			return true;
+		}
+
 		public override void SetDefaults()
 		{
 			item.name = "Holy Knight's Shield";
