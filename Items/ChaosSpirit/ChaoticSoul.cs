@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Items.Summon
+namespace Bluemagic.Items.ChaosSpirit
 {
 	public class ChaoticSoul : ModItem
 	{

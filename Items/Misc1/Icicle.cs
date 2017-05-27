@@ -2,7 +2,7 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Items.Summon
+namespace Bluemagic.Items.Misc1
 {
 	public class Icicle : ModItem
 	{
