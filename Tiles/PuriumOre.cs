@@ -36,7 +36,7 @@ namespace Bluemagic.Tiles
 				{
 					WorldGen.Convert(i + x, j + y, 0, 0);
 					Tile tile = Main.tile[i + x, j + y];
-					if (tile.active() && (tile.type == TileID.Demonite || tile.type == TileID.Crimtane))
+					if (tile.active() && (tile.type == TileID.Demonite || tile.type == TileID.Crimtane) && Main.rand.Next(3) == 0)
 					{
 						tile.type = (ushort)mod.TileType("PuriumOre");
 						NetMessage.SendTileRange(Main.myPlayer, i + x, j + y, 1, 1);
