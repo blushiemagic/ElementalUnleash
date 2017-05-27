@@ -489,7 +489,7 @@ namespace Bluemagic.Abomination
 				}
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenDrill"));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DimensionalChest"));
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"));
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"), 5);
 			}
 			BluemagicWorld.downedAbomination = true;
 			if (Main.netMode != 1 && NPC.downedMoonlord)
