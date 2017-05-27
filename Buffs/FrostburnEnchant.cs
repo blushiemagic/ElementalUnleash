@@ -4,19 +4,19 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Buffs
 {
-	public class EtherealFlamesEnchant : ModBuff
+	public class FrostburnEnchant : ModBuff
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Weapon Imbue: Frostburn";
-			Main.buffTip[Type] = "Melee attacks inflict frostburn";
+			Main.buffName[Type] = "Weapon Imbue: Ethereal Flames";
+			Main.buffTip[Type] = "Melee attacks inflict ethereal flames";
 			Main.meleeBuff[Type] = true;
 			Main.persistentBuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant = 2;
+			player.GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant = 1;
 		}
 	}
 }

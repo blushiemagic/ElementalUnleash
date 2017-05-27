@@ -814,6 +814,16 @@ namespace Bluemagic
 						Main.dust[dust].velocity.Y -= 0.5f;
 					}
 				}
+				else if (customMeleeEnchant == 2)
+				{
+					if (Main.rand.Next(2) == 0)
+					{
+						int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, 135, player.velocity.X * 0.2f + player.direction * 3f, player.velocity.Y * 0.2f, 100, default(Color), 2.5f);
+						Main.dust[dust].noGravity = true;
+						Main.dust[dust].velocity *= 0.7f;
+						Main.dust[dust].velocity.Y -= 0.5f;
+					}
+				}
 			}
 		}
 
@@ -840,6 +850,10 @@ namespace Bluemagic
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 			}
+			else if (customMeleeEnchant == 2)
+			{
+				target.AddBuff(BuffID.Frostburn, 60 * Main.rand.Next(3, 7), false);
+			}
 			if (puriumShieldChargeMax > 0f && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
 			{
 				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
@@ -862,6 +876,10 @@ namespace Bluemagic
 				{
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), false);
 				}
+				else if (customMeleeEnchant == 2)
+				{
+					target.AddBuff(BuffID.Frostburn, 60 * Main.rand.Next(3, 7), false);
+				}
 			}
 			if (puriumShieldChargeMax > 0f && target.lifeMax > 5 && target.type != NPCID.TargetDummy)
 			{
@@ -874,6 +892,10 @@ namespace Bluemagic
 			if (customMeleeEnchant == 1)
 			{
 				target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
+			}
+			else if (customMeleeEnchant == 2)
+			{
+				target.AddBuff(BuffID.Frostburn, 60 * Main.rand.Next(3, 7), true);
 			}
 			if (puriumShieldChargeMax > 0f)
 			{
@@ -888,6 +910,10 @@ namespace Bluemagic
 				if (customMeleeEnchant == 1)
 				{
 					target.AddBuff(mod.BuffType("EtherealFlames"), 60 * Main.rand.Next(3, 7), true);
+				}
+				else if (customMeleeEnchant == 2)
+				{
+					target.AddBuff(BuffID.Frostburn, 60 * Main.rand.Next(3, 7), true);
 				}
 			}
 			if (puriumShieldChargeMax > 0f)
