@@ -6,19 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Purium.Armor
 {
+	[AutoloadEquip(EquipType.Head)]
 	public class PuriumMask : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Head);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("50% increased minion damage"
+				+ "\nIncreases maximum number of minions by 4");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Purium Mask";
-			item.toolTip = "50% increased minion damage";
-			item.toolTip2 = "Increases maximum number of minions by 4";
 			item.width = 18;
 			item.height = 18;
 			item.defense = 9;

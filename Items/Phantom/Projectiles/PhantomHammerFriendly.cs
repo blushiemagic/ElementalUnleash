@@ -7,9 +7,13 @@ namespace Bluemagic.Items.Phantom.Projectiles
 {
 	public class PhantomHammerFriendly : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Phantom Hammer");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Hammer";
 			projectile.width = 38;
 			projectile.height = 38;
 			projectile.alpha = 70;

@@ -7,14 +7,17 @@ namespace Bluemagic.Items.Misc1
 {
 	public class HorrorRune : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Toggles the horrors from above");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Horror Rune";
 			item.width = 12;
 			item.height = 20;
 			item.maxStack = 20;
 			item.rare = 4;
-			item.toolTip = "Toggles the horrors from above";
 			item.useStyle = 4;
 			item.useAnimation = 45;
 			item.useTime = 45;
@@ -36,7 +39,7 @@ namespace Bluemagic.Items.Misc1
 				}
 				if (Main.netMode == 2)
 				{
-					NetMessage.SendData(MessageID.WorldInfo);
+					NetMessage.SendData(MessageID.WorldData);
 				}
 			}
 			return true;

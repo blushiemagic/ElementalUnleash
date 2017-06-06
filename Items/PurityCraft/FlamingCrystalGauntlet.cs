@@ -6,20 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.PurityCraft
 {
+	[AutoloadEquip(EquipType.HandsOn, EquipType.HandsOff)]
 	public class FlamingCrystalGauntlet : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.HandsOn);
-			equips.Add(EquipType.HandsOff);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("Increases melee knockback and inflicts fire damage on attack"
+				+ "\n25% increased melee damage and speed");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Flaming Crystal Gauntlet";
-			item.toolTip = "Increases melee knockback and inflicts fire damage on attack";
-			item.toolTip2 = "25% increased melee damage and speed";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;

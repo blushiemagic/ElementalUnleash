@@ -8,12 +8,15 @@ namespace Bluemagic.Items.Purium.Weapons
 {
 	public class PuriumBullet : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Bounces at high speeds");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Bullet";
 			item.width = 8;
 			item.height = 8;
-			item.toolTip = "Bounces at high speeds";
 			item.maxStack = 999;
 			item.damage = 20;
 			item.knockBack = 4f;

@@ -9,7 +9,6 @@ namespace Bluemagic.Phantom
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Hammer";
 			projectile.width = 38;
 			projectile.height = 38;
 			projectile.alpha = 70;

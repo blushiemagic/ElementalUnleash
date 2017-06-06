@@ -11,9 +11,13 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 	{
 		private const int maxTime = 50;
 
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Cleanser Beam";
 			projectile.width = 32;
 			projectile.height = 80;
 			projectile.friendly = true;
@@ -22,7 +26,6 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			projectile.ignoreWater = true;
 			projectile.hide = true;
 			projectile.ranged = true;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override void AI()

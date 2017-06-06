@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Phantom
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Phantom Trophy";
 			item.width = 30;
 			item.height = 30;
 			item.maxStack = 99;

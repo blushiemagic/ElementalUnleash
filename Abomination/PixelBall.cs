@@ -7,16 +7,17 @@ namespace Bluemagic.Abomination
 {
 	public class PixelBall : ElementBall
 	{
-		public override bool Autoload(ref string name, ref string texture)
+		public override string Texture
 		{
-			texture = mod.Name + "/Abomination/ElementBall";
-			return mod.Properties.Autoload;
+			get
+			{
+				return "Bluemagic/Abomination/ElementBall";
+			}
 		}
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
-			base.SetDefaults();
-			projectile.name = "Pixel Ball";
+			DisplayName.SetDefault("Pixel Ball");
 		}
 
 		public override void CreateDust()

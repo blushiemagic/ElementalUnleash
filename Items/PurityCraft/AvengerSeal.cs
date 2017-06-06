@@ -7,10 +7,13 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class AvengerSeal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("30% increased damage");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Avenger Seal";
-			item.toolTip = "30% increased damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;

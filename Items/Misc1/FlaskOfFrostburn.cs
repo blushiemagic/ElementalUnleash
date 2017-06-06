@@ -7,14 +7,17 @@ namespace Bluemagic.Items.Misc1
 {
 	public class FlaskOfFrostburn : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Melee attacks inflict frostburn");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Flask of Frostburn";
 			item.width = 14;
 			item.height = 24;
 			item.maxStack = 30;
 			item.rare = 8;
-			item.toolTip = "Melee attacks inflict frostburn";
 			item.value = 5000;
 			item.useStyle = 2;
 			item.useAnimation = 17;

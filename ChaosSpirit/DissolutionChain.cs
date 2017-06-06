@@ -12,7 +12,6 @@ namespace Bluemagic.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Dissolution Chain";
 			projectile.width = 32;
 			projectile.height = 32;
 			projectile.hostile = true;
@@ -95,7 +94,7 @@ namespace Bluemagic.ChaosSpirit
 					int proj = Projectile.NewProjectile(player.Center, Vector2.Zero, projectile.type, damage, 0f, Main.myPlayer, projectile.Center.X, projectile.Center.Y);
 					Main.projectile[proj].localAI[0] = projectile.localAI[0];
 					Main.projectile[proj].localAI[1] = projectile.localAI[1];
-					NetMessage.SendData(27, -1, -1, "", proj);
+					NetMessage.SendData(27, -1, -1, null, proj);
 				}
 				if (timer == interval)
 				{

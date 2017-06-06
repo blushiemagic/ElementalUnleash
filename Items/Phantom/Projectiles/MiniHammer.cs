@@ -7,9 +7,14 @@ namespace Bluemagic.Items.Phantom.Projectiles
 {
 	public class MiniHammer : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionShot[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Mini Hammer";
 			projectile.width = 19;
 			projectile.height = 19;
 			projectile.timeLeft = 200;
@@ -17,8 +22,6 @@ namespace Bluemagic.Items.Phantom.Projectiles
 			projectile.friendly = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
 		}
 
 		public override void AI()

@@ -9,17 +9,20 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 {
 	public class VoidPortal : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			Main.projFrames[projectile.type] = 2;
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionShot[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Void Portal";
 			projectile.width = 80;
 			projectile.height = 80;
 			projectile.friendly = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			Main.projFrames[projectile.type] = 2;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
 		}
 
 		public override void AI()

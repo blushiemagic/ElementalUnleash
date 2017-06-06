@@ -6,19 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Purium.Armor
 {
+	[AutoloadEquip(EquipType.Body)]
 	public class PuriumBreastplate : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Body);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("10% increased damage and critical strike chance"
+				+ "\nIncreases your max number of minions by 1");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Purium Breastplate";
-			item.toolTip = "10% increased damage and critical strike chance";
-			item.toolTip2 = "Increases your max number of minions by 1";
 			item.width = 18;
 			item.height = 18;
 			item.defense = 32;

@@ -8,15 +8,15 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Weapon Imbue: Frostburn";
-			Main.buffTip[Type] = "Melee attacks inflict frostburn";
+			DisplayName.SetDefault("Weapon Imbue: Ethereal Flames");
+			Description.SetDefault("Melee attacks inflict ethereal flames");
 			Main.meleeBuff[Type] = true;
 			Main.persistentBuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant = 2;
+			player.GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant = 1;
 		}
 	}
 }

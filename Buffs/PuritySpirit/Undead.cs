@@ -10,8 +10,8 @@ namespace Bluemagic.Buffs.PuritySpirit
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[this.Type] = "Undead";
-			Main.buffTip[this.Type] = "Recovering harms you";
+			DisplayName.SetDefault("Undead");
+			Description.SetDefault("Recovering harms you");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;

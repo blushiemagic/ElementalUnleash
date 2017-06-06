@@ -8,15 +8,18 @@ namespace Bluemagic.Items.PuritySpirit
 {
 	public class PrismaticShocker : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Dissolve your foes in a dazzling display."
+				+ "\n<right> to turn off the lights.");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Prismatic Shocker";
 			item.damage = 409;
 			item.magic = true;
 			item.width = 48;
 			item.height = 48;
-			item.toolTip = "Dissolve your foes in a dazzling display.";
-			item.toolTip2 = "Right-click to turn off the lights.";
 			item.useTime = 30;
 			item.useAnimation = 30;
 			item.UseSound = SoundID.Item44;

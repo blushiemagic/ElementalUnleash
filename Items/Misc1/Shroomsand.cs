@@ -7,9 +7,13 @@ namespace Bluemagic.Items.Misc1
 {
 	public class Shroomsand : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Shroomsand Block");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Shroomsand Block";
 			item.width = 12;
 			item.height = 12;
 			item.maxStack = 999;

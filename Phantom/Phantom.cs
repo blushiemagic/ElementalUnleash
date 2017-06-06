@@ -3,18 +3,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Phantom
 {
+	[AutoloadBossHead]
 	public class Phantom : ModNPC
 	{
 		private const float maxSpeed = 8f;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("The Phantom");
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "Phantom";
-			npc.displayName = "The Phantom";
 			npc.aiStyle = -1;
 			npc.lifeMax = 50000;
 			npc.damage = 120;
@@ -291,14 +296,16 @@ namespace Bluemagic.Phantom
 
 		private void Talk(string message)
 		{
-			message = "<" + npc.displayName + "> " + message;
+			message = "<" + npc.TypeName + "> " + message;
 			if (Main.netMode == 0)
 			{
-				Main.NewText(message, 50, 150, 200);
+				string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+				Main.NewText(text, 50, 150, 200);
 			}
 			else
 			{
-				NetMessage.SendData(MessageID.ChatText, -1, -1, message, 255, 50, 150, 200);
+				NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+				NetMessage.BroadcastChatMessage(text, new Color(50, 150, 200));
 			}
 		}
 

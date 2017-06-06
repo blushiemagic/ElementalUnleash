@@ -14,7 +14,6 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void SetDefaults()
 		{
-			projectile.name = "Chaos Ray";
 			projectile.width = 48;
 			projectile.height = 48;
 			projectile.hostile = true;

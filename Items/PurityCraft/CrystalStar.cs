@@ -10,7 +10,6 @@ namespace Bluemagic.Items.PurityCraft
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Crystal Star";
 			projectile.width = 24;
 			projectile.height = 24;
 			projectile.aiStyle = 5;

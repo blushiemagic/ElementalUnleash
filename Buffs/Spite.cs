@@ -9,8 +9,8 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Spite";
-			Main.buffTip[Type] = "12% increased damage and critical strike chance";
+			DisplayName.SetDefault("Spite");
+			Description.SetDefault("12% increased damage and critical strike chance");
 			Main.buffNoSave[Type] = true;
 		}
 

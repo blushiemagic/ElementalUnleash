@@ -19,7 +19,9 @@ namespace Bluemagic.Tiles
 			TileObjectData.addTile(Type);
 			dustType = 7;
 			disableSmartCursor = true;
-			AddMapEntry(new Color(120, 85, 60), "Trophy");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Trophy");
+			AddMapEntry(new Color(120, 85, 60), name);
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)

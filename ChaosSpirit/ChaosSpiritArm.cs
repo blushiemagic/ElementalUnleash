@@ -14,10 +14,14 @@ namespace Bluemagic.ChaosSpirit
 		private const int size = ChaosSpirit.size;
 		public const float armLength = ChaosSpirit2.armLength;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Spirit of Chaos - Arm");
+			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "ChaosSpiritArm";
-			npc.displayName = "Spirit of Chaos - Arm";
 			npc.aiStyle = -1;
 			npc.lifeMax = 400000;
 			npc.damage = 200;
@@ -38,7 +42,6 @@ namespace Bluemagic.ChaosSpirit
 			{
 				npc.buffImmune[k] = true;
 			}
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
 			music = MusicID.LunarBoss;
 		}
 
@@ -137,7 +140,7 @@ namespace Bluemagic.ChaosSpirit
 			}
 			if (npc.localAI[0] == 0f)
 			{
-				npc.displayName = GetName();
+				npc.GivenName = GetName();
 				npc.localAI[0] = 1f;
 			}
 			npc.timeLeft = NPC.activeTime;
@@ -363,7 +366,7 @@ namespace Bluemagic.ChaosSpirit
 				}
 				int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("ChaosRay"), damage, 0f, Main.myPlayer, npc.whoAmI, startRot);
 				Main.projectile[proj].localAI[0] = endRot;
-				NetMessage.SendData(27, -1, -1, "", proj);
+				NetMessage.SendData(27, -1, -1, null, proj);
 			}
 			if (attackTimer == 300)
 			{

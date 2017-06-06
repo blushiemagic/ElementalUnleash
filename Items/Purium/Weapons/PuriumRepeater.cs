@@ -8,12 +8,15 @@ namespace Bluemagic.Items.Purium.Weapons
 {
 	public class PuriumRepeater : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("50% chance not to consume ammo");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Repeater";
 			item.width = 50;
 			item.height = 18;
-			item.toolTip = "50% chance not to consume ammo";
 			item.useStyle = 5;
 			item.useAnimation = 18;
 			item.useTime = 18;

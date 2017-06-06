@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Bullet";
 			projectile.width = 8;
 			projectile.height = 8;
 			projectile.alpha = 255;

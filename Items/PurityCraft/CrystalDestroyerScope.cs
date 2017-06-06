@@ -8,11 +8,14 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class CrystalDestroyerScope : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Increases view range for guns (<right> to zoom out)"
+				+ "\n25% increased ranged damage and critical strike chance");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Crystal Destroyer Scope";
-			item.toolTip = "Increases view range for guns (Right click to zoom out)";
-			item.toolTip2 = "+25% ranged damage, +25% critical strike chance";
 			item.width = 14;
 			item.height = 28;
 			item.accessory = true;

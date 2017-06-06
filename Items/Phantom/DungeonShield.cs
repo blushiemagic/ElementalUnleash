@@ -7,22 +7,21 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Phantom
 {
+	[AutoloadEquip(EquipType.Shield)]
 	public class DungeonShield : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Shield);
-			return true;
+			DisplayName.SetDefault("Holy Knight's Shield");
+			Tooltip.SetDefault("Grants immunity to knockback"
+				+ "\nAbsorbs 25% of damage done to players on your team when above 25% life"
+				+ "\nYou and players on your team take 7% reduced damage");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Holy Knight's Shield";
 			item.width = 32;
 			item.height = 32;
-			AddTooltip("Grants immunity to knockback");
-			AddTooltip("Absorbs 25% of damage done to players on your team when above 25% life");
-			AddTooltip("You and players on your team take 7% reduced damage");
 			item.value = Item.buyPrice(0, 20, 0, 0);
 			item.rare = 9;
 			item.expert = true;

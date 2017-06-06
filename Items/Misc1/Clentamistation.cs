@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class Clentamistation : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Clentaminates items");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Clentamistation";
 			item.width = 26;
 			item.height = 20;
 			item.maxStack = 99;
 			item.rare = 5;
 			item.value = 2000000;
-			item.toolTip = "Clentaminates items";
 			item.useStyle = 1;
 			item.useTurn = true;
 			item.useAnimation = 15;

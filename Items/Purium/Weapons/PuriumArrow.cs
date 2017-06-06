@@ -8,12 +8,16 @@ namespace Bluemagic.Items.Purium.Weapons
 {
 	public class PuriumArrow : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Leaves a trail in its path"
+				+ "\nThe trail does not interfere with your piercing projectiles");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Arrow";
 			item.width = 10;
 			item.height = 28;
-			item.toolTip = "Leaves a trail in its path";
 			item.maxStack = 999;
 			item.damage = 14;
 			item.knockBack = 4f;

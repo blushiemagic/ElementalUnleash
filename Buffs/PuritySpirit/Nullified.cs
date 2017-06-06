@@ -10,8 +10,8 @@ namespace Bluemagic.Buffs.PuritySpirit
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[this.Type] = "Nullified";
-			Main.buffTip[this.Type] = "Your abilities are nullified";
+			DisplayName.SetDefault("Nullified");
+			Description.SetDefault("Your abilities are nullified");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;

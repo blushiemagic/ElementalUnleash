@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class SpitePotion : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("12% increased damage and critical strike chance"
+				+ "\nIncompatible with Wrath and Rage");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Spite Potion";
 			item.width = 14;
 			item.height = 24;
 			item.maxStack = 30;
 			item.rare = 8;
-			item.toolTip = "12% increases damage and critical strike chance";
-			item.toolTip2 = "Incompatible with Wrath and Rage";
 			item.value = 1000;
 			item.useStyle = 2;
 			item.useAnimation = 17;

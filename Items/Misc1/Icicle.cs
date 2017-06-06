@@ -8,7 +8,6 @@ namespace Bluemagic.Items.Misc1
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Icicle";
 			item.width = 20;
 			item.height = 20;
 			item.maxStack = 99;

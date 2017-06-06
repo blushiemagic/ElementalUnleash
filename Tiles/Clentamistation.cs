@@ -16,7 +16,9 @@ namespace Bluemagic.Tiles
 			Main.tileFrameImportant[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
 			TileObjectData.addTile(Type);
-			AddMapEntry(new Color(175, 175, 175), "Clentamistation");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Clentamistation");
+			AddMapEntry(new Color(175, 175, 175), name);
 			disableSmartCursor = true;
 		}
 

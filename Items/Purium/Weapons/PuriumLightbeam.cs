@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Purium.Weapons
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Purium Lightbeam";
 			item.width = 40;
 			item.height = 40;
 			item.scale = 1.1f;

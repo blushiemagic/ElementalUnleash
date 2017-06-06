@@ -9,7 +9,6 @@ namespace Bluemagic.Items.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Cataclysm Trophy";
 			item.width = 30;
 			item.height = 30;
 			item.maxStack = 99;

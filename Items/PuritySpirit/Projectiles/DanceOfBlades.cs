@@ -8,9 +8,13 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
 	public class DanceOfBlades : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Dance of Blades");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Dance of Blades";
 			projectile.width = 220;
 			projectile.height = 220;
 			projectile.friendly = true;

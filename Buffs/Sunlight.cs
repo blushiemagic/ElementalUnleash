@@ -9,8 +9,8 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Sunlight";
-			Main.buffTip[Type] = "Emitting light and increased night vision";
+			DisplayName.SetDefault("Sunlight");
+			Description.SetDefault("Emitting light and increased night vision");
 			Main.buffNoSave[Type] = true;
 		}
 

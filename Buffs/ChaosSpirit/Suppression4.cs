@@ -10,8 +10,8 @@ namespace Bluemagic.Buffs.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[this.Type] = "Suppression";
-			Main.buffTip[this.Type] = "100% reduced damage";
+			DisplayName.SetDefault("Suppression");
+			Description.SetDefault("100% reduced damage");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;

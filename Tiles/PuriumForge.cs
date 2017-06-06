@@ -25,7 +25,9 @@ namespace Bluemagic.Tiles
 			dustType = 128;
 			animationFrameHeight = 38;
 			adjTiles = new int[] { TileID.Furnaces, TileID.Hellforge, TileID.AdamantiteForge };
-			AddMapEntry(new Color(100, 210, 100), "Purium Forge");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Purium Forge");
+			AddMapEntry(new Color(100, 210, 100), name);
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)

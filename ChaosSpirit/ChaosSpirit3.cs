@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Bluemagic.ChaosSpirit
@@ -14,10 +15,16 @@ namespace Bluemagic.ChaosSpirit
 	{
 		private const int size = ChaosSpirit.size;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Spirit of Chaos");
+			Main.npcFrameCount[npc.type] = 5;
+			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "ChaosSpirit";
-			npc.displayName = "Spirit of Chaos";
 			npc.aiStyle = -1;
 			npc.lifeMax = 400000;
 			npc.damage = 0;
@@ -34,13 +41,10 @@ namespace Bluemagic.ChaosSpirit
 			npc.noTileCollide = true;
 			npc.HitSound = SoundID.NPCHit1;
 			npc.DeathSound = null;
-			Main.npcFrameCount[npc.type] = 5;
 			for (int k = 0; k < npc.buffImmune.Length; k++)
 			{
 				npc.buffImmune[k] = true;
 			}
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
 			music = MusicID.Title;
 			bossBag = mod.ItemType("ChaosSpiritBag");
 		}
@@ -177,7 +181,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			countdown = 60 * 60;
 			stage++;
-			Talk("60 seconds until the end");
+			Talk("Mods.Bluemagic.CataclysmCountdown", 60);
 		}
 
 		private void Countdown()
@@ -189,45 +193,45 @@ namespace Bluemagic.ChaosSpirit
 			}
 			if (countdown == 60 * 45)
 			{
-				Talk("45 seconds until the end");
+				Talk("Mods.Bluemagic.CataclysmCountdown", 45);
 			}
 			else if (countdown == 60 * 30)
 			{
-				Talk("30 seconds until the end");
+				Talk("Mods.Bluemagic.CataclysmCountdown", 30);
 			}
 			else if (countdown == 60 * 20)
 			{
-				Talk("20 seconds until the end");
+				Talk("Mods.Bluemagic.CataclysmCountdown", 20);
 			}
 			else if (countdown == 60 * 10)
 			{
-				Talk("10 seconds until the end");
+				Talk("Mods.Bluemagic.CataclysmCountdown", 10);
 			}
 			else if (countdown == 60 * 5)
 			{
-				Talk("5");
+				TalkLiteral("5");
 			}
 			else if (countdown == 60 * 4)
 			{
-				Talk("4");
+				TalkLiteral("4");
 			}
 			else if (countdown == 60 * 3)
 			{
-				Talk("3");
+				TalkLiteral("3");
 			}
 			else if (countdown == 60 * 2)
 			{
-				Talk("2");
+				TalkLiteral("2");
 			}
 			else if (countdown == 60)
 			{
-				Talk("1");
+				TalkLiteral("1");
 			}
 			else if (countdown <= 0)
 			{
 				countdown = 0;
 				stage++;
-				Talk("The air grows heavy with chaotic pressure");
+				Talk("Mods.Bluemagic.ChaosPressureStart");
 				npc.netUpdate = true;
 			}
 		}
@@ -384,7 +388,7 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void BossLoot(ref string name, ref int potionType)
 		{
-			name = "The " + npc.displayName;
+			name = "The " + name;
 			potionType = ItemID.SuperHealingPotion;
 		}
 
@@ -404,15 +408,42 @@ namespace Bluemagic.ChaosSpirit
 			return Color.White;
 		}
 
-		private void Talk(string message, byte r = 255, byte g = 255, byte b = 255)
+		private void Talk(string key, byte r = 255, byte g = 255, byte b = 255)
 		{
 			if (Main.netMode == 0)
 			{
-				Main.NewText(message, r, g, b);
+				Main.NewText(Language.GetTextValue(key), r, g, b);
 			}
-			else if (Main.netMode == 2)
+			else
 			{
-				NetMessage.SendData(25, -1, -1, message, 255, r, g, b);
+				NetworkText text = NetworkText.FromKey(key);
+				NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+			}
+		}
+
+		private void Talk(string key, object arg, byte r = 255, byte g = 255, byte b = 255)
+		{
+			if (Main.netMode == 0)
+			{
+				Main.NewText(Language.GetTextValue(key, arg), r, g, b);
+			}
+			else
+			{
+				NetworkText text = NetworkText.FromKey(key, arg);
+				NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+			}
+		}
+
+		private void TalkLiteral(string literal, byte r = 255, byte g = 255, byte b = 255)
+		{
+			if (Main.netMode == 0)
+			{
+				Main.NewText(literal, r, g, b);
+			}
+			else
+			{
+				NetworkText text = NetworkText.FromLiteral(literal);
+				NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
 			}
 		}
 

@@ -12,7 +12,6 @@ namespace Bluemagic.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Suppression Sphere";
 			projectile.width = 120;
 			projectile.height = 120;
 			projectile.penetrate = -1;

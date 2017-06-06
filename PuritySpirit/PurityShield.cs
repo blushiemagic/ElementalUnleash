@@ -9,10 +9,16 @@ namespace Bluemagic.PuritySpirit
 {
 	public class PurityShield : ModNPC
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Shield of Purity");
+			Main.npcFrameCount[npc.type] = 4;
+			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "PurityShield";
-			npc.displayName = "Shield of Purity";
 			npc.aiStyle = -1;
 			npc.lifeMax = PuritySpirit.dpsCap;
 			npc.damage = 0;
@@ -29,9 +35,6 @@ namespace Bluemagic.PuritySpirit
 			{
 				npc.buffImmune[k] = true;
 			}
-			Main.npcFrameCount[npc.type] = 4;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)

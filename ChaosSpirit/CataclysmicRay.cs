@@ -14,7 +14,6 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void SetDefaults()
 		{
-			projectile.name = "Cataclysmic Ray";
 			projectile.width = 48;
 			projectile.height = 48;
 			projectile.hostile = true;

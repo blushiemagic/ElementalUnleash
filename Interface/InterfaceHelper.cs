@@ -2,29 +2,30 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Bluemagic.Interface
 {
 	public static class InterfaceHelper
 	{
-		public static void ModifyInterfaceLayers(List<MethodSequenceListItem> layers)
+		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			for (int k = 0; k < layers.Count; k++)
 			{
 				if (layers[k].Name == "Vanilla: Resource Bars")
 				{
-					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar));
+					layers.Insert(k + 1, new LegacyGameInterfaceLayer("Bluemagic: Purium Shield Bar", DrawPuriumShieldBar, InterfaceScaleType.UI));
 				}
 				else if (layers[k].Name == "Vanilla: Inventory")
 				{
-					layers.Insert(k + 1, new MethodSequenceListItem("Bluemagic: Custom Stats", DrawCustomStats, layers[k]));
+					layers.Insert(k + 1, new LegacyGameInterfaceLayer("Bluemagic: Custom Stats", DrawCustomStats, InterfaceScaleType.UI));
 				}
 				else if (layers[k].Name == "Vanilla: Mouse Over")
 				{
-					layers.Insert(k, new MethodSequenceListItem("Bluemagic: Mouse Over", DrawMouseOver, layers[k]));
+					layers.Insert(k, new LegacyGameInterfaceLayer("Bluemagic: Mouse Over", DrawMouseOver, InterfaceScaleType.UI));
 					k++;
 				}
 			}
@@ -49,7 +50,7 @@ namespace Bluemagic.Interface
 			const int padding = 4;
 			const int chargeSize = barSize - 2 * padding;
 			const int chargeHeight = 20;
-			SpriteFont font = Main.fontMouseText;
+			DynamicSpriteFont font = Main.fontMouseText;
 			float puriumShieldCharge = Math.Min(modPlayer.puriumShieldCharge, modPlayer.puriumShieldChargeMax);
 			string chargeText = (int)puriumShieldCharge + "/" + (int)modPlayer.puriumShieldChargeMax;
 			string maxText = "Purity Shield Charge: " + (int)modPlayer.puriumShieldChargeMax + "/" + (int)modPlayer.puriumShieldChargeMax;

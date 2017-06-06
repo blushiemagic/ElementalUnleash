@@ -11,15 +11,21 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 	{
 		private List<Vector2> positions = new List<Vector2>();
 
-		public override bool Autoload(ref string name, ref string texture)
+		public override string Texture
 		{
-			texture = "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
-			return base.Autoload(ref name, ref texture);
+			get
+			{
+				return "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
+			}
+		}
+
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Lightbeam";
 			projectile.width = 8;
 			projectile.height = 8;
 			projectile.hide = true;
@@ -29,7 +35,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.ignoreWater = true;
 			projectile.MaxUpdates = 16;
 			projectile.melee = true;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override void AI()

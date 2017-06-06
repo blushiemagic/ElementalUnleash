@@ -6,19 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.PurityCraft
 {
+	[AutoloadEquip(EquipType.HandsOn)]
 	public class MoonlightCharm : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.HandsOn);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("Provides huge life regeneration and greatly reduces the cooldown of healing potions"
+				+ "\nIncreases pickup range and effectiveness of hearts");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Moonlight Charm";
-			item.toolTip = "Provides huge life regeneration and greatly reduces the cooldown of healing potions";
-			item.toolTip2 = "Increases pickup range and effectiveness of hearts";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;

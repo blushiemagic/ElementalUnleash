@@ -10,7 +10,6 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Prismatic Shocker";
 			projectile.width = 32;
 			projectile.height = 32;
 			projectile.friendly = true;

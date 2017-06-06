@@ -7,10 +7,13 @@ namespace Bluemagic.Items.Purium
 {
 	public class PuriumOre : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("'Flowing with power'");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Ore";
-			item.toolTip = "'Flowing with power'";
 			item.width = 12;
 			item.height = 12;
 			item.maxStack = 999;

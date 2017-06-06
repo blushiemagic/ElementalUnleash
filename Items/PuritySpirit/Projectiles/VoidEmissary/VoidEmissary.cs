@@ -17,15 +17,21 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 		private bool handsOpen = false;
 		private const float voidPortalCooldown = 600f;
 
+		public override void SetStaticDefaults()
+		{
+			Main.projFrames[projectile.type] = 3;
+			Main.projPet[projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
 			projectile.netImportant = true;
-			projectile.name = "Void Emissary";
 			projectile.width = 32;
 			projectile.height = 48;
-			Main.projFrames[projectile.type] = 3;
 			projectile.friendly = true;
-			Main.projPet[projectile.type] = true;
 			projectile.minion = true;
 			projectile.minionSlots = 1;
 			projectile.penetrate = -1;
@@ -34,11 +40,8 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 			projectile.timeLeft = 18000;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
 			hand1.offset = new Vector2(-16f, 24f);
 			hand2.offset = new Vector2(16f, 24f);
-			ProjectileID.Sets.Homing[projectile.type] = true;
 		}
 
 		public override void SendExtraAI(BinaryWriter writer)

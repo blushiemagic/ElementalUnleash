@@ -9,15 +9,23 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PuriumArrowTrail : ModProjectile
 	{
-		public override bool Autoload(ref string name, ref string texture)
+		public override string Texture
 		{
-			texture = "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
-			return base.Autoload(ref name, ref texture);
+			get
+			{
+				return "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
+			}
+		}
+
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Purium Arrow");
+			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[projectile.type] = 90;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Arrow";
 			projectile.width = 8;
 			projectile.height = 8;
 			projectile.ranged = true;
@@ -27,8 +35,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.friendly = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 90;
 		}
 
 		public override void AI()

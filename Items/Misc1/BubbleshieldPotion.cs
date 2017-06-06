@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class BubbleshieldPotion : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Increases defense by 12 and reduces damage taken by 12%"
+				+ "\nIncompatible with Ironskin and Endurance");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Bubbleshield Potion";
 			item.width = 14;
 			item.height = 24;
 			item.maxStack = 30;
 			item.rare = 8;
-			item.toolTip = "Increases defense by 12 and reduces damage taken by 12%";
-			item.toolTip2 = "Incompatible with Ironskin and Endurance";
 			item.value = 1000;
 			item.useStyle = 2;
 			item.useAnimation = 17;

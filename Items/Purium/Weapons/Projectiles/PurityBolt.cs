@@ -7,10 +7,19 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PurityBolt : ModProjectile
 	{
-		public override bool Autoload(ref string name, ref string texture)
+		public override string Texture
 		{
-			texture = "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
-			return base.Autoload(ref name, ref texture);
+			get
+			{
+				return "Bluemagic/Items/Purium/Weapons/Projectiles/PuriumBullet";
+			}
+		}
+
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Purity Wisp");
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionShot[projectile.type] = true;
 		}
 
 		public override void SetDefaults()
@@ -21,8 +30,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.penetrate = 1;
 			projectile.friendly = true;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
 		}
 
 		public override void AI()

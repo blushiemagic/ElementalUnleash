@@ -7,14 +7,17 @@ namespace Bluemagic.Items.Phantom
 {
 	public class SpectreGun : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Uses wisps as ammo");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Spectre Gun";
 			item.damage = 68;
 			item.ranged = true;
 			item.width = 42;
 			item.height = 30;
-			item.toolTip = "Uses wisps as ammo";
 			item.useTime = 35;
 			item.useAnimation = 35;
 			item.useStyle = 5;

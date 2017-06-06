@@ -1,20 +1,5 @@
-Added the Purity Shield mount
-Added the Hardmode Guide
-Added phantom weapons
-Support for boss checklist summoning info
-Rebalanced recipes and effects of infinity crystal items
-infinity crystal items now require purium anvil instead of elemental purge
-increased stack size of solar/lunar/horror drops
-improved the spirit of chaos's attacks
-spirit of chaos phase 2 only requires 8 hits
-slightly increased drop rate of horror drops
-added recipe for truffle worm
-added more dimensional chest recipes
-added the phantom
-dungeon spirits inflict ethereal flames
-fixed bug where prismatic shocker doesn't work
-fixed bug where cleanser beam's aim marker draws for other players
-fixed bug where cleanser beam is invisible to other players
-fixed several spirit of purity/chaos attacks not working in multiplayer
-added new potions
-the abomination now drops more molten bars
+updated to tModLoader v0.10
+fixed a few item names
+made some tooltips more descriptive
+fixed bug where flask of frostburn and ethereal flames were switched
+added music for spirit of purity

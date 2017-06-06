@@ -7,7 +7,9 @@ using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 using Bluemagic.ChaosSpirit;
 using Bluemagic.Interface;
 using Bluemagic.PuritySpirit;
@@ -39,7 +41,8 @@ namespace Bluemagic
 			Properties = new ModProperties()
 			{
 				Autoload = true,
-				AutoloadGores = true
+				AutoloadGores = true,
+				AutoloadSounds = true
 			};
 		}
 
@@ -64,6 +67,34 @@ namespace Bluemagic
 			SkyManager.Instance["Bluemagic:MonolithVoid"] = new VoidSky();
 			Filters.Scene["Bluemagic:ChaosSpirit"] = new Filter(new ChaosSpiritScreenShaderData("FilterMiniTower").UseColor(0.9f, 0.4f, 0.4f).UseOpacity(0.25f), EffectPriority.VeryHigh);
 			SkyManager.Instance["Bluemagic:ChaosSpirit"] = new ChaosSpiritSky();
+
+			ModTranslation text = CreateTranslation("PhantomSummon");
+			text.SetDefault("You feel something cold leeching your life...");
+			AddTranslation(text);
+			text = CreateTranslation("ElementalUnleash");
+			text.SetDefault("The elements have been unleashed!");
+			AddTranslation(text);
+			text = CreateTranslation("NPCTalk");
+			text.SetDefault("<{0}> {1}");
+			AddTranslation(text);
+			text = CreateTranslation("LivesLeft");
+			text.SetDefault("{0} has {1} lives left!");
+			AddTranslation(text);
+			text = CreateTranslation("LifeLeft");
+			text.SetDefault("{0} has 1 life left!");
+			AddTranslation(text);
+			text = CreateTranslation("ChaosDpsCap");
+			text.SetDefault("A heavy pressure protects the chaos from rapid damage.");
+			AddTranslation(text);
+			text = CreateTranslation("ChaosPressureStart");
+			text.SetDefault("The air grows heavy with chaotic pressure");
+			AddTranslation(text);
+			text = CreateTranslation("ChaosPressureLight");
+			text.SetDefault("A protective sphere of light has appeared!");
+			AddTranslation(text);
+			text = CreateTranslation("CataclysmCountdown");
+			text.SetDefault("{0} seconds until the end");
+			AddTranslation(text);
 		}
 
 		public override void PostSetupContent()
@@ -102,16 +133,16 @@ namespace Bluemagic
 				player.GetModPlayer<BluemagicPlayer>(this).heroLives = lives;
 				if (lives > 0)
 				{
-					string text = player.name + " has " + lives;
+					NetworkText text;
 					if (lives == 1)
 					{
-						text += " life left!";
+						text = NetworkText.FromKey("Mods.Bluemagic.LifeLeft", player.name);
 					}
 					else
 					{
-						text += " lives left!";
+						text = NetworkText.FromKey("Mods.Bluemagic.LivesLeft", player.name, lives);
 					}
-					NetMessage.SendData(25, -1, -1, text, 255, 255, 25, 25);
+					NetMessage.BroadcastChatMessage(text, new Color(255, 25, 25));
 				}
 			}
 			else if (type == MessageType.ChaosSpirit)
@@ -159,7 +190,7 @@ namespace Bluemagic
 			}
 		}
 
-		public override void ModifyInterfaceLayers(List<MethodSequenceListItem> layers)
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			InterfaceHelper.ModifyInterfaceLayers(layers);
 		}

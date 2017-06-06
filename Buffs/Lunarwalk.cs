@@ -9,8 +9,8 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Lunarwalk";
-			Main.buffTip[Type] = "30% increased movement speed - Press UP to reverse gravity";
+			DisplayName.SetDefault("Lunarwalk");
+			Description.SetDefault("30% increased movement speed - Press UP to reverse gravity");
 			Main.buffNoSave[Type] = true;
 		}
 

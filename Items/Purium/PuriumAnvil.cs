@@ -7,10 +7,13 @@ namespace Bluemagic.Items.Purium
 {
 	public class PuriumAnvil : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Used to craft items from elemental bars");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Anvil";
-			item.toolTip = "Used to craft items from elemental bars";
 			item.width = 28;
 			item.height = 14;
 			item.maxStack = 99;

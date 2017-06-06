@@ -7,12 +7,15 @@ namespace Bluemagic.Items.Phantom
 {
 	public class PhantomBlade : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Projects a phantom blade when swung");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Phantom Blade";
 			item.width = 40;
 			item.height = 40;
-			item.toolTip = "Projects a phantom blade when swung";
 			item.useStyle = 1;
 			item.useAnimation = 32;
 			item.useTime = 32;

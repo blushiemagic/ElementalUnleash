@@ -10,9 +10,13 @@ namespace Bluemagic.ChaosSpirit
 {
 	public class ChaosArray : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Array of Chaos");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Array of Chaos";
 			projectile.width = 64;
 			projectile.height = 64;
 			projectile.hostile = true;

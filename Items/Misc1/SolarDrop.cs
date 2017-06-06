@@ -6,12 +6,15 @@ namespace Bluemagic.Items.Misc1
 {
 	public class SolarDrop : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Burning with sunlight");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Solar Drop";
 			item.width = 8;
 			item.height = 8;
-			item.toolTip = "Burning with sunlight";
 			item.maxStack = 999;
 			item.rare = 3;
 			item.value = 1000;

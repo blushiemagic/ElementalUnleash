@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -150,12 +152,13 @@ namespace Bluemagic
 			}
 			if (Main.netMode == 0)
 			{
-				Main.NewText("The elements have been unleashed!", 100, 220, 100);
+				Main.NewText(Language.GetTextValue("Mods.Bluemagic.ElementalUnleash"), 100, 220, 100);
 			}
 			else if (Main.netMode == 2)
 			{
-				NetMessage.SendData(MessageID.ChatText, -1, -1, "The elements have been unleashed!", 255, 100, 220, 100);
-				NetMessage.SendData(MessageID.WorldInfo);
+				NetworkText text = NetworkText.FromKey("Mods.Bluemagic.ElementalUnleash");
+				NetMessage.BroadcastChatMessage(text, new Color(100, 220, 100));
+				NetMessage.SendData(MessageID.WorldData);
 			}
 		}
 	}

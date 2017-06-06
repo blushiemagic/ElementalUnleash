@@ -7,8 +7,8 @@ namespace Bluemagic.Buffs.Summons
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[this.Type] = "Purity Shield";
-			Main.buffTip[this.Type] = "The Spirit of Purity lends you power";
+			DisplayName.SetDefault("Purity Shield");
+			Description.SetDefault("The Spirit of Purity lends you power");
 			Main.buffNoTimeDisplay[Type] = true;
 			Main.buffNoSave[Type] = true;
 		}

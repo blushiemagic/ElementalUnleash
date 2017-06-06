@@ -6,14 +6,17 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class PurityShield : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Mount - Encases you inside a shield of purity"
+				+ "\nInfinite flight and +10% purity shield fill rate");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purity Shield";
 			item.width = 28;
 			item.height = 28;
 			item.alpha = 75;
-			item.toolTip = "Mount - Encases you inside a shield of purity";
-			item.toolTip2 = "Infinite flight and +10% purity shield fill rate";
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = 1;

@@ -11,9 +11,15 @@ namespace Bluemagic.PuritySpirit
 {
 	public class PuritySnake : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Void Trail");
+			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[projectile.type] = 180;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Void Trail";
 			projectile.width = 80;
 			projectile.height = 80;
 			projectile.hide = true;
@@ -22,8 +28,6 @@ namespace Bluemagic.PuritySpirit
 			projectile.hostile = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 180;
 			cooldownSlot = 1;
 		}
 

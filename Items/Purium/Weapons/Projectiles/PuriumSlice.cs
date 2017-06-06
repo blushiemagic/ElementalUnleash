@@ -8,9 +8,13 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PuriumSlice : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Purium Slicer");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Slice";
 			projectile.width = 30;
 			projectile.height = 30;
 			projectile.scale = 1.4f;
@@ -45,11 +49,11 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			}
 		}
 
-		public override bool NewTileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
 		{
 			width = 12;
 			height = 12;
-			return base.NewTileCollideStyle(ref width, ref height, ref fallThrough);
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
 		}
 
 		public override void Kill(int timeLeft)

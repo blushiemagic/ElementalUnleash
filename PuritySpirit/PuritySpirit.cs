@@ -5,10 +5,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
+using System.Reflection;
 
 namespace Bluemagic.PuritySpirit
 {
+	[AutoloadBossHead]
 	public class PuritySpirit : ModNPC
 	{
 		private const int size = 120;
@@ -16,10 +19,15 @@ namespace Bluemagic.PuritySpirit
 		public static readonly int arenaWidth = (int)(1.3f * NPC.sWidth);
 		public static readonly int arenaHeight = (int)(1.3f * NPC.sHeight);
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Spirit of Purity");
+			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "PuritySpirit";
-			npc.displayName = "Spirit of Purity";
 			npc.aiStyle = -1;
 			npc.lifeMax = 400000;
 			npc.damage = 0;
@@ -41,9 +49,7 @@ namespace Bluemagic.PuritySpirit
 			{
 				npc.buffImmune[k] = true;
 			}
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
-			music = MusicID.Title;
+			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/The sound of anxiety");
 			bossBag = mod.ItemType("PuritySpiritBag");
 		}
 
@@ -762,7 +768,7 @@ namespace Bluemagic.PuritySpirit
 
 		public override void BossLoot(ref string name, ref int potionType)
 		{
-			name = "The " + npc.displayName;
+			name = "The " + name;
 			potionType = ItemID.SuperHealingPotion;
 		}
 
@@ -896,14 +902,15 @@ namespace Bluemagic.PuritySpirit
 
 		private void Talk(string message)
 		{
-			string text = "<Spirit of Purity> " + message;
 			if (Main.netMode != 2)
 			{
-				Main.NewText("<Spirit of Purity> " + message, 150, 250, 150);
+				string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+				Main.NewText(text, 150, 250, 150);
 			}
 			else
 			{
-				NetMessage.SendData(25, -1, -1, text, 255, 150, 250, 150);
+				NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+				NetMessage.BroadcastChatMessage(text, new Color(150, 250, 150));
 			}
 		}
 

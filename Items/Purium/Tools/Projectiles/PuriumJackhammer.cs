@@ -8,9 +8,13 @@ namespace Bluemagic.Items.Purium.Tools.Projectiles
 {
 	public class PuriumJackhammer : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			Main.projFrames[projectile.type] = 4;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Jackhammer";
 			projectile.width = 18;
 			projectile.height = 18;
 			projectile.scale = 1.2f;
@@ -21,7 +25,6 @@ namespace Bluemagic.Items.Purium.Tools.Projectiles
 			projectile.hide = true;
 			projectile.ownerHitCheck = true;
 			projectile.melee = true;
-			Main.projFrames[projectile.type] = 4;
 		}
 
 		public override void AI()

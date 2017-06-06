@@ -9,7 +9,6 @@ namespace Bluemagic.Items.PuritySpirit
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Elemental Purge";
 			item.width = 22;
 			item.height = 32;
 			item.maxStack = 99;

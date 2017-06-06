@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Purium.Tools.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Chainsaw";
 			projectile.width = 18;
 			projectile.height = 18;
 			projectile.scale = 1.2f;

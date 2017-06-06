@@ -7,13 +7,16 @@ namespace Bluemagic.Items.Misc1
 {
 	public class PurpleDroplet : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Used by the Clentamistation"
+				+ "\nImbues the Corruption");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purple Droplet";
 			item.width = 4;
 			item.height = 4;
-			item.toolTip = "Used by the Clentamistation";
-			item.toolTip2 = "Imbues the Corruption";
 			item.maxStack = 999;
 			item.rare = 3;
 			item.value = 25;

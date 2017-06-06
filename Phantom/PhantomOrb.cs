@@ -10,7 +10,6 @@ namespace Bluemagic.Phantom
 	{
 		public override void SetDefaults()
 		{
-			npc.name = "Phantom Orb";
 			npc.aiStyle = -1;
 			npc.lifeMax = 500;
 			npc.defense = 50;

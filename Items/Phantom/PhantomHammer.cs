@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Phantom
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Phantom Hammer";
 			item.width = 14;
 			item.height = 28;
 			item.useStyle = 1;

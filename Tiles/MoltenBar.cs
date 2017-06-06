@@ -21,7 +21,9 @@ namespace Bluemagic.Tiles
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.addTile(Type);
-			AddMapEntry(new Color(255, 200, 100), "Molten Bar");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Molten Bar");
+			AddMapEntry(new Color(255, 200, 100), name);
 			drop = mod.ItemType("MoltenBar");
 		}
 

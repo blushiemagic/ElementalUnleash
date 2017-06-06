@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Abomination.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Molten Drill";
 			projectile.width = 22;
 			projectile.height = 22;
 			projectile.aiStyle = 20;

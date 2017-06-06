@@ -9,7 +9,6 @@ namespace Bluemagic.Items.PurityCraft
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Endless Silver Pouch";
 			item.shootSpeed = 4f;
 			item.shoot = ProjectileID.Bullet;
 			item.damage = 9;

@@ -11,9 +11,13 @@ namespace Bluemagic.ChaosSpirit
 {
 	public class DissonanceOrb : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Dissonance Orb";
 			projectile.width = 64;
 			projectile.height = 64;
 			projectile.hostile = true;
@@ -22,7 +26,6 @@ namespace Bluemagic.ChaosSpirit
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			cooldownSlot = 1;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		private int timer = 0;
@@ -32,7 +35,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			if (Main.netMode == 2 && !synced)
 			{
-				NetMessage.SendData(27, -1, -1, "", projectile.whoAmI);
+				NetMessage.SendData(27, -1, -1, null, projectile.whoAmI);
 				synced = true;
 			}
 			if (timer == 0)

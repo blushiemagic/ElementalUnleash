@@ -8,12 +8,15 @@ namespace Bluemagic.Items.Purium.Weapons
 {
 	public class PuriumStaff : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Casts a controllable sphere of purity");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Staff";
 			item.width = 26;
 			item.height = 28;
-			item.toolTip = "Casts a controllable sphere of purity";
 			item.useStyle = 1;
 			item.useAnimation = 27;
 			item.useTime = 27;

@@ -6,17 +6,16 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.ChaosSpirit
 {
+	[AutoloadEquip(EquipType.Head)]
 	public class ChaosSpiritMask : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Head);
-			return true;
+			DisplayName.SetDefault("Spirit of Chaos Mask");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Spirit of Chaos Mask";
 			item.width = 18;
 			item.height = 18;
 			item.rare = 1;

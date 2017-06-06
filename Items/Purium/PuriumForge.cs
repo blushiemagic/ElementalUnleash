@@ -7,10 +7,13 @@ namespace Bluemagic.Items.Purium
 {
 	public class PuriumForge : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Used to smelt elemental ores");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Forge";
-			item.toolTip = "Used to smelt elemental ores";
 			item.width = 44;
 			item.height = 30;
 			item.maxStack = 99;

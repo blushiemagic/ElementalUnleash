@@ -7,10 +7,13 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class WarriorSeal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("30% increased melee damage");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Warrior Seal";
-			item.toolTip = "30% increased melee damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;

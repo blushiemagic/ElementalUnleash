@@ -7,9 +7,13 @@ namespace Bluemagic.Phantom
 {
 	public class WispHostile : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Wisp");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Wisp";
 			projectile.width = 16;
 			projectile.height = 16;
 			projectile.alpha = 70;

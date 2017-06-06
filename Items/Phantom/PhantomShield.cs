@@ -7,21 +7,20 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Phantom
 {
+	[AutoloadEquip(EquipType.Shield)]
 	public class PhantomShield : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Shield);
-			return true;
+			DisplayName.SetDefault("Phantom's Shield");
+			Tooltip.SetDefault("Reduces damage taken by 7%"
+				+ "\nPlayers on your team receive this bonus as well");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Phantom's Shield";
 			item.width = 32;
 			item.height = 32;
-			item.toolTip = "Reduces damage taken by 7%";
-			item.toolTip2 = "Players on your team receive this bonus as well";
 			item.value = Item.buyPrice(0, 10, 0, 0);
 			item.rare = 9;
 			item.expert = true;

@@ -7,8 +7,8 @@ namespace Bluemagic.Buffs.Summons
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Void Emissary";
-			Main.buffTip[Type] = "The void emissary will fight alongside you";
+			DisplayName.SetDefault("Void Emissary");
+			Description.SetDefault("The void emissary will fight alongside you");
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 		}

@@ -7,13 +7,16 @@ namespace Bluemagic.Items.Misc1
 {
 	public class RedDroplet : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Used by the Clentamistation"
+				+ "\nImbues the Crimson");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Red Droplet";
 			item.width = 4;
 			item.height = 4;
-			item.toolTip = "Used by the Clentamistation";
-			item.toolTip2 = "Imbues the Crimson";
 			item.maxStack = 999;
 			item.rare = 3;
 			item.value = 25;

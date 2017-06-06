@@ -10,9 +10,14 @@ namespace Bluemagic.Projectiles
 	{
 		protected bool falling = true;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Shroomsand Ball");
+			ProjectileID.Sets.ForcePlateDetection[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Shroomsand Ball";
 			projectile.knockBack = 6f;
 			projectile.width = 10;
 			projectile.height = 10;
@@ -20,7 +25,6 @@ namespace Bluemagic.Projectiles
 			projectile.friendly = true;
 			projectile.hostile = true;
 			projectile.penetrate = -1;
-			ProjectileID.Sets.ForcePlateDetection[projectile.type] = true;
 		}
 
 		public override void AI()
@@ -72,7 +76,7 @@ namespace Bluemagic.Projectiles
 			Lighting.AddLight((int)(projectile.Center.X / 16f), (int)(projectile.Center.Y / 16f), 0.1f, 0.2f, 0.7f);
 		}
 
-		public override bool NewTileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
 		{
 			if (falling)
 			{
@@ -110,12 +114,12 @@ namespace Bluemagic.Projectiles
 							WorldGen.SlopeTile(tileX, tileY + 1, 0);
 							if (Main.netMode == 2)
 							{
-								NetMessage.SendData(17, -1, -1, "", 14, tileX, tileY + 1, 0f, 0, 0, 0);
+								NetMessage.SendData(17, -1, -1, null, 14, tileX, tileY + 1, 0f, 0, 0, 0);
 							}
 						}
 						if (Main.netMode != 0)
 						{
-							NetMessage.SendData(17, -1, -1, "", 1, tileX, tileY, tileType, 0, 0, 0);
+							NetMessage.SendData(17, -1, -1, null, 1, tileX, tileY, tileType, 0, 0, 0);
 						}
 					}
 				}

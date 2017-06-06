@@ -1,20 +1,24 @@
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Phantom
 {
 	public class PaladinEmblem : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("The dungeon is growing cold...");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Paladin Emblem";
 			item.width = 22;
 			item.height = 14;
 			item.maxStack = 20;
 			item.rare = 8;
-			item.toolTip = "The dungeon is growing cold...";
 			item.useStyle = 4;
 			item.useAnimation = 45;
 			item.useTime = 45;
@@ -45,10 +49,10 @@ namespace Bluemagic.Items.Phantom
 				int npc = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("PhantomSoul"), 0, 0f, 0f, 0f, 0f, player.whoAmI);
 				if (Main.netMode == 2)
 				{
-					NetMessage.SendData(MessageID.SyncNPC, -1, -1, "", npc);
+					NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npc);
 				}
 			}
-			Main.NewText("You feel something cold leeching your life...", 50, 150, 200);
+			Main.NewText(Language.GetTextValue("Mods.Bluemagic.PhantomSummon"), 50, 150, 200);
 			return true;
 		}
 

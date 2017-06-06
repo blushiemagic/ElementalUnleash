@@ -9,8 +9,8 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Bubbleshield";
-			Main.buffTip[Type] = "Increases defense by 12 and reduces damage taken by 12%";
+			DisplayName.SetDefault("Bubbleshield");
+			Description.SetDefault("Increases defense by 12 and reduces damage taken by 12%");
 			Main.buffNoSave[Type] = true;
 		}
 

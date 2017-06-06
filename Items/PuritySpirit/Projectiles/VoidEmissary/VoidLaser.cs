@@ -10,9 +10,14 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 {
 	public class VoidLaser : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionShot[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Void Laser";
 			projectile.width = 20;
 			projectile.height = 20;
 			projectile.aiStyle = 84;
@@ -23,8 +28,6 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 			projectile.ranged = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
 		}
 
 		public override bool PreAI()

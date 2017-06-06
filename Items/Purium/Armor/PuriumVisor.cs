@@ -6,19 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Purium.Armor
 {
+	[AutoloadEquip(EquipType.Head)]
 	public class PuriumVisor : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Head);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("15% increased ranged damage, 10% increased ranged critical strike chance"
+				+ "\n25% chance to not consume ammo");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Purium Visor";
-			item.toolTip = "15% increased ranged damage, 10% increased ranged critical strike chance";
-			item.toolTip2 = "25% chance to not consume ammo";
 			item.width = 18;
 			item.height = 18;
 			item.defense = 24;

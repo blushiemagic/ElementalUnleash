@@ -10,7 +10,6 @@ namespace Bluemagic.Items.PurityCraft
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Crystal Shard";
 			projectile.width = 12;
 			projectile.height = 12;
 			projectile.friendly = true;

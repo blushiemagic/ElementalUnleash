@@ -7,14 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class DayInvert : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Celestial Rune");
+			Tooltip.SetDefault("Manipulates the sun and moon");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Celestial Rune";
 			item.width = 12;
 			item.height = 20;
 			item.maxStack = 20;
 			item.rare = 4;
-			item.toolTip = "Manipulates the sun and moon";
 			item.useStyle = 4;
 			item.useAnimation = 45;
 			item.useTime = 45;
@@ -36,7 +40,7 @@ namespace Bluemagic.Items.Misc1
 				}
 				if (Main.netMode == 2)
 				{
-					NetMessage.SendData(MessageID.WorldInfo);
+					NetMessage.SendData(MessageID.WorldData);
 				}
 			}
 			return true;

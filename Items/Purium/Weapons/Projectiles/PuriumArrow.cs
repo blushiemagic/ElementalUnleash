@@ -8,9 +8,13 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PuriumArrow : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Arrow";
 			projectile.width = 10;
 			projectile.height = 10;
 			projectile.aiStyle = 1;
@@ -22,7 +26,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.friendly = true;
 			projectile.tileCollide = true;
 			projectile.ignoreWater = false;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override void AI()

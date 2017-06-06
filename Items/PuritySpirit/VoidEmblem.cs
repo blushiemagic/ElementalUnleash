@@ -6,15 +6,20 @@ namespace Bluemagic.Items.PuritySpirit
 {
 	public class VoidEmblem : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Emblem of the Void");
+			Tooltip.SetDefault("Summons a void emissary to fight alongside you."
+				+ "\nDoes not interfere with your piercing projectiles");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Emblem of the Void";
 			item.damage = 612;
 			item.summon = true;
 			item.mana = 10;
 			item.width = 28;
 			item.height = 28;
-			item.toolTip = "Summons a void emissary to fight alongside you.";
 			item.useTime = 36;
 			item.useAnimation = 36;
 			item.useStyle = 4;

@@ -9,10 +9,14 @@ namespace Bluemagic.Items.ChaosSpirit
 {
 	public class ChaosCrystal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Grants one chaos point");
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Chaos Crystal";
-			item.toolTip = "Grants one chaos point";
 			item.width = 28;
 			item.height = 28;
 			item.maxStack = 99;
@@ -23,11 +27,6 @@ namespace Bluemagic.Items.ChaosSpirit
 			item.useTime = 30;
 			item.useAnimation = 30;
 			item.UseSound = SoundID.Item29;
-		}
-
-		public override DrawAnimation GetAnimation()
-		{
-			return new DrawAnimationVertical(5, 4);
 		}
 
 		public override bool CanUseItem(Player player)

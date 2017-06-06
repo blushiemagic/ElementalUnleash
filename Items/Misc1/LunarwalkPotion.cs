@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class LunarwalkPotion : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("30% increased movement speed and allows the control of gravity"
+				+ "\nIncompatible with Swiftness");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Lunarwalk Potion";
 			item.width = 14;
 			item.height = 24;
 			item.maxStack = 30;
 			item.rare = 3;
-			item.toolTip = "30% increased movement speed and allows the control of gravity";
-			item.toolTip2 = "Incompatible with Swiftness";
 			item.value = 1000;
 			item.useStyle = 2;
 			item.useAnimation = 17;

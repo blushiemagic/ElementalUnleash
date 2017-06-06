@@ -6,15 +6,18 @@ namespace Bluemagic.Items.Abomination
 {
 	public class MoltenBar : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("'Pulsing with heat energy'"
+				+ "\nThe first item bluemagic123 ever made");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Molten Bar";
 			item.width = 20;
 			item.height = 20;
 			item.maxStack = 99;
 			item.rare = 10;
-			item.toolTip = "'Pulsing with heat energy'";
-			item.toolTip2 = "The first item bluemagic123 ever made";
 			item.value = 30000;
 			item.useStyle = 1;
 			item.useTurn = true;

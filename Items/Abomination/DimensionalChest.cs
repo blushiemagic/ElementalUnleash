@@ -7,10 +7,13 @@ namespace Bluemagic.Items.Abomination
 {
 	public class DimensionalChest : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Steals loot from other dimensions");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Dimensional Chest";
-			item.toolTip = "Steals loot from other dimensions";
 			item.width = 26;
 			item.height = 22;
 			item.maxStack = 99;

@@ -8,12 +8,16 @@ namespace Bluemagic.Items.ChaosSpirit
 {
 	public class RitualOfEndings : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Brings the wrath of the End unto the world"
+				+ "\nCan be reused infinitely");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Ritual of Endings";
 			item.width = 20;
 			item.height = 20;
-			item.toolTip = "Brings the wrath of the End unto the world";
 			item.value = Item.sellPrice(0, 50, 0, 0);
 			item.rare = 11;
 			item.useAnimation = 45;

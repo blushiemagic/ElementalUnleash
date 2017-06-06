@@ -8,11 +8,14 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class CelestialSeal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("30% increased magic damage"
+				+ "\nGreatly increases pickup range and effectiveness of stars");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Celestial Seal";
-			item.toolTip = "30% increased magic damage";
-			item.toolTip2 = "Greatly increases pickup range and effectiveness of stars";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;

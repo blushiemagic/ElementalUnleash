@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Misc1
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Mushroom Brick Wall";
 			item.width = 12;
 			item.height = 12;
 			item.maxStack = 999;
@@ -25,7 +24,7 @@ namespace Bluemagic.Items.Misc1
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient("MushroomBrick");
+			recipe.AddIngredient(null, "MushroomBrick");
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this, 4);
 			recipe.AddRecipe();

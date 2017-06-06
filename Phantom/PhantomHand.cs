@@ -10,10 +10,13 @@ namespace Bluemagic.Phantom
 	{
 		private const float maxSpeed = 8f;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("The Phantom");
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "Phantom Hand";
-			npc.displayName = "The Phantom";
 			npc.aiStyle = -1;
 			npc.lifeMax = 50000;
 			npc.damage = 120;

@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Phantom.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Blade";
 			projectile.width = 200;
 			projectile.height = 12;
 			projectile.alpha = 70;

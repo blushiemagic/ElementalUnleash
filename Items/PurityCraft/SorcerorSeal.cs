@@ -7,10 +7,13 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class SorcerorSeal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("30% increased magic damage");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Sorceror Seal";
-			item.toolTip = "30% increased magic damage";
 			item.width = 24;
 			item.height = 24;
 			item.accessory = true;

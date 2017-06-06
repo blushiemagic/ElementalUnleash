@@ -7,15 +7,19 @@ namespace Bluemagic.Items.PuritySpirit
 {
 	public class CleanserBeam : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Cleanse your foes, one line at a time."
+				+ "\nWipes out everything within the beam."
+				+ "\nNo enemy armor can survive the destruction!");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Cleanser Beam";
 			item.damage = 212;
 			item.ranged = true;
 			item.width = 64;
 			item.height = 24;
-			item.toolTip = "Cleanse your foes, one line at a time.";
-			item.toolTip2 = "Wipes out everything within the beam.";
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.UseSound = SoundID.Item13;

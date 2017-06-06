@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Staff";
 			projectile.width = 10;
 			projectile.height = 10;
 			projectile.alpha = 255;

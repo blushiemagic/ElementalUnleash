@@ -9,10 +9,14 @@ namespace Bluemagic.Items.ChaosSpirit
 {
 	public class CataclysmCrystal : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Grants one cataclysm point");
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Cataclysm Crystal";
-			item.toolTip = "Grants one cataclysm point";
 			item.width = 28;
 			item.height = 28;
 			item.maxStack = 99;
@@ -24,11 +28,6 @@ namespace Bluemagic.Items.ChaosSpirit
 			item.useTime = 30;
 			item.useAnimation = 30;
 			item.UseSound = SoundID.Item29;
-		}
-
-		public override DrawAnimation GetAnimation()
-		{
-			return new DrawAnimationVertical(5, 4);
 		}
 
 		public override bool CanUseItem(Player player)

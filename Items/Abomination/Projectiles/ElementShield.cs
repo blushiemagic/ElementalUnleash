@@ -8,9 +8,14 @@ namespace Bluemagic.Items.Abomination.Projectiles
 {
 	public class ElementShield : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Six-Color Shield");
+			Main.projFrames[projectile.type] = 6;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Six-Color Shield";
 			projectile.width = 48;
 			projectile.height = 48;
 			projectile.alpha = 75;
@@ -19,7 +24,6 @@ namespace Bluemagic.Items.Abomination.Projectiles
 			projectile.magic = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
-			Main.projFrames[projectile.type] = 6;
 		}
 
 		public override void AI()
@@ -34,7 +38,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 				{
 					projectile.damage = (int)(1.2f * projectile.damage);
 				}
-				projectile.name = GetName();
+				projectile.Name = GetName();
 				projectile.localAI[0] = 1f;
 			}
 			Player player = Main.player[projectile.owner];
@@ -112,7 +116,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 				case 5:
 					return "Ichor Shield";
 				default:
-					return projectile.name;
+					return projectile.Name;
 			}
 		}
 

@@ -11,7 +11,6 @@ namespace Bluemagic.Phantom
 	{
 		public override void SetDefaults()
 		{
-			npc.name = "Phantom Soul";
 			npc.aiStyle = -1;
 			npc.width = 16;
 			npc.height = 16;

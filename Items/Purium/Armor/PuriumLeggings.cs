@@ -6,18 +6,16 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Purium.Armor
 {
+	[AutoloadEquip(EquipType.Legs)]
 	public class PuriumLeggings : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Legs);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("12% increased movement speed");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Purium Leggings";
-			item.toolTip = "12% increased movement speed";
 			item.width = 18;
 			item.height = 18;
 			item.defense = 24;

@@ -6,19 +6,17 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Purium.Armor
 {
+	[AutoloadEquip(EquipType.Head)]
 	public class PuriumHeadgear : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Head);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("15% increased magic damage, 10% increased magic critical strike chance"
+				+ "\n+80 maximum mana and 15% reduced mana usage");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Purium Headgear";
-			item.toolTip = "15% increased magic damage, 10% increased magic critical strike chance";
-			item.toolTip2 = "+80 maximum mana and 15% reduced mana usage";
 			item.width = 18;
 			item.height = 18;
 			item.defense = 14;

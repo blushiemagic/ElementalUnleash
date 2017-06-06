@@ -13,7 +13,6 @@ namespace Bluemagic.Items.Phantom.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Sphere";
 			projectile.width = 192;
 			projectile.height = 192;
 			projectile.alpha = 255;

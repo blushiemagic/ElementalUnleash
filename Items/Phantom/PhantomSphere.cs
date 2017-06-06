@@ -7,12 +7,15 @@ namespace Bluemagic.Items.Phantom
 {
 	public class PhantomSphere : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Summons a phantom sphere around you");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Phantom Sphere";
 			item.width = 26;
 			item.height = 28;
-			item.toolTip = "Summons a phantom sphere";
 			item.useStyle = 4;
 			item.useAnimation = 28;
 			item.useTime = 28;

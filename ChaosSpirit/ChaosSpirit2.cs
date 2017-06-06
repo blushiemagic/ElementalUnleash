@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Bluemagic.ChaosSpirit
@@ -14,10 +15,14 @@ namespace Bluemagic.ChaosSpirit
 		private const int size = ChaosSpirit.size;
 		public const float armLength = 400f;
 
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Spirit of Chaos");
+			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "ChaosSpirit";
-			npc.displayName = "Spirit of Chaos";
 			npc.aiStyle = -1;
 			npc.lifeMax = 400000;
 			npc.damage = 200;
@@ -39,7 +44,6 @@ namespace Bluemagic.ChaosSpirit
 			{
 				npc.buffImmune[k] = true;
 			}
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
 			music = MusicID.LunarBoss;
 			//bossBag = mod.ItemType("ChaosSpiritBag");
 		}
@@ -414,7 +418,7 @@ namespace Bluemagic.ChaosSpirit
 			{
 				if (attackProgress == 0)
 				{
-					Talk("The air grows heavy with chaotic pressure");
+					Talk("Mods.Bluemagic.ChaosPressureStart");
 					float angle = Main.rand.NextFloat() * MathHelper.TwoPi;
 					Vector2 offset = 320f * angle.ToRotationVector2();
 					Projectile.NewProjectile(npc.Center + offset, Vector2.Zero, mod.ProjectileType("HolySphere"), 0, 0f, Main.myPlayer, npc.whoAmI);
@@ -422,7 +426,7 @@ namespace Bluemagic.ChaosSpirit
 				}
 				if (attackProgress == 30)
 				{
-					Talk("A protective sphere of light has appeared!");
+					Talk("Mods.Bluemagic.ChaosPressureLight");
 				}
 			}
 			attackProgress++;
@@ -588,15 +592,16 @@ namespace Bluemagic.ChaosSpirit
 			return false;
 		}
 
-		private void Talk(string message, byte r = 255, byte g = 255, byte b = 255)
+		private void Talk(string key, byte r = 255, byte g = 255, byte b = 255)
 		{
 			if (Main.netMode != 2)
 			{
-				Main.NewText(message, r, g, b);
+				Main.NewText(Language.GetTextValue(key), r, g, b);
 			}
 			else
 			{
-				NetMessage.SendData(25, -1, -1, message, 255, r, g, b);
+				NetworkText text = NetworkText.FromKey(key);
+				NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
 			}
 		}
 

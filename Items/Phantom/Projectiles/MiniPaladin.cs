@@ -9,24 +9,27 @@ namespace Bluemagic.Items.Phantom.Projectiles
 {
 	public class MiniPaladin : Minion
 	{
+		public override void SetStaticDefaults()
+		{
+			Main.projFrames[projectile.type] = 11;
+			Main.projPet[projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
 			projectile.netImportant = true;
-			projectile.name = "Mini Paladin";
 			projectile.width = 32;
 			projectile.height = 32;
-			Main.projFrames[projectile.type] = 11;
 			projectile.friendly = true;
-			Main.projPet[projectile.type] = true;
 			projectile.minion = true;
 			projectile.minionSlots = 1;
 			projectile.penetrate = -1;
 			projectile.timeLeft = 18000;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = false;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
-			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 		}
 
 		public override void CheckActive()

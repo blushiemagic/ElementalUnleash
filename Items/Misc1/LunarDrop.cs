@@ -6,12 +6,15 @@ namespace Bluemagic.Items.Misc1
 {
 	public class LunarDrop : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Glowing with moonlight");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Lunar Drop";
 			item.width = 8;
 			item.height = 8;
-			item.toolTip = "Glowing with moonlight";
 			item.maxStack = 999;
 			item.rare = 3;
 			item.value = 1000;

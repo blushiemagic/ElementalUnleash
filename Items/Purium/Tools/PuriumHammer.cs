@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Purium.Tools
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Purium Hammer";
 			item.damage = 130;
 			item.melee = true;
 			item.width = 20;

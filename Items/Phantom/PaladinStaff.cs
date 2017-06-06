@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Phantom
 {
 	public class PaladinStaff : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Summons a mini paladin to fight for you.");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Paladin Staff";
 			item.damage = 62;
 			item.summon = true;
 			item.mana = 10;
 			item.width = 26;
 			item.height = 28;
-			item.toolTip = "Summons a mini paladin to fight for you.";
 			item.useTime = 36;
 			item.useAnimation = 36;
 			item.useStyle = 1;

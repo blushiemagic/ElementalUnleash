@@ -7,15 +7,18 @@ namespace Bluemagic.Items.Misc1
 {
 	public class SunlightPotion : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Emits a strong aura of light and increases night vision"
+				+ "\nIncompatible with Shine");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Sunlight Potion";
 			item.width = 14;
 			item.height = 24;
 			item.maxStack = 30;
 			item.rare = 3;
-			item.toolTip = "Emits a strong aura of light and increases night vision";
-			item.toolTip2 = "Incompatible with Shine";
 			item.value = 1000;
 			item.useStyle = 2;
 			item.useAnimation = 17;

@@ -8,11 +8,14 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class InfinityScarab : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Greatly increases your max number of minions"
+				+ "\nGreatly increases the damage and knockback of your minions");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Infinity Scarab";
-			item.toolTip = "Greatly increases your max number of minions";
-			item.toolTip2 = "Greatly increases the damage and knockback of your minions";
 			item.width = 24;
 			item.height = 28;
 			item.accessory = true;

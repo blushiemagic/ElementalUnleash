@@ -10,8 +10,8 @@ namespace Bluemagic.Buffs.Damage
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[this.Type] = "Ethereal Flames";
-			Main.buffTip[this.Type] = "Losing life";
+			DisplayName.SetDefault("Ethereal Flames");
+			Description.SetDefault("Losing life");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
@@ -25,7 +25,7 @@ namespace Bluemagic.Buffs.Damage
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-			npc.GetModInfo<BluemagicNPCInfo>(mod).eFlames = true;
+			npc.GetGlobalNPC<BluemagicNPC>().eFlames = true;
 		}
 	}
 }

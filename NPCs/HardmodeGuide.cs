@@ -7,20 +7,48 @@ using Terraria.UI.Gamepad;
 
 namespace Bluemagic.NPCs
 {
+	[AutoloadHead]
 	public class HardmodeGuide : ModNPC
 	{
 		private static int helpText;
 
-		public override bool Autoload(ref string name, ref string texture, ref string[] altTextures)
+		public override string Texture
+		{
+			get
+			{
+				return "Bluemagic/NPCs/HardmodeGuide";
+			}
+		}
+
+		public override string[] AltTextures
+		{
+			get
+			{
+				return new string[] { Texture + "_Alt_1" };
+			}
+		}
+
+		public override bool Autoload(ref string name)
 		{
 			name = "Hardmode Guide";
-			altTextures = new string[] { texture + "_Alt_1" };
-			return mod.Properties.Autoload;
+			return base.Autoload(ref name);
+		}
+
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Hardmode Guide");
+			Main.npcFrameCount[npc.type] = 25;
+			NPCID.Sets.ExtraFramesCount[npc.type] = 9;
+			NPCID.Sets.AttackFrameCount[npc.type] = 4;
+			NPCID.Sets.DangerDetectRange[npc.type] = 700;
+			NPCID.Sets.AttackType[npc.type] = 0;
+			NPCID.Sets.AttackTime[npc.type] = 90;
+			NPCID.Sets.AttackAverageChance[npc.type] = 30;
+			NPCID.Sets.HatOffsetY[npc.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.name = "Hardmode Guide";
 			npc.townNPC = true;
 			npc.friendly = true;
 			npc.width = 18;
@@ -32,15 +60,6 @@ namespace Bluemagic.NPCs
 			npc.HitSound = SoundID.NPCHit1;
 			npc.DeathSound = SoundID.NPCDeath1;
 			npc.knockBackResist = 0.5f;
-			Main.npcFrameCount[npc.type] = 25;
-			NPCID.Sets.ExtraFramesCount[npc.type] = 9;
-			NPCID.Sets.AttackFrameCount[npc.type] = 4;
-			NPCID.Sets.DangerDetectRange[npc.type] = 700;
-			NPCID.Sets.AttackType[npc.type] = 0;
-			NPCID.Sets.AttackTime[npc.type] = 90;
-			NPCID.Sets.AttackAverageChance[npc.type] = 30;
-			NPCID.Sets.HatOffsetY[npc.type] = 4;
-			NPCID.Sets.ExtraTextureCount[npc.type] = 1;
 			animationType = NPCID.Guide;
 		}
 
@@ -80,7 +99,7 @@ namespace Bluemagic.NPCs
 			int partyGirl = NPC.FindFirstNPC(NPCID.PartyGirl);
 			if (partyGirl >= 0 && Main.rand.Next(4) == 0)
 			{
-				return "Can you please tell " + Main.npc[partyGirl].displayName + " to stop decorating my house with colors?";
+				return "Can you please tell " + Main.npc[partyGirl].GivenName + " to stop decorating my house with colors?";
 			}
 			switch (Main.rand.Next(3))
 			{
@@ -95,8 +114,8 @@ namespace Bluemagic.NPCs
 
 		public override void SetChatButtons(ref string button, ref string button2)
 		{
-			button = Lang.inter[51];
-			button2 = Lang.inter[25];
+			button = Lang.inter[51].Value;
+			button2 = Lang.inter[25].Value;
 		}
 
 		public override void OnChatButtonClicked(bool firstButton, ref bool shop)

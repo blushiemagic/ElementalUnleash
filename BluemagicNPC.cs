@@ -9,16 +9,24 @@ namespace Bluemagic
 {
 	public class BluemagicNPC : GlobalNPC
 	{
+		public bool eFlames = false;
+
+		public override bool InstancePerEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override void ResetEffects(NPC npc)
 		{
-			BluemagicNPCInfo info = npc.GetModInfo<BluemagicNPCInfo>(mod);
-			info.eFlames = false;
+			eFlames = false;
 		}
 
 		public override void UpdateLifeRegen(NPC npc, ref int damage)
 		{
-			BluemagicNPCInfo info = npc.GetModInfo<BluemagicNPCInfo>(mod);
-			if (info.eFlames)
+			if (eFlames)
 			{
 				if (npc.lifeRegen > 0)
 				{
@@ -129,8 +137,7 @@ namespace Bluemagic
 
 		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
-			BluemagicNPCInfo info = npc.GetModInfo<BluemagicNPCInfo>(mod);
-			if (info.eFlames)
+			if (eFlames)
 			{
 				if (Main.rand.Next(4) < 3)
 				{

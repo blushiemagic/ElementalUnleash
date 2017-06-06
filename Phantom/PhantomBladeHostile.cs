@@ -8,9 +8,13 @@ namespace Bluemagic.Phantom
 {
 	public class PhantomBladeHostile : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Phantom Blade");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Blade";
 			projectile.width = 400;
 			projectile.height = 24;
 			projectile.alpha = 70;

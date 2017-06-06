@@ -8,6 +8,7 @@ using Bluemagic;
 
 namespace Bluemagic.Abomination
 {
+	[AutoloadBossHead]
 	public class CaptiveElement : ModNPC
 	{
 		private int difficulty
@@ -75,10 +76,13 @@ namespace Bluemagic.Abomination
 			}
 		}
 
+		public override void SetStaticDefaults()
+		{
+			Main.npcFrameCount[npc.type] = 10;
+		}
+
 		public override void SetDefaults()
 		{
-			npc.name = "Captive Element";
-			npc.displayName = "Captive Element";
 			npc.aiStyle = -1;
 			npc.lifeMax = 15000;
 			npc.damage = 100;
@@ -93,7 +97,6 @@ namespace Bluemagic.Abomination
 			npc.dontTakeDamage = true;
 			npc.width = 100;
 			npc.height = 100;
-			Main.npcFrameCount[npc.type] = 10;
 			npc.value = Item.buyPrice(0, 20, 0, 0);
 			npc.npcSlots = 10f;
 			npc.boss = true;

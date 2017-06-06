@@ -9,7 +9,6 @@ namespace Bluemagic.Items.Misc1
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Mushroom Brick";
 			item.width = 12;
 			item.height = 12;
 			item.maxStack = 999;

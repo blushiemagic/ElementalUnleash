@@ -6,18 +6,16 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.PurityCraft
 {
+	[AutoloadEquip(EquipType.Neck)]
 	public class CrystalVeil : ModItem
 	{
-		public override bool Autoload(ref string name, ref string texture, IList<EquipType> equips)
+		public override void SetStaticDefaults()
 		{
-			equips.Add(EquipType.Neck);
-			return base.Autoload(ref name, ref texture, equips);
+			Tooltip.SetDefault("Causes crystals to fall and greatly increases length of invincibility after taking damage");
 		}
 
 		public override void SetDefaults()
 		{
-			item.name = "Crystal Veil";
-			item.toolTip = "Causes crystals to fall and greatly increases length of invincibility after taking damage";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;

@@ -7,9 +7,13 @@ namespace Bluemagic.Phantom
 {
 	public class PhantomSphereHostile : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Phantom Sphere");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Phantom Sphere";
 			projectile.width = 192;
 			projectile.height = 192;
 			projectile.alpha = 70;

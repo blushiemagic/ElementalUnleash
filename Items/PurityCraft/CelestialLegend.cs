@@ -8,11 +8,15 @@ namespace Bluemagic.Items.PurityCraft
 {
 	public class CelestialLegend : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Turns the holder into a werewolf at night and a merfolk when entering water"
+				+ "\nIncreases to all stats");
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(30, 2));
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Celestial Legend";
-			item.toolTip = "Turns the holder into a werewolf at night and a merfolk when entering water";
-			item.toolTip2 = "Increases to all stats";
 			item.width = 16;
 			item.height = 24;
 			item.accessory = true;
@@ -43,11 +47,6 @@ namespace Bluemagic.Items.PurityCraft
 			player.minionKB += 0.75f;
 			player.thrownDamage += 0.15f;
 			player.thrownCrit += 10;
-		}
-
-		public override DrawAnimation GetAnimation()
-		{
-			return new DrawAnimationVertical(30, 2);
 		}
 
 		public override void AddRecipes()

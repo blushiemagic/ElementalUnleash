@@ -1,4 +1,5 @@
 using System;
+using ReLogic.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -132,7 +133,7 @@ namespace Bluemagic.Interface
 				text = "Chaos Boosts";
 			}
 			CalculatedStyle dim = panel.GetDimensions();
-			SpriteFont font = Main.fontMouseText;
+			DynamicSpriteFont font = Main.fontMouseText;
 			Vector2 textSize = font.MeasureString(text);
 			Vector2 drawPos = dim.Position() + new Vector2((dim.Width - textSize.X) / 2f, 10f);
 			Utils.DrawBorderString(Main.spriteBatch, text, drawPos, Color.White);

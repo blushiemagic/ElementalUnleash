@@ -12,7 +12,6 @@ namespace Bluemagic.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Holy Sphere";
 			projectile.width = 48;
 			projectile.height = 48;
 			projectile.penetrate = -1;

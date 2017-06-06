@@ -7,15 +7,18 @@ namespace Bluemagic.Items.PuritySpirit
 {
 	public class DanceOfBlades : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Dance the dance of death."
+				+ "\nPurifies the screen of enemies.");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Dance of Blades";
 			item.damage = 500;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;
-			item.toolTip = "Dance the dance of death.";
-			item.toolTip2 = "Purifies the screen of enemies.";
 			item.useTime = 10;
 			item.useAnimation = 10;
 			item.channel = true;

@@ -39,7 +39,7 @@ namespace Bluemagic.Tiles
 			{
 				canFall = false;
 			}
-			if (above.active() && (TileLoader.IsChest(above.type) || above.type == TileID.FakeContainers || above.type == TileID.PalmTree || TileLoader.IsDresser(above.type)))
+			if (above.active() && (TileID.Sets.BasicChest[above.type] || TileID.Sets.BasicChestFake[above.type] || above.type == TileID.PalmTree || TileLoader.IsDresser(above.type)))
 			{
 				canFall = false;
 			}

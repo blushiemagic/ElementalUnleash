@@ -8,8 +8,8 @@ namespace Bluemagic.Buffs.Summons
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Mini Paladin";
-			Main.buffTip[Type] = "A mini paladin will fight for you.";
+			DisplayName.SetDefault("Mini Paladin");
+			Description.SetDefault("A mini paladin will fight for you.");
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 		}

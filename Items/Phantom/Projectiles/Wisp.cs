@@ -8,9 +8,13 @@ namespace Bluemagic.Items.Phantom.Projectiles
 {
 	public class Wisp : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.Homing[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Wisp";
 			projectile.width = 8;
 			projectile.height = 8;
 			projectile.alpha = 255;
@@ -18,7 +22,6 @@ namespace Bluemagic.Items.Phantom.Projectiles
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.ranged = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
 		}
 
 		public override void AI()

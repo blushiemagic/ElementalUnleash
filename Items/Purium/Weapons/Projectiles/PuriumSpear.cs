@@ -7,9 +7,13 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 {
 	public class PuriumSpear : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Purium Lightbeam");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Lightbeam";
 			projectile.width = 18;
 			projectile.height = 18;
 			projectile.aiStyle = 19;

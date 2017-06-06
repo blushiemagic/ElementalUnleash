@@ -7,12 +7,15 @@ namespace Bluemagic.Items.Misc1
 {
 	public class SkywareKey : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("A key to a different dimension");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Skyware Key";
 			item.width = 14;
 			item.height = 20;
-			item.toolTip = "A key to a different dimension";
 			item.maxStack = 99;
 		}
 

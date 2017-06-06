@@ -23,7 +23,9 @@ namespace Bluemagic.Tiles
 			drop = mod.ItemType("PuriumAnvil");
 			dustType = 128;
 			adjTiles = new int[] { TileID.Anvils, TileID.MythrilAnvil };
-			AddMapEntry(new Color(100, 210, 100), "Purium Anvil");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Purium Anvil");
+			AddMapEntry(new Color(100, 210, 100), name);
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)

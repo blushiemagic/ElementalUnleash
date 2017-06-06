@@ -19,7 +19,9 @@ namespace Bluemagic.Tiles
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.addTile(Type);
-			AddMapEntry(new Color(100, 210, 100), "Purium Bar");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Purium Bar");
+			AddMapEntry(new Color(100, 210, 100), name);
 		}
 
 		public override ushort GetMapOption(int i, int j)

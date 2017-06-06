@@ -10,7 +10,6 @@ namespace Bluemagic.Items.Purium.Tools.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Purium Drill";
 			projectile.width = 22;
 			projectile.height = 22;
 			projectile.scale = 1.1f;

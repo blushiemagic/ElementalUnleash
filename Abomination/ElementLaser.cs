@@ -9,9 +9,13 @@ namespace Bluemagic.Abomination
 {
 	public class ElementLaser : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Elemental Laser");
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Elemental Laser";
 			projectile.width = 4;
 			projectile.height = 4;
 			projectile.timeLeft = 630;
@@ -36,7 +40,7 @@ namespace Bluemagic.Abomination
 				{
 					cooldownSlot = 1;
 				}
-				projectile.name = GetName();
+				projectile.Name = GetName();
 			}
 			projectile.Center = npc.Center;
 			projectile.localAI[0] += 1f;

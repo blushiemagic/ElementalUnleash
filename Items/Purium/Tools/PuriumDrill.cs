@@ -7,14 +7,17 @@ namespace Bluemagic.Items.Purium.Tools
 {
 	public class PuriumDrill : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Can mine Frostbyte");
+		}
+
 		public override void SetDefaults()
 		{
-			item.name = "Purium Drill";
 			item.damage = 90;
 			item.melee = true;
 			item.width = 20;
 			item.height = 12;
-			item.toolTip = "Can mine Frostbyte";
 			item.useTime = 6;
 			item.useAnimation = 11;
 			item.channel = true;

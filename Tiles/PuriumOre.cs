@@ -25,7 +25,9 @@ namespace Bluemagic.Tiles
 			drop = mod.ItemType("PuriumOre");
 			minPick = 225;
 			mineResist = 5f;
-			AddMapEntry(new Color(100, 210, 100), "Purium");
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Purium");
+			AddMapEntry(new Color(100, 210, 100), name);
 		}
 
 		public override void RandomUpdate(int i, int j)

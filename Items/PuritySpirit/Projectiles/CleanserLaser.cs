@@ -10,9 +10,14 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
 	public class CleanserLaser : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Cleanser Beam");
+			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
-			projectile.name = "Cleanser Laser";
 			projectile.width = 4;
 			projectile.height = 4;
 			projectile.aiStyle = 84;
@@ -22,7 +27,6 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.hide = true;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
 
 		public override bool PreAI()

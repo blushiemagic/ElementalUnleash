@@ -9,7 +9,6 @@ namespace Bluemagic.Items.PuritySpirit
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Void Monolith";
 			item.width = 22;
 			item.height = 32;
 			item.maxStack = 999;

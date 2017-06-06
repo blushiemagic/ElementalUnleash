@@ -9,7 +9,6 @@ namespace Bluemagic.Items.PurityCraft
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Endless Flaming Quiver";
 			item.shootSpeed = 3.5f;
 			item.shoot = ProjectileID.FireArrow;
 			item.damage = 7;

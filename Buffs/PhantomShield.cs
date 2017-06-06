@@ -8,8 +8,8 @@ namespace Bluemagic.Buffs
 	{
 		public override void SetDefaults()
 		{
-			Main.buffName[Type] = "Phantom Shield";
-			Main.buffTip[Type] = "7% reduced damage taken";
+			DisplayName.SetDefault("Phantom Shield");
+			Description.SetDefault("7% reduced damage taken");
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 		}

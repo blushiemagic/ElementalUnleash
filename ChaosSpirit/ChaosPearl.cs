@@ -12,7 +12,6 @@ namespace Bluemagic.ChaosSpirit
 	{
 		public override void SetDefaults()
 		{
-			projectile.name = "Chaos Pearl";
 			projectile.width = 32;
 			projectile.height = 32;
 			projectile.hostile = true;

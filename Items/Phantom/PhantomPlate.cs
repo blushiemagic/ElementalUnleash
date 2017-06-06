@@ -8,7 +8,6 @@ namespace Bluemagic.Items.Phantom
 	{
 		public override void SetDefaults()
 		{
-			item.name = "Phantom Plate";
 			item.width = 20;
 			item.height = 20;
 			item.maxStack = 99;
