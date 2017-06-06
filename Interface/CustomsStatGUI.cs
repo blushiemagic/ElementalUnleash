@@ -279,6 +279,10 @@ namespace Bluemagic.Interface
 
 			for (int k = 0; k < 5; k++)
 			{
+				if (visibleStats[k] == null)
+				{
+					return;
+				}
 				Vector2 topLeft = GetStatOffset(k);
 				if (IsMouseOver(topLeft, 372, 32))
 				{

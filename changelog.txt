@@ -1,5 +1,1 @@
-updated to tModLoader v0.10
-fixed a few item names
-made some tooltips more descriptive
-fixed bug where flask of frostburn and ethereal flames were switched
-added music for spirit of purity
+fixed bug where game crashes at the last page of chaos/cataclysm stats
