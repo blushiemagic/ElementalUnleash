@@ -13,6 +13,7 @@ using Terraria.UI;
 using Bluemagic.ChaosSpirit;
 using Bluemagic.Interface;
 using Bluemagic.PuritySpirit;
+using Bluemagic.TerraSpirit;
 using Bluemagic.Tiles;
 
 namespace Bluemagic
@@ -67,6 +68,8 @@ namespace Bluemagic
 			SkyManager.Instance["Bluemagic:MonolithVoid"] = new VoidSky();
 			Filters.Scene["Bluemagic:ChaosSpirit"] = new Filter(new ChaosSpiritScreenShaderData("FilterMiniTower").UseColor(0.9f, 0.4f, 0.4f).UseOpacity(0.25f), EffectPriority.VeryHigh);
 			SkyManager.Instance["Bluemagic:ChaosSpirit"] = new ChaosSpiritSky();
+			Filters.Scene["Bluemagic:TerraSpirit"] = new Filter(new TerraSpiritScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0.1f), EffectPriority.VeryHigh);
+			SkyManager.Instance["Bluemagic:TerraSpirit"] = new TerraSpiritSky();
 
 			ModTranslation text = CreateTranslation("PhantomSummon");
 			text.SetDefault("You feel something cold leeching your life...");
@@ -188,6 +191,25 @@ namespace Bluemagic
 					}
 				}
 			}
+			else if (type == MessageType.TerraLives)
+			{
+				Player player = Main.player[reader.ReadInt32()];
+				int lives = reader.ReadInt32();
+				player.GetModPlayer<BluemagicPlayer>().terraLives = lives;
+				if (lives > 0)
+				{
+					NetworkText text;
+					if (lives == 1)
+					{
+						text = NetworkText.FromKey("Mods.Bluemagic.LifeLeft", player.name);
+					}
+					else
+					{
+						text = NetworkText.FromKey("Mods.Bluemagic.LivesLeft", player.name, lives);
+					}
+					NetMessage.BroadcastChatMessage(text, new Color(255, 25, 25));
+				}
+			}
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -208,6 +230,8 @@ namespace Bluemagic
 		PuritySpirit,
 		HeroLives,
 		ChaosSpirit,
-		PushChaosArm
+		PushChaosArm,
+		TerraSpirit,
+		TerraLives
 	}
 }

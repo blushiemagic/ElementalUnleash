@@ -9,7 +9,8 @@ namespace Bluemagic.Items.PurityCraft
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Mount - Encases you inside a shield of purity"
-				+ "\nInfinite flight and +10% purity shield fill rate");
+				+ "\nInfinite flight and +10% purity shield fill rate"
+				+ "\nHold the jump key to move more slowly");
 		}
 
 		public override void SetDefaults()

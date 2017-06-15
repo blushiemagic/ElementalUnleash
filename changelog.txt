@@ -1,1 +1,2 @@
-fixed bug where game crashes at the last page of chaos/cataclysm stats
+hold jump to move more slowly with the purity shield mount
+fixed bug where misc effects show while dead

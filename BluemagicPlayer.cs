@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Bluemagic.PuritySpirit;
@@ -68,6 +69,9 @@ namespace Bluemagic
 		public float thrownCost = 0f;
 		public int cancelBadRegen = 0;
 
+		internal int terraLives = 0;
+		private int terraImmune = 0;
+
 		//permanent data
 		public float puriumShieldCharge = 0f;
 		public CustomStats chaosStats;
@@ -120,6 +124,7 @@ namespace Bluemagic
 			badHeal = false;
 			puriumShieldCharge = 0f;
 			reviveTime = 0;
+			terraLives = 0;
 		}
 
 		public override TagCompound Save()
@@ -152,18 +157,30 @@ namespace Bluemagic
 			return NPC.AnyNPCs(mod.NPCType("ChaosSpirit")) || NPC.AnyNPCs(mod.NPCType("ChaosSpirit2")) || NPC.AnyNPCs(mod.NPCType("ChaosSpirit3"));
 		}
 
+		private bool AnyTerraSpirit()
+		{
+			return NPC.AnyNPCs(mod.NPCType("TerraSpirit"));
+		}
+
 		private bool IsChaosSpirit(int type)
 		{
 			return type == mod.NPCType("ChaosSpirit") || type == mod.NPCType("ChaosSpirit2") || type == mod.NPCType("ChaosSpirit3");
 		}
 
+		private bool IsTerraSpirit(int type)
+		{
+			return type == mod.NPCType("TerraSpirit");
+		}
+
 		public override void UpdateBiomeVisuals()
 		{
-			bool useChaos = AnyChaosSpirit();
+			bool useTerra = AnyTerraSpirit();
+			player.ManageSpecialBiomeVisuals("Bluemagic:TerraSpirit", useTerra);
+			bool useChaos = !useTerra && AnyChaosSpirit();
 			player.ManageSpecialBiomeVisuals("Bluemagic:ChaosSpirit", useChaos);
-			bool usePurity = !useChaos && NPC.AnyNPCs(mod.NPCType("PuritySpirit"));
+			bool usePurity = !useTerra && !useChaos && NPC.AnyNPCs(mod.NPCType("PuritySpirit"));
 			player.ManageSpecialBiomeVisuals("Bluemagic:PuritySpirit", usePurity);
-			bool useVoidMonolith = voidMonolith && !useChaos && !usePurity && !NPC.AnyNPCs(NPCID.MoonLordCore);
+			bool useVoidMonolith = voidMonolith && !useTerra && !useChaos && !usePurity && !NPC.AnyNPCs(NPCID.MoonLordCore);
 			player.ManageSpecialBiomeVisuals("Bluemagic:MonolithVoid", useVoidMonolith, player.Center);
 		}
 
@@ -276,6 +293,24 @@ namespace Bluemagic
 			{
 				purityDebuffCooldown--;
 			}
+			if (terraLives > 0)
+			{
+				bool flag = false;
+				for (int k = 0; k < 200; k++)
+				{
+					NPC npc = Main.npc[k];
+					if (npc.active && IsTerraSpirit(npc.type))
+					{
+						flag = true;
+						TerraSpiritBarrier(npc);
+						break;
+					}
+				}
+				if (!flag)
+				{
+					terraLives = 0;
+				}
+			}
 		}
 
 		public void CheckBadHeal()
@@ -287,7 +322,7 @@ namespace Bluemagic
 				CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, hurt.ToString(), false, false);
 				if (player.statLife <= 0 && player.whoAmI == Main.myPlayer)
 				{
-					player.KillMe(PlayerDeathReason.ByCustomReason(" was dissolved by holy powers"), hurt, 0, false);
+					player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was dissolved by holy powers"), hurt, 0, false);
 				}
 			}
 			prevLife = -1;
@@ -343,6 +378,44 @@ namespace Bluemagic
 				player.Teleport(newPosition, 1, 0);
 				NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, newPosition.X, newPosition.Y, 1, 0, 0);
 				PuritySpiritDebuff();
+			}
+		}
+
+		private void TerraSpiritBarrier(NPC npc)
+		{
+			int halfWidth = TerraSpirit.TerraSpirit.arenaWidth / 2;
+			int halfHeight = TerraSpirit.TerraSpirit.arenaHeight / 2;
+			if (player.position.X <= npc.Center.X - halfWidth)
+			{
+				player.position.X = npc.Center.X - halfWidth;
+				if (player.velocity.X < 0f)
+				{
+					player.velocity.X = 0f;
+				}
+			}
+			else if (player.position.X + player.width >= npc.Center.X + halfWidth)
+			{
+				player.position.X = npc.Center.X + halfWidth - player.width;
+				if (player.velocity.X > 0f)
+				{
+					player.velocity.X = 0f;
+				}
+			}
+			if (player.position.Y <= npc.Center.Y - halfHeight)
+			{
+				player.position.Y = npc.Center.Y - halfHeight;
+				if (player.velocity.Y < 0f)
+				{
+					player.velocity.Y = 0f;
+				}
+			}
+			else if (player.position.Y + player.height >= npc.Center.Y + halfHeight)
+			{
+				player.position.Y = npc.Center.Y + halfHeight - player.height;
+				if (player.velocity.Y > 0f)
+				{
+					player.velocity.Y = 0f;
+				}
 			}
 		}
 
@@ -432,7 +505,7 @@ namespace Bluemagic
 			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
 			if (player.whoAmI == Main.myPlayer)
 			{
-				player.KillMe(PlayerDeathReason.ByCustomReason(" was crushed by chaotic pressure!"), damage, 0, false);
+				player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was crushed by chaotic pressure!"), damage, 0, false);
 			}
 		}
 
@@ -508,6 +581,10 @@ namespace Bluemagic
 				player.endurance += PuriumShieldEndurance();
 			}
 			CheckBadHeal();
+			if (terraImmune > 0)
+			{
+				terraImmune--;
+			}
 		}
 
 		private void ChargePuriumShield(float charge)
@@ -532,6 +609,43 @@ namespace Bluemagic
 				enduranceFill = puriumShieldEnduranceMult;
 			}
 			return 0.2f * enduranceFill;
+		}
+
+		public override void PreUpdateMovement()
+		{
+			if (purityShieldMount)
+			{
+				if (player.controlLeft)
+				{
+					player.velocity.X = -Mounts.PurityShield.speed;
+					player.direction = -1;
+				}
+				else if (player.controlRight)
+				{
+					player.velocity.X = Mounts.PurityShield.speed;
+					player.direction = 1;
+				}
+				else
+				{
+					player.velocity.X = 0f;
+				}
+				if (player.controlUp)
+				{
+					player.velocity.Y = -Mounts.PurityShield.speed;
+				}
+				else if (player.controlDown)
+				{
+					player.velocity.Y = Mounts.PurityShield.speed;
+				}
+				else
+				{
+					player.velocity.Y = 0f;
+				}
+				if (player.controlJump)
+				{
+					player.velocity *= 0.5f;
+				}
+			}
 		}
 
 		public override void PostUpdate()
@@ -790,14 +904,68 @@ namespace Bluemagic
 			{
 				if (healHurt > 0)
 				{
-					damageSource = PlayerDeathReason.ByCustomReason(" was dissolved by holy powers");
+					damageSource = PlayerDeathReason.ByCustomReason(player.name + " was dissolved by holy powers");
 				}
 				else if (chaosPressure > 0)
 				{
-					damageSource = PlayerDeathReason.ByCustomReason(" was crushed by chaotic pressure");
+					damageSource = PlayerDeathReason.ByCustomReason(player.name + " was crushed by chaotic pressure");
 				}
 			}
 			return true;
+		}
+
+		public void TerraKill()
+		{
+			if (terraLives <= 0 || terraImmune > 0)
+			{
+				return;
+			}
+			int damage = 100 * player.statLifeMax2;
+			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
+			terraLives--;
+			if (Main.netMode == 1)
+			{
+				ModPacket packet = mod.GetPacket();
+				packet.Write((byte)MessageType.TerraLives);
+				packet.Write(player.whoAmI);
+				packet.Write(heroLives);
+				packet.Send();
+			}
+			if (Main.netMode == 0)
+			{
+				string text;
+				if (terraLives == 1)
+				{
+					text = Language.GetTextValue("Mods.Bluemagic.LifeLeft", player.name);
+				}
+				else
+				{
+					text = Language.GetTextValue("Mods.Bluemagic.LivesLeft", player.name, terraLives);
+				}
+				Main.NewText(text, 255, 25, 25);
+			}
+			if (terraLives > 0)
+			{
+				player.statLife = player.statLifeMax2;
+				player.HealEffect(player.statLifeMax2);
+				terraImmune = 60;
+				if (!player.immune)
+				{
+					player.immune = true;
+					player.immuneTime = 60;
+				}
+			}
+			else if (Main.myPlayer == player.whoAmI)
+			{
+				for (int k = 0; k < 1000; k++)
+				{
+					if (player.dead)
+					{
+						break;
+					}
+					player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
+				}
+			}
 		}
 
 		public override void MeleeEffects(Item item, Rectangle hitbox)
@@ -948,6 +1116,10 @@ namespace Bluemagic
 					return;
 				}
 				Player drawPlayer = drawInfo.drawPlayer;
+				if (drawPlayer.dead)
+				{
+					return;
+				}
 				Mod mod = ModLoader.GetMod("Bluemagic");
 				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>(mod);
 				if (modPlayer.reviveTime > 0)
@@ -966,6 +1138,10 @@ namespace Bluemagic
 					return;
 				}
 				Player drawPlayer = drawInfo.drawPlayer;
+				if (drawPlayer.dead)
+				{
+					return;
+				}
 				Mod mod = ModLoader.GetMod("Bluemagic");
 				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>(mod);
 				if (modPlayer.badHeal)

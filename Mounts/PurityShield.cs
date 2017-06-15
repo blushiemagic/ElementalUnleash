@@ -7,7 +7,7 @@ namespace Bluemagic.Mounts
 {
 	public class PurityShield : ModMountData
 	{
-		private const float speed = 10f;
+		public const float speed = 10f;
 
 		public override void SetDefaults()
 		{
@@ -60,36 +60,6 @@ namespace Bluemagic.Mounts
 			{
 				mountData.textureWidth = mountData.backTexture.Width;
 				mountData.textureHeight = mountData.backTexture.Height;
-			}
-		}
-
-		public override void UpdateEffects(Player player)
-		{
-			if (player.controlLeft)
-			{
-				player.velocity.X = -speed;
-				player.direction = -1;
-			}
-			else if (player.controlRight)
-			{
-				player.velocity.X = speed;
-				player.direction = 1;
-			}
-			else
-			{
-				player.velocity.X = 0f;
-			}
-			if (player.controlJump || player.controlUp)
-			{
-				player.velocity.Y = -speed;
-			}
-			else if (player.controlDown)
-			{
-				player.velocity.Y = speed;
-			}
-			else
-			{
-				player.velocity.Y = 0f;
 			}
 		}
 	}
