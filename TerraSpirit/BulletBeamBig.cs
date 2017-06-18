@@ -13,15 +13,17 @@ namespace Bluemagic.TerraSpirit
 		protected float size;
 		protected float rotation;
 		protected int delay;
+		protected int life;
 		private float alpha;
 		private float alphaDir;
 
-		public BulletBeamBig(Vector2 position, float size = 160f, float rotation = MathHelper.PiOver2, int delay = 90)
+		public BulletBeamBig(Vector2 position, float size = 160f, float rotation = MathHelper.PiOver2, int delay = 90, int life = 30)
 		{
 			this.position = position;
 			this.size = size;
 			this.rotation = rotation;
 			this.delay = delay;
+			this.life = life;
 			this.alpha = 0f;
 			this.alphaDir = 1f;
 		}
@@ -38,7 +40,7 @@ namespace Bluemagic.TerraSpirit
 			{
 				alphaDir = 1f;
 			}
-			return delay > -30;
+			return delay > -life;
 		}
 
 		public override bool Collides(Rectangle box)

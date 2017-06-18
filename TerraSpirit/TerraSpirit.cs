@@ -114,6 +114,10 @@ namespace Bluemagic.TerraSpirit
 			{
 				Stage2();
 			}
+			else if (Stage == 5)
+			{
+				Stage3();
+			}
 			FixLife();
 			Progress++;
 			Rectangle bounds = new Rectangle((int)npc.Center.X - arenaWidth / 2, (int)npc.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
@@ -321,6 +325,74 @@ namespace Bluemagic.TerraSpirit
 			if (Progress == 1440 && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe2"), 0, npc.whoAmI);
+			}
+		}
+
+		private void Stage3()
+		{
+			if (Progress == 0)
+			{
+				Main.PlaySound(15, -1, -1, 0);
+			}
+			if (Progress >= 60 && Progress <= 300 && Progress % 60 == 0)
+			{
+				Vector2 center = GetTarget().Center;
+				const float length = 192f;
+				float rotation = 0f;
+				if (Progress == 120)
+				{
+					rotation = MathHelper.PiOver4;
+				}
+				else if (Progress == 180)
+				{
+					rotation = MathHelper.Pi / 8f;
+				}
+				else if (Progress == 240)
+				{
+					rotation = MathHelper.Pi * 3f / 8f;
+				}
+				bullets.Add(new BulletCross(center + length * rotation.ToRotationVector2(), rotation));
+				bullets.Add(new BulletCross(center + length * (rotation + MathHelper.PiOver2).ToRotationVector2(), rotation));
+				bullets.Add(new BulletCross(center - length * rotation.ToRotationVector2(), rotation));
+				bullets.Add(new BulletCross(center - length * (rotation + MathHelper.PiOver2).ToRotationVector2(), rotation));
+			}
+			if (Progress == 360)
+			{
+				Vector2 center = npc.Center;
+				const int xOffset = arenaWidth / 4;
+				const int yOffset = arenaHeight / 4;
+				bullets.Add(new BulletPortal(center, center + new Vector2(xOffset, yOffset)));
+				bullets.Add(new BulletPortal(center, center + new Vector2(-xOffset, yOffset)));
+				bullets.Add(new BulletPortal(center, center + new Vector2(xOffset, -yOffset)));
+				bullets.Add(new BulletPortal(center, center + new Vector2(-xOffset, -yOffset)));
+			}
+			if (Progress >= 510 && Progress <= 690 && (Progress - 510) % 90 == 0)
+			{
+				bullets.Add(new BulletBeamBig(GetTarget().Center, 160, MathHelper.PiOver2, 60));
+			}
+			if (Progress >= 720 && Progress <= 1020 && Progress % 30 == 0)
+			{
+				bullets.Add(new BulletRingShrink(GetTarget().Center, 8f, 0.012f));
+			}
+			if (Progress == 1140)
+			{
+				bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.PiOver2, 60));
+				bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
+				bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
+			}
+			if (Progress >= 1500 && Progress <= 1800 && Progress % 4 == 0)
+			{
+				Vector2 bulletPos = new Vector2(npc.Center.X, npc.Center.Y - arenaHeight / 2);
+				bulletPos.X += 80f * (float)Math.Sin(MathHelper.TwoPi * Progress / 120);
+				bullets.Add(new BulletArray(bulletPos, 0f, 160f, new Vector2(0f, 8f), arenaHeight / 8));
+			}
+			if (Progress >= 1560 && Progress <= 1800 && Progress % 60 == 0)
+			{
+				bullets.Add(new BulletBeamBig(GetTarget().Center, 160, 0f, 60));
+			}
+			if (Progress == 1980 && Main.netMode != 1)
+			{
+				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe3"), 0, npc.whoAmI);
 			}
 		}
 

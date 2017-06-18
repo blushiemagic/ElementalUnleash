@@ -923,6 +923,10 @@ namespace Bluemagic
 			int damage = 100 * player.statLifeMax2;
 			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
 			terraLives--;
+			if (terraLives == 0 && Bluemagic.testing)
+			{
+				terraLives = 1;
+			}
 			if (Main.netMode == 1)
 			{
 				ModPacket packet = mod.GetPacket();

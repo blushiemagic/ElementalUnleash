@@ -21,6 +21,7 @@ namespace Bluemagic
 	public class Bluemagic : Mod
 	{
 		public static Mod Instance;
+		public const bool testing = false;
 
 		private static Color pureColor = new Color(100, 255, 100);
 		private static int pureColorStyle = 0;
