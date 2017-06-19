@@ -1,2 +1,3 @@
 hold jump to move more slowly with the purity shield mount
 fixed bug where misc effects show while dead
+fixed random crash when idling with purity shield mount

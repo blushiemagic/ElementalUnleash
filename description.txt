@@ -1,9 +1,3 @@
-All the bosses from ExampleMod, with more loot and without ExampleMod's cheats!
+Test your fighting prowess against four difficult end-game bosses. Defeating the Abomination post-Moonlord will trigger the Elemental Unleash in your world, filling your world with powerful monsters and loot. The Spirit of Chaos is guaranteed to be the most challenging boss you'll ever fight!
 
-Test your fighting prowess against four difficult end-game bosses, including the Abomination and the Spirit of Purity.
-
-Now with a new third boss not found in ExampleMod: the Spirit of Chaos! Guaranteed to be the most challenging boss you'll fight.
-
-Also includes the Phantom, ported over from my tAPI mod then overhauled. It is meant to be fought around the same time as Duke Fishron.
-
-I am also currently in the process of porting everything from my old tAPI mod over to this mod.
+More info can be found on the homepage.
