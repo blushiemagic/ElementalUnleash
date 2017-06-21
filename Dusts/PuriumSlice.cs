@@ -17,15 +17,15 @@ namespace Bluemagic.Dusts
 			return Dust.NewDust(pos, width, height, Bluemagic.Instance.DustType("PuriumSlice"), 0f, 0f, 100, color, 1f);
 		}
 
-		public override void OnSpawn(Dust dust)
-		{
-			dust.noLight = true;
-		}
-
 		public override bool Update(Dust dust)
 		{
 			Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), 0.3f, 0.6f, 0.2f);
 			return true;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
 		}
 	}
 }

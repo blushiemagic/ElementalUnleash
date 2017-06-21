@@ -11,7 +11,6 @@ namespace Bluemagic.Dusts
 		{
 			dust.noGravity = true;
 			dust.velocity = Vector2.Zero;
-			dust.noLight = true;
 		}
 
 		public override bool Update(Dust dust)
@@ -32,6 +31,11 @@ namespace Bluemagic.Dusts
 				}
 			}
 			return false;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
 		}
 	}
 }

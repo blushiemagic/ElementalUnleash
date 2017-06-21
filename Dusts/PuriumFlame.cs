@@ -13,7 +13,6 @@ namespace Bluemagic.Dusts
 			dust.scale = 1.1f;
 			dust.velocity *= 0.2f;
 			dust.noGravity = true;
-			dust.noLight = true;
 		}
 
 		public override bool Update(Dust dust)
@@ -32,6 +31,11 @@ namespace Bluemagic.Dusts
 				dust.active = false;
 			}
 			return false;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
 		}
 	}
 }

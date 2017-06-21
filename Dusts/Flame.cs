@@ -10,7 +10,6 @@ namespace Bluemagic.Dusts
 		public override void OnSpawn(Dust dust)
 		{
 			dust.noGravity = true;
-			dust.noLight = true;
 			dust.scale = 2f;
 		}
 
@@ -29,6 +28,11 @@ namespace Bluemagic.Dusts
 				Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), dust.color.R / 255f * 0.5f * strength, dust.color.G / 255f * 0.5f * strength, dust.color.B / 255f * 0.5f * strength);
 			}
 			return false;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
 		}
 	}
 }

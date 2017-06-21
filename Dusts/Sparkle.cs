@@ -11,7 +11,6 @@ namespace Bluemagic.Dusts
 		{
 			dust.velocity *= 0.4f;
 			dust.noGravity = true;
-			dust.noLight = true;
 			dust.scale *= 1.5f;
 		}
 
@@ -27,6 +26,11 @@ namespace Bluemagic.Dusts
 				dust.active = false;
 			}
 			return false;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
 		}
 	}
 }
