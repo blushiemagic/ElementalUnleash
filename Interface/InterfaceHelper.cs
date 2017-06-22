@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -11,6 +12,30 @@ namespace Bluemagic.Interface
 {
 	public static class InterfaceHelper
 	{
+		private static FieldInfo mHInfo;
+		private static FieldInfo _itemIconCacheTimeInfo;
+
+		public static void Initialize()
+		{
+			mHInfo = typeof(Main).GetField("mH", BindingFlags.NonPublic | BindingFlags.Static);
+			_itemIconCacheTimeInfo = typeof(Main).GetField("_itemIconCacheTime", BindingFlags.NonPublic | BindingFlags.Static);
+		}
+
+		public static int GetMH()
+		{
+			return (int)mHInfo.GetValue(null);
+		}
+
+		public static void SetMH(int height)
+		{
+			mHInfo.SetValue(null, height);
+		}
+
+		public static void HideItemIconCache()
+		{
+			_itemIconCacheTimeInfo.SetValue(null, 0);
+		}
+
 		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			for (int k = 0; k < layers.Count; k++)
@@ -21,6 +46,8 @@ namespace Bluemagic.Interface
 				}
 				else if (layers[k].Name == "Vanilla: Inventory")
 				{
+					layers.Insert(k, new LegacyGameInterfaceLayer("Bluemagic: Accessory Slot Fix", FixAccessorySlots, InterfaceScaleType.None));
+					k++;
 					layers.Insert(k + 1, new LegacyGameInterfaceLayer("Bluemagic: Custom Stats", DrawCustomStats, InterfaceScaleType.UI));
 				}
 				else if (layers[k].Name == "Vanilla: Mouse Over")
@@ -63,6 +90,16 @@ namespace Bluemagic.Interface
 			Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldBar"), new Vector2(anchorX, 32f), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldCharge"), new Vector2(anchorX + padding, 32f + padding), new Rectangle(0, 0, (int)(fill * chargeSize), chargeHeight), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
+			return true;
+		}
+
+		private static bool FixAccessorySlots()
+		{
+			Player player = Main.player[Main.myPlayer];
+			if (Main.mapEnabled && !Main.mapFullscreen && Main.mapStyle == 1 && player.GetModPlayer<BluemagicPlayer>().extraAccessory2)
+			{
+				SetMH(GetMH() - 50);
+			}
 			return true;
 		}
 

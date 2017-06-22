@@ -58,6 +58,7 @@ namespace Bluemagic
 					throw new Exception("ExampleMod and Bluemagic cannot be loaded at the same time");
 				}
 			}
+			InterfaceHelper.Initialize();
 			for (int k = 1; k <= 4; k++)
 			{
 				AddBossHeadTexture(captiveElementHead + k);

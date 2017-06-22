@@ -483,7 +483,14 @@ namespace Bluemagic.Abomination
 			}
 			if (Main.expertMode)
 			{
-				npc.DropBossBags();
+				if (NPC.downedMoonlord)
+				{
+					npc.DropItemInstanced(npc.position, npc.Size, mod.ItemType("AbominationBag2"));
+				}
+				else
+				{
+					npc.DropBossBags();
+				}
 			}
 			else
 			{
@@ -494,6 +501,10 @@ namespace Bluemagic.Abomination
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenDrill"));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DimensionalChest"));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"), 5);
+				if (NPC.downedMoonlord)
+				{
+					
+				}
 			}
 			BluemagicWorld.downedAbomination = true;
 			if (Main.netMode != 1 && NPC.downedMoonlord)

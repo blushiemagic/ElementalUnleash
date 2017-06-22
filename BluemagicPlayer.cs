@@ -23,6 +23,7 @@ namespace Bluemagic
 		private int elementShieldTimer = 0;
 		public int elementShieldPos = 0;
 		public bool voidMonolith = false;
+		public bool extraAccessory2 = false;
 
 		public float puriumShieldChargeMax = 0f;
 		public float puriumShieldChargeRate = 1f;
@@ -116,6 +117,10 @@ namespace Bluemagic
 			ammoCost = 0f;
 			thrownCost = 0f;
 			cancelBadRegen = 0;
+			if (extraAccessory2)
+			{
+				player.extraAccessorySlots = 2;
+			}
 		}
 
 		public override void UpdateDead()
@@ -131,6 +136,7 @@ namespace Bluemagic
 		{
 			TagCompound tag = new TagCompound();
 			tag["version"] = 0;
+			tag["extraAccessory2"] = extraAccessory2;
 			tag["puriumShieldCharge"] = puriumShieldCharge;
 			tag["chaosStats"] = chaosStats.Save();
 			tag["cataclysmStats"] = cataclysmStats.Save();
@@ -139,6 +145,7 @@ namespace Bluemagic
 
 		public override void Load(TagCompound tag)
 		{
+			extraAccessory2 = tag.GetBool("extraAccessory2");
 			puriumShieldCharge = tag.GetFloat("puriumShieldCharge");
 			TagCompound tagStats = tag.GetCompound("chaosStats");
 			if (tagStats != null)
