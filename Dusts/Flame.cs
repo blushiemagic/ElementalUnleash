@@ -30,7 +30,7 @@ namespace Bluemagic.Dusts
 			return false;
 		}
 
-		public override Color? GetAlpha(Color lightColor)
+		public override Color? GetAlpha(Dust dust, Color lightColor)
 		{
 			return Color.White;
 		}
