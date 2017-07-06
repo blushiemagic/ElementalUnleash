@@ -503,7 +503,22 @@ namespace Bluemagic.Abomination
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"), 5);
 				if (NPC.downedMoonlord)
 				{
-					
+					switch (Main.rand.Next(5))
+					{
+					case 0:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalYoyo"));
+						break;
+					case 1:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalSprayer"));
+						break;
+					case 2:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballTome"));
+						break;
+					case 3:
+						break;
+					case 4:
+						break;
+					}
 				}
 			}
 			BluemagicWorld.downedAbomination = true;

@@ -41,6 +41,22 @@ namespace Bluemagic.Items.Abomination
 			player.QuickSpawnItem(mod.ItemType("MoltenBar"), 5);
 			player.QuickSpawnItem(mod.ItemType("SixColorShield"));
 			player.QuickSpawnItem(mod.ItemType("ElementalEye"));
+			switch (Main.rand.Next(5))
+			{
+			case 0:
+				player.QuickSpawnItem(mod.ItemType("ElementalYoyo"));
+				break;
+			case 1:
+				player.QuickSpawnItem(mod.ItemType("ElementalSprayer"));
+				break;
+			case 2:
+				player.QuickSpawnItem(mod.ItemType("EyeballTome"));
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			}
 		}
 	}
 }
