@@ -65,6 +65,7 @@ namespace Bluemagic.TerraSpirit
 			npc.lavaImmune = true;
 			npc.noGravity = true;
 			npc.noTileCollide = true;
+			npc.chaseable = false;
 			npc.HitSound = SoundID.NPCHit1;
 			npc.DeathSound = null;
 			npc.alpha = 255;

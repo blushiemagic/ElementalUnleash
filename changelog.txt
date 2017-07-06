@@ -1,3 +1,5 @@
 hold jump to move more slowly with the purity shield mount
 fixed bug where misc effects show while dead
 fixed random crash when idling with purity shield mount
+added more drops to the Abomination post-Moonlord
+fixed some bugs with homing projectiles against the spirit of chaos

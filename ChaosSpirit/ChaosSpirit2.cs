@@ -29,6 +29,7 @@ namespace Bluemagic.ChaosSpirit
 			npc.defense = 0;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = false;
+			npc.chaseable = false;
 			npc.width = size;
 			npc.height = size;
 			npc.value = Item.buyPrice(1, 0, 0, 0);
