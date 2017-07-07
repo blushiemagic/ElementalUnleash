@@ -3,3 +3,5 @@ fixed bug where misc effects show while dead
 fixed random crash when idling with purity shield mount
 added more drops to the Abomination post-Moonlord
 fixed some bugs with homing projectiles against the spirit of chaos
+nerfed the phantom's damage
+buffed the phantom when enraged

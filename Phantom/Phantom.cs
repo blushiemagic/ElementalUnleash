@@ -22,7 +22,7 @@ namespace Bluemagic.Phantom
 		{
 			npc.aiStyle = -1;
 			npc.lifeMax = 50000;
-			npc.damage = 120;
+			npc.damage = 100;
 			npc.defense = 50;
 			npc.knockBackResist = 0f;
 			npc.width = 80;
@@ -149,8 +149,8 @@ namespace Bluemagic.Phantom
 			}
 			if (Enraged)
 			{
-				npc.damage = npc.defDamage * 2;
-				npc.defense = npc.defDefense * 2;
+				npc.damage = npc.defDamage * 3;
+				npc.defense = npc.defDefense * 3;
 			}
 
 			if (AttackTimer >= 0f)
