@@ -119,6 +119,10 @@ namespace Bluemagic.TerraSpirit
 			{
 				Stage3();
 			}
+			else if (Stage == 7)
+			{
+				Stage4();
+			}
 			FixLife();
 			Progress++;
 			Rectangle bounds = new Rectangle((int)npc.Center.X - arenaWidth / 2, (int)npc.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
@@ -394,6 +398,40 @@ namespace Bluemagic.TerraSpirit
 			if (Progress == 1980 && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe3"), 0, npc.whoAmI);
+			}
+		}
+
+		private void Stage4()
+		{
+			if (Progress >= 180 && Progress <= 540 && Progress % 60 == 0)
+			{
+				bullets.Add(new BulletRingExpand(npc.Center, 6f));
+			}
+			if (Progress >= 180 && Progress <= 540 && Progress % 60 == 30)
+			{
+				bullets.Add(new BulletRingExpand(npc.Center, 6f).Rotation(MathHelper.Pi / 16f));
+			}
+			if (Progress == 180)
+			{
+				bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.PiOver2, 60));
+				bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
+			}
+			if (Progress >= 600 && Progress <= 960 && Progress % 90 == 0)
+			{
+				Vector2 center = GetTarget().Center;
+				bullets.Add(new BulletCrossRotate(center, 192f, 0.02f, 0f));
+				bullets.Add(new BulletCrossRotate(center, 192f, 0.02f, MathHelper.PiOver2));
+				bullets.Add(new BulletCrossRotate(center, 192f, 0.02f, MathHelper.Pi));
+				bullets.Add(new BulletCrossRotate(center, 192f, 0.02f, 3f * MathHelper.PiOver2));
+			}
+			if (Progress == 1080)
+			{
+				bullets.Add(new BulletFlowerDoom(npc.Center, 720));
+			}
+			if (Progress >= 2000)
+			{
+				Talk("ok you win for now but my creator hasn't finished me yet");
+				npc.active = false;
 			}
 		}
 

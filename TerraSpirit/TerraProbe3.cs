@@ -21,7 +21,7 @@ namespace Bluemagic.TerraSpirit
 			{
 				TerraSpirit spirit = (TerraSpirit)Spirit.modNPC;
 				Vector2 center = npc.Center;
-				spirit.bullets.Add(new BulletPortal2(center, center + new Vector2(-320f, 320f)));
+				spirit.bullets.Add(new BulletPortal2(center, center + new Vector2(-320f, -320f)));
 				spirit.bullets.Add(new BulletPortal2(center, center + new Vector2(320f, -320f)));
 				spirit.bullets.Add(new BulletPortal2(center, center + new Vector2(-320f, 320f)));
 				spirit.bullets.Add(new BulletPortal2(center, center + new Vector2(320f, 320f)));

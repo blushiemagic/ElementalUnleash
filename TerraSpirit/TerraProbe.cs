@@ -103,6 +103,24 @@ namespace Bluemagic.TerraSpirit
 
 		public abstract void Behavior();
 
+		public override bool? CanBeHitByItem(Player player, Item item)
+		{
+			if (player.GetModPlayer<BluemagicPlayer>().terraLives > 0)
+			{
+				return null;
+			}
+			return false;
+		}
+
+		public override bool? CanBeHitByProjectile(Projectile projectile)
+		{
+			if (!projectile.npcProj && !projectile.trap && Main.player[projectile.owner].GetModPlayer<BluemagicPlayer>().terraLives > 0)
+			{
+				return null;
+			}
+			return false;
+		}
+
 		public override bool PreNPCLoot()
 		{
 			NPC spirit = Spirit;
