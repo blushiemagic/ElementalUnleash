@@ -53,6 +53,7 @@ namespace Bluemagic.Items.Abomination
 				player.QuickSpawnItem(mod.ItemType("EyeballTome"));
 				break;
 			case 3:
+				player.QuickSpawnItem(mod.ItemType("ElementalStaff"));
 				break;
 			case 4:
 				break;

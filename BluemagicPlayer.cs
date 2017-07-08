@@ -24,6 +24,7 @@ namespace Bluemagic
 		public int elementShieldPos = 0;
 		public bool voidMonolith = false;
 		public bool extraAccessory2 = false;
+		public bool elementMinion = false;
 
 		public float puriumShieldChargeMax = 0f;
 		public float puriumShieldChargeRate = 1f;
@@ -96,6 +97,7 @@ namespace Bluemagic
 			customMeleeEnchant = 0;
 			paladinMinion = false;
 			elementShield = false;
+			elementMinion = false;
 			puriumShieldChargeMax = 0f;
 			puriumShieldChargeRate = 1f;
 			puriumShieldEnduranceMult = 1f;

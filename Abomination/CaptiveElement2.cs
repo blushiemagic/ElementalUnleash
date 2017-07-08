@@ -515,6 +515,7 @@ namespace Bluemagic.Abomination
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballTome"));
 						break;
 					case 3:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalStaff"));
 						break;
 					case 4:
 						break;
