@@ -18,7 +18,7 @@ namespace Bluemagic.Items.Phantom.Projectiles
 			projectile.height = 38;
 			projectile.alpha = 70;
 			projectile.timeLeft = 300;
-			projectile.maxPenetrate = -1;
+			projectile.penetrate = -1;
 			projectile.friendly = true;
 			projectile.thrown = true;
 			projectile.tileCollide = false;
