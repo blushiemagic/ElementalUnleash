@@ -40,7 +40,7 @@ namespace Bluemagic.Items.Purium.Armor
 
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return (head.type == mod.ItemType("PuriumHelmet") || head.type == mod.ItemType("PuriumVisor") || head.type == mod.ItemType("PuriumHeadgear") || head.type == mod.ItemType("PuriumMask")) && body.type == mod.ItemType("PuriumBreastplate") && legs.type == mod.ItemType("PuriumLeggings");
+			return (head.type == mod.ItemType("PuriumHelmet") || head.type == mod.ItemType("PuriumVisor") || head.type == mod.ItemType("PuriumHeadgear") || head.type == mod.ItemType("PuriumMask") || head.type == mod.ItemType("PuriumHat")) && body.type == mod.ItemType("PuriumBreastplate") && legs.type == mod.ItemType("PuriumLeggings");
 		}
 
 		public override void UpdateArmorSet(Player player)

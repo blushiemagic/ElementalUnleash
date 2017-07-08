@@ -20,6 +20,7 @@ namespace Bluemagic.Items.Abomination
 			item.UseSound = SoundID.Item1;
 			item.noMelee = true;
 			item.useStyle = 1;
+			item.noUseGraphic = true;
 			item.damage = 289;
 			item.useAnimation = 20;
 			item.useTime = 20;
