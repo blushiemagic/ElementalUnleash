@@ -50,7 +50,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 					if (projectile.ai[0] <= 0f)
 					{
 						CreateBlade();
-						projectile.ai[0] = 5f;
+						projectile.ai[0] = 3f;
 					}
 				}
 			}

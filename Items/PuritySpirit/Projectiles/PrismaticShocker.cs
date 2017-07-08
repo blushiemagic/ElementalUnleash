@@ -86,6 +86,14 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			return new Color(r, g, b);
 		}
 
+		public Color BeamColor()
+		{
+			int r = (Main.DiscoR + 255) / 2;
+			int g = (Main.DiscoG + 255) / 2;
+			int b = (Main.DiscoB + 255) / 2;
+			return new Color(r, g, b);
+		}
+
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			for (int k = projectile.whoAmI + 1; k < 1000; k++)
@@ -106,7 +114,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			float length = unit.Length();
 			unit.Normalize();
 			float rotation = unit.ToRotation();
-			Color color = GetAlpha(lightColor).Value * 0.6f;
+			Color color = BeamColor() * 0.6f;
 			for (float k = projectile.localAI[0]; k <= length; k += 8f)
 			{
 				Vector2 drawPos = projectile.Center + unit * k - Main.screenPosition;
