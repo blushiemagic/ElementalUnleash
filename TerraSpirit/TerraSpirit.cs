@@ -123,6 +123,10 @@ namespace Bluemagic.TerraSpirit
 			{
 				Stage4();
 			}
+			else if (Stage == 9)
+			{
+				Stage5();
+			}
 			FixLife();
 			Progress++;
 			Rectangle bounds = new Rectangle((int)npc.Center.X - arenaWidth / 2, (int)npc.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
@@ -385,17 +389,17 @@ namespace Bluemagic.TerraSpirit
 				bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
 				bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
 			}
-			if (Progress >= 1500 && Progress <= 1800 && Progress % 4 == 0)
+			if (Progress >= 1560 && Progress <= 1860 && Progress % 4 == 0)
 			{
 				Vector2 bulletPos = new Vector2(npc.Center.X, npc.Center.Y - arenaHeight / 2);
 				bulletPos.X += 80f * (float)Math.Sin(MathHelper.TwoPi * Progress / 120);
 				bullets.Add(new BulletArray(bulletPos, 0f, 160f, new Vector2(0f, 8f), arenaHeight / 8));
 			}
-			if (Progress >= 1560 && Progress <= 1800 && Progress % 60 == 0)
+			if (Progress >= 1620 && Progress <= 1860 && Progress % 60 == 0)
 			{
 				bullets.Add(new BulletBeamBig(GetTarget().Center, 160, 0f, 60));
 			}
-			if (Progress == 1980 && Main.netMode != 1)
+			if (Progress == 2040 && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe3"), 0, npc.whoAmI);
 			}
@@ -428,11 +432,19 @@ namespace Bluemagic.TerraSpirit
 			{
 				bullets.Add(new BulletFlowerDoom(npc.Center, 720));
 			}
-			if (Progress >= 2000)
+			if (Progress == 1980)
 			{
-				Talk("ok you win for now but my creator hasn't finished me yet");
-				npc.active = false;
+				bullets.Add(new BulletBlackHole(npc.Center));
 			}
+			if (Progress == 2820 && Main.netMode != 1)
+			{
+				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe4"), 0, npc.whoAmI);
+			}
+		}
+
+		private void Stage5()
+		{
+			
 		}
 
 		private void FixLife()

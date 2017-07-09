@@ -934,6 +934,7 @@ namespace Bluemagic
 			terraLives--;
 			if (terraLives == 0 && Bluemagic.testing)
 			{
+				Main.NewText("YOU LOSE! Lucky you're just the dev whose testing her fight.", 255, 25, 25);
 				terraLives = 1;
 			}
 			if (Main.netMode == 1)
