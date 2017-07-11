@@ -925,7 +925,7 @@ namespace Bluemagic
 
 		public void TerraKill()
 		{
-			if (terraLives <= 0 || terraImmune > 0)
+			if (terraLives <= 0 || terraImmune > 0 || Main.netMode == 2)
 			{
 				return;
 			}
@@ -942,7 +942,7 @@ namespace Bluemagic
 				ModPacket packet = mod.GetPacket();
 				packet.Write((byte)MessageType.TerraLives);
 				packet.Write(player.whoAmI);
-				packet.Write(heroLives);
+				packet.Write(terraLives);
 				packet.Send();
 			}
 			if (Main.netMode == 0)

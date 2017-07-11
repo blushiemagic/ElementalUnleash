@@ -21,7 +21,7 @@ namespace Bluemagic
 	public class Bluemagic : Mod
 	{
 		public static Mod Instance;
-		public const bool testing = true;
+		public const bool testing = false;
 
 		private static Color pureColor = new Color(100, 255, 100);
 		private static int pureColorStyle = 0;
@@ -193,6 +193,18 @@ namespace Bluemagic
 							packet.Write(push.Y);
 							packet.Send(-1, whoAmI);
 						}
+					}
+				}
+			}
+			else if (type == MessageType.TerraSpirit)
+			{
+				NPC npc = Main.npc[reader.ReadInt32()];
+				if (npc.active)
+				{
+					TerraSpirit.TerraSpirit spirit = npc.modNPC as TerraSpirit.TerraSpirit;
+					if (spirit != null)
+					{
+						spirit.HandlePacket(reader);
 					}
 				}
 			}

@@ -238,30 +238,32 @@ namespace Bluemagic.TerraSpirit
 
 		public void Initialize()
 		{
-			if (Progress == 0)
+			if (Progress == Main.netMode)
 			{
 				bullets.Clear();
 				Vector2 center = npc.Center;
-				for (int k = 0; k < 255; k++)
+				if (Main.netMode != 1)
 				{
-					Player player = Main.player[k];
-					if (player.active & !player.dead && player.position.X > center.X - arenaWidth / 2 && player.position.X + player.width < center.X + arenaWidth / 2 && player.position.Y > center.Y - arenaHeight / 2 && player.position.Y + player.height < center.Y + arenaHeight / 2)
+					for (int k = 0; k < 255; k++)
 					{
-						player.GetModPlayer<BluemagicPlayer>().terraLives = 10;
-						if (Main.netMode == 2)
+						Player player = Main.player[k];
+						if (player.active & !player.dead && player.position.X > center.X - arenaWidth / 2 && player.position.X + player.width < center.X + arenaWidth / 2 && player.position.Y > center.Y - arenaHeight / 2 && player.position.Y + player.height < center.Y + arenaHeight / 2)
 						{
-							ModPacket netMessage = GetPacket(TerraSpiritMessageType.TerraPlayer);
-							netMessage.Send(k);
-						}
-						else if (player.whoAmI == Main.myPlayer)
-						{
-							Main.NewText("You have " + 10 + " lives!");
+							player.GetModPlayer<BluemagicPlayer>().terraLives = 10;
+							if (Main.netMode == 2)
+							{
+								ModPacket netMessage = GetPacket(TerraSpiritMessageType.TerraPlayer);
+								netMessage.Send(k);
+							}
+							else if (player.whoAmI == Main.myPlayer)
+							{
+								Main.NewText("You have " + 10 + " lives!");
+							}
 						}
 					}
 				}
 			}
-			BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
-			if (Main.netMode != 2 && modPlayer.terraLives > 0)
+			if (Main.netMode != 1)
 			{
 				if (Progress == 90)
 				{
@@ -285,6 +287,7 @@ namespace Bluemagic.TerraSpirit
 					Talk("Your greed shall be your undoing.");
 					Stage++;
 					Progress = -1;
+					npc.netUpdate = true;
 				}
 			}
 		}
@@ -444,7 +447,11 @@ namespace Bluemagic.TerraSpirit
 
 		private void Stage5()
 		{
-			
+			if (Progress >= 300)
+			{
+				Main.NewText("ok you win for now but my creator hasn't finished me yet");
+				npc.active = false;
+			}
 		}
 
 		private void FixLife()
@@ -576,7 +583,8 @@ namespace Bluemagic.TerraSpirit
 			if (type == TerraSpiritMessageType.TerraPlayer)
 			{
 				Player player = Main.player[Main.myPlayer];
-				player.GetModPlayer<BluemagicPlayer>(mod).heroLives = 10;
+				player.GetModPlayer<BluemagicPlayer>(mod).terraLives = 10;
+				Main.NewText("You have " + 10 + " lives!");
 			}
 		}
 	}
