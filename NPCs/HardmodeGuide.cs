@@ -402,7 +402,7 @@ namespace Bluemagic.NPCs
 					}
 					return "You can mix together items from powerful monsters of many elements to create something that can summon a hideous beast in the underworld.";
 				case 32:
-					if (!BluemagicWorld.downedAbomination || !NPC.downedMoonlord || BluemagicWorld.downedAbomination2 > 0)
+					if (!BluemagicWorld.downedAbomination || !NPC.downedMoonlord || BluemagicWorld.elementalUnleash)
 					{
 						goto case -1;
 					}

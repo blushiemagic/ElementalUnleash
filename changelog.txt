@@ -9,3 +9,4 @@ fixed bug where phantom hammer does not pierce
 added throwing hat for purium armor
 buffed the dance of blades
 made the prismatic shocker's rainbow more visible
+purium ore now generates when using an item from the abomination instead of when defeating the abomination

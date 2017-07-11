@@ -17,7 +17,8 @@ namespace Bluemagic
 		public static bool snowMoonPassed = false;
 		public static bool downedPhantom = false;
 		public static bool downedAbomination = false;
-		public static int downedAbomination2 = 0;
+		public static bool elementalUnleash = false;
+		public static int numPuriumGens = 0;
 		public static bool downedPuritySpirit = false;
 		public static bool downedChaosSpirit = false;
 
@@ -28,7 +29,8 @@ namespace Bluemagic
 			snowMoonPassed = false;
 			downedPhantom = false;
 			downedAbomination = false;
-			downedAbomination2 = 0;
+			elementalUnleash = false;
+			numPuriumGens = 0;
 			downedPuritySpirit = false;
 			downedChaosSpirit = false;
 		}
@@ -41,7 +43,8 @@ namespace Bluemagic
 			tag["snowMoonPassed"] = snowMoonPassed;
 			tag["downedPhantom"] = downedPhantom;
 			tag["downedAbomination"] = downedAbomination;
-			tag["downedAbomination2"] = downedAbomination2;
+			tag["elementalUnleash"] = elementalUnleash;
+			tag["numPuriumGens"] = numPuriumGens;
 			tag["downedPuritySpirit"] = downedPuritySpirit;
 			tag["downedChaosSpirit"] = downedChaosSpirit;
 			return tag;
@@ -54,7 +57,16 @@ namespace Bluemagic
 			snowMoonPassed = tag.GetBool("snowMoonPassed");
 			downedPhantom = tag.GetBool("downedPhantom");
 			downedAbomination = tag.GetBool("downedAbomination");
-			downedAbomination2 = tag.GetInt("downedAbomination2");
+			if (tag.ContainsKey("numPuriumGens"))
+			{
+				elementalUnleash = tag.GetBool("elementalUnleash");
+				numPuriumGens = tag.GetInt("numPuriumGens");
+			}
+			else
+			{
+				numPuriumGens = tag.GetInt("elementalUnleash");
+				elementalUnleash = numPuriumGens > 0;
+			}
 			downedPuritySpirit = tag.GetBool("downedPuritySpirit");
 			downedChaosSpirit = tag.GetBool("downedChaosSpirit");
 		}
@@ -82,16 +94,20 @@ namespace Bluemagic
 			{
 				flags |= 16;
 			}
-			if (downedPuritySpirit)
+			if (elementalUnleash)
 			{
 				flags |= 32;
 			}
-			if (downedChaosSpirit)
+			if (downedPuritySpirit)
 			{
 				flags |= 64;
 			}
+			if (downedChaosSpirit)
+			{
+				flags |= 128;
+			}
 			writer.Write(flags);
-			writer.Write(downedAbomination2);
+			writer.Write(numPuriumGens);
 		}
 
 		public override void NetReceive(BinaryReader reader)
@@ -102,9 +118,10 @@ namespace Bluemagic
 			snowMoonPassed = ((flags & 4) == 4);
 			downedPhantom = ((flags & 8) == 8);
 			downedAbomination = ((flags & 16) == 16);
-			downedPuritySpirit = ((flags & 32) == 32);
-			downedChaosSpirit = ((flags & 64) == 64);
-			downedAbomination2 = reader.ReadInt32();
+			elementalUnleash = ((flags & 32) == 32);
+			downedPuritySpirit = ((flags & 64) == 64);
+			downedChaosSpirit = ((flags & 128) == 128);
+			numPuriumGens = reader.ReadInt32();
 		}
 
 		public override void LoadLegacy(BinaryReader reader)
@@ -145,19 +162,14 @@ namespace Bluemagic
 			{
 				return;
 			}
-			downedAbomination2 += 1;
-			for (double k = 0; k < (Main.maxTilesX - 200) * (Main.maxTilesY - 150 - (int)Main.rockLayer) / 10000.0 / (double)downedAbomination2; k += 1.0)
+			numPuriumGens += 1;
+			for (double k = 0; k < (Main.maxTilesX - 200) * (Main.maxTilesY - 150 - (int)Main.rockLayer) / 10000.0 / (double)numPuriumGens; k += 1.0)
 			{
 				WorldGen.OreRunner(WorldGen.genRand.Next(100, Main.maxTilesX - 100), WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 150), (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Bluemagic.Instance.TileType("PuriumOre"));
 			}
-			if (Main.netMode == 0)
+			Bluemagic.NewText("Mods.Bluemagic.PuriumOreGen", 100, 220, 100);
+			if (Main.netMode == 2)
 			{
-				Main.NewText(Language.GetTextValue("Mods.Bluemagic.ElementalUnleash"), 100, 220, 100);
-			}
-			else if (Main.netMode == 2)
-			{
-				NetworkText text = NetworkText.FromKey("Mods.Bluemagic.ElementalUnleash");
-				NetMessage.BroadcastChatMessage(text, new Color(100, 220, 100));
 				NetMessage.SendData(MessageID.WorldData);
 			}
 		}

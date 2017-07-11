@@ -79,6 +79,9 @@ namespace Bluemagic
 			text = CreateTranslation("ElementalUnleash");
 			text.SetDefault("The elements have been unleashed!");
 			AddTranslation(text);
+			text = CreateTranslation("PuriumOreGen");
+			text.SetDefault("Your world has been blessed with Purium!");
+			AddTranslation(text);
 			text = CreateTranslation("NPCTalk");
 			text.SetDefault("<{0}> {1}");
 			AddTranslation(text);
@@ -109,7 +112,7 @@ namespace Bluemagic
 			{
 				bossList.Call("AddBossWithInfo", "The Phantom", 12.05f, (Func<bool>)(() => BluemagicWorld.downedPhantom), string.Format("Use a [i:{0}] in the Dungeon (Plantera must be defeated)", ItemType("PaladinEmblem")));
 				bossList.Call("AddBossWithInfo", "The Abomination", 12.8f, (Func<bool>)(() => BluemagicWorld.downedAbomination), string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", ItemType("FoulOrb")));
-				bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.downedAbomination2 > 0), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
+				bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.elementalUnleash), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
 				bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
 				bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
 			}
@@ -224,6 +227,24 @@ namespace Bluemagic
 			pureColor.R = (byte)(255 - 155f * Math.Abs(Math.Cos(pureColorStyle * Math.PI / 200.0)));
 			pureColor.B = pureColor.R;
 			pureColorStyle = (pureColorStyle + 1) % 200;
+		}
+
+		public static void NewText(string key, int r, int g, int b)
+		{
+			if (Main.netMode == 0)
+			{
+				Main.NewText(Language.GetTextValue(key), (byte)r, (byte)g, (byte)b);
+			}
+			else if (Main.netMode == 2)
+			{
+				NetworkText text = NetworkText.FromKey(key);
+				NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+			}
+		}
+
+		public static void NewText(string key, Color color)
+		{
+			NewText(key, color.R, color.G, color.B);
 		}
 	}
 

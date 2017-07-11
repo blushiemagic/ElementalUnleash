@@ -481,6 +481,10 @@ namespace Bluemagic.Abomination
 			{
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AbominationTrophy"));
 			}
+			if (NPC.downedMoonlord)
+			{
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumOreGen"));
+			}
 			if (Main.expertMode)
 			{
 				if (NPC.downedMoonlord)
@@ -518,6 +522,7 @@ namespace Bluemagic.Abomination
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalStaff"));
 						break;
 					case 4:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballGlove"));
 						break;
 					}
 				}
@@ -525,7 +530,8 @@ namespace Bluemagic.Abomination
 			BluemagicWorld.downedAbomination = true;
 			if (Main.netMode != 1 && NPC.downedMoonlord)
 			{
-				BluemagicWorld.GenPurium();
+				BluemagicWorld.elementalUnleash = true;
+				Bluemagic.NewText("Mods.Bluemagic.ElementalUnleash", 100, 220, 100);
 			}
 		}
 
