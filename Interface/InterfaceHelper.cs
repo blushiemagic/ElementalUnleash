@@ -137,7 +137,8 @@ namespace Bluemagic.Interface
 			int screenAnchorX = Main.screenWidth / 2;
 			const int barSize = 128;
 			const int barHeight = 28;
-			if (Main.mouseX > screenAnchorX && Main.mouseX < screenAnchorX + barSize && Main.mouseY > 32 && Main.mouseY < 32 + barHeight)
+			Rectangle rect = new Rectangle(screenAnchorX, 32, (int)(barSize * Main.UIScale), (int)(barHeight * Main.UIScale));
+			if (Main.mouseX > rect.Left && Main.mouseX < rect.Right && Main.mouseY > rect.Top && Main.mouseY < rect.Bottom)
 			{
 				Main.player[Main.myPlayer].showItemIcon = false;
 				float enduranceCap = (int)(20 * modPlayer.puriumShieldEnduranceMult);
@@ -150,6 +151,28 @@ namespace Bluemagic.Interface
 				Main.instance.MouseText(text);
 				Main.mouseText = true;
 			}
+		}
+
+		public static Rectangle GetFullRectangle(UIElement element)
+		{
+			CalculatedStyle dim = element.GetDimensions();
+			return GetFullRectangle((int)dim.X, (int)dim.Y, (int)dim.Width, (int)dim.Height);
+		}
+
+		public static Rectangle GetFullRectangle(int x, int y, int width, int height)
+		{
+			Vector2 vector = new Vector2(x, y);
+			Vector2 position = new Vector2(width, height) + vector;
+			vector = Vector2.Transform(vector, Main.UIScaleMatrix);
+			position = Vector2.Transform(position, Main.UIScaleMatrix);
+			Rectangle result = new Rectangle((int)vector.X, (int)vector.Y, (int)(position.X - vector.X), (int)(position.Y - vector.Y));
+			int sWidth = Main.spriteBatch.GraphicsDevice.Viewport.Width;
+			int sHeight = Main.spriteBatch.GraphicsDevice.Viewport.Height;
+			result.X = Utils.Clamp<int>(result.X, 0, sWidth);
+			result.Y = Utils.Clamp<int>(result.Y, 0, sHeight);
+			result.Width = Utils.Clamp<int>(result.Width, 0, sWidth - result.X);
+			result.Height = Utils.Clamp<int>(result.Height, 0, sHeight - result.Y);
+			return result;
 		}
 	}
 }

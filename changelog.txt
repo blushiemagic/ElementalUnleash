@@ -1,12 +1,1 @@
-hold jump to move more slowly with the purity shield mount
-fixed bug where misc effects show while dead
-fixed random crash when idling with purity shield mount
-added more drops to the Abomination post-Moonlord
-fixed some bugs with homing projectiles against the spirit of chaos
-nerfed the phantom's damage
-buffed the phantom when enraged
-fixed bug where phantom hammer does not pierce
-added throwing hat for purium armor
-buffed the dance of blades
-made the prismatic shocker's rainbow more visible
-purium ore now generates when using an item from the abomination instead of when defeating the abomination
+purium shield and custom stats UIs now work with interface scaling

@@ -224,7 +224,8 @@ namespace Bluemagic.Interface
 
 		private static bool IsMouseOver(int x, int y, int width, int height)
 		{
-			return curMouse.X > x && curMouse.X < x + width && curMouse.Y > y && curMouse.Y < y + height;
+			Rectangle rect = InterfaceHelper.GetFullRectangle(x, y, width, height);
+			return curMouse.X > rect.Left && curMouse.X < rect.Right && curMouse.Y > rect.Top && curMouse.Y < rect.Bottom;
 		}
 
 		private static bool IsMouseOver(Vector2 pos, int width, int height)
