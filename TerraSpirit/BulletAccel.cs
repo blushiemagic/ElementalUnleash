@@ -30,7 +30,7 @@ namespace Bluemagic.TerraSpirit
 		{
 			speed += acceleration;
 			position += speed * direction;
-			return position.X >= bounds.X && position.X <= bounds.Right && position.Y >= bounds.Y && position.Y <= bounds.Bottom;
+			return position.X + size / 2 >= bounds.X && position.X - size / 2 <= bounds.Right && position.Y + size / 2 >= bounds.Y && position.Y - size / 2 <= bounds.Bottom;
 		}
 	}
 }

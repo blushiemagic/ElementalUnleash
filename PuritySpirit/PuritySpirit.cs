@@ -169,9 +169,16 @@ namespace Bluemagic.PuritySpirit
 			}
 		}
 
+		internal static int dpsCap
+		{
+			get
+			{
+				return BluemagicWorld.downedPuritySpirit ? 20000 : 10000;
+			}
+		}
+
 		private IList<Particle> particles = new List<Particle>();
 		private float[,] aura = new float[size, size];
-		internal const int dpsCap = 10000;
 		private int damageTotal = 0;
 		private bool saidRushMessage = false;
 		public readonly IList<int> targets = new List<int>();

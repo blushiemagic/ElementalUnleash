@@ -31,7 +31,13 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 
 		public override bool PreAI()
 		{
-			Projectile cannon = Main.projectile[Projectile.GetByUUID(projectile.owner, projectile.ai[1])];
+			int uuid = Projectile.GetByUUID(projectile.owner, projectile.ai[1]);
+			if (uuid < 0)
+			{
+				projectile.Kill();
+				return false;
+			}
+			Projectile cannon = Main.projectile[uuid];
 			if (cannon.active && cannon.type == mod.ProjectileType("CleanserBeam"))
 			{
 				Vector2 direction = Vector2.Normalize(cannon.velocity);

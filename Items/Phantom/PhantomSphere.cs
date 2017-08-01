@@ -32,5 +32,34 @@ namespace Bluemagic.Items.Phantom
 			item.UseSound = SoundID.Item43;
 			item.shoot = mod.ProjectileType("PhantomSphere");
 		}
+
+		public override void AddRecipes()
+		{
+			if (Bluemagic.Sushi != null)
+			{
+				ModRecipe recipe;
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "PhantomBlade");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "SpectreGun");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "PaladinStaff");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+			}
+		}
 	}
 }

@@ -59,7 +59,6 @@ namespace Bluemagic.TerraSpirit
 			npc.knockBackResist = 0f;
 			npc.width = size;
 			npc.height = size;
-			npc.value = Item.buyPrice(100, 0, 0, 0);
 			npc.npcSlots = 1337f;
 			npc.boss = true;
 			npc.lavaImmune = true;
@@ -126,6 +125,10 @@ namespace Bluemagic.TerraSpirit
 			else if (Stage == 9)
 			{
 				Stage5();
+			}
+			else if (Stage == 11)
+			{
+				End();
 			}
 			FixLife();
 			Progress++;
@@ -233,6 +236,14 @@ namespace Bluemagic.TerraSpirit
 			if (Progress >= 180)
 			{
 				npc.active = false;
+				if (Main.netMode != 1)
+				{
+					BluemagicWorld.terraDeaths++;
+					if (Main.netMode == 2)
+					{
+						NetMessage.SendData(MessageID.WorldData);
+					}
+				}
 			}
 		}
 
@@ -244,20 +255,37 @@ namespace Bluemagic.TerraSpirit
 				Vector2 center = npc.Center;
 				if (Main.netMode != 1)
 				{
+					int lives = 10;
+					switch (Stage)
+					{
+					case 4:
+						lives = BluemagicWorld.terraCheckpoint1;
+						break;
+					case 6:
+						lives = BluemagicWorld.terraCheckpoint2;
+						break;
+					case 8:
+						lives = BluemagicWorld.terraCheckpoint3;
+						break;
+					case 10:
+						lives = BluemagicWorld.terraCheckpointS;
+						break;
+					}
 					for (int k = 0; k < 255; k++)
 					{
 						Player player = Main.player[k];
 						if (player.active & !player.dead && player.position.X > center.X - arenaWidth / 2 && player.position.X + player.width < center.X + arenaWidth / 2 && player.position.Y > center.Y - arenaHeight / 2 && player.position.Y + player.height < center.Y + arenaHeight / 2)
 						{
-							player.GetModPlayer<BluemagicPlayer>().terraLives = 10;
+							player.GetModPlayer<BluemagicPlayer>().terraLives = lives;
 							if (Main.netMode == 2)
 							{
 								ModPacket netMessage = GetPacket(TerraSpiritMessageType.TerraPlayer);
+								netMessage.Write((byte)lives);
 								netMessage.Send(k);
 							}
 							else if (player.whoAmI == Main.myPlayer)
 							{
-								Main.NewText("You have " + 10 + " lives!");
+								Main.NewText("You have " + lives + " lives!");
 							}
 						}
 					}
@@ -265,28 +293,144 @@ namespace Bluemagic.TerraSpirit
 			}
 			if (Main.netMode != 1)
 			{
-				if (Progress == 90)
+				bool startFight = false;
+				if (BluemagicWorld.terraDeaths == 0)
 				{
-					Talk("You haved saved Terraria...");
+					if (Progress == 90)
+					{
+						Talk("You haved saved Terraria...");
+					}
+					if (Progress == 210)
+					{
+						Talk("You have passed my trial...");
+					}
+					if (Progress == 330)
+					{
+						Talk("You have slain the god responsible for the Elemental Unleash...");
+					}
+					if (Progress == 450)
+					{
+						Talk("And yet, you still desire more power, more challenge?");
+					}
+					if (Progress >= 570)
+					{
+						Talk("Your greed shall be your undoing.");
+						startFight = true;
+					}
 				}
-				if (Progress == 210)
+				if (BluemagicWorld.terraDeaths == 1)
 				{
-					Talk("You have passed my trial...");
+					if (Progress == 90)
+					{
+						Talk("You have been slain by me...");
+					}
+					if (Progress == 210)
+					{
+						Talk("And still, you return?");
+					}
+					if (Progress == 330)
+					{
+						Talk("If another death is truly what you wish for...");
+					}
+					if (Progress >= 450)
+					{
+						Talk("...So be it... witness my true power...");
+						startFight = true;
+					}
 				}
-				if (Progress == 330)
+				if (BluemagicWorld.terraDeaths == 2)
 				{
-					Talk("You have slain the god responsible for the Elemental Unleash...");
+					if (Progress == 90)
+					{
+						Talk("I can see granting you the gift of immortality was a mistake...");
+					}
+					if (Progress == 210)
+					{
+						Talk("If you still refuse to give up...");
+					}
+					if (Progress >= 330)
+					{
+						Talk("I shall just beat you into submission...");
+						startFight = true;
+					}
 				}
-				if (Progress == 450)
+				if (BluemagicWorld.terraDeaths == 3)
 				{
-					Talk("And yet, you still desire more power, more challenge?");
+					if (Progress == 90)
+					{
+						Talk("You think 3 deaths is not many.");
+					}
+					if (Progress == 210)
+					{
+						Talk("You believe you still have a chance against me.");
+					}
+					if (Progress >= 330)
+					{
+						Talk("Allow me to show you how mistaken you are...");
+						startFight = true;
+					}
 				}
-				if (Progress >= 570)
+				if (BluemagicWorld.terraDeaths == 4)
+				{
+					if (Progress == 90)
+					{
+						Talk("Humans are truly such strange creatures.");
+					}
+					if (Progress == 210)
+					{
+						Talk("You never give up, even if there is no hope...");
+					}
+					if (Progress >= 330)
+					{
+						Talk("That is why I chose you to save Terraria. But you have made me regret my choice...");
+						startFight = true;
+					}
+				}
+				if (BluemagicWorld.terraDeaths >= 5 && BluemagicWorld.terraDeaths < 10)
+				{
+					if (Progress == 90)
+					{
+						Talk("Do you still not tire of this?");
+					}
+					if (Progress >= 210)
+					{
+						Talk("Do you really wish to die this many times?");
+						startFight = true;
+					}
+				}
+				if (BluemagicWorld.terraDeaths >= 10 && BluemagicWorld.terraDeaths < 25)
+				{
+					if (Progress == 90)
+					{
+						Talk("You have lost against me " + BluemagicWorld.terraDeaths + " times now.");
+					}
+					if (Progress >= 210)
+					{
+						Talk("I will do whatever it takes to eradicate your hope...");
+						startFight = true;
+					}
+				}
+				if (BluemagicWorld.terraDeaths >= 25)
+				{
+					if (Progress == 90)
+					{
+						Talk("You are now at " + BluemagicWorld.terraDeaths + " deaths.");
+					}
+					if (Progress >= 210)
+					{
+						Talk("I tire of you... begone...");
+						startFight = true;
+					}
+				}
+				if (startFight)
 				{
 					Main.PlaySound(15, -1, -1, 0);
-					Talk("Your greed shall be your undoing.");
 					Stage++;
 					Progress = -1;
+					if (Stage == 7 || Stage == 9)
+					{
+						Progress = 120;
+					}
 					npc.netUpdate = true;
 				}
 			}
@@ -410,6 +554,10 @@ namespace Bluemagic.TerraSpirit
 
 		private void Stage4()
 		{
+			if (Progress == 0)
+			{
+				Main.PlaySound(15, -1, -1, 0);
+			}
 			if (Progress >= 180 && Progress <= 540 && Progress % 60 == 0)
 			{
 				bullets.Add(new BulletRingExpand(npc.Center, 6f));
@@ -447,10 +595,136 @@ namespace Bluemagic.TerraSpirit
 
 		private void Stage5()
 		{
-			if (Progress >= 300)
+			if (Progress == 0)
 			{
-				Main.NewText("ok you win for now but my creator hasn't finished me yet");
-				npc.active = false;
+				Main.PlaySound(15, -1, -1, 0);
+			}
+			if (Progress == 180)
+			{
+				bullets.Add(new BulletChase(npc.Center, 1000, 300, (position, spirit) => null, 0.03f));
+			}
+			if (Progress >= 180 && Progress <= 420 && Progress % 120 == 60)
+			{
+				bullets.Add(new BulletRingSpinOut(npc.Center, 8f, 0.005f));
+				bullets.Add(new BulletRingSpinOut(npc.Center, 8f, -0.005f));
+			}
+			if (Progress >= 180 && Progress <= 420 && Progress % 120 == 0)
+			{
+				bullets.Add(new BulletRingSpinOut(npc.Center, 8f, 0.01f).Rotation(MathHelper.Pi / 16f));
+				bullets.Add(new BulletRingSpinOut(npc.Center, 8f, -0.01f).Rotation(MathHelper.Pi / 16f));
+			}
+			if (Progress >= 540 && Progress <= 1020 && Progress % 60 == 0)
+			{
+				bullets.Add(new BulletRingExpand(npc.Center, 4f).NumBullets(32));
+				bullets.Add(new BulletRingExpand(npc.Center, 8f).NumBullets(32).Rotation(MathHelper.Pi / 32f));
+				bullets.Add(new BulletRingExpand(npc.Center, 12f).NumBullets(16).Rotation((GetTarget().Center - npc.Center).ToRotation()));
+			}
+			if (Progress == 1260)
+			{
+				bullets.Add(new BulletSlide(npc.Center));
+			}
+			if (Progress >= 1380 && Progress <= 1860 && Progress % 120 == 60)
+			{
+				bullets.Add(new BulletBeamBig(GetTarget().Center, delay: 60, life: 20));
+			}
+			if (Progress == 2000 && Main.netMode != 2)
+			{
+				Main.NewText("You can feel a Void World opening up behind the fabrics of reality...");
+			}
+			if (Progress == 2060)
+			{
+				Main.PlaySound(15, -1, -1, 0);
+			}
+			if (Progress >= 2060 && Progress <= 2660)
+			{
+				Vector2 arena = new Vector2(arenaWidth, arenaHeight);
+				Vector2 origin = npc.Center - arena / 2f;
+				Vector2 target = GetTarget().Center;
+				Vector2 localTarget = target - origin;
+				if (Progress % 8 == 0)
+				{
+					float x1 = localTarget.X;
+					float x2 = (localTarget.X + arena.X / 2f) % arena.X;
+					float y1 = localTarget.Y;
+					float y2 = (localTarget.Y + arena.Y / 2f) % arena.Y;
+					x1 += origin.X;
+					x2 += origin.X;
+					y1 += origin.Y;
+					y2 += origin.Y;
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x1, y1)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x1, y2)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x2, y1)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x2, y2)));
+				}
+				if (Progress % 8 == 2)
+				{
+					const int interval = 400;
+					for (int x = 0; x < arenaWidth / interval; x++)
+					{
+						float xPos = (localTarget.X + x * interval + interval / 2) % arena.X + origin.X;
+						for (int y = 0; y < arenaHeight / interval; y++)
+						{
+							float yPos = (localTarget.Y + y * interval + interval / 2) % arena.Y + origin.Y;
+							bullets.Insert(0, new BulletVoidWorld(new Vector2(xPos, yPos)));
+						}
+					}
+				}
+				if (Progress % 8 == 4)
+				{
+					float x1 = origin.X + localTarget.X;
+					float x2 = origin.X + arena.X - localTarget.X;
+					float y1 = origin.Y + localTarget.Y;
+					float y2 = origin.Y + arena.Y - localTarget.Y;
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x1, y1)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x1, y2)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x2, y1)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(x2, y2)));
+				}
+				if (Progress % 8 == 6)
+				{
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X - 100f, target.Y)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X + 100f, target.Y)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X, target.Y - 100f)));
+					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X, target.Y + 100f)));
+				}
+			}
+			if (Progress == 2800 && Main.netMode != 1)
+			{
+				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe5"), 0, npc.whoAmI);
+			}
+		}
+
+		private void End()
+		{
+			if (Progress == 0)
+			{
+				Main.PlaySound(29, -1, -1, 92);
+			}
+			if (Main.expertMode)
+			{
+				if (Progress >= 280)
+				{
+					NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("TerraSpirit2"));
+					npc.active = false;
+				}
+			}
+			else
+			{
+				npc.dontTakeDamage = true;
+				if (Progress >= 420)
+				{
+					if (Main.netMode != 1)
+					{
+						BluemagicWorld.downedTerraSpirit = true;
+						if (Main.netMode == 2)
+						{
+							NetMessage.SendData(MessageID.WorldData);
+						}
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumCoin"), Main.rand.Next(10, 13));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RainbowStar"));
+					}
+					npc.active = false;
+				}
 			}
 		}
 
@@ -506,14 +780,21 @@ namespace Bluemagic.TerraSpirit
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
+			float scale = 1f;
+			if (!Main.expertMode && Stage == 11)
+			{
+				scale += 9f * Progress / 400f;
+			}
+			float alpha = 1f;
+			alpha -= 0.8f * (scale - 1f) / 9f;
 			for (int x = 0; x < size; x++)
 			{
 				for (int y = 0; y < size; y++)
 				{
-					Vector2 drawPos = npc.position - Main.screenPosition;
-					drawPos.X += x * 2 - size / 2;
-					drawPos.Y += y * 2 - size / 2;
-					spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+					Vector2 drawPos = npc.Center - Main.screenPosition;
+					drawPos.X += scale * (x * 2 - size);
+					drawPos.Y += scale * (y * 2 - size);
+					spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y] * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 				}
 			}
 			spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
@@ -582,9 +863,10 @@ namespace Bluemagic.TerraSpirit
 			TerraSpiritMessageType type = (TerraSpiritMessageType)reader.ReadByte();
 			if (type == TerraSpiritMessageType.TerraPlayer)
 			{
+				byte lives = reader.ReadByte();
 				Player player = Main.player[Main.myPlayer];
-				player.GetModPlayer<BluemagicPlayer>(mod).terraLives = 10;
-				Main.NewText("You have " + 10 + " lives!");
+				player.GetModPlayer<BluemagicPlayer>(mod).terraLives = lives;
+				Main.NewText("You have " + lives + " lives!");
 			}
 		}
 	}

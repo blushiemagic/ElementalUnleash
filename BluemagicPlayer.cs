@@ -73,6 +73,7 @@ namespace Bluemagic
 
 		internal int terraLives = 0;
 		private int terraImmune = 0;
+		public bool godmode = false;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
@@ -119,6 +120,7 @@ namespace Bluemagic
 			ammoCost = 0f;
 			thrownCost = 0f;
 			cancelBadRegen = 0;
+			godmode = false;
 			if (extraAccessory2)
 			{
 				player.extraAccessorySlots = 2;
@@ -132,6 +134,18 @@ namespace Bluemagic
 			puriumShieldCharge = 0f;
 			reviveTime = 0;
 			terraLives = 0;
+			if (heroLives == 1)
+			{
+				heroLives = 0;
+				if (Main.netMode == 1)
+				{
+					ModPacket packet = mod.GetPacket();
+					packet.Write((byte)MessageType.HeroLives);
+					packet.Write(player.whoAmI);
+					packet.Write(heroLives);
+					packet.Send();
+				}
+			}
 		}
 
 		public override TagCompound Save()
@@ -161,6 +175,48 @@ namespace Bluemagic
 			}
 		}
 
+		public override void clientClone(ModPlayer clientClone)
+		{
+			BluemagicPlayer clone = clientClone as BluemagicPlayer;
+			clone.chaosStats = chaosStats.Clone();
+			clone.cataclysmStats = cataclysmStats.Clone();
+		}
+
+		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+		{
+			ModPacket packet = mod.GetPacket(512);
+			packet.Write((byte)player.whoAmI);
+			packet.Write((byte)0);
+			chaosStats.NetSend(packet);
+			packet.Send(toWho, fromWho);
+			packet = mod.GetPacket(512);
+			packet.Write((byte)player.whoAmI);
+			packet.Write((byte)1);
+			cataclysmStats.NetSend(packet);
+			packet.Send(toWho, fromWho);
+		}
+
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
+			BluemagicPlayer clone = clientPlayer as BluemagicPlayer;
+			if (!chaosStats.Equals(clone.chaosStats))
+			{
+				ModPacket packet = mod.GetPacket(512);
+				packet.Write((byte)player.whoAmI);
+				packet.Write((byte)0);
+				chaosStats.NetSend(packet);
+				packet.Send();
+			}
+			if (!cataclysmStats.Equals(clone.cataclysmStats))
+			{
+				ModPacket packet = mod.GetPacket(512);
+				packet.Write((byte)player.whoAmI);
+				packet.Write((byte)1);
+				cataclysmStats.NetSend(packet);
+				packet.Send();
+			}
+		}
+
 		private bool AnyChaosSpirit()
 		{
 			return NPC.AnyNPCs(mod.NPCType("ChaosSpirit")) || NPC.AnyNPCs(mod.NPCType("ChaosSpirit2")) || NPC.AnyNPCs(mod.NPCType("ChaosSpirit3"));
@@ -168,7 +224,7 @@ namespace Bluemagic
 
 		private bool AnyTerraSpirit()
 		{
-			return NPC.AnyNPCs(mod.NPCType("TerraSpirit"));
+			return NPC.AnyNPCs(mod.NPCType("TerraSpirit")) || NPC.AnyNPCs(mod.NPCType("TerraSpirit2"));
 		}
 
 		private bool IsChaosSpirit(int type)
@@ -178,7 +234,7 @@ namespace Bluemagic
 
 		private bool IsTerraSpirit(int type)
 		{
-			return type == mod.NPCType("TerraSpirit");
+			return type == mod.NPCType("TerraSpirit") || type == mod.NPCType("TerraSpirit2");
 		}
 
 		public override void UpdateBiomeVisuals()
@@ -394,12 +450,17 @@ namespace Bluemagic
 		{
 			int halfWidth = TerraSpirit.TerraSpirit.arenaWidth / 2;
 			int halfHeight = TerraSpirit.TerraSpirit.arenaHeight / 2;
+			bool spikes = npc.type == mod.NPCType("TerraSpirit2");
 			if (player.position.X <= npc.Center.X - halfWidth)
 			{
 				player.position.X = npc.Center.X - halfWidth;
 				if (player.velocity.X < 0f)
 				{
 					player.velocity.X = 0f;
+				}
+				if (spikes)
+				{
+					TerraKill();
 				}
 			}
 			else if (player.position.X + player.width >= npc.Center.X + halfWidth)
@@ -409,6 +470,10 @@ namespace Bluemagic
 				{
 					player.velocity.X = 0f;
 				}
+				if (spikes)
+				{
+					TerraKill();
+				}
 			}
 			if (player.position.Y <= npc.Center.Y - halfHeight)
 			{
@@ -417,6 +482,10 @@ namespace Bluemagic
 				{
 					player.velocity.Y = 0f;
 				}
+				if (spikes)
+				{
+					TerraKill();
+				}
 			}
 			else if (player.position.Y + player.height >= npc.Center.Y + halfHeight)
 			{
@@ -424,6 +493,10 @@ namespace Bluemagic
 				if (player.velocity.Y > 0f)
 				{
 					player.velocity.Y = 0f;
+				}
+				if (spikes)
+				{
+					TerraKill();
 				}
 			}
 		}
@@ -697,6 +770,16 @@ namespace Bluemagic
 			nullified = true;
 		}
 
+		public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+		{
+			return !godmode;
+		}
+
+		public override bool CanBeHitByProjectile(Projectile projectile)
+		{
+			return !godmode;
+		}
+
 		public override void OnHitByNPC(NPC npc, int damage, bool crit)
 		{
 			if (npc.type == NPCID.DungeonSpirit && Main.rand.Next(4) == 0)
@@ -745,6 +828,11 @@ namespace Bluemagic
 			percentDamage = 0f;
 			defenseEffect = -1f;
 			chaosDefense = false;
+			if (godmode)
+			{
+				damage = 0;
+				customDamage = true;
+			}
 			return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
 		}
 
@@ -861,10 +949,18 @@ namespace Bluemagic
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
+			if (godmode)
+			{
+				player.statLife = player.statLifeMax2;
+				return false;
+			}
 			if (puriumShieldChargeMax > 0f && puriumShieldCharge >= reviveCost)
 			{
 				puriumShieldCharge -= reviveCost;
-				player.statLife = 1;
+				if (player.statLife < 1)
+				{
+					player.statLife = 1;
+				}
 				StartBadHeal();
 				player.immune = true;
 				player.immuneTime = player.longInvince ? 180 : 120;
@@ -878,7 +974,7 @@ namespace Bluemagic
 				}
 				return false;
 			}
-			if (heroLives > 0)
+			if (heroLives > 1)
 			{
 				heroLives--;
 				if (Main.netMode == 1)
@@ -889,25 +985,22 @@ namespace Bluemagic
 					packet.Write(heroLives);
 					packet.Send();
 				}
-				if (heroLives > 0)
+				player.statLife = player.statLifeMax2;
+				player.HealEffect(player.statLifeMax2);
+				StartBadHeal();
+				player.immune = true;
+				player.immuneTime = player.longInvince ? 180 : 120;
+				if (crystalCloak)
 				{
-					player.statLife = player.statLifeMax2;
-					player.HealEffect(player.statLifeMax2);
-					StartBadHeal();
-					player.immune = true;
-					player.immuneTime = player.longInvince ? 180 : 120;
-					if (crystalCloak)
-					{
-						player.immuneTime += 60;
-					}
-					for (int k = 0; k < player.hurtCooldowns.Length; k++)
-					{
-						player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
-					}
-					Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 29);
-					reviveTime = 60;
-					return false;
+					player.immuneTime += 60;
 				}
+				for (int k = 0; k < player.hurtCooldowns.Length; k++)
+				{
+					player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
+				}
+				Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 29);
+				reviveTime = 60;
+				return false;
 			}
 			if (damage == 10.0 && hitDirection == 0 && damageSource.SourceOtherIndex == 8)
 			{

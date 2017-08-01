@@ -58,7 +58,20 @@ namespace Bluemagic.Items.ChaosSpirit
 			recipe.AddIngredient(ItemID.LivingFireBlock, 100);
 			recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
 			recipe.AddIngredient(ItemID.ShroomiteBar, 10);
-			recipe.AddIngredient(ItemID.LunarBar, 20);
+			if (Bluemagic.Calamity == null)
+			{
+				recipe.AddIngredient(ItemID.LunarBar, 20);
+			}
+			else
+			{
+				recipe.AddIngredient(Bluemagic.Calamity.ItemType("CosmiliteBar"), 10);
+			}
+			if (Bluemagic.Thorium != null)
+			{
+				recipe.AddIngredient(Bluemagic.Thorium.ItemType("OceanEssence"), 3);
+				recipe.AddIngredient(Bluemagic.Thorium.ItemType("DeathEssence"), 3);
+				recipe.AddIngredient(Bluemagic.Thorium.ItemType("InfernoEssence"), 3);
+			}
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

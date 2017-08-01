@@ -21,6 +21,12 @@ namespace Bluemagic
 		public static int numPuriumGens = 0;
 		public static bool downedPuritySpirit = false;
 		public static bool downedChaosSpirit = false;
+		public static int terraDeaths = 0;
+		internal static int terraCheckpoint1 = 0;
+		internal static int terraCheckpoint2 = 0;
+		internal static int terraCheckpoint3 = 0;
+		internal static int terraCheckpointS = 0;
+		public static bool downedTerraSpirit = false;
 
 		public override void Initialize()
 		{
@@ -33,10 +39,53 @@ namespace Bluemagic
 			numPuriumGens = 0;
 			downedPuritySpirit = false;
 			downedChaosSpirit = false;
+			terraDeaths = 0;
+			terraCheckpoint1 = 0;
+			terraCheckpoint2 = 0;
+			terraCheckpoint3 = 0;
+			terraCheckpointS = 0;
+			downedTerraSpirit = false;
+		}
+
+		private void FixTerraCheckpoints()
+		{
+			if (terraCheckpoint1 < 0)
+			{
+				terraCheckpoint1 = 0;
+			}
+			if (terraCheckpoint1 > 10)
+			{
+				terraCheckpoint1 = 10;
+			}
+			if (terraCheckpoint2 < 0)
+			{
+				terraCheckpoint2 = 0;
+			}
+			if (terraCheckpoint2 > 10)
+			{
+				terraCheckpoint2 = 10;
+			}
+			if (terraCheckpoint3 < 0)
+			{
+				terraCheckpoint3 = 0;
+			}
+			if (terraCheckpoint3 > 10)
+			{
+				terraCheckpoint3 = 10;
+			}
+			if (terraCheckpointS < 0)
+			{
+				terraCheckpointS = 0;
+			}
+			if (terraCheckpointS > 10)
+			{
+				terraCheckpointS = 10;
+			}
 		}
 
 		public override TagCompound Save()
 		{
+			FixTerraCheckpoints();
 			TagCompound tag = new TagCompound();
 			tag["eclipsePassed"] = eclipsePassed;
 			tag["pumpkinMoonPassed"] = pumpkinMoonPassed;
@@ -47,6 +96,12 @@ namespace Bluemagic
 			tag["numPuriumGens"] = numPuriumGens;
 			tag["downedPuritySpirit"] = downedPuritySpirit;
 			tag["downedChaosSpirit"] = downedChaosSpirit;
+			tag["terraDeaths"] = terraDeaths;
+			tag["terraCheckpoint1"] = terraCheckpoint1;
+			tag["terraCheckpoint2"] = terraCheckpoint2;
+			tag["terraCheckpoint3"] = terraCheckpoint3;
+			tag["terraCheckpointS"] = terraCheckpointS;
+			tag["downedTerraSpirit"] = downedTerraSpirit;
 			return tag;
 		}
 
@@ -69,10 +124,18 @@ namespace Bluemagic
 			}
 			downedPuritySpirit = tag.GetBool("downedPuritySpirit");
 			downedChaosSpirit = tag.GetBool("downedChaosSpirit");
+			terraDeaths = tag.GetInt("terraDeaths");
+			terraCheckpoint1 = tag.GetInt("terraCheckpoint1");
+			terraCheckpoint2 = tag.GetInt("terraCheckpoint2");
+			terraCheckpoint3 = tag.GetInt("terraCheckpoint3");
+			terraCheckpointS = tag.GetInt("terraCheckpointS");
+			downedTerraSpirit = tag.GetBool("downedTerraSpirit");
+			FixTerraCheckpoints();
 		}
 
 		public override void NetSend(BinaryWriter writer)
 		{
+			FixTerraCheckpoints();
 			byte flags = 0;
 			if (eclipsePassed)
 			{
@@ -108,6 +171,15 @@ namespace Bluemagic
 			}
 			writer.Write(flags);
 			writer.Write(numPuriumGens);
+			flags = 0;
+			if (downedTerraSpirit)
+			{
+				flags |= 1;
+			}
+			writer.Write(flags);
+			writer.Write(terraDeaths);
+			writer.Write((byte)(terraCheckpoint1 + 16 * terraCheckpoint2));
+			writer.Write((byte)(terraCheckpoint3 + 16 * terraCheckpointS));
 		}
 
 		public override void NetReceive(BinaryReader reader)
@@ -122,6 +194,16 @@ namespace Bluemagic
 			downedPuritySpirit = ((flags & 64) == 64);
 			downedChaosSpirit = ((flags & 128) == 128);
 			numPuriumGens = reader.ReadInt32();
+			flags = reader.ReadByte();
+			downedTerraSpirit = ((flags & 1) == 1);
+			terraDeaths = reader.ReadInt32();
+			byte val = reader.ReadByte();
+			terraCheckpoint1 = val % 16;
+			terraCheckpoint2 = val / 16;
+			val = reader.ReadByte();
+			terraCheckpoint3 = val % 16;
+			terraCheckpointS = val / 16;
+			FixTerraCheckpoints();
 		}
 
 		public override void LoadLegacy(BinaryReader reader)

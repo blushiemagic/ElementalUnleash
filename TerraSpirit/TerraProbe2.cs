@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.TerraSpirit
@@ -31,6 +32,17 @@ namespace Bluemagic.TerraSpirit
 			{
 				Timer = 0;
 			}
+		}
+
+		public override bool PreNPCLoot()
+		{
+			BluemagicWorld.terraCheckpoint1 = FindHighestLife(BluemagicWorld.terraCheckpoint1);
+			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Checkpoint1"));
+			if (Main.netMode == 2)
+			{
+				NetMessage.SendData(MessageID.WorldData);
+			}
+			return base.PreNPCLoot();
 		}
 	}
 }

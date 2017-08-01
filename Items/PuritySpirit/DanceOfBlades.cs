@@ -39,5 +39,34 @@ namespace Bluemagic.Items.PuritySpirit
 			player.bodyFrame.Y = 3 * player.bodyFrame.Height;
 			return true;
 		}
+
+		public override void AddRecipes()
+		{
+			if (Bluemagic.Sushi != null)
+			{
+				ModRecipe recipe;
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "CleanserBeam");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "PrismaticShocker");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "VoidEmblem");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -116,6 +117,31 @@ namespace Bluemagic
 			}
 		}
 
+		public CustomStats Clone()
+		{
+			CustomStats clone = new CustomStats();
+			clone.Points = Points;
+			clone.Stats = new List<CustomStat>(Stats.Select(stat => stat.Clone()));
+			return clone;
+		}
+
+		public bool Equals(object other)
+		{
+			CustomStats stats = other as CustomStats;
+			if (stats == null || Points != stats.Points || Stats.Count != stats.Stats.Count)
+			{
+				return false;
+			}
+			for (int k = 0; k < Stats.Count; k++)
+			{
+				if (!Stats[k].Equals(stats.Stats[k]))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
 		public static CustomStats CreateChaosStats()
 		{
 			CustomStats stats = new CustomStats();
@@ -186,6 +212,17 @@ namespace Bluemagic
 		public bool CanUpgrade()
 		{
 			return Points < MaxPoints;
+		}
+
+		public bool Equals(object other)
+		{
+			CustomStat otherStat = other as CustomStat;
+			return otherStat != null && Points == otherStat.Points && Name == otherStat.Name && Tooltip == otherStat.Tooltip && Inactive == otherStat.Inactive;
+		}
+
+		public CustomStat Clone()
+		{
+			return (CustomStat)MemberwiseClone();
 		}
 	}
 

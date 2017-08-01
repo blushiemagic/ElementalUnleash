@@ -54,5 +54,41 @@ namespace Bluemagic.Items.Abomination
 			}
 			return base.UseItem(player);
 		}
+
+		public override void AddRecipes()
+		{
+			if (Bluemagic.Sushi != null)
+			{
+				ModRecipe recipe;
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "ElementalYoyo");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "ElementalSprayer");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "EyeballTome");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+
+				recipe = new ModRecipe(mod);
+				recipe.AddIngredient(null, "EyeballGlove");
+				recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+				recipe.AddTile(TileID.TinkerersWorkbench);
+				recipe.SetResult(this);
+				recipe.AddRecipe();
+			}
+		}
 	}
 }

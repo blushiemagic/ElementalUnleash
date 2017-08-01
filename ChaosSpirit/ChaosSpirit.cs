@@ -51,11 +51,18 @@ namespace Bluemagic.ChaosSpirit
 		}
 
 		private List<ChaosOrb> orbs = new List<ChaosOrb>();
-		internal const int dpsCap = 10000;
 		private int damageTotal = 0;
 		private bool saidRushMessage = false;
 		internal List<int> targets = new List<int>();
 		private bool canMove = true;
+
+		internal static int dpsCap
+		{
+			get
+			{
+				return BluemagicWorld.downedChaosSpirit ? 20000 : 10000;
+			}
+		}
 
 		private int stage
 		{

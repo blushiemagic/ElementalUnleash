@@ -20,11 +20,11 @@ namespace Bluemagic.TerraSpirit
 		{
 			get
 			{
-				return (int)npc.ai[1];
+				return (int)npc.localAI[1];
 			}
 			set
 			{
-				npc.ai[1] = value;
+				npc.localAI[1] = value;
 			}
 		}
 
@@ -135,6 +135,23 @@ namespace Bluemagic.TerraSpirit
 				}
 			}
 			return false;
+		}
+
+		protected int FindHighestLife(int start = 0)
+		{
+			int max = start;
+			for (int k = 0; k < 255; k++)
+			{
+				if (Main.player[k].active && !Main.player[k].dead)
+				{
+					BluemagicPlayer modPlayer = Main.player[k].GetModPlayer<BluemagicPlayer>();
+					if (modPlayer.terraLives > max)
+					{
+						max = modPlayer.terraLives;
+					}
+				}
+			}
+			return max;
 		}
 	}
 }

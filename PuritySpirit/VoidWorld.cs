@@ -151,21 +151,13 @@ namespace Bluemagic.PuritySpirit
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			const int prime1 = 101;
-			const int prime2 = 107;
 			for (int k = Math.Max(0, (int)projectile.localAI[0] - 300); k < projectile.oldPos.Length; k++)
 			{
 				if (projectile.oldPos[k] != Vector2.Zero)
 				{
 					Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition;
-					drawPos.X += (k / 5 * prime1) % 13 - 6;
-					drawPos.Y += (k / 5 * prime2) % 13 - 6;
 					Rectangle frame = new Rectangle(0, 0, 80, 80);
-					frame.Y += 164 * (k / 60);
-					if ((k / 10) % 2 == 1)
-					{
-						frame.Y += 82;
-					}
+					frame.Y += 82 * (k * 7 / 180);
 					spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, frame, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 				}
 			}

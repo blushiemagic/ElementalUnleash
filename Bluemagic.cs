@@ -21,6 +21,9 @@ namespace Bluemagic
 	public class Bluemagic : Mod
 	{
 		public static Mod Instance;
+		public static Mod Calamity;
+		public static Mod Thorium;
+		public static Mod Sushi;
 		public const bool testing = false;
 
 		private static Color pureColor = new Color(100, 255, 100);
@@ -103,6 +106,12 @@ namespace Bluemagic
 			text = CreateTranslation("CataclysmCountdown");
 			text.SetDefault("{0} seconds until the end");
 			AddTranslation(text);
+			text = CreateTranslation("TerraSpiritExpert");
+			text.SetDefault("The Spirit of Purity is losing control!");
+			AddTranslation(text);
+			text = CreateTranslation("ExtraLives");
+			text.SetDefault("Everyone has been granted 3 extra lives!");
+			AddTranslation(text);
 		}
 
 		public override void PostSetupContent()
@@ -115,12 +124,118 @@ namespace Bluemagic
 				bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.elementalUnleash), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
 				bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
 				bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
+				bossList.Call("AddBossWithInfo", "????? (Phase 1)", 42f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0), string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", ItemType("RitualOfBunnies")));
+				bossList.Call("AddBossWithInfo", "????? (Phase 2)", 256f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint1")));
+				bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
+				bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0 || BluemagicWorld.downedTerraSpirit), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
+				bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
 			}
+			Calamity = ModLoader.GetMod("CalamityMod");
+			Thorium = ModLoader.GetMod("ThoriumMod");
+			Sushi = ModLoader.GetMod("imkSushisMod");
 		}
 
 		public override void AddRecipes()
 		{
 			BluemagicRecipes.AddRecipes(this);
+		}
+
+		public override object Call(object[] args)
+		{
+			if (args.Length == 0)
+			{
+				return null;
+			}
+			if (args[0] == "Set")
+			{
+				if (args.Length < 4)
+				{
+					return null;
+				}
+				if (args[1] is Player && args[2] is string)
+				{
+					return CallPlayerSet((Player)args[1], (string)args[2], args[3]);
+				}
+				return null;
+			}
+			if (args[0] == "Get")
+			{
+				if (args.Length < 2)
+				{
+					return null;
+				}
+				if (args[1] is string)
+				{
+					return CallGet((string)args[1]);
+				}
+				return null;
+			}
+			return null;
+		}
+
+		private object CallPlayerSet(Player player, string command, object arg)
+		{
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
+			if (command == "puriumShieldChargeMax" && arg is float)
+			{
+				modPlayer.puriumShieldChargeMax = (float)arg;
+				return arg;
+			}
+			if (command == "puriumShieldChargeRate" && arg is float)
+			{
+				modPlayer.puriumShieldChargeRate = (float)arg;
+				return arg;
+			}
+			if (command == "puriumShieldEnduranceMult" && arg is float)
+			{
+				modPlayer.puriumShieldEnduranceMult = (float)arg;
+				return arg;
+			}
+			if (command == "manaMagnet2" && arg is bool)
+			{
+				modPlayer.manaMagnet2 = (bool)arg;
+				return arg;
+			}
+			if (command == "crystalCloak" && arg is bool)
+			{
+				modPlayer.crystalCloak = (bool)arg;
+				return arg;
+			}
+			if (command == "lifeMagnet2" && arg is bool)
+			{
+				modPlayer.lifeMagnet2 = (bool)arg;
+				return arg;
+			}
+			return null;
+		}
+
+		private object CallGet(string command)
+		{
+			if (command == "downedPhantom")
+			{
+				return BluemagicWorld.downedPhantom;
+			}
+			if (command == "downedAbomination")
+			{
+				return BluemagicWorld.downedAbomination;
+			}
+			if (command == "elementalUnleash")
+			{
+				return BluemagicWorld.elementalUnleash;
+			}
+			if (command == "downedPuritySpirit")
+			{
+				return BluemagicWorld.downedPuritySpirit;
+			}
+			if (command == "downedChaosSpirit")
+			{
+				return BluemagicWorld.downedChaosSpirit;
+			}
+			if (command == "downedTerraSpirit")
+			{
+				return BluemagicWorld.downedTerraSpirit;
+			}
+			return null;
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -227,6 +342,53 @@ namespace Bluemagic
 					NetMessage.BroadcastChatMessage(text, new Color(255, 25, 25));
 				}
 			}
+			else if (type == MessageType.GoldBlob)
+			{
+				NPC npc = Main.npc[reader.ReadByte()];
+				float value = reader.ReadByte();
+				if (npc.active && npc.type == NPCType("GoldBlob"))
+				{
+					npc.localAI[0] = value;
+				}
+			}
+			else if (type == MessageType.ExtraLives)
+			{
+				BluemagicPlayer player = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
+				if (player.terraLives > 0)
+				{
+					player.terraLives += 3;
+				}
+			}
+			else if (type == MessageType.BulletNegative)
+			{
+				NPC npc = Main.npc[reader.ReadByte()];
+				if (npc.active && npc.type == NPCType("TerraSpirit2") && npc.modNPC is TerraSpirit2)
+				{
+					var bullets = ((TerraSpirit2)npc.modNPC).bullets;
+					int count = reader.ReadByte();
+					for (int k = 0; k < count; k++)
+					{
+						bullets.Add(new BulletNegative(reader.ReadVector2(), reader.ReadVector2()));
+					}
+				}
+			}
+			else if (type == MessageType.CustomStats)
+			{
+				byte byte1 = reader.ReadByte();
+				byte byte2 = reader.ReadByte();
+				Player player = Main.player[byte1];
+				BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
+				CustomStats stats = byte2 == 0 ? modPlayer.chaosStats : modPlayer.cataclysmStats;
+				stats.NetReceive(reader);
+				if (Main.netMode == 2)
+				{
+					ModPacket packet = GetPacket(512);
+					packet.Write(byte1);
+					packet.Write(byte2);
+					stats.NetSend(packet);
+					packet.Send(-1, whoAmI);
+				}
+			}
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -267,6 +429,10 @@ namespace Bluemagic
 		ChaosSpirit,
 		PushChaosArm,
 		TerraSpirit,
-		TerraLives
+		TerraLives,
+		GoldBlob,
+		ExtraLives,
+		BulletNegative,
+		CustomStats
 	}
 }

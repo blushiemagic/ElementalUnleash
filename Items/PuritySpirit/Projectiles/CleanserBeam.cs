@@ -88,7 +88,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			int byUUID = Projectile.GetByUUID(projectile.owner, projectile.ai[1]);
-			if (projectile.ai[0] > maxTime && Main.projectile[byUUID].type == mod.ProjectileType("CleanserLaser"))
+			if (byUUID >= 0 && projectile.ai[0] > maxTime && Main.projectile[byUUID].type == mod.ProjectileType("CleanserLaser"))
 			{
 				Main.instance.DrawProj(byUUID);
 			}
