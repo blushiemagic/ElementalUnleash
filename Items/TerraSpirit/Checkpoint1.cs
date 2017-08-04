@@ -31,7 +31,7 @@ namespace Bluemagic.Items.TerraSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			return BluemagicWorld.terraCheckpoint1 > 0 && !NPC.AnyNPCs(mod.NPCType("TerraSpirit"));
+			return BluemagicWorld.terraCheckpoint1 > 0 && !NPC.AnyNPCs(mod.NPCType("TerraSpirit")) && !NPC.AnyNPCs(mod.NPCType("TerraSpirit2"));
 		}
 
 		public override bool UseItem(Player player)

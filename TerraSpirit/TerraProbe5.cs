@@ -41,14 +41,11 @@ namespace Bluemagic.TerraSpirit
 
 		public override bool PreNPCLoot()
 		{
-			if (Main.expertMode)
+			BluemagicWorld.terraCheckpointS = FindHighestLife(BluemagicWorld.terraCheckpointS);
+			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CheckpointS"));
+			if (Main.netMode == 2)
 			{
-				BluemagicWorld.terraCheckpointS = FindHighestLife(BluemagicWorld.terraCheckpointS);
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CheckpointS"));
-				if (Main.netMode == 2)
-				{
-					NetMessage.SendData(MessageID.WorldData);
-				}
+				NetMessage.SendData(MessageID.WorldData);
 			}
 			return base.PreNPCLoot();
 		}

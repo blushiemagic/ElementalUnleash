@@ -14,8 +14,7 @@ namespace Bluemagic.Items.TerraSpirit
 			DisplayName.SetDefault("The Final Ritual");
 			Tooltip.SetDefault("Enrages the Spirit of Purity at 1 health"
 				+ "\nCan be reused infinitely"
-				+ "\nEach player starts with {0} lives"
-				+ "\nOnly useable on Expert Mode");
+				+ "\nEach player starts with {0} lives");
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
@@ -33,7 +32,7 @@ namespace Bluemagic.Items.TerraSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			return Main.expertMode && BluemagicWorld.terraCheckpointS > 0 && !NPC.AnyNPCs(mod.NPCType("TerraSpirit"));
+			return BluemagicWorld.terraCheckpointS > 0 && !NPC.AnyNPCs(mod.NPCType("TerraSpirit")) && !NPC.AnyNPCs(mod.NPCType("TerraSpirit2"));
 		}
 
 		public override bool UseItem(Player player)

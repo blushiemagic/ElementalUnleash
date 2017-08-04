@@ -127,7 +127,7 @@ namespace Bluemagic
 				bossList.Call("AddBossWithInfo", "????? (Phase 1)", 42f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0), string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", ItemType("RitualOfBunnies")));
 				bossList.Call("AddBossWithInfo", "????? (Phase 2)", 256f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint1")));
 				bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
-				bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0 || BluemagicWorld.downedTerraSpirit), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
+				bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
 				bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
 			}
 			Calamity = ModLoader.GetMod("CalamityMod");

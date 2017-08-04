@@ -112,6 +112,14 @@ namespace Bluemagic.TerraSpirit
 			return false;
 		}
 
+		public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+		{
+			if (Main.expertMode)
+			{
+				damage = (int)(damage * 0.8f);
+			}
+		}
+
 		public override bool? CanBeHitByProjectile(Projectile projectile)
 		{
 			if (!projectile.npcProj && !projectile.trap && Main.player[projectile.owner].GetModPlayer<BluemagicPlayer>().terraLives > 0)
@@ -119,6 +127,14 @@ namespace Bluemagic.TerraSpirit
 				return null;
 			}
 			return false;
+		}
+
+		public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			if (Main.expertMode)
+			{
+				damage = (int)(damage * 0.8f);
+			}
 		}
 
 		public override bool PreNPCLoot()

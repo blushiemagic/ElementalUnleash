@@ -266,7 +266,7 @@ namespace Bluemagic.TerraSpirit
 		private void Attack()
 		{
 			Progress %= 300;
-			if (Progress == 0)
+			if (Progress == 0 || (Main.expertMode && Progress == 150))
 			{
 				Player target = null;
 				float distance = 0f;
@@ -287,7 +287,7 @@ namespace Bluemagic.TerraSpirit
 					NPC.NewNPC((int)npc.position.X + npc.width / 2, (int)npc.position.Y + npc.height - 20, mod.NPCType("NegativeBlob"), 0, npc.whoAmI, (target.Center - npc.Center).ToRotation());
 				}
 			}
-			npc.life++;
+			npc.life += Main.expertMode ? 5 : 1;
 			if (npc.life > npc.lifeMax)
 			{
 				npc.life = npc.lifeMax;
@@ -309,9 +309,12 @@ namespace Bluemagic.TerraSpirit
 				{
 					NetMessage.SendData(MessageID.WorldData);
 				}
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumCoin"), Main.rand.Next(20, 25));
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumCoin"), Main.expertMode ? Main.rand.Next(20, 25) : Main.rand.Next(10, 13));
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RainbowStar"));
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BlushieCharm"));
+				if (Main.expertMode)
+				{
+					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BlushieCharm"));
+				}
 				npc.active = false;
 			}
 		}

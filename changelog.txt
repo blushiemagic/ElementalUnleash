@@ -1,2 +1,4 @@
 fixed bug where cataclysm countdown does not display properly
 fixed bug where lives left sync instead of custom stats in multiplayer
+fixed bug where you can summon a second final boss in the final phase
+fixed bug where the final boss is too easy

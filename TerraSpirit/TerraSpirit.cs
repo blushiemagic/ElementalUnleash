@@ -294,7 +294,19 @@ namespace Bluemagic.TerraSpirit
 			if (Main.netMode != 1)
 			{
 				bool startFight = false;
-				if (BluemagicWorld.terraDeaths == 0)
+				if (BluemagicWorld.downedTerraSpirit)
+				{
+					if (Progress == 90)
+					{
+						Talk("You would revive me for your own amusement?");
+					}
+					if (Progress == 210)
+					{
+						Talk("I fail to understand the actions of you humans...");
+						startFight = true;
+					}
+				}
+				else if (BluemagicWorld.terraDeaths == 0)
 				{
 					if (Progress == 90)
 					{
@@ -318,7 +330,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths == 1)
+				else if (BluemagicWorld.terraDeaths == 1)
 				{
 					if (Progress == 90)
 					{
@@ -338,7 +350,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths == 2)
+				else if (BluemagicWorld.terraDeaths == 2)
 				{
 					if (Progress == 90)
 					{
@@ -354,7 +366,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths == 3)
+				else if (BluemagicWorld.terraDeaths == 3)
 				{
 					if (Progress == 90)
 					{
@@ -370,7 +382,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths == 4)
+				else if (BluemagicWorld.terraDeaths == 4)
 				{
 					if (Progress == 90)
 					{
@@ -386,7 +398,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths >= 5 && BluemagicWorld.terraDeaths < 10)
+				else if (BluemagicWorld.terraDeaths >= 5 && BluemagicWorld.terraDeaths < 10)
 				{
 					if (Progress == 90)
 					{
@@ -398,7 +410,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths >= 10 && BluemagicWorld.terraDeaths < 25)
+				else if (BluemagicWorld.terraDeaths >= 10 && BluemagicWorld.terraDeaths < 25)
 				{
 					if (Progress == 90)
 					{
@@ -410,7 +422,7 @@ namespace Bluemagic.TerraSpirit
 						startFight = true;
 					}
 				}
-				if (BluemagicWorld.terraDeaths >= 25)
+				else if (BluemagicWorld.terraDeaths >= 25)
 				{
 					if (Progress == 90)
 					{
@@ -525,6 +537,10 @@ namespace Bluemagic.TerraSpirit
 			if (Progress >= 510 && Progress <= 690 && (Progress - 510) % 90 == 0)
 			{
 				bullets.Add(new BulletBeamBig(GetTarget().Center, 160, MathHelper.PiOver2, 60));
+				if (Main.expertMode)
+				{
+					bullets.Add(new BulletBeamBig(GetTarget().Center, 160, 0f, 60));
+				}
 			}
 			if (Progress >= 720 && Progress <= 1020 && Progress % 30 == 0)
 			{
@@ -532,8 +548,17 @@ namespace Bluemagic.TerraSpirit
 			}
 			if (Progress == 1140)
 			{
-				bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.PiOver2, 60));
-				bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
+				if (Main.expertMode)
+				{
+					bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
+				}
+				else
+				{
+					bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.PiOver2, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
+				}
 				bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
 			}
 			if (Progress >= 1560 && Progress <= 1860 && Progress % 4 == 0)
@@ -568,8 +593,17 @@ namespace Bluemagic.TerraSpirit
 			}
 			if (Progress == 180)
 			{
-				bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.PiOver2, 60));
-				bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
+				if (Main.expertMode)
+				{
+					bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
+				}
+				else
+				{
+					bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.PiOver2, 60));
+					bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
+				}
 			}
 			if (Progress >= 600 && Progress <= 960 && Progress % 90 == 0)
 			{
@@ -617,7 +651,7 @@ namespace Bluemagic.TerraSpirit
 			{
 				bullets.Add(new BulletRingExpand(npc.Center, 4f).NumBullets(32));
 				bullets.Add(new BulletRingExpand(npc.Center, 8f).NumBullets(32).Rotation(MathHelper.Pi / 32f));
-				bullets.Add(new BulletRingExpand(npc.Center, 12f).NumBullets(16).Rotation((GetTarget().Center - npc.Center).ToRotation()));
+				bullets.Add(new BulletRingExpand(npc.Center, 12f).NumBullets(Main.expertMode ? 32 : 16).Rotation((GetTarget().Center - npc.Center).ToRotation()));
 			}
 			if (Progress == 1260)
 			{
@@ -626,6 +660,10 @@ namespace Bluemagic.TerraSpirit
 			if (Progress >= 1380 && Progress <= 1860 && Progress % 120 == 60)
 			{
 				bullets.Add(new BulletBeamBig(GetTarget().Center, delay: 60, life: 20));
+				if (Main.expertMode)
+				{
+					bullets.Add(new BulletBeamBig(GetTarget().Center, rotation: 0f, delay: 60, life: 20));
+				}
 			}
 			if (Progress == 2000 && Main.netMode != 2)
 			{
@@ -700,31 +738,10 @@ namespace Bluemagic.TerraSpirit
 			{
 				Main.PlaySound(29, -1, -1, 92);
 			}
-			if (Main.expertMode)
+			if (Progress >= 280)
 			{
-				if (Progress >= 280)
-				{
-					NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("TerraSpirit2"));
-					npc.active = false;
-				}
-			}
-			else
-			{
-				npc.dontTakeDamage = true;
-				if (Progress >= 420)
-				{
-					if (Main.netMode != 1)
-					{
-						BluemagicWorld.downedTerraSpirit = true;
-						if (Main.netMode == 2)
-						{
-							NetMessage.SendData(MessageID.WorldData);
-						}
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumCoin"), Main.rand.Next(10, 13));
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RainbowStar"));
-					}
-					npc.active = false;
-				}
+				NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("TerraSpirit2"));
+				npc.active = false;
 			}
 		}
 
@@ -754,10 +771,7 @@ namespace Bluemagic.TerraSpirit
 				break;
 			case 10:
 			case 11:
-				if (Main.expertMode)
-				{
-					npc.life = 1;
-				}
+				npc.life = 1;
 				break;
 			}
 		}
@@ -780,21 +794,14 @@ namespace Bluemagic.TerraSpirit
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			float scale = 1f;
-			if (!Main.expertMode && Stage == 11)
-			{
-				scale += 9f * Progress / 400f;
-			}
-			float alpha = 1f;
-			alpha -= 0.8f * (scale - 1f) / 9f;
 			for (int x = 0; x < size; x++)
 			{
 				for (int y = 0; y < size; y++)
 				{
 					Vector2 drawPos = npc.Center - Main.screenPosition;
-					drawPos.X += scale * (x * 2 - size);
-					drawPos.Y += scale * (y * 2 - size);
-					spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y] * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+					drawPos.X += x * 2 - size;
+					drawPos.Y += y * 2 - size;
+					spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 				}
 			}
 			spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
