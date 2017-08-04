@@ -185,11 +185,13 @@ namespace Bluemagic
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
 			ModPacket packet = mod.GetPacket(512);
+			packet.Write((byte)MessageType.CustomStats);
 			packet.Write((byte)player.whoAmI);
 			packet.Write((byte)0);
 			chaosStats.NetSend(packet);
 			packet.Send(toWho, fromWho);
 			packet = mod.GetPacket(512);
+			packet.Write((byte)MessageType.CustomStats);
 			packet.Write((byte)player.whoAmI);
 			packet.Write((byte)1);
 			cataclysmStats.NetSend(packet);
@@ -202,6 +204,7 @@ namespace Bluemagic
 			if (!chaosStats.Equals(clone.chaosStats))
 			{
 				ModPacket packet = mod.GetPacket(512);
+				packet.Write((byte)MessageType.CustomStats);
 				packet.Write((byte)player.whoAmI);
 				packet.Write((byte)0);
 				chaosStats.NetSend(packet);
@@ -210,6 +213,7 @@ namespace Bluemagic
 			if (!cataclysmStats.Equals(clone.cataclysmStats))
 			{
 				ModPacket packet = mod.GetPacket(512);
+				packet.Write((byte)MessageType.CustomStats);
 				packet.Write((byte)player.whoAmI);
 				packet.Write((byte)1);
 				cataclysmStats.NetSend(packet);

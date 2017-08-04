@@ -181,7 +181,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			countdown = 60 * 60;
 			stage++;
-			Talk("Mods.Bluemagic.CataclysmCountdown", 60);
+			Talk("Mods.Bluemagic.CataclysmCountdown", "60");
 		}
 
 		private void Countdown()
@@ -193,19 +193,19 @@ namespace Bluemagic.ChaosSpirit
 			}
 			if (countdown == 60 * 45)
 			{
-				Talk("Mods.Bluemagic.CataclysmCountdown", 45);
+				Talk("Mods.Bluemagic.CataclysmCountdown", "45");
 			}
 			else if (countdown == 60 * 30)
 			{
-				Talk("Mods.Bluemagic.CataclysmCountdown", 30);
+				Talk("Mods.Bluemagic.CataclysmCountdown", "30");
 			}
 			else if (countdown == 60 * 20)
 			{
-				Talk("Mods.Bluemagic.CataclysmCountdown", 20);
+				Talk("Mods.Bluemagic.CataclysmCountdown", "20");
 			}
 			else if (countdown == 60 * 10)
 			{
-				Talk("Mods.Bluemagic.CataclysmCountdown", 10);
+				Talk("Mods.Bluemagic.CataclysmCountdown", "10");
 			}
 			else if (countdown == 60 * 5)
 			{

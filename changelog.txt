@@ -1,11 +1,2 @@
-purium shield and custom stats UIs now work with interface scaling
-fixed bug where void trail is affected by lighting
-fixed bug where custom stats aren't synced between clients
-added the ultimate boss that is and will always be the hardest boss in modded terraria
-added purium coins to help store platinum coins
-ritual of ending recipes changes depending on what mods you have
-fixed bug where the spirits of purity and chaos will still despawn if you lose all your lives but another mod revives you
-fixed error message when ending cleanser beam
-made the spirits of purity and chaos easier to defeat once they have already been defeated
-added Mod.Call support for easier cross-mod content
-added support for boss loot swap tokens from imkSushi's mod
+fixed bug where cataclysm countdown does not display properly
+fixed bug where lives left sync instead of custom stats in multiplayer
