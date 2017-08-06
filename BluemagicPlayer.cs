@@ -455,10 +455,10 @@ namespace Bluemagic
 		private void TerraSpiritBarrier(NPC npc)
 		{
 			Vector2 offset = player.position - lastPos;
-			if (offset.Length() > 48f)
+			if (offset.Length() > 32f)
 			{
 				offset.Normalize();
-				offset *= 48f;
+				offset *= 32f;
 				player.position = lastPos + offset;
 			}
 			int halfWidth = TerraSpirit.TerraSpirit.arenaWidth / 2;

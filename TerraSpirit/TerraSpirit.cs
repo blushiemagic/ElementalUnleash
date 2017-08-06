@@ -484,13 +484,13 @@ namespace Bluemagic.TerraSpirit
 			{
 				bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
 			}
-			if (Progress >= 1080 && Progress <= 1320 && Progress % 120 == 0)
+			if (Progress >= 1200 && Progress <= 1440 && Progress % 120 == 0)
 			{
 				Vector2 bulletPos = GetTarget().Center;
 				bullets.Add(new BulletRingTimed(bulletPos, 6, 192f, 0.03f, 120));
 				bullets.Add(new BulletBeamBig(bulletPos, 320, MathHelper.PiOver2, 120));
 			}
-			if (Progress == 1440 && Main.netMode != 1)
+			if (Progress == 1560 && Main.netMode != 1)
 			{
 				NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe2"), 0, npc.whoAmI);
 			}
@@ -724,6 +724,13 @@ namespace Bluemagic.TerraSpirit
 					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X + 100f, target.Y)));
 					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X, target.Y - 100f)));
 					bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X, target.Y + 100f)));
+					if (Main.expertMode)
+					{
+						bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X - 200f, target.Y - 200f)));
+						bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X + 200f, target.Y - 200f)));
+						bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X - 200f, target.Y + 200f)));
+						bullets.Insert(0, new BulletVoidWorld(new Vector2(target.X + 200f, target.Y + 200f)));
+					}
 				}
 			}
 			if (Progress == 2800 && Main.netMode != 1)
