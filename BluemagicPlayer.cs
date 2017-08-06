@@ -73,6 +73,7 @@ namespace Bluemagic
 
 		internal int terraLives = 0;
 		private int terraImmune = 0;
+		private Vector2 lastPos;
 		public bool godmode = false;
 
 		//permanent data
@@ -380,6 +381,7 @@ namespace Bluemagic
 					terraLives = 0;
 				}
 			}
+			lastPos = player.position;
 		}
 
 		public void CheckBadHeal()
@@ -452,6 +454,13 @@ namespace Bluemagic
 
 		private void TerraSpiritBarrier(NPC npc)
 		{
+			Vector2 offset = player.position - lastPos;
+			if (offset.Length() > 48f)
+			{
+				offset.Normalize();
+				offset *= 48f;
+				player.position = lastPos + offset;
+			}
 			int halfWidth = TerraSpirit.TerraSpirit.arenaWidth / 2;
 			int halfHeight = TerraSpirit.TerraSpirit.arenaHeight / 2;
 			bool spikes = npc.type == mod.NPCType("TerraSpirit2");
