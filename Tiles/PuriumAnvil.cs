@@ -20,7 +20,6 @@ namespace Bluemagic.Tiles
 			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.addTile(Type);
-			drop = mod.ItemType("PuriumAnvil");
 			dustType = 128;
 			adjTiles = new int[] { TileID.Anvils, TileID.MythrilAnvil };
 			ModTranslation name = CreateMapEntryName();

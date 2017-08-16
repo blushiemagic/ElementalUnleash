@@ -1,4 +1,1 @@
-fixed bug where the abomination does not shoot stuff
-fixed bug where you can teleport in the final boss fight
-nerfed first phase of the final boss
-fixed bug where fourth phase of the final boss is too easy on expert mode
+fixed bug where mining a purium anvil drops 3 of it
