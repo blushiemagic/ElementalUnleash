@@ -52,7 +52,7 @@ namespace Bluemagic.Items.Purium.Armor
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "PuriumBar", 24);
+			recipe.AddIngredient(null, "PuriumBar", 20);
 			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();

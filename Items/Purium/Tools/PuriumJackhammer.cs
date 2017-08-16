@@ -33,7 +33,7 @@ namespace Bluemagic.Items.Purium.Tools
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "PuriumBar", 12);
+			recipe.AddIngredient(null, "PuriumBar", 10);
 			recipe.AddTile(null, "PuriumAnvil");
 			recipe.SetResult(this);
 			recipe.AddRecipe();
