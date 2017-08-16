@@ -72,6 +72,7 @@ namespace Bluemagic
 		public int cancelBadRegen = 0;
 
 		internal int terraLives = 0;
+		private int terraKill = 0;
 		private int terraImmune = 0;
 		private Vector2 lastPos;
 		public bool godmode = false;
@@ -135,6 +136,7 @@ namespace Bluemagic
 			puriumShieldCharge = 0f;
 			reviveTime = 0;
 			terraLives = 0;
+			terraKill = 0;
 			if (heroLives == 1)
 			{
 				heroLives = 0;
@@ -680,6 +682,11 @@ namespace Bluemagic
 			{
 				terraImmune--;
 			}
+			if (terraKill > 0)
+			{
+				terraKill--;
+				player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
+			}
 		}
 
 		private void ChargePuriumShield(float charge)
@@ -1077,10 +1084,12 @@ namespace Bluemagic
 			}
 			else if (Main.myPlayer == player.whoAmI)
 			{
-				for (int k = 0; k < 1000; k++)
+				terraKill = 10;
+				for (int k = 0; k < 10; k++)
 				{
 					if (player.dead)
 					{
+						terraKill = 0;
 						break;
 					}
 					player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
