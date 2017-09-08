@@ -135,6 +135,15 @@ namespace Bluemagic
 			Sushi = ModLoader.GetMod("imkSushisMod");
 		}
 
+		public override void Unload()
+		{
+			
+			Instance = null;
+			Calamity = null;
+			Thorium = null;
+			Sushi = null;
+		}
+
 		public override void AddRecipes()
 		{
 			BluemagicRecipes.AddRecipes(this);
