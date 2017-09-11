@@ -1,2 +1,3 @@
 memory improvements on reloading mods
 purium slicer no longer flies across the entire map
+fixed bug where item icon can hide custom stat boosts

@@ -120,6 +120,8 @@ namespace Bluemagic.Interface
 			if (IsMouseOver(panel))
 			{
 				Main.player[Main.myPlayer].mouseInterface = true;
+				Main.player[Main.myPlayer].showItemIcon = false;
+				InterfaceHelper.HideItemIconCache();
 			}
 			string text;
 			if (selected == 1)
