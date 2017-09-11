@@ -1,3 +1,2 @@
-fixed bug where mining a purium anvil drops 3 of it
-lowered purium bar requirements for armor, tools, and elemental purge
-fixed bug where game slightly freezes when the final boss kills you and you have revival equipment
+memory improvements on reloading mods
+purium slicer no longer flies across the entire map

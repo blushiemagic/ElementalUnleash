@@ -24,6 +24,7 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 			projectile.ignoreWater = true;
 			projectile.penetrate = -1;
 			projectile.melee = true;
+			projectile.timeLeft = 120;
 		}
 
 		public override void AI()
