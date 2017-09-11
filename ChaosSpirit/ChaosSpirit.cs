@@ -779,6 +779,10 @@ namespace Bluemagic.ChaosSpirit
 			Rectangle frame = new Rectangle(0, 0, eyeTexture.Width, eyeTexture.Height / 5);
 			frame.Y = frameNum * frame.Height;
 			spriteBatch.Draw(eyeTexture, eyePos - Main.screenPosition, frame, Color.White, npc.rotation, new Vector2(frame.Width / 2, frame.Height / 2), 1f, SpriteEffects.None, 0f);
+			if (damageTotal >= dpsCap * 60)
+			{
+				spriteBatch.Draw(mod.GetTexture("Mounts/ChaosShield"), npc.Center - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(32, 32), 2.5f, SpriteEffects.None, 0f);
+			}
 
 			if (attack == 10 && attackProgress < 120)
 			{
