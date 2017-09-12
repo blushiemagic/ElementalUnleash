@@ -2,3 +2,4 @@ memory improvements on reloading mods
 purium slicer no longer flies across the entire map
 fixed bug where item icon can hide custom stat boosts
 added shield visuals for bosses with dps caps
+added salt

@@ -1036,6 +1036,69 @@ namespace Bluemagic
 			return true;
 		}
 
+		public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+		{
+			Item salt = new Item();
+			salt.SetDefaults(mod.ItemType("Salt"));
+			int npc = NPC.FindFirstNPC(mod.NPCType("Abomination"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 25 + 25 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			int count = NPC.CountNPCS(mod.NPCType("CaptiveElement2"));
+			if (count > 0)
+			{
+				salt.stack = 50 + 5 * (5 - count);
+				player.GetItem(player.whoAmI, salt);
+			}
+			npc = NPC.FindFirstNPC(mod.NPCType("Phantom"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 50 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			npc = NPC.FindFirstNPC(mod.NPCType("PuritySpirit"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 50 + 50 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			npc = NPC.FindFirstNPC(mod.NPCType("ChaosSpirit"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 50 + 25 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			npc = NPC.FindFirstNPC(mod.NPCType("ChaosSpirit2"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 75 + 50 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			npc = NPC.FindFirstNPC(mod.NPCType("ChaosSpirit3"));
+			if (npc >= 0)
+			{
+				NPC ent = Main.npc[npc];
+				salt.stack = 125 + 25 * (ent.lifeMax - ent.life) / ent.lifeMax;
+				player.GetItem(player.whoAmI, salt);
+			}
+			if (NPC.AnyNPCs(mod.NPCType("TerraSpirit")))
+			{
+				salt.stack = 10 * BluemagicWorld.terraDeaths;
+				if (salt.stack > 999)
+				{
+					salt.stack = 999;
+				}
+				player.GetItem(player.whoAmI, salt);
+			}
+		}
+
 		public void TerraKill()
 		{
 			if (terraLives <= 0 || terraImmune > 0 || Main.netMode == 2)
