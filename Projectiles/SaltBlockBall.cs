@@ -6,8 +6,14 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Projectiles
 {
-	public class ShroomsandBall : SandBall
+	public class SaltBlockBall : SandBall
 	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Salt Ball");
+			ProjectileID.Sets.ForcePlateDetection[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
 			projectile.knockBack = 6f;
@@ -16,8 +22,8 @@ namespace Bluemagic.Projectiles
 			projectile.friendly = true;
 			projectile.hostile = true;
 			projectile.penetrate = -1;
-			tileType = mod.TileType("Shroomsand");
-			dustType = 17;
+			tileType = mod.TileType("SaltBlock");
+			dustType = 13;
 		}
 	}
 }
