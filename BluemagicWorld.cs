@@ -219,6 +219,7 @@ namespace Bluemagic
 		{
 			BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
 			modPlayer.voidMonolith = false;
+			modPlayer.saltLamp = false;
 		}
 
 		public override void PostUpdate()

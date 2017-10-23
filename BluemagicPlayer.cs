@@ -25,6 +25,7 @@ namespace Bluemagic
 		public bool voidMonolith = false;
 		public bool extraAccessory2 = false;
 		public bool elementMinion = false;
+		public bool saltLamp = false;
 
 		public float puriumShieldChargeMax = 0f;
 		public float puriumShieldChargeRate = 1f;
@@ -317,6 +318,10 @@ namespace Bluemagic
 
 		public override void PreUpdateBuffs()
 		{
+			if (saltLamp)
+			{
+				player.AddBuff(mod.BuffType("SaltLamp"), 2, false);
+			}
 			if (heroLives > 0)
 			{
 				bool flag = false;
@@ -639,6 +644,10 @@ namespace Bluemagic
 			}
 			elementShieldPos++;
 			elementShieldPos %= 300;
+			if (saltLamp)
+			{
+				player.statDefense += 4;
+			}
 			chaosStats.Update(player);
 			if (Main.expertMode)
 			{

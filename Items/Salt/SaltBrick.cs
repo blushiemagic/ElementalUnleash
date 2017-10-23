@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Items.Misc1
+namespace Bluemagic.Items.Salt
 {
 	public class SaltBrick : ModItem
 	{

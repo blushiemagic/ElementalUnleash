@@ -3,9 +3,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Bluemagic.Items
+namespace Bluemagic.Items.Salt
 {
-	public class Salt : ModItem
+	public class PinkSalt : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
