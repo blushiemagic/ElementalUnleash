@@ -19,7 +19,7 @@ namespace Bluemagic.Items.Purium.Armor
 		{
 			item.width = 18;
 			item.height = 18;
-			item.defense = 32;
+			item.defense = 29;
 			item.rare = 11;
 			item.value = Item.sellPrice(0, 12, 0, 0);
 		}

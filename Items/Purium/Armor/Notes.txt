@@ -1,5 +1,5 @@
-Melee: +90 defense, +25% damage, +20% crit chance, +16% movement, +16% melee speed
-Ranged: +80 defense, +25% damage, +20% crit chance, +12% movement, +25% no ammo
-Magic: +70 defense, +25% damage, +20% crit chance, +12% movement, -15% mana use, +80 mana
-Summon: +65 defense, +5 minions, +10% crit chance, +60% damage, +12% movement
-Thrown: +80 defense, +25% damage, +20% crit chance, +12% movement, +20% thrown velocity, +33% no ammo
+Melee: +80 defense, +25% damage, +20% crit chance, +16% movement, +16% melee speed
+Ranged: +70 defense, +25% damage, +20% crit chance, +12% movement, +25% no ammo
+Magic: +60 defense, +25% damage, +20% crit chance, +12% movement, -15% mana use, +80 mana
+Summon: +55 defense, +5 minions, +10% crit chance, +60% damage, +12% movement
+Thrown: +70 defense, +25% damage, +20% crit chance, +12% movement, +20% thrown velocity, +33% no ammo
