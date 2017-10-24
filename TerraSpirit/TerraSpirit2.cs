@@ -268,7 +268,7 @@ namespace Bluemagic.TerraSpirit
 			Progress %= 300;
 			if (Progress == 0 || (Main.expertMode && Progress == 150))
 			{
-				Player target = null;
+				/*Player target = null;
 				float distance = 0f;
 				for (int k = 0; k < 255; k++)
 				{
@@ -285,7 +285,8 @@ namespace Bluemagic.TerraSpirit
 				if (target != null)
 				{
 					NPC.NewNPC((int)npc.position.X + npc.width / 2, (int)npc.position.Y + npc.height - 20, mod.NPCType("NegativeBlob"), 0, npc.whoAmI, (target.Center - npc.Center).ToRotation());
-				}
+				}*/
+				NPC.NewNPC((int)npc.position.X + npc.width / 2, (int)npc.position.Y + npc.height - 20, mod.NPCType("NegativeBlob"), 0, npc.whoAmI, Main.rand.NextFloat() * MathHelper.TwoPi);
 			}
 			npc.life += Main.expertMode ? 5 : 1;
 			if (npc.life > npc.lifeMax)
