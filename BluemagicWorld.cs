@@ -6,6 +6,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Bluemagic.BlushieBoss;
 
 namespace Bluemagic
 {
@@ -27,6 +28,7 @@ namespace Bluemagic
 		internal static int terraCheckpoint3 = 0;
 		internal static int terraCheckpointS = 0;
 		public static bool downedTerraSpirit = false;
+		public static bool downedBlushie = false;
 
 		public override void Initialize()
 		{
@@ -45,6 +47,7 @@ namespace Bluemagic
 			terraCheckpoint3 = 0;
 			terraCheckpointS = 0;
 			downedTerraSpirit = false;
+			downedBlushie = false;
 		}
 
 		private void FixTerraCheckpoints()
@@ -102,6 +105,7 @@ namespace Bluemagic
 			tag["terraCheckpoint3"] = terraCheckpoint3;
 			tag["terraCheckpointS"] = terraCheckpointS;
 			tag["downedTerraSpirit"] = downedTerraSpirit;
+			tag["downedBlushie"] = downedBlushie;
 			return tag;
 		}
 
@@ -130,6 +134,7 @@ namespace Bluemagic
 			terraCheckpoint3 = tag.GetInt("terraCheckpoint3");
 			terraCheckpointS = tag.GetInt("terraCheckpointS");
 			downedTerraSpirit = tag.GetBool("downedTerraSpirit");
+			downedBlushie = tag.GetBool("downedBlushie");
 			FixTerraCheckpoints();
 		}
 
@@ -176,6 +181,10 @@ namespace Bluemagic
 			{
 				flags |= 1;
 			}
+			if (downedBlushie)
+			{
+				flags |= 2;
+			}
 			writer.Write(flags);
 			writer.Write(terraDeaths);
 			writer.Write((byte)(terraCheckpoint1 + 16 * terraCheckpoint2));
@@ -196,6 +205,7 @@ namespace Bluemagic
 			numPuriumGens = reader.ReadInt32();
 			flags = reader.ReadByte();
 			downedTerraSpirit = ((flags & 1) == 1);
+			downedBlushie = ((flags & 2) == 2);
 			terraDeaths = reader.ReadInt32();
 			byte val = reader.ReadByte();
 			terraCheckpoint1 = val % 16;
@@ -237,6 +247,7 @@ namespace Bluemagic
 			{
 				snowMoonPassed = true;
 			}
+			BlushieBoss.BlushieBoss.Update();
 		}
 
 		public static void GenPurium()
