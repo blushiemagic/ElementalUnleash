@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -265,6 +267,16 @@ namespace Bluemagic
 			if (Main.netMode == 2)
 			{
 				NetMessage.SendData(MessageID.WorldData);
+			}
+		}
+
+		public override void PostDrawTiles()
+		{
+			if (BlushieBoss.BlushieBoss.Active)
+			{
+				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, (RasterizerState)typeof(Main).GetField("Rasterizer", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Main.instance), null, Main.Transform);
+				BlushieBoss.BlushieBoss.DrawArena(Main.spriteBatch);
+				Main.spriteBatch.End();
 			}
 		}
 	}

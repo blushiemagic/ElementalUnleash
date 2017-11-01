@@ -5,10 +5,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Bluemagic.BlushieBoss;
 using Bluemagic.PuritySpirit;
 
 namespace Bluemagic
@@ -76,7 +78,11 @@ namespace Bluemagic
 		private int terraKill = 0;
 		private int terraImmune = 0;
 		private Vector2 lastPos;
+		public bool triedGodmode = false;
 		public bool godmode = false;
+		public bool noGodmode = false;
+		internal float blushieHealth = 0f;
+		private int blushieImmune = 0;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
@@ -123,7 +129,9 @@ namespace Bluemagic
 			ammoCost = 0f;
 			thrownCost = 0f;
 			cancelBadRegen = 0;
+			triedGodmode = false;
 			godmode = false;
+			noGodmode = false;
 			if (extraAccessory2)
 			{
 				player.extraAccessorySlots = 2;
@@ -138,6 +146,7 @@ namespace Bluemagic
 			reviveTime = 0;
 			terraLives = 0;
 			terraKill = 0;
+			blushieHealth = 0f;
 			if (heroLives == 1)
 			{
 				heroLives = 0;
@@ -247,14 +256,33 @@ namespace Bluemagic
 
 		public override void UpdateBiomeVisuals()
 		{
-			bool useTerra = AnyTerraSpirit();
+			bool useTerra = false;
+			bool useChaos = false;
+			bool usePurity = false;
+			bool useVoidMonolith = false;
+			if (BlushieBoss.BlushieBoss.Active)
+			{
+			}
+			else if (AnyTerraSpirit())
+			{
+				useTerra = true;
+			}
+			else if (AnyChaosSpirit())
+			{
+				useChaos = true;
+			}
+			else if (NPC.AnyNPCs(mod.NPCType("PuritySpirit")))
+			{
+				usePurity = true;
+			}
+			else if (voidMonolith && !NPC.AnyNPCs(NPCID.MoonLordCore))
+			{
+				useVoidMonolith = true;
+			}
 			player.ManageSpecialBiomeVisuals("Bluemagic:TerraSpirit", useTerra);
-			bool useChaos = !useTerra && AnyChaosSpirit();
 			player.ManageSpecialBiomeVisuals("Bluemagic:ChaosSpirit", useChaos);
-			bool usePurity = !useTerra && !useChaos && NPC.AnyNPCs(mod.NPCType("PuritySpirit"));
 			player.ManageSpecialBiomeVisuals("Bluemagic:PuritySpirit", usePurity);
-			bool useVoidMonolith = voidMonolith && !useTerra && !useChaos && !usePurity && !NPC.AnyNPCs(NPCID.MoonLordCore);
-			player.ManageSpecialBiomeVisuals("Bluemagic:MonolithVoid", useVoidMonolith, player.Center);
+			player.ManageSpecialBiomeVisuals("Bluemagic:MonolithVoid", useVoidMonolith);
 		}
 
 		public override void UpdateBadLifeRegen()
@@ -285,6 +313,15 @@ namespace Bluemagic
 				{
 					player.lifeRegenTime = 0;
 				}
+			}
+			if (blushieImmune > 0)
+			{
+				if (player.lifeRegen > 0)
+				{
+					player.lifeRegen = 0;
+				}
+				player.lifeRegenTime = 0;
+				player.lifeRegen -= 32;
 			}
 		}
 
@@ -386,6 +423,22 @@ namespace Bluemagic
 				if (!flag)
 				{
 					terraLives = 0;
+				}
+			}
+			if (blushieHealth > 0f)
+			{
+				if (BlushieBoss.BlushieBoss.Active)
+				{
+					BlushieBarrier();
+					int maxHealth = (int)(blushieHealth * player.statLifeMax2);
+					if (player.statLife > maxHealth)
+					{
+						player.statLife = maxHealth;
+					}
+				}
+				else
+				{
+					blushieHealth = 0f;
 				}
 			}
 			lastPos = player.position;
@@ -521,6 +574,51 @@ namespace Bluemagic
 			}
 		}
 
+		private void BlushieBarrier()
+		{
+			Vector2 offset = player.position - lastPos;
+			if (offset.Length() > 32f)
+			{
+				offset.Normalize();
+				offset *= 32f;
+				player.position = lastPos + offset;
+			}
+			Vector2 origin = BlushieBoss.BlushieBoss.Origin;
+			float arenaSize = BlushieBoss.BlushieBoss.ArenaSize;
+			if (player.position.X <= origin.X - arenaSize)
+			{
+				player.position.X = origin.X - arenaSize;
+				if (player.velocity.X < 0f)
+				{
+					player.velocity.X = 0f;
+				}
+			}
+			else if (player.position.X + player.width >= origin.X + arenaSize)
+			{
+				player.position.X = origin.X + arenaSize - player.width;
+				if (player.velocity.X > 0f)
+				{
+					player.velocity.X = 0f;
+				}
+			}
+			if (player.position.Y <= origin.Y - arenaSize)
+			{
+				player.position.Y = origin.Y - arenaSize;
+				if (player.velocity.Y < 0f)
+				{
+					player.velocity.Y = 0f;
+				}
+			}
+			else if (player.position.Y + player.height >= origin.Y + arenaSize)
+			{
+				player.position.Y = origin.Y + arenaSize - player.height;
+				if (player.velocity.Y > 0f)
+				{
+					player.velocity.Y = 0f;
+				}
+			}
+		}
+
 		public void PuritySpiritDebuff()
 		{
 			bool flag = true;
@@ -617,6 +715,10 @@ namespace Bluemagic
 			{
 				Nullify();
 			}
+			if (BlushieBoss.BlushieBoss.Players[player.whoAmI])
+			{
+				noGodmode = true;
+			}
 		}
 
 		public override void PostUpdateEquips()
@@ -690,6 +792,10 @@ namespace Bluemagic
 			if (terraImmune > 0)
 			{
 				terraImmune--;
+			}
+			if (blushieImmune > 0)
+			{
+				blushieImmune--;
 			}
 			if (terraKill > 0)
 			{
@@ -1169,6 +1275,160 @@ namespace Bluemagic
 			}
 		}
 
+		public void BlushieDamage(float bulletDamage)
+		{
+			if (blushieHealth <= 0f || blushieImmune > 0 || Main.netMode == 2)
+			{
+				return;
+			}
+			int oldHealth = player.statLife;
+			blushieHealth -= bulletDamage;
+			player.statLife = (int)(player.statLifeMax2 * blushieHealth);
+			int constDamage = (int)((200f - player.statDefense / 2f) * (1f - player.endurance));
+			if (constDamage < 1)
+			{
+				constDamage = 1;
+			}
+			if (player.statLife > oldHealth - constDamage)
+			{
+				player.statLife = oldHealth - constDamage;
+			}
+			int damage = oldHealth - player.statLife;
+			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
+			if (blushieHealth > 0f && player.statLife > 0)
+			{
+				blushieImmune = 60;
+				if (!player.immune)
+				{
+					player.immune = true;
+					player.immuneTime = 60;
+				}
+			}
+			else if (Main.myPlayer == player.whoAmI)
+			{
+				bool playSound = true;
+				bool genGore = true;
+				PlayerDeathReason damageSource = PlayerDeathReason.ByCustomReason(player.name + " succumbed to the might of the blushie!");
+				PlayerHooks.PreKill(player, damage, 0, false, ref playSound, ref genGore, ref damageSource);
+				damageSource = PlayerDeathReason.ByCustomReason(player.name + " succumbed to the might of the blushie!");
+				player.lastDeathPostion = player.Center;
+				player.lastDeathTime = DateTime.Now;
+				player.showLastDeath = true;
+				bool flag;
+				int coinsOwned = (int)Utils.CoinsCount(out flag, player.inventory, new int[0]);
+				player.lostCoins = coinsOwned;
+				player.lostCoinString = Main.ValueToCoins(player.lostCoins);
+				Main.mapFullscreen = false;
+				player.trashItem.SetDefaults(0, false);
+				if (player.difficulty == 0)
+				{
+					for (int i = 0; i < 59; i++)
+					{
+						Item item = player.inventory[i];
+						if (item.stack > 0 && ((item.type >= 1522 && item.type <= 1527) || item.type == 3643))
+						{
+							int num = Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, item.type, 1, false, 0, false, false);
+							Main.item[num].netDefaults(item.netID);
+							Main.item[num].Prefix(item.prefix);
+							Main.item[num].stack = item.stack;
+							Main.item[num].velocity.Y = Main.rand.Next(-20, 1) * 0.2f;
+							Main.item[num].velocity.X = Main.rand.Next(-20, 21) * 0.2f;
+							Main.item[num].noGrabDelay = 100;
+							Main.item[num].favorited = false;
+							Main.item[num].newAndShiny = false;
+							if (Main.netMode == 1)
+							{
+								NetMessage.SendData(21, -1, -1, null, num, 0f, 0f, 0f, 0, 0, 0);
+							}
+							item.SetDefaults(0, false);
+						}
+					}
+				}
+				else if (player.difficulty == 1)
+				{
+					player.DropItems();
+				}
+				else if (player.difficulty == 2)
+				{
+					player.DropItems();
+					player.KillMeForGood();
+				}
+				if (playSound)
+				{
+					Main.PlaySound(5, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
+				}
+				player.headVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+				player.bodyVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+				player.legVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+				player.headVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+				player.bodyVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+				player.legVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+				if (player.stoned || !genGore)
+				{
+					player.headPosition = Vector2.Zero;
+					player.bodyPosition = Vector2.Zero;
+					player.legPosition = Vector2.Zero;
+				}
+				if (genGore)
+				{
+					for (int j = 0; j < 100; j++)
+					{
+						if (player.stoned)
+						{
+							Dust.NewDust(player.position, player.width, player.height, 1, 0f, -2f, 0, default(Color), 1f);
+						}
+						else if (player.frostArmor)
+						{
+							int num2 = Dust.NewDust(player.position, player.width, player.height, 135, 0f, -2f, 0, default(Color), 1f);
+							Main.dust[num2].shader = GameShaders.Armor.GetSecondaryShader(player.ArmorSetDye(), player);
+						}
+						else if (player.boneArmor)
+						{
+							int num3 = Dust.NewDust(player.position, player.width, player.height, 26, 0f, -2f, 0, default(Color), 1f);
+							Main.dust[num3].shader = GameShaders.Armor.GetSecondaryShader(player.ArmorSetDye(), player);
+						}
+						else
+						{
+							Dust.NewDust(player.position, player.width, player.height, 5, 0f, -2f, 0, default(Color), 1f);
+						}
+					}
+				}
+				player.mount.Dismount(player);
+				player.dead = true;
+				player.respawnTimer = 600;
+				if (Main.expertMode)
+				{
+					player.respawnTimer = 900;
+				}
+				PlayerHooks.Kill(player, damage, 0, false, damageSource);
+				player.immuneAlpha = 0;
+				player.palladiumRegen = false;
+				player.iceBarrier = false;
+				player.crystalLeaf = false;
+				NetworkText deathText = damageSource.GetDeathText(player.name);
+				if (Main.netMode == 0)
+				{
+					Main.NewText(deathText.ToString(), 225, 25, 25, false);
+				}
+				else if (Main.netMode == 1)
+				{
+					NetMessage.SendPlayerDeath(player.whoAmI, damageSource, damage, 0, false, -1, -1);
+				}
+				if (player.difficulty == 0)
+				{
+					player.DropCoins();
+				}
+				player.DropTombstone(coinsOwned, deathText, 0);
+				try
+				{
+					WorldGen.saveToonWhilePlaying();
+				}
+				catch
+				{
+				}
+			}
+		}
+
 		public override void MeleeEffects(Item item, Rectangle hitbox)
 		{
 			if (item.melee && !item.noMelee && !item.noUseGraphic && customMeleeEnchant > 0)
@@ -1387,6 +1647,12 @@ namespace Bluemagic
 					strength = 0.4f + strength * 0.2f;
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
 					data.shader = drawInfo.drawPlayer.miscDyes[3].dye;
+					Main.playerDrawData.Add(data);
+				}
+				if (modPlayer.blushieHealth > 0f && drawPlayer.whoAmI == Main.myPlayer)
+				{
+					Texture2D texture = mod.GetTexture("BlushieBoss/Indicator");
+					DrawData data = new DrawData(texture, drawPlayer.Center - new Vector2(4f) - Main.screenPosition, Color.White);
 					Main.playerDrawData.Add(data);
 				}
 			});

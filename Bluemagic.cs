@@ -76,6 +76,7 @@ namespace Bluemagic
 			SkyManager.Instance["Bluemagic:ChaosSpirit"] = new ChaosSpiritSky();
 			Filters.Scene["Bluemagic:TerraSpirit"] = new Filter(new TerraSpiritScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0.1f), EffectPriority.VeryHigh);
 			SkyManager.Instance["Bluemagic:TerraSpirit"] = new TerraSpiritSky();
+			SkyManager.Instance["Bluemagic:BlushieBoss"] = new BlushieSky();
 
 			ModTranslation text = CreateTranslation("PhantomSummon");
 			text.SetDefault("You feel something cold leeching your life...");
@@ -135,11 +136,11 @@ namespace Bluemagic
 			Calamity = ModLoader.GetMod("CalamityMod");
 			Thorium = ModLoader.GetMod("ThoriumMod");
 			Sushi = ModLoader.GetMod("imkSushisMod");
+			BlushieBoss.BlushieBoss.Load();
 		}
 
 		public override void Unload()
 		{
-			
 			Instance = null;
 			Calamity = null;
 			Thorium = null;
@@ -216,6 +217,10 @@ namespace Bluemagic
 			{
 				modPlayer.lifeMagnet2 = (bool)arg;
 				return arg;
+			}
+			if (command == "noGodmode" && arg is bool)
+			{
+				modPlayer.noGodmode = (bool)arg;
 			}
 			return null;
 		}

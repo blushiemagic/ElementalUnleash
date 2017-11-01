@@ -26,10 +26,19 @@ namespace Bluemagic.Items.TerraSpirit
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).godmode = true;
-			if (player.endurance < 1f)
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
+			if (modPlayer.noGodmode)
 			{
-				player.endurance = 1f;
+				player.statDefense -= item.defense;
+				modPlayer.triedGodmode = true;
+			}
+			else
+			{
+				modPlayer.godmode = true;
+				if (player.endurance < 1f)
+				{
+					player.endurance = 1f;
+				}
 			}
 		}
 
