@@ -94,5 +94,12 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 			}
 			return true;
 		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/CleanserBeam_Glow");
+			SpriteEffects spriteEffects = projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+			spriteBatch.Draw(texture, projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY), null, Color.White, projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), projectile.scale, spriteEffects, 0f);
+		}
 	}
 }
