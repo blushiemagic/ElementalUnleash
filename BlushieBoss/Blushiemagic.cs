@@ -104,9 +104,9 @@ namespace Bluemagic.BlushieBoss
 			{
 				alpha = 1f;
 			}
-			else if (BlushieBoss.Timer < 3720)
+			else if (BlushieBoss.Timer < 3660)
 			{
-				int temp = (BlushieBoss.Timer - 3720) % 40;
+				int temp = (BlushieBoss.Timer - 3600) % 40;
 				if (temp > 20)
 				{
 					temp = 40 - temp;

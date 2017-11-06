@@ -56,7 +56,9 @@ namespace Bluemagic.BlushieBoss
 
 		public static BulletBounce NewStar(Vector2 position, Vector2 velocity, int numBounces)
 		{
-			return new BulletBounce(position, velocity, numBounces, 16f, BlushieBoss.BulletStarTexture);
+			BulletBounce bullet = new BulletBounce(position, velocity, numBounces, 16f, BlushieBoss.BulletStarTexture);
+			bullet.Damage = 0.075f;
+			return bullet;
 		}
 	}
 }

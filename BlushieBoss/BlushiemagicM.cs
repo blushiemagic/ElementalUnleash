@@ -22,26 +22,40 @@ namespace Bluemagic.BlushieBoss
 
 		public override void AI()
 		{
-			if (BlushieBoss.Timer > 300f)
-			{
-				for (int k = 0; k < 3; k++)
-				{
-					float radius = 32f;
-					float rotation = Main.rand.NextFloat() * MathHelper.TwoPi;
-					Vector2 dustPos = npc.Center + new Vector2(0f, 15f) + radius * rotation.ToRotationVector2();
-					int dust = Dust.NewDust(dustPos, 0, 0, mod.DustType("Particle"), 0f, 0f, 0, Color.Green);
-					Main.dust[dust].customData = npc;
-				}
-			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
+			if (BlushieBoss.Timer >= 480)
+			{
+				Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
+				Vector2 draw = npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
+				spriteBatch.Draw(texture, draw + new Vector2(-60f, 0f), null, Color.White);
+				spriteBatch.Draw(texture, draw + new Vector2(60f, 0f), null, Color.White);
+			}
 			return true;
 		}
 
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
+			if (BlushieBoss.Timer < 480)
+			{
+				Texture2D texture = mod.GetTexture("ChaosSpirit/DissonanceOrb");
+				Vector2 drawPos = npc.Center - Main.screenPosition;
+				Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+				float rotation = 0.05f * BlushieBoss.Timer;
+				spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.5f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.5f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.25f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.25f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+			}
+			else
+			{
+				Texture2D shield = mod.GetTexture("Mounts/PurityShield");
+				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.7f);
+			}
 			BlushieBoss.DrawBullets(spriteBatch);
 		}
 	}

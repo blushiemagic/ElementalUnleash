@@ -16,9 +16,12 @@ namespace Bluemagic.BlushieBoss
 		internal static List<Bullet> bullets = new List<Bullet>();
 		internal static Vector2 Origin;
 		internal static bool[] Players = new bool[256];
-		private static int[] index = new int[] { -1, -1 };
+		private static int[] index = new int[] { -1, -1, -1, -1, -1 };
+		private static Vector2 PosK;
+		private static Vector2 PosA;
+		private static Vector2 PosL;
 
-		private static int[] types = new int[2];
+		private static int[] types = new int[5];
 		internal static Texture2D BulletWhiteTexture;
 		internal static Texture2D BulletGoldTexture;
 		internal static Texture2D BulletGoldLargeTexture;
@@ -35,7 +38,10 @@ namespace Bluemagic.BlushieBoss
 		internal static void Load()
 		{
 			types[0] = Bluemagic.Instance.NPCType("Blushiemagic");
-			types[1] = Bluemagic.Instance.NPCType("BlushiemagicM");
+			types[1] = Bluemagic.Instance.NPCType("BlushiemagicK");
+			types[2] = Bluemagic.Instance.NPCType("BlushiemagicA");
+			types[3] = Bluemagic.Instance.NPCType("BlushiemagicL");
+			types[4] = Bluemagic.Instance.NPCType("BlushiemagicM");
 			BulletWhiteTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletWhite");
 			BulletGoldTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGold");
 			BulletGoldLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGoldLarge");
@@ -93,6 +99,10 @@ namespace Bluemagic.BlushieBoss
 				if (Phase == 1)
 				{
 					Phase1();
+				}
+				else if (Phase == 2)
+				{
+					Phase2();
 				}
 				Player player = Main.player[GetTarget()];
 				for (int k = 0; k < bullets.Count; k++)
@@ -176,6 +186,10 @@ namespace Bluemagic.BlushieBoss
 						flag = true;
 						break;
 					}
+				}
+				if (Timer == 1)
+				{
+					Music ("Music - Shelter - by Phyrnna");
 				}
 				if (flag && Timer == 120)
 				{
@@ -275,8 +289,91 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 2;
 			Timer = 0;
-			int npc = NPC.NewNPC((int)Origin.X, (int)Origin.Y, types[1]);
-			Main.npc[npc].Center = Origin;
+			index[4] = NPC.NewNPC((int)Origin.X, (int)Origin.Y, types[4]);
+			Main.npc[index[4]].Center = Origin;
+		}
+
+		internal static void Phase2()
+		{
+			NPC megan = Main.npc[index[4]];
+			if (Main.netMode != 1)
+			{
+				if (Timer == 1)
+				{
+					BlushieTalk("Woah... what's happening to me?");
+				}
+				if (Timer == 100)
+				{
+					Music("Music - Return of the Snow Queen - by Phyrnna");
+				}
+				if (Timer == 180)
+				{
+					int x = (int)megan.Bottom.X;
+					int y = (int)megan.Bottom.Y;
+					for (int k = 1; k <= 3; k++)
+					{
+						index[k] = NPC.NewNPC(x, y, types[k], index[4]);
+					}
+					PosK = Vector2.Zero;
+					PosA = Vector2.Zero;
+					PosL = Vector2.Zero;
+					KylieTalk("Why am I here? I'm useless...");
+					AnnaTalk("Hi there! Are you ready to have fun?~");
+					LunaTalk("You think you can stand up to me? We shall see...");
+				}
+			}
+			if (Timer < 180)
+			{
+				return;
+			}
+			NPC kylie = Main.npc[index[1]];
+			NPC anna = Main.npc[index[2]];
+			NPC luna = Main.npc[index[3]];
+			if (Timer >= 180 && Timer < 600)
+			{
+				float distance = (Timer - 180) / 300f;
+				if (distance > 1f)
+				{
+					distance = 1f;
+				}
+				distance *= ArenaSize * 0.75f;
+				PosK = new Vector2(0f, -distance);
+				PosA = distance * (MathHelper.Pi * 5f / 6f).ToRotationVector2();
+				PosL = distance * (MathHelper.Pi * 1f / 6f).ToRotationVector2();
+			}
+			if (Timer >= 480)
+			{
+				megan.Center = Origin + new Vector2(0f, 16f * (float)Math.Sin((Timer - 480f) / 60f));
+			}
+			if (Timer >= 600)
+			{
+				float kVal = ((Timer - 600) / 3600f * 4f + 0.5f) % 4f;
+				float distance = ArenaSize * 0.75f;
+				if (kVal < 1f)
+				{
+					PosK = Vector2.Lerp(new Vector2(-distance, -distance), new Vector2(distance, -distance), kVal);
+				}
+				else if (kVal < 2f)
+				{
+					PosK = Vector2.Lerp(new Vector2(distance, -distance), new Vector2(distance, distance), kVal - 1f);
+				}
+				else if (kVal < 3f)
+				{
+					PosK = Vector2.Lerp(new Vector2(distance, distance), new Vector2(-distance, distance), kVal - 2f);
+				}
+				else
+				{
+					PosK = Vector2.Lerp(new Vector2(-distance, distance), new Vector2(-distance, -distance), kVal - 3f);
+				}
+				float theta = (Timer - 600) * MathHelper.TwoPi / 1800f;
+				float r = (float)Math.Cos(1.8f * theta);
+				PosA = ArenaSize * 0.75f * r * (MathHelper.Pi * 5f / 6f - theta).ToRotationVector2();
+				float rot = MathHelper.Pi / 6f - ((Timer - 600) % 3600) * MathHelper.TwoPi / 3600f;
+				PosL = ArenaSize * 0.75f * rot.ToRotationVector2();
+			}
+			kylie.Center = Origin + PosK;
+			anna.Center = Origin + PosA;
+			luna.Center = Origin + PosL;
 		}
 
 		internal static int GetTarget()
@@ -293,6 +390,19 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			return 255;
+		}
+
+		private static void Music(string message)
+		{
+			if (Main.netMode != 2)
+			{
+				Main.NewText(message);
+			}
+			else
+			{
+				NetworkText text = NetworkText.FromLiteral(message);
+				NetMessage.BroadcastChatMessage(text, Color.White);
+			}
 		}
 
 		private static void Talk(string name, string message, byte r, byte g, byte b)
@@ -312,6 +422,21 @@ namespace Bluemagic.BlushieBoss
 		private static void BlushieTalk(string message)
 		{
 			Talk("blushiemagic", message, 200, 255, 255);
+		}
+
+		private static void KylieTalk(string message)
+		{
+			Talk("blushiemagic (K)", message, 0, 128, 255);
+		}
+
+		private static void AnnaTalk(string message)
+		{
+			Talk("blushiemagic (A)", message, 255, 128, 128);
+		}
+
+		private static void LunaTalk(string message)
+		{
+			Talk("blushiemagic (L)", message, 128, 0, 128);
 		}
 
 		internal static void DrawArena(SpriteBatch spriteBatch)
