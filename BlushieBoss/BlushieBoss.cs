@@ -17,15 +17,24 @@ namespace Bluemagic.BlushieBoss
 		internal static Vector2 Origin;
 		internal static bool[] Players = new bool[256];
 		private static int[] index = new int[] { -1, -1, -1, -1, -1 };
-		private static Vector2 PosK;
-		private static Vector2 PosA;
-		private static Vector2 PosL;
+		internal static Vector2 PosK;
+		internal static Vector2 PosA;
+		internal static Vector2 PosL;
+		internal static Vector2 DataK;
+		internal static Vector2 DataL;
+		internal static float DataL2;
 
 		private static int[] types = new int[5];
 		internal static Texture2D BulletWhiteTexture;
 		internal static Texture2D BulletGoldTexture;
 		internal static Texture2D BulletGoldLargeTexture;
 		internal static Texture2D BulletStarTexture;
+		internal static Texture2D BulletPurpleTexture;
+		internal static Texture2D BulletBlackTexture;
+		internal static Texture2D BulletBlueTexture;
+		internal static Texture2D BulletBlueLargeTexture;
+		internal static Texture2D BulletBlueSmallTexture;
+		internal static Texture2D BulletBoxBlueTexture;
 
 		public static bool Active
 		{
@@ -46,6 +55,12 @@ namespace Bluemagic.BlushieBoss
 			BulletGoldTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGold");
 			BulletGoldLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGoldLarge");
 			BulletStarTexture = Bluemagic.Instance.GetTexture("BlushieBoss/Star");
+			BulletPurpleTexture = Bluemagic.Instance.GetTexture("BlushieBoss/LightningOrb");
+			BulletBlackTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlack");
+			BulletBlueTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlue");
+			BulletBlueLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueLarge");
+			BulletBlueSmallTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueSmall");
+			BulletBoxBlueTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBoxBlue");
 		}
 
 		internal static void Update()
@@ -321,6 +336,14 @@ namespace Bluemagic.BlushieBoss
 					AnnaTalk("Hi there! Are you ready to have fun?~");
 					LunaTalk("You think you can stand up to me? We shall see...");
 				}
+				if (Timer == 2640)
+				{
+					KylieTalk("\x300cMirrors of Imprisonment\x300d");
+				}
+				if (Timer == 2040)
+				{
+					LunaTalk("\x300cShadow Vortex\x300d");
+				}
 			}
 			if (Timer < 180)
 			{
@@ -371,9 +394,92 @@ namespace Bluemagic.BlushieBoss
 				float rot = MathHelper.Pi / 6f - ((Timer - 600) % 3600) * MathHelper.TwoPi / 3600f;
 				PosL = ArenaSize * 0.75f * rot.ToRotationVector2();
 			}
-			kylie.Center = Origin + PosK;
-			anna.Center = Origin + PosA;
-			luna.Center = Origin + PosL;
+			PosK += Origin;
+			PosA += Origin;
+			PosL += Origin;
+			kylie.Center = PosK;
+			anna.Center = PosA;
+			luna.Center = PosL;
+
+			if (Main.netMode != 2 && Timer >= 600)
+			{
+				int timerK = (Timer - 600) % 2820;
+				if (timerK < 840 && timerK % 120 == 0)
+				{
+					for (int k = 0; k < 8; k++)
+					{
+						float angle = k / 8f * MathHelper.TwoPi;
+						bullets.Add(new BulletRotateKylie(angle, MathHelper.TwoPi / 300f));
+						bullets.Add(new BulletRotateKylie(angle, -MathHelper.TwoPi / 300f));
+					}
+				}
+				if (timerK >= 1140 && timerK < 1860 && timerK % 90 == 60)
+				{
+					var bullet = BulletTargetSmooth.NewBlueLarge(PosK, Main.player[GetTarget()].Center, 450);
+					bullets.Add(bullet);
+					for (int k = 0; k < 32; k++)
+					{
+						float rot = MathHelper.TwoPi * k / 32f;
+						bullets.Add(BulletRotateAround.NewBlueSmall(bullet, 80f, rot, MathHelper.TwoPi / 120f));
+					}
+				}
+				if (timerK >= 2040 && timerK < 2640)
+				{
+					if (timerK % 60 == 0)
+					{
+						Vector2 uv = Main.player[GetTarget()].Center - Origin;
+						uv.X -= (float)Math.Floor(uv.X / 400f) * 400f;
+						uv.Y -= (float)Math.Floor(uv.Y / 400f) * 400f;
+						DataK = Origin - new Vector2(ArenaSize) + uv;
+					}
+					if (timerK % 8 == 0)
+					{
+						for (float x = DataK.X; x <= Origin.X + ArenaSize; x += 400f)
+						{
+							bullets.Add(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)));
+						}
+						for (float y = DataK.Y; y <= Origin.Y + ArenaSize; y += 400f)
+						{
+							bullets.Add(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
+						}
+					}
+				}
+
+				int timerL = (Timer - 600) % 2200;
+				if (timerL < 600)
+				{
+					if (timerL % 32 == 0)
+					{
+						bullets.Add(new BulletRotateLuna(1f, 0f));
+						bullets.Add(new BulletRotateLuna(1f, MathHelper.Pi));
+					}
+					else if (timerL % 32 == 16)
+					{
+						bullets.Add(new BulletRotateLuna(-1f, MathHelper.PiOver2));
+						bullets.Add(new BulletRotateLuna(-1f, 3f * MathHelper.PiOver2));
+					}
+				}
+				if (timerL >= 780 && timerL < 1260)
+				{
+					if (timerL % 120 == 60)
+					{
+						DataL = PosL;
+						Vector2 dir = Main.player[GetTarget()].Center - PosL;
+						DataL2 = dir.ToRotation();
+					}
+					if (timerL % 120 >= 60 && timerL % 120 < 90)
+					{
+						float normal = DataL2 + MathHelper.PiOver2;
+						Vector2 pos = DataL + (32f * Main.rand.NextFloat() - 16f) * normal.ToRotationVector2();
+						bullets.Add(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()));
+					}
+				}
+				if (timerL >= 1440 && timerL < 2080)
+				{
+					float rot = timerL;
+					bullets.Add(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * rot.ToRotationVector2()));
+				}
+			}
 		}
 
 		internal static int GetTarget()

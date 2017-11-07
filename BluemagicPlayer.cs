@@ -430,11 +430,6 @@ namespace Bluemagic
 				if (BlushieBoss.BlushieBoss.Active)
 				{
 					BlushieBarrier();
-					int maxHealth = (int)(blushieHealth * player.statLifeMax2);
-					if (player.statLife > maxHealth)
-					{
-						player.statLife = maxHealth;
-					}
 				}
 				else
 				{
@@ -802,6 +797,10 @@ namespace Bluemagic
 				terraKill--;
 				player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
 			}
+			if (blushieHealth > 0f)
+			{
+				player.statLifeMax2 = (int)(blushieHealth * player.statLifeMax2);
+			}
 		}
 
 		private void ChargePuriumShield(float charge)
@@ -1147,6 +1146,10 @@ namespace Bluemagic
 				{
 					damageSource = PlayerDeathReason.ByCustomReason(player.name + " was crushed by chaotic pressure");
 				}
+				else if (blushieImmune > 0)
+				{
+					damageSource = PlayerDeathReason.ByCustomReason(player.name + " succumbed to the might of the blushie!");
+				}
 			}
 			return true;
 		}
@@ -1295,6 +1298,14 @@ namespace Bluemagic
 			}
 			int damage = oldHealth - player.statLife;
 			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.DamagedFriendly, damage.ToString(), true, false);
+			if (player.Male)
+			{
+				Main.PlaySound(1, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
+			}
+			else
+			{
+				Main.PlaySound(20, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
+			}
 			if (blushieHealth > 0f && player.statLife > 0)
 			{
 				blushieImmune = 60;
