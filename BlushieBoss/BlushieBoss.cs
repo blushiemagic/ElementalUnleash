@@ -21,6 +21,7 @@ namespace Bluemagic.BlushieBoss
 		internal static Vector2 PosA;
 		internal static Vector2 PosL;
 		internal static Vector2 DataK;
+		internal static float DataA;
 		internal static Vector2 DataL;
 		internal static float DataL2;
 
@@ -35,6 +36,10 @@ namespace Bluemagic.BlushieBoss
 		internal static Texture2D BulletBlueLargeTexture;
 		internal static Texture2D BulletBlueSmallTexture;
 		internal static Texture2D BulletBoxBlueTexture;
+		internal static Texture2D BulletFireLargeTexture;
+		internal static Texture2D BulletFireTexture;
+		internal static Texture2D[] BulletColorTextures;
+		internal static Texture2D BulletLightTexture;
 
 		public static bool Active
 		{
@@ -61,6 +66,16 @@ namespace Bluemagic.BlushieBoss
 			BulletBlueLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueLarge");
 			BulletBlueSmallTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueSmall");
 			BulletBoxBlueTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBoxBlue");
+			BulletFireLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletFireLarge");
+			BulletFireTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletFire");
+			BulletColorTextures = new Texture2D[6];
+			BulletColorTextures[0] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletRed");
+			BulletColorTextures[1] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletOrange");
+			BulletColorTextures[2] = BulletGoldTexture;
+			BulletColorTextures[3] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGreenLight");
+			BulletColorTextures[4] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueLight");
+			BulletColorTextures[5] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletPurple");
+			BulletLightTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletLight");
 		}
 
 		internal static void Update()
@@ -129,7 +144,7 @@ namespace Bluemagic.BlushieBoss
 						bullets.RemoveAt(k);
 						k--;
 					}
-					else if (Vector2.Distance(player.Center, bullets[k].Position) < bullets[k].Size)
+					else if (bullets[k].Damage > 0f && Vector2.Distance(player.Center, bullets[k].Position) < bullets[k].Size)
 					{
 						player.GetModPlayer<BluemagicPlayer>().BlushieDamage(bullets[k].Damage);
 					}
@@ -222,6 +237,10 @@ namespace Bluemagic.BlushieBoss
 				{
 					BlushieTalk("Are you ready for your final challenge?");
 				}
+				if (Timer == 2040)
+				{
+					BlushieTalk("\x300cAstral Collision\x300d");
+				}
 				if (Timer == 3480)
 				{
 					BlushieTalk("I'm... so tired...");
@@ -245,26 +264,26 @@ namespace Bluemagic.BlushieBoss
 					for (int k = 0; k < 16; k++)
 					{
 						float useRotate = rotate + k * MathHelper.TwoPi / 16f;
-						bullets.Add(BulletSimple.NewWhite(Origin, length / 90f * useRotate.ToRotationVector2()));
+						AddBullet(BulletSimple.NewWhite(Origin, length / 90f * useRotate.ToRotationVector2()));
 					}
 					for (int k = 0; k < 4; k++)
 					{
 						float useRotate = rotate + k * MathHelper.PiOver2;
 						Vector2 direction = useRotate.ToRotationVector2();
 						Vector2 center = Origin + length / 2 * direction;
-						bullets.Add(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, MathHelper.TwoPi / 180f, 180));
-						bullets.Add(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, -MathHelper.TwoPi / 180f, 180));
+						AddBullet(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, MathHelper.TwoPi / 180f, 180));
+						AddBullet(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, -MathHelper.TwoPi / 180f, 180));
 					}
 				}
 				if (Timer >= 1320 && Timer <= 1920 && Timer % 30 == 0)
 				{
 					Bullet center = BulletTarget.NewGoldLarge(Origin, Main.player[GetTarget()].Center, 60);
-					bullets.Add(center);
+					AddBullet(center);
 					for (int k = 0; k < 8; k++)
 					{
 						float rotate = k / 8f * MathHelper.TwoPi;
-						bullets.Add(BulletRelease.NewWhite(center, 60f, rotate, MathHelper.TwoPi / 480f, 4f));
-						bullets.Add(BulletRelease.NewWhite(center, 60f, rotate, -MathHelper.TwoPi / 480f, 4f));
+						AddBullet(BulletRelease.NewWhite(center, 60f, rotate, MathHelper.TwoPi / 480f, 4f));
+						AddBullet(BulletRelease.NewWhite(center, 60f, rotate, -MathHelper.TwoPi / 480f, 4f));
 					}
 				}
 				if (Timer >= 2040 && Timer <= 2640 && Timer % 60 == 0)
@@ -285,7 +304,7 @@ namespace Bluemagic.BlushieBoss
 								continue;
 							}
 							Vector2 adjust = Vector2.Lerp(start, end, i / 6f);
-							bullets.Add(BulletBounce.NewStar(Origin, offset + 0.75f * adjust, 5));
+							AddBullet(BulletBounce.NewStar(Origin, offset + 0.75f * adjust, 5));
 						}
 					}
 				}
@@ -335,6 +354,10 @@ namespace Bluemagic.BlushieBoss
 					KylieTalk("Why am I here? I'm useless...");
 					AnnaTalk("Hi there! Are you ready to have fun?~");
 					LunaTalk("You think you can stand up to me? We shall see...");
+				}
+				if (Timer == 1800)
+				{
+					AnnaTalk("\x300cRay of Absolute Light\x300d!~");
 				}
 				if (Timer == 2640)
 				{
@@ -409,18 +432,18 @@ namespace Bluemagic.BlushieBoss
 					for (int k = 0; k < 8; k++)
 					{
 						float angle = k / 8f * MathHelper.TwoPi;
-						bullets.Add(new BulletRotateKylie(angle, MathHelper.TwoPi / 300f));
-						bullets.Add(new BulletRotateKylie(angle, -MathHelper.TwoPi / 300f));
+						AddBullet(new BulletRotateKylie(angle, MathHelper.TwoPi / 300f));
+						AddBullet(new BulletRotateKylie(angle, -MathHelper.TwoPi / 300f));
 					}
 				}
 				if (timerK >= 1140 && timerK < 1860 && timerK % 90 == 60)
 				{
 					var bullet = BulletTargetSmooth.NewBlueLarge(PosK, Main.player[GetTarget()].Center, 450);
-					bullets.Add(bullet);
+					AddBullet(bullet);
 					for (int k = 0; k < 32; k++)
 					{
 						float rot = MathHelper.TwoPi * k / 32f;
-						bullets.Add(BulletRotateAround.NewBlueSmall(bullet, 80f, rot, MathHelper.TwoPi / 120f));
+						AddBullet(BulletRotateAround.NewBlueSmall(bullet, 80f, rot, MathHelper.TwoPi / 120f));
 					}
 				}
 				if (timerK >= 2040 && timerK < 2640)
@@ -436,12 +459,59 @@ namespace Bluemagic.BlushieBoss
 					{
 						for (float x = DataK.X; x <= Origin.X + ArenaSize; x += 400f)
 						{
-							bullets.Add(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)));
+							AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)));
 						}
 						for (float y = DataK.Y; y <= Origin.Y + ArenaSize; y += 400f)
 						{
-							bullets.Add(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
+							AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
 						}
+					}
+				}
+
+				int timerA = (Timer - 600) % 1800;
+				if (timerA < 450 && timerA % 90 == 0)
+				{
+					AddBullet(new BulletFireBomb(Main.player[GetTarget()].Center, 120));
+				}
+				if (timerA >= 600 && timerA < 1080 && timerA % 12 == 0)
+				{
+					float baseRot = (float)Math.Sin(timerA * MathHelper.TwoPi / 120f);
+					baseRot *= MathHelper.Pi / 6f;
+					for (int k = 0; k < 6; k++)
+					{
+						float rot = baseRot + MathHelper.TwoPi * k / 6f;
+						int color = (k + (timerA / 12)) % 6;
+						AddBullet(BulletSimple.NewColor(PosA, 8f * rot.ToRotationVector2(), color));
+					}
+				}
+				const float raySize = 80f;
+				if (timerA == 1200)
+				{
+					DataA = Main.player[GetTarget()].Center.X - raySize;
+				}
+				if (timerA >= 1200 && timerA < 1680 && timerA % 2 == 0)
+				{
+					float progress = (timerA - 1200) / 480f;
+					int count = 1 + (int)(progress * 5f);
+					for (int k = 0; k < progress; k++)
+					{
+						AddBullet(BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y + ArenaSize), new Vector2(0f, -4f - progress * 16f)));
+					}
+				}
+				if (timerA == 1680)
+				{
+					Main.PlaySound(29, -1, -1, 104);
+				}
+				if (timerA >= 1680 && timerA < 1740)
+				{
+					for (int k = 0; k < 20; k++)
+					{
+						var bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize), new Vector2(0f, 32f));
+						bullet.Damage = 0.2f;
+						AddBullet(bullet);
+						bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize + 16f), new Vector2(0f, 32f));
+						bullet.Damage = 0.2f;
+						AddBullet(bullet);
 					}
 				}
 
@@ -450,13 +520,13 @@ namespace Bluemagic.BlushieBoss
 				{
 					if (timerL % 32 == 0)
 					{
-						bullets.Add(new BulletRotateLuna(1f, 0f));
-						bullets.Add(new BulletRotateLuna(1f, MathHelper.Pi));
+						AddBullet(new BulletRotateLuna(1f, 0f));
+						AddBullet(new BulletRotateLuna(1f, MathHelper.Pi));
 					}
 					else if (timerL % 32 == 16)
 					{
-						bullets.Add(new BulletRotateLuna(-1f, MathHelper.PiOver2));
-						bullets.Add(new BulletRotateLuna(-1f, 3f * MathHelper.PiOver2));
+						AddBullet(new BulletRotateLuna(-1f, MathHelper.PiOver2));
+						AddBullet(new BulletRotateLuna(-1f, 3f * MathHelper.PiOver2));
 					}
 				}
 				if (timerL >= 780 && timerL < 1260)
@@ -471,13 +541,13 @@ namespace Bluemagic.BlushieBoss
 					{
 						float normal = DataL2 + MathHelper.PiOver2;
 						Vector2 pos = DataL + (32f * Main.rand.NextFloat() - 16f) * normal.ToRotationVector2();
-						bullets.Add(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()));
+						AddBullet(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()));
 					}
 				}
 				if (timerL >= 1440 && timerL < 2080)
 				{
 					float rot = timerL;
-					bullets.Add(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * rot.ToRotationVector2()));
+					AddBullet(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * rot.ToRotationVector2()));
 				}
 			}
 		}
@@ -496,6 +566,12 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			return 255;
+		}
+
+		internal static void AddBullet(Bullet bullet, float damageMult = 1f)
+		{
+			bullet.Damage *= damageMult;
+			bullets.Add(bullet);
 		}
 
 		private static void Music(string message)

@@ -30,5 +30,15 @@ namespace Bluemagic.BlushieBoss
 		{
 			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoxBlueTexture);
 		}
+
+		public static BulletSimple NewColor(Vector2 position, Vector2 velocity, int color)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletColorTextures[color]);
+		}
+
+		public static BulletSimple NewLight(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletLightTexture);
+		}
 	}
 }

@@ -45,16 +45,19 @@ namespace Bluemagic.BlushieBoss
 				}
 				var bullet = new BulletLightning(Position, speed * newRot1.ToRotationVector2());
 				bullet.NumBounces = NumBounces;
-				BlushieBoss.bullets.Add(bullet);
+				bullet.Damage = Damage;
+				BlushieBoss.AddBullet(bullet);
 				bullet = new BulletLightning(Position, speed * newRot2.ToRotationVector2());
 				bullet.NumBounces = NumBounces;
-				BlushieBoss.bullets.Add(bullet);
+				bullet.Damage = Damage;
+				BlushieBoss.AddBullet(bullet);
 			}
-			if (Main.rand.Next(2) == 0)
+			for (int k = 0; k < 1; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 32, 32, Bluemagic.Instance.DustType("PurpleLightning"), 0f, 0f, 100, default(Color), 1f);
 				Main.dust[dust].velocity *= 0.5f;
 				Main.dust[dust].velocity += Velocity;
+				Main.dust[dust].position += Velocity;
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].noLight = true;
 			}

@@ -30,7 +30,9 @@ namespace Bluemagic
 		internal static int terraCheckpoint3 = 0;
 		internal static int terraCheckpointS = 0;
 		public static bool downedTerraSpirit = false;
+		public static bool downedBlushiePhase2 = false;
 		public static bool downedBlushie = false;
+		public static bool noHitBlushie = false;
 
 		public override void Initialize()
 		{
@@ -49,7 +51,9 @@ namespace Bluemagic
 			terraCheckpoint3 = 0;
 			terraCheckpointS = 0;
 			downedTerraSpirit = false;
+			downedBlushiePhase2 = false;
 			downedBlushie = false;
+			noHitBlushie = false;
 		}
 
 		private void FixTerraCheckpoints()
@@ -107,7 +111,9 @@ namespace Bluemagic
 			tag["terraCheckpoint3"] = terraCheckpoint3;
 			tag["terraCheckpointS"] = terraCheckpointS;
 			tag["downedTerraSpirit"] = downedTerraSpirit;
+			tag["downedBlushiePhase2"] = downedBlushiePhase2;
 			tag["downedBlushie"] = downedBlushie;
+			tag["noHitBlushie"] = noHitBlushie;
 			return tag;
 		}
 
@@ -136,7 +142,9 @@ namespace Bluemagic
 			terraCheckpoint3 = tag.GetInt("terraCheckpoint3");
 			terraCheckpointS = tag.GetInt("terraCheckpointS");
 			downedTerraSpirit = tag.GetBool("downedTerraSpirit");
+			downedBlushiePhase2 = tag.GetBool("downedBlushiePhase2");
 			downedBlushie = tag.GetBool("downedBlushie");
+			noHitBlushie = tag.GetBool("noHitBlushie");
 			FixTerraCheckpoints();
 		}
 
@@ -183,9 +191,17 @@ namespace Bluemagic
 			{
 				flags |= 1;
 			}
-			if (downedBlushie)
+			if (downedBlushiePhase2)
 			{
 				flags |= 2;
+			}
+			if (downedBlushie)
+			{
+				flags |= 4;
+			}
+			if (noHitBlushie)
+			{
+				flags |= 8;
 			}
 			writer.Write(flags);
 			writer.Write(terraDeaths);
@@ -207,7 +223,9 @@ namespace Bluemagic
 			numPuriumGens = reader.ReadInt32();
 			flags = reader.ReadByte();
 			downedTerraSpirit = ((flags & 1) == 1);
-			downedBlushie = ((flags & 2) == 2);
+			downedBlushiePhase2 = ((flags & 2) == 2);
+			downedBlushie = ((flags & 4) == 4);
+			noHitBlushie = ((flags & 8) == 8);
 			terraDeaths = reader.ReadInt32();
 			byte val = reader.ReadByte();
 			terraCheckpoint1 = val % 16;
