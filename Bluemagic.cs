@@ -76,6 +76,7 @@ namespace Bluemagic
 			SkyManager.Instance["Bluemagic:ChaosSpirit"] = new ChaosSpiritSky();
 			Filters.Scene["Bluemagic:TerraSpirit"] = new Filter(new TerraSpiritScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0.1f), EffectPriority.VeryHigh);
 			SkyManager.Instance["Bluemagic:TerraSpirit"] = new TerraSpiritSky();
+			SkyManager.Instance["Bluemagic:BlushieBoss"] = new BlushieSky();
 
 			ModTranslation text = CreateTranslation("PhantomSummon");
 			text.SetDefault("You feel something cold leeching your life...");
@@ -130,16 +131,18 @@ namespace Bluemagic
 				bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
 				bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
 				bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
-				bossList.Call("AddBossWithInfo", "blushiemagic", float.PositiveInfinity, (Func<bool>)(() => BluemagicWorld.downedBlushie), "Coming soon!");
+				bossList.Call("AddBossWithInfo", "blushiemagic (Phases 1-2)", float.MaxValue - 1e37f, (Func<bool>)(() => BluemagicWorld.downedBlushiePhase2), "Please don't do this");
+				bossList.Call("AddBossWithInfo", "blushiemagic", float.MaxValue, (Func<bool>)(() => BluemagicWorld.downedBlushie), "Why");
+				bossList.Call("AddBossWithInfo", "blushiemagic (no hit)", float.PositiveInfinity, (Func<bool>)(() => BluemagicWorld.noHitBlushie), "You must be a god");
 			}
 			Calamity = ModLoader.GetMod("CalamityMod");
 			Thorium = ModLoader.GetMod("ThoriumMod");
 			Sushi = ModLoader.GetMod("imkSushisMod");
+			BlushieBoss.BlushieBoss.Load();
 		}
 
 		public override void Unload()
 		{
-			
 			Instance = null;
 			Calamity = null;
 			Thorium = null;
@@ -216,6 +219,10 @@ namespace Bluemagic
 			{
 				modPlayer.lifeMagnet2 = (bool)arg;
 				return arg;
+			}
+			if (command == "noGodmode" && arg is bool)
+			{
+				modPlayer.noGodmode = (bool)arg;
 			}
 			return null;
 		}

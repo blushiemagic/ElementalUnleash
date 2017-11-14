@@ -8,26 +8,32 @@ namespace Bluemagic.BlushieBoss
 {
 	public class Blushiemagic : BlushiemagicBase
 	{
+		public override void SetStaticDefaults()
+		{
+			base.SetStaticDefaults();
+			DisplayName.SetDefault("blushiemagic");
+		}
+
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 			this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Shelter");
+			npc.takenDamageMultiplier = 10f;
 		}
 
 		public override void AI()
 		{
-			if (BlushieBoss.Phase == 0)
+			if (BlushieBoss.Timer > 300f)
 			{
-				if (Main.netMode != 1)
+				for (int k = 0; k < 3; k++)
 				{
-					BlushieBoss.Initialize(npc);
-				}
-				else
-				{
-					return;
+					float radius = 32f;
+					float rotation = Main.rand.NextFloat() * MathHelper.TwoPi;
+					Vector2 dustPos = npc.Center + new Vector2(0f, 15f) + radius * rotation.ToRotationVector2();
+					int dust = Dust.NewDust(dustPos, 0, 0, mod.DustType("Particle"), 0f, 0f, 0, Color.White);
+					Main.dust[dust].customData = npc;
 				}
 			}
-			
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -61,6 +67,62 @@ namespace Bluemagic.BlushieBoss
 				spriteBatch.Draw(texture, drawPos, null, Color.White, -baseRot + rot, new Vector2(100f, 34f), new Vector2(scale, 1f), SpriteEffects.FlipHorizontally, 0f);
 			}
 			return true;
+		}
+
+		public override bool CheckDead()
+		{
+			if (BlushieBoss.Timer < 3600)
+			{
+				npc.life = npc.lifeMax;
+			}
+			else
+			{
+				npc.active = false;
+				BlushieBoss.StartPhase2();
+			}
+			return false;
+		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			Texture2D shield = mod.GetTexture("BlushieBoss/Shield");
+			float alpha;
+			if (BlushieBoss.Timer < 60)
+			{
+				alpha = 0f;
+			}
+			else if (BlushieBoss.Timer < 120)
+			{
+				int temp = (BlushieBoss.Timer - 60) % 40;
+				if (temp > 20)
+				{
+					temp = 40 - temp;
+				}
+				alpha = temp / 20f;
+			}
+			else if (BlushieBoss.Timer < 3600)
+			{
+				alpha = 1f;
+			}
+			else if (BlushieBoss.Timer < 3660)
+			{
+				int temp = (BlushieBoss.Timer - 3600) % 40;
+				if (temp > 20)
+				{
+					temp = 40 - temp;
+				}
+				alpha = 1f - temp / 20f;
+			}
+			else
+			{
+				alpha = 0f;
+			}
+			alpha *= 0.7f;
+			if (alpha > 0f)
+			{
+				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * alpha);
+			}
+			BlushieBoss.DrawBullets(spriteBatch);
 		}
 	}
 }

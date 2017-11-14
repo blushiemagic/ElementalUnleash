@@ -24,7 +24,7 @@ namespace Bluemagic.Items.Abomination
 			item.shoot = mod.ProjectileType("ElementalSpray");
 			item.useAmmo = AmmoID.Gel;
 			item.UseSound = SoundID.Item34;
-			item.damage = 200;
+			item.damage = 240;
 			item.knockBack = 0.5f;
 			item.shootSpeed = 10f;
 			item.noMelee = true;
