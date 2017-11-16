@@ -1214,7 +1214,8 @@ namespace Bluemagic
 			}
 			if (NPC.AnyNPCs(mod.NPCType("TerraSpirit")))
 			{
-				salt.stack = 10 * BluemagicWorld.terraDeaths;
+				salt.SetDefaults(mod.ItemType("PureSalt"));
+				salt.stack = 2 * BluemagicWorld.terraDeaths;
 				if (salt.stack > 999)
 				{
 					salt.stack = 999;
@@ -1573,6 +1574,15 @@ namespace Bluemagic
 			if (puriumShieldChargeMax > 0f)
 			{
 				ChargePuriumShield(damage * puriumShieldDamageEffectiveness);
+			}
+		}
+
+		public override void ModifyScreenPosition()
+		{
+			if (BlushieBoss.BlushieBoss.Players[Main.myPlayer] && BlushieBoss.BlushieBoss.CameraFocus)
+			{
+				Vector2 origin = BlushieBoss.BlushieBoss.Origin;
+				Main.screenPosition = origin - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
 			}
 		}
 

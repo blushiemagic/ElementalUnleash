@@ -16,6 +16,7 @@ namespace Bluemagic.BlushieBoss
 		internal static List<Bullet> bullets = new List<Bullet>();
 		internal static Vector2 Origin;
 		internal static bool[] Players = new bool[256];
+		internal static bool CameraFocus = false;
 		private static int[] index = new int[] { -1, -1, -1, -1, -1 };
 		internal static Vector2 PosK;
 		internal static Vector2 PosA;
@@ -214,6 +215,7 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 0;
 			Timer = 0;
+			CameraFocus = false;
 			HealthK = 1000000;
 			HealthA = 1000000;
 			HealthL = 1000000;
