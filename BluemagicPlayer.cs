@@ -82,6 +82,7 @@ namespace Bluemagic
 		public bool godmode = false;
 		public bool noGodmode = false;
 		internal float blushieHealth = 0f;
+		internal int origHealth;
 		private int blushieImmune = 0;
 
 		//permanent data
@@ -147,6 +148,7 @@ namespace Bluemagic
 			terraLives = 0;
 			terraKill = 0;
 			blushieHealth = 0f;
+			blushieImmune = 0;
 			if (heroLives == 1)
 			{
 				heroLives = 0;
@@ -321,7 +323,10 @@ namespace Bluemagic
 					player.lifeRegen = 0;
 				}
 				player.lifeRegenTime = 0;
-				player.lifeRegen -= 32;
+				if (!Bluemagic.testing || player.statLife > 1)
+				{
+					player.lifeRegen -= 32;
+				}
 			}
 		}
 
@@ -797,6 +802,7 @@ namespace Bluemagic
 				terraKill--;
 				player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
 			}
+			int origHealth = player.statLifeMax2;
 			if (blushieHealth > 0f)
 			{
 				player.statLifeMax2 = (int)(blushieHealth * player.statLifeMax2);
@@ -1317,6 +1323,14 @@ namespace Bluemagic
 			}
 			else if (Main.myPlayer == player.whoAmI)
 			{
+				if (Bluemagic.testing)
+				{
+					Main.NewText("YOU LOSE! Lucky that it's not possible for the dev to defeat herself when testing.");
+					blushieHealth = 0.05f;
+					player.statLife = 1;
+					blushieImmune = 60;
+					return;
+				}
 				bool playSound = true;
 				bool genGore = true;
 				PlayerDeathReason damageSource = PlayerDeathReason.ByCustomReason(player.name + " succumbed to the might of the blushie!");

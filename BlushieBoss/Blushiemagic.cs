@@ -117,12 +117,17 @@ namespace Bluemagic.BlushieBoss
 			{
 				alpha = 0f;
 			}
-			alpha *= 0.7f;
+			alpha *= 0.5f;
 			if (alpha > 0f)
 			{
 				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * alpha);
 			}
 			BlushieBoss.DrawBullets(spriteBatch);
+		}
+
+		public override bool UseSpecialDamage()
+		{
+			return false;
 		}
 	}
 }

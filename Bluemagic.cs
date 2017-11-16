@@ -139,6 +139,14 @@ namespace Bluemagic
 			Thorium = ModLoader.GetMod("ThoriumMod");
 			Sushi = ModLoader.GetMod("imkSushisMod");
 			BlushieBoss.BlushieBoss.Load();
+
+			Mod healthBars = ModLoader.GetMod("FKBossHealthBar");
+			if (healthBars != null)
+			{
+				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicK"));
+				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicA"));
+				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicL"));
+			}
 		}
 
 		public override void Unload()

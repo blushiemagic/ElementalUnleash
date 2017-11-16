@@ -27,11 +27,11 @@ namespace Bluemagic.BlushieBoss
 				for (int k = 0; k < 16; k++)
 				{
 					float rot = MathHelper.TwoPi * k / 16f;
-					Bullet bullet = new BulletFire(Position, 10f * rot.ToRotationVector2());
+					Bullet bullet = new BulletFire(Position, 8f * rot.ToRotationVector2());
 					BlushieBoss.AddBullet(bullet, BombDamageMult);
 				}
 			}
-			for (int k = 0; k < 3; k++)
+			for (int k = 0; k < 2; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 64, 64, 6, 0f, 0f, 0, default(Color), 4f);
 				Main.dust[dust].noGravity = true;

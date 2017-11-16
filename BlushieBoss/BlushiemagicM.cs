@@ -30,8 +30,13 @@ namespace Bluemagic.BlushieBoss
 			{
 				Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
 				Vector2 draw = npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
-				spriteBatch.Draw(texture, draw + new Vector2(-60f, 0f), null, Color.White);
-				spriteBatch.Draw(texture, draw + new Vector2(60f, 0f), null, Color.White);
+				float offset = BlushieBoss.Timer - 480;
+				if (offset > 60f)
+				{
+					offset = 60f;
+				}
+				spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), null, Color.White);
+				spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), null, Color.White);
 			}
 			return true;
 		}
@@ -54,9 +59,14 @@ namespace Bluemagic.BlushieBoss
 			else
 			{
 				Texture2D shield = mod.GetTexture("Mounts/PurityShield");
-				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.7f);
+				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
 			}
 			BlushieBoss.DrawBullets(spriteBatch);
+		}
+
+		public override bool UseSpecialDamage()
+		{
+			return false;
 		}
 	}
 }

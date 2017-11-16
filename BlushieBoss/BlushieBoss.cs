@@ -24,6 +24,13 @@ namespace Bluemagic.BlushieBoss
 		internal static float DataA;
 		internal static Vector2 DataL;
 		internal static float DataL2;
+		internal static int Immune = 0;
+		internal static int HealthK;
+		internal static int HealthA;
+		internal static int HealthL;
+		internal static int ShieldK = 0;
+		internal static int ShieldA = 0;
+		internal static int ShieldL = 0;
 
 		private static int[] types = new int[5];
 		internal static Texture2D BulletWhiteTexture;
@@ -46,6 +53,14 @@ namespace Bluemagic.BlushieBoss
 			get
 			{
 				return Phase > 0;
+			}
+		}
+
+		public static int Difficulty
+		{
+			get
+			{
+				return Main.expertMode ? 2 : 1;
 			}
 		}
 
@@ -123,6 +138,10 @@ namespace Bluemagic.BlushieBoss
 					Players[k] = false;
 				}
 			}
+			if (Immune > 0)
+			{
+				Immune--;
+			}
 			if (Active)
 			{
 				Timer++;
@@ -173,6 +192,12 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 1;
 			Timer = 0;
+			HealthK = 1000000;
+			HealthA = 1000000;
+			HealthL = 1000000;
+			ShieldK = 0;
+			ShieldA = 0;
+			ShieldL = 0;
 			Origin = Main.npc[index[0]].Center;
 			for (int k = 0; k < 255; k++)
 			{
@@ -189,6 +214,12 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 0;
 			Timer = 0;
+			HealthK = 1000000;
+			HealthA = 1000000;
+			HealthL = 1000000;
+			ShieldK = 0;
+			ShieldA = 0;
+			ShieldL = 0;
 			for (int k = 0; k < 255; k++)
 			{
 				Players[k] = false;
@@ -261,49 +292,53 @@ namespace Bluemagic.BlushieBoss
 					float length = offset.Length();
 					offset.Normalize();
 					float rotate = offset.ToRotation();
-					for (int k = 0; k < 16; k++)
+					int num = 16 * Difficulty;
+					for (int k = 0; k < num; k++)
 					{
-						float useRotate = rotate + k * MathHelper.TwoPi / 16f;
+						float useRotate = rotate + k * MathHelper.TwoPi / num;
 						AddBullet(BulletSimple.NewWhite(Origin, length / 90f * useRotate.ToRotationVector2()));
 					}
-					for (int k = 0; k < 4; k++)
+					num = 4 * Difficulty;
+					for (int k = 0; k < num; k++)
 					{
-						float useRotate = rotate + k * MathHelper.PiOver2;
+						float useRotate = rotate + k * MathHelper.TwoPi / num;
 						Vector2 direction = useRotate.ToRotationVector2();
 						Vector2 center = Origin + length / 2 * direction;
 						AddBullet(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, MathHelper.TwoPi / 180f, 180));
 						AddBullet(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, -MathHelper.TwoPi / 180f, 180));
 					}
 				}
-				if (Timer >= 1320 && Timer <= 1920 && Timer % 30 == 0)
+				if (Timer >= 1320 && Timer <= 1920 && Timer % 60 == 0)
 				{
 					Bullet center = BulletTarget.NewGoldLarge(Origin, Main.player[GetTarget()].Center, 60);
 					AddBullet(center);
-					for (int k = 0; k < 8; k++)
+					int num = 8 * Difficulty;
+					for (int k = 0; k < num; k++)
 					{
-						float rotate = k / 8f * MathHelper.TwoPi;
+						float rotate = k / (float)num * MathHelper.TwoPi;
 						AddBullet(BulletRelease.NewWhite(center, 60f, rotate, MathHelper.TwoPi / 480f, 4f));
 						AddBullet(BulletRelease.NewWhite(center, 60f, rotate, -MathHelper.TwoPi / 480f, 4f));
 					}
 				}
-				if (Timer >= 2040 && Timer <= 2640 && Timer % 60 == 0)
+				if (Timer >= 2040 && Timer <= 2640 && Timer % 90 == 0)
 				{
 					Vector2 offset = Main.player[GetTarget()].Center - Origin;
 					offset.Normalize();
-					offset *= 8f;
+					offset *= 6f;
 					for (int k = 0; k < 5; k++)
 					{
 						float angle = MathHelper.Pi * 1.5f - k * MathHelper.TwoPi / 5f;
 						float nextAngle = MathHelper.Pi * 1.5f - (k + 2) * MathHelper.TwoPi / 5f;
 						Vector2 start = angle.ToRotationVector2();
 						Vector2 end = nextAngle.ToRotationVector2();
-						for (int i = 0; i < 6; i++)
+						int num = 6 * Difficulty;
+						for (int i = 0; i < num; i++)
 						{
-							if (i == 2 || i == 3)
+							if (i == num / 2 - 1 || i == num / 2)
 							{
 								continue;
 							}
-							Vector2 adjust = Vector2.Lerp(start, end, i / 6f);
+							Vector2 adjust = Vector2.Lerp(start, end, i / (float)num);
 							AddBullet(BulletBounce.NewStar(Origin, offset + 0.75f * adjust, 5));
 						}
 					}
@@ -372,9 +407,27 @@ namespace Bluemagic.BlushieBoss
 			{
 				return;
 			}
-			NPC kylie = Main.npc[index[1]];
-			NPC anna = Main.npc[index[2]];
-			NPC luna = Main.npc[index[3]];
+			NPC kylie = index[1] > -1 ? Main.npc[index[1]] : null;
+			NPC anna = index[2] > -1 ? Main.npc[index[2]] : null;
+			NPC luna = index[3] > -1 ? Main.npc[index[3]] : null;
+			if (Main.netMode != 1)
+			{
+				if (kylie != null && kylie.localAI[1] == 0f && (ShieldBuff(kylie) || ShieldBuff(anna) || ShieldBuff(luna)))
+				{
+					KylieTalk("Oh, um, I can create shields around us to protect us from damage. Yeah...");
+					kylie.localAI[1] = 1f;
+				}
+				if (luna != null && luna.localAI[1] == 0f && (DamageBuff(kylie) || DamageBuff(anna) || DamageBuff(luna)))
+				{
+					LunaTalk("Impressive. You still live. But how about if I buff our damage?");
+					luna.localAI[1] = 1f;
+				}
+				if (anna != null && anna.localAI[1] == 0f && (HealBuff(kylie) || HealBuff(anna) || HealBuff(luna)))
+				{
+					AnnaTalk("You're not gonna defeat any of us on my watch! >:( Magic healing powers, go!");
+					anna.localAI[1] = 1f;
+				}
+			}
 			if (Timer >= 180 && Timer < 600)
 			{
 				float distance = (Timer - 180) / 300f;
@@ -420,30 +473,90 @@ namespace Bluemagic.BlushieBoss
 			PosK += Origin;
 			PosA += Origin;
 			PosL += Origin;
-			kylie.Center = PosK;
-			anna.Center = PosA;
-			luna.Center = PosL;
-
+			if (kylie != null)
+			{
+				kylie.Center = PosK;
+			}
+			if (anna != null)
+			{
+				anna.Center = PosA;
+			}
+			if (luna != null)
+			{
+				luna.Center = PosL;
+			}
 			if (Main.netMode != 2 && Timer >= 600)
 			{
-				int timerK = (Timer - 600) % 2820;
-				if (timerK < 840 && timerK % 120 == 0)
+				if (kylie != null)
+				{
+					KylieAttack();
+					kylie.dontTakeDamage = false;
+					if (HealBuff(kylie))
+					{
+						HealthK += 321;
+					}
+					kylie.life = HealthK;
+					if (ShieldK < 300)
+					{
+						ShieldK++;
+					}
+				}
+				if (anna != null)
+				{
+					AnnaAttack();
+					anna.dontTakeDamage = false;
+					if (HealBuff(anna))
+					{
+						HealthA += 321;
+					}
+					anna.life = HealthA;
+					if (ShieldA < 300)
+					{
+						ShieldA++;
+					}
+				}
+				if (luna != null)
+				{
+					LunaAttack();
+					luna.dontTakeDamage = false;
+					if (HealBuff(luna))
+					{
+						HealthL += 321;
+					}
+					luna.life = HealthL;
+					if (ShieldL < 300)
+					{
+						ShieldL++;
+					}
+				}
+			}
+		}
+
+		private static void KylieAttack()
+		{
+			float damage = DamageBuff(Main.npc[index[1]]) ? 1.5f : 1f;
+			int numCycles = Phase2Count() == 1 ? 2 : 1;
+			int timerK = (Timer - 600) % 2820;
+			for (int i = 0; i < numCycles; i++)
+			{
+				if (timerK < 840 && timerK % (120 / Difficulty) == 0)
 				{
 					for (int k = 0; k < 8; k++)
 					{
 						float angle = k / 8f * MathHelper.TwoPi;
-						AddBullet(new BulletRotateKylie(angle, MathHelper.TwoPi / 300f));
-						AddBullet(new BulletRotateKylie(angle, -MathHelper.TwoPi / 300f));
+						AddBullet(new BulletRotateKylie(angle, MathHelper.TwoPi / 300f), damage);
+						AddBullet(new BulletRotateKylie(angle, -MathHelper.TwoPi / 300f), damage);
 					}
 				}
 				if (timerK >= 1140 && timerK < 1860 && timerK % 90 == 60)
 				{
 					var bullet = BulletTargetSmooth.NewBlueLarge(PosK, Main.player[GetTarget()].Center, 450);
-					AddBullet(bullet);
-					for (int k = 0; k < 32; k++)
+					AddBullet(bullet, damage);
+					int num = (int)(32 * Math.Sqrt(Difficulty));
+					for (int k = 0; k < num; k++)
 					{
-						float rot = MathHelper.TwoPi * k / 32f;
-						AddBullet(BulletRotateAround.NewBlueSmall(bullet, 80f, rot, MathHelper.TwoPi / 120f));
+						float rot = MathHelper.TwoPi * k / (float)num;
+						AddBullet(BulletRotateAround.NewBlueSmall(bullet, 80f * (float)Math.Sqrt(Difficulty), rot, MathHelper.TwoPi / 120f), damage);
 					}
 				}
 				if (timerK >= 2040 && timerK < 2640)
@@ -459,43 +572,60 @@ namespace Bluemagic.BlushieBoss
 					{
 						for (float x = DataK.X; x <= Origin.X + ArenaSize; x += 400f)
 						{
-							AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)));
+							AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)), damage);
+							if (Difficulty >= 2)
+							{
+								AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y + ArenaSize), new Vector2(0f, -8f)), damage);
+							}
 						}
 						for (float y = DataK.Y; y <= Origin.Y + ArenaSize; y += 400f)
 						{
-							AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
+							AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)), damage);
+							if (Difficulty >= 2)
+							{
+								AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X + ArenaSize, y), new Vector2(-8f, 0f)), damage);
+							}
 						}
 					}
 				}
+				timerK = (timerK + 1410) % 2820;
+			}
+		}
 
-				int timerA = (Timer - 600) % 1800;
-				if (timerA < 450 && timerA % 90 == 0)
+		private static void AnnaAttack()
+		{
+			float damage = DamageBuff(Main.npc[index[2]]) ? 1.5f : 1f;
+			int numCycles = Phase2Count() == 1 ? 2 : 1;
+			int timerA = (Timer - 600) % 1800;
+			for (int i = 0; i < numCycles; i++)
+			{
+				if (timerA < 450 && timerA % (90 / Difficulty) == 0)
 				{
-					AddBullet(new BulletFireBomb(Main.player[GetTarget()].Center, 120));
+					AddBullet(new BulletFireBomb(Main.player[GetTarget()].Center, 120, damage));
 				}
-				if (timerA >= 600 && timerA < 1080 && timerA % 12 == 0)
+				if (timerA >= 600 && timerA < 1080 && timerA % (12 / Difficulty) == 0)
 				{
 					float baseRot = (float)Math.Sin(timerA * MathHelper.TwoPi / 120f);
 					baseRot *= MathHelper.Pi / 6f;
 					for (int k = 0; k < 6; k++)
 					{
 						float rot = baseRot + MathHelper.TwoPi * k / 6f;
-						int color = (k + (timerA / 12)) % 6;
-						AddBullet(BulletSimple.NewColor(PosA, 8f * rot.ToRotationVector2(), color));
+						int color = (k + (timerA / (12 / Difficulty))) % 6;
+						AddBullet(BulletSimple.NewColor(PosA, 6f * rot.ToRotationVector2(), color), damage);
 					}
 				}
-				const float raySize = 80f;
+				float raySize = 80f * Difficulty;
 				if (timerA == 1200)
 				{
 					DataA = Main.player[GetTarget()].Center.X - raySize;
 				}
-				if (timerA >= 1200 && timerA < 1680 && timerA % 2 == 0)
+				if (timerA >= 1200 && timerA < 1680 && timerA % (2 / Difficulty) == 0)
 				{
 					float progress = (timerA - 1200) / 480f;
 					int count = 1 + (int)(progress * 5f);
 					for (int k = 0; k < progress; k++)
 					{
-						AddBullet(BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y + ArenaSize), new Vector2(0f, -4f - progress * 16f)));
+						AddBullet(BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y + ArenaSize), new Vector2(0f, -4f - progress * 16f)), damage);
 					}
 				}
 				if (timerA == 1680)
@@ -504,29 +634,44 @@ namespace Bluemagic.BlushieBoss
 				}
 				if (timerA >= 1680 && timerA < 1740)
 				{
-					for (int k = 0; k < 20; k++)
+					for (int k = 0; k < 20 * Difficulty; k++)
 					{
 						var bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize), new Vector2(0f, 32f));
 						bullet.Damage = 0.2f;
-						AddBullet(bullet);
+						AddBullet(bullet, damage);
 						bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize + 16f), new Vector2(0f, 32f));
 						bullet.Damage = 0.2f;
-						AddBullet(bullet);
+						AddBullet(bullet, damage);
 					}
 				}
+				timerA = (timerA + 900) % 1800;
+			}
+		}
 
-				int timerL = (Timer - 600) % 2200;
+		private static void LunaAttack()
+		{
+			float damage = DamageBuff(Main.npc[index[3]]) ? 1.5f : 1f;
+			int numCycles = Phase2Count() == 1 ? 2 : 1;
+			int timerL = (Timer - 600) % 2200;
+			for (int i = 0; i < numCycles; i++)
+			{
 				if (timerL < 600)
 				{
 					if (timerL % 32 == 0)
 					{
-						AddBullet(new BulletRotateLuna(1f, 0f));
-						AddBullet(new BulletRotateLuna(1f, MathHelper.Pi));
+						int num = 2 * Difficulty;
+						for (int k = 0; k < num; k++)
+						{
+							AddBullet(new BulletRotateLuna(1f, k * MathHelper.TwoPi / num), damage);
+						}
 					}
 					else if (timerL % 32 == 16)
 					{
-						AddBullet(new BulletRotateLuna(-1f, MathHelper.PiOver2));
-						AddBullet(new BulletRotateLuna(-1f, 3f * MathHelper.PiOver2));
+						int num = 2 * Difficulty;
+						for (int k = 0; k < num; k++)
+						{
+							AddBullet(new BulletRotateLuna(-1f, (k + 0.5f) * MathHelper.TwoPi / num), damage);
+						}
 					}
 				}
 				if (timerL >= 780 && timerL < 1260)
@@ -537,19 +682,56 @@ namespace Bluemagic.BlushieBoss
 						Vector2 dir = Main.player[GetTarget()].Center - PosL;
 						DataL2 = dir.ToRotation();
 					}
-					if (timerL % 120 >= 60 && timerL % 120 < 90)
+					if (timerL % 120 >= 60 && timerL % 120 < 60 + 30 * Difficulty)
 					{
 						float normal = DataL2 + MathHelper.PiOver2;
 						Vector2 pos = DataL + (32f * Main.rand.NextFloat() - 16f) * normal.ToRotationVector2();
-						AddBullet(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()));
+						AddBullet(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()), damage);
 					}
 				}
 				if (timerL >= 1440 && timerL < 2080)
 				{
 					float rot = timerL;
-					AddBullet(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * rot.ToRotationVector2()));
+					int num = Difficulty;
+					for (int k = 0; k < num; k++)
+					{
+						float useRot = rot + k * MathHelper.TwoPi / num;
+						AddBullet(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * useRot.ToRotationVector2()), damage);
+					}
+				}
+				timerL = (timerL + 1100) % 2200;
+			}
+		}
+
+		internal static int Phase2Count()
+		{
+			int count = 0;
+			for (int k = 1; k <= 3; k++)
+			{
+				if (index[k] > -1)
+				{
+					count++;
 				}
 			}
+			return count;
+		}
+
+		internal static bool ShieldBuff(NPC npc)
+		{
+			int count = Phase2Count();
+			return index[1] > -1 && npc.life <= 1500000 - 250000 * count;
+		}
+
+		internal static bool DamageBuff(NPC npc)
+		{
+			int count = Phase2Count();
+			return index[3] > -1 && npc.life <= 1250000 - 250000 * count;
+		}
+
+		internal static bool HealBuff(NPC npc)
+		{
+			int count = Phase2Count();
+			return index[2] > -1 && npc.life <= 1000000 - 250000 * count;
 		}
 
 		internal static int GetTarget()
@@ -606,17 +788,17 @@ namespace Bluemagic.BlushieBoss
 			Talk("blushiemagic", message, 200, 255, 255);
 		}
 
-		private static void KylieTalk(string message)
+		internal static void KylieTalk(string message)
 		{
 			Talk("blushiemagic (K)", message, 0, 128, 255);
 		}
 
-		private static void AnnaTalk(string message)
+		internal static void AnnaTalk(string message)
 		{
 			Talk("blushiemagic (A)", message, 255, 128, 128);
 		}
 
-		private static void LunaTalk(string message)
+		internal static void LunaTalk(string message)
 		{
 			Talk("blushiemagic (L)", message, 128, 0, 128);
 		}

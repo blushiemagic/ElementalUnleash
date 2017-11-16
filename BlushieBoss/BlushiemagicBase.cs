@@ -8,6 +8,8 @@ namespace Bluemagic.BlushieBoss
 {
 	public abstract class BlushiemagicBase : ModNPC
 	{
+		private Player hitBy;
+
 		public override void SetStaticDefaults()
 		{
 			NPCID.Sets.NeedsExpertScaling[npc.type] = false;
@@ -45,6 +47,81 @@ namespace Bluemagic.BlushieBoss
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
+		}
+
+		public virtual bool UseSpecialDamage()
+		{
+			return true;
+		}
+
+		public override bool? CanBeHitByItem(Player player, Item item)
+		{
+			if (!BlushieBoss.Players[player.whoAmI])
+			{
+				return false;
+			}
+			if (UseSpecialDamage() && BlushieBoss.Immune > 0)
+			{
+				return false;
+			}
+			hitBy = player;
+			return null;
+		}
+
+		public override bool? CanBeHitByProjectile(Projectile projectile)
+		{
+			if (!BlushieBoss.Players[projectile.owner])
+			{
+				return false;
+			}
+			if (UseSpecialDamage() && BlushieBoss.Immune > 0)
+			{
+				return false;
+			}
+			return null;
+		}
+
+		public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+		{
+			hitBy = player;
+		}
+
+		public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			if (!projectile.trap && !projectile.npcProj)
+			{
+				hitBy = Main.player[projectile.owner];
+			}
+		}
+
+		public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
+		{
+			if (!UseSpecialDamage())
+			{
+				hitBy = null;
+				return true;
+			}
+			if (hitBy == null || !hitBy.active || BlushieBoss.Immune > 0)
+			{
+				damage = 0;
+			}
+			else
+			{
+				damage = CalculateDamage(hitBy, damage);
+				SetHealth(damage);
+				BlushieBoss.Immune = 60;
+			}
+			hitBy = null;
+			return false;
+		}
+
+		public virtual double CalculateDamage(Player player, double damage)
+		{
+			return damage;
+		}
+
+		public virtual void SetHealth(double damage)
+		{
 		}
 	}
 }

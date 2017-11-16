@@ -20,14 +20,14 @@ namespace Bluemagic.BlushieBoss
 		{
 			Vector2 offset = BlushieBoss.PosL - Position;
 			float length = offset.Length();
-			if (offset.Length() <= 8f)
+			if (offset.Length() <= 6f)
 			{
 				Position = BlushieBoss.PosL;
 				Finished = true;
 				return;
 			}
 			offset.Normalize();
-			Position += 8f * offset;
+			Position += 6f * offset;
 		}
 
 		public override bool ShouldRemove()

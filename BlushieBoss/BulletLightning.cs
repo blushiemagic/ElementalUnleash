@@ -52,7 +52,7 @@ namespace Bluemagic.BlushieBoss
 				bullet.Damage = Damage;
 				BlushieBoss.AddBullet(bullet);
 			}
-			for (int k = 0; k < 1; k++)
+			for (int k = 0; k < 2; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 32, 32, Bluemagic.Instance.DustType("PurpleLightning"), 0f, 0f, 100, default(Color), 1f);
 				Main.dust[dust].velocity *= 0.5f;

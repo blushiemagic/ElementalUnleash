@@ -31,6 +31,23 @@ namespace Bluemagic.BlushieBoss
 			}
 		}
 
+		public override bool CheckDead()
+		{
+			if (BlushieBoss.HealthK > 0)
+			{
+				npc.life = BlushieBoss.HealthK;
+			}
+			else
+			{
+				npc.active = false;
+				if (Main.netMode != 1)
+				{
+					BlushieBoss.KylieTalk("I knew it. I'm so useless...");
+				}
+			}
+			return false;
+		}
+
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			if (BlushieBoss.Timer >= 600)
@@ -39,6 +56,43 @@ namespace Bluemagic.BlushieBoss
 				spriteBatch.Draw(texture, npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2), Color.White);
 			}
 			return true;
+		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			if (BlushieBoss.ShieldK >= 300 && BlushieBoss.ShieldBuff(npc))
+			{
+				Texture2D shield = mod.GetTexture("BlushieBoss/ShieldK");
+				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
+			}
+		}
+
+		public override double CalculateDamage(Player player, double damage)
+		{
+			if (BlushieBoss.ShieldK > 300 && BlushieBoss.ShieldBuff(npc))
+			{
+				BlushieBoss.ShieldK = 0;
+				return 0;
+			}
+			float defenseMult = player.statDefense / 200f;
+			float resistMult = player.endurance / 0.6f;
+			float mult = 0.6f * defenseMult + 0.4f * resistMult;
+			damage = mult * 100000;
+			if (damage > 100000)
+			{
+				damage = 100000;
+			}
+			if (Main.netMode != 2 && npc.localAI[0] == 0f && damage < 50000)
+			{
+				Main.NewText("<blushiemagic (K)> Oh yeah, uh, you need lots of defense and damage reduction if you want to damage me. Sorry...", 0, 128, 255);
+				npc.localAI[0] = 1f;
+			}
+			return damage;
+		}
+
+		public override void SetHealth(double damage)
+		{
+			BlushieBoss.HealthK = npc.life - (int)damage;
 		}
 	}
 }

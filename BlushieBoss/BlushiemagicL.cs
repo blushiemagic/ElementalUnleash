@@ -38,6 +38,23 @@ namespace Bluemagic.BlushieBoss
 			npc.localAI[0] = (npc.localAI[0] + 1f) % 60f;
 		}
 
+		public override bool CheckDead()
+		{
+			if (BlushieBoss.HealthL > 0)
+			{
+				npc.life = BlushieBoss.HealthL;
+			}
+			else
+			{
+				if (Main.netMode != 1)
+				{
+					BlushieBoss.LunaTalk("Hmph. I will admit I underestimated you. I shall concede defeat...");
+				}
+				npc.active = false;
+			}
+			return false;
+		}
+
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			Texture2D texture = mod.GetTexture("BlushieBoss/LightningCannon");
@@ -73,6 +90,40 @@ namespace Bluemagic.BlushieBoss
 			}
 
 			return true;
+		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			if (BlushieBoss.ShieldL >= 300 && BlushieBoss.ShieldBuff(npc))
+			{
+				Texture2D shield = mod.GetTexture("BlushieBoss/ShieldL");
+				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
+			}
+		}
+
+		public override double CalculateDamage(Player player, double damage)
+		{
+			if (BlushieBoss.ShieldL > 300 && BlushieBoss.ShieldBuff(npc))
+			{
+				BlushieBoss.ShieldL = 0;
+				return 0;
+			}
+			damage *= 50;
+			if (damage > 100000)
+			{
+				damage = 100000;
+			}
+			if (Main.netMode != 2 && npc.localAI[0] == 0f && damage < 50000)
+			{
+				Main.NewText("<blushiemagic (L)> I hope you realize that you need high damage in order to deal high damage to me. Common sense, really...", 128, 0, 128);
+				npc.localAI[0] = 1f;
+			}
+			return damage;
+		}
+
+		public override void SetHealth(double damage)
+		{
+			BlushieBoss.HealthL = npc.life - (int)damage;
 		}
 	}
 }

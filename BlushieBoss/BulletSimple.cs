@@ -33,7 +33,9 @@ namespace Bluemagic.BlushieBoss
 
 		public static BulletSimple NewColor(Vector2 position, Vector2 velocity, int color)
 		{
-			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletColorTextures[color]);
+			var bullet = new BulletSimple(position, velocity, 16f, BlushieBoss.BulletColorTextures[color]);
+			bullet.Damage = 0.075f;
+			return bullet;
 		}
 
 		public static BulletSimple NewLight(Vector2 position, Vector2 velocity)
