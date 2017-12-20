@@ -12,6 +12,7 @@ namespace Bluemagic.BlushieBoss
 		{
 			base.SetStaticDefaults();
 			DisplayName.SetDefault("blushiemagic (A)");
+			Main.npcFrameCount[npc.type] = 2;
 		}
 
 		public override void SetDefaults()
@@ -52,10 +53,22 @@ namespace Bluemagic.BlushieBoss
 				npc.active = false;
 				if (Main.netMode != 1)
 				{
-					BlushieBoss.AnnaTalk("Wow, you're really strong! It was very fun playing with you~");
+					if (BlushieBoss.BlushieC)
+					{
+						BlushieBoss.ChrisTalk("You are incredibly powerful! It was a pleasure to be able to spar with you.");
+					}
+					else
+					{
+						BlushieBoss.AnnaTalk("Wow, you're really strong! It was very fun playing with you~");
+					}
 				}
 			}
 			return false;
+		}
+
+		public override void FindFrame(int frameHeight)
+		{
+			npc.frame.Y = BlushieBoss.BlushieC ? frameHeight : 0;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -93,7 +106,14 @@ namespace Bluemagic.BlushieBoss
 			}
 			if (Main.netMode != 2 && npc.localAI[0] == 0f && damage < 50000)
 			{
-				Main.NewText("<blushiemagic (A)> I play with my own rules! If you want to damage me, try having lots of health at the start of the fight and high life regen!", 255, 128, 128);
+				if (BlushieBoss.BlushieC)
+				{
+					Main.NewText("<blushiemagic (A)> I play with my own rules! If you want to damage me, try having lots of health at the start of the fight and high life regen!", 255, 128, 128);
+				}
+				else
+				{
+					Main.NewText("<blushiemagic (C)> I'll give you a hint: maximum health and high life regen are key to damaging me. If you get hit, you won't be penalized for the max health reduction, but the damage over time you take will matter!", 255, 255, 0);
+				}
 				npc.localAI[0] = 1f;
 			}
 			return damage;

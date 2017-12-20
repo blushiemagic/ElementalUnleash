@@ -16,7 +16,7 @@ namespace Bluemagic.BlushieBoss
 		public override void Update()
 		{
 			base.Update();
-			for (int k = 0; k < 1; k++)
+			for (int k = 0; k < 0; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 32, 32, 6, 0f, 0f, 0, default(Color), 4f);
 				Main.dust[dust].noGravity = true;

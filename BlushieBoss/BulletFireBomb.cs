@@ -31,7 +31,7 @@ namespace Bluemagic.BlushieBoss
 					BlushieBoss.AddBullet(bullet, BombDamageMult);
 				}
 			}
-			for (int k = 0; k < 2; k++)
+			for (int k = 0; k < 0; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 64, 64, 6, 0f, 0f, 0, default(Color), 4f);
 				Main.dust[dust].noGravity = true;

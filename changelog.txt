@@ -9,3 +9,4 @@ buffed terra spirit's final phase
 resprited cleanser beam
 buffed the elemental sprayer
 resprited abomination phase 2
+fixed bug where chaos spirit arms have health bars

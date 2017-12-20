@@ -1686,8 +1686,8 @@ namespace Bluemagic
 				}
 				if (modPlayer.blushieHealth > 0f && drawPlayer.whoAmI == Main.myPlayer)
 				{
-					Texture2D texture = mod.GetTexture("BlushieBoss/Indicator");
-					DrawData data = new DrawData(texture, drawPlayer.Center - new Vector2(4f) - Main.screenPosition, Color.White);
+					Texture2D texture = mod.GetTexture(BlushieBoss.BlushieBoss.CameraFocus ? "BlushieBoss/IndicatorBig" : "BlushieBoss/Indicator");
+					DrawData data = new DrawData(texture, drawPlayer.Center - new Vector2(texture.Width / 2, texture.Height / 2) - Main.screenPosition, Color.White);
 					Main.playerDrawData.Add(data);
 				}
 			});

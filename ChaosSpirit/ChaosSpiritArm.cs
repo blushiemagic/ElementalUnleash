@@ -28,6 +28,7 @@ namespace Bluemagic.ChaosSpirit
 			npc.defense = 0;
 			npc.knockBackResist = 0f;
 			npc.dontTakeDamage = false;
+			npc.immortal = true;
 			npc.width = size;
 			npc.height = size;
 			npc.npcSlots = 10f;

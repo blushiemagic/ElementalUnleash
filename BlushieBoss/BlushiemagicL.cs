@@ -103,7 +103,7 @@ namespace Bluemagic.BlushieBoss
 
 		public override double CalculateDamage(Player player, double damage)
 		{
-			if (BlushieBoss.ShieldL > 300 && BlushieBoss.ShieldBuff(npc))
+			if (BlushieBoss.ShieldL >= 300 && BlushieBoss.ShieldBuff(npc))
 			{
 				BlushieBoss.ShieldL = 0;
 				return 0;

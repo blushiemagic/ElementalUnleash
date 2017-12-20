@@ -18,6 +18,7 @@ namespace Bluemagic.BlushieBoss
 		internal static bool[] Players = new bool[256];
 		internal static bool CameraFocus = false;
 		private static int[] index = new int[] { -1, -1, -1, -1, -1 };
+		internal static bool BlushieC;
 		internal static Vector2 PosK;
 		internal static Vector2 PosA;
 		internal static Vector2 PosL;
@@ -32,6 +33,10 @@ namespace Bluemagic.BlushieBoss
 		internal static int ShieldK = 0;
 		internal static int ShieldA = 0;
 		internal static int ShieldL = 0;
+		internal static Vector2 DragonPos;
+		internal static Vector2 ArmLeftPos;
+		internal static Vector2 ArmRightPos;
+		internal static Vector2 SkullPos;
 
 		private static int[] types = new int[5];
 		internal static Texture2D BulletWhiteTexture;
@@ -153,6 +158,10 @@ namespace Bluemagic.BlushieBoss
 				else if (Phase == 2)
 				{
 					Phase2();
+				}
+				else if (Phase == 3)
+				{
+					Phase3();
 				}
 				Player player = Main.player[GetTarget()];
 				for (int k = 0; k < bullets.Count; k++)
@@ -362,6 +371,7 @@ namespace Bluemagic.BlushieBoss
 			Timer = 0;
 			index[4] = NPC.NewNPC((int)Origin.X, (int)Origin.Y, types[4]);
 			Main.npc[index[4]].Center = Origin;
+			BlushieC = Main.rand.Next(10) == 0;
 		}
 
 		internal static void Phase2()
@@ -389,12 +399,26 @@ namespace Bluemagic.BlushieBoss
 					PosA = Vector2.Zero;
 					PosL = Vector2.Zero;
 					KylieTalk("Why am I here? I'm useless...");
-					AnnaTalk("Hi there! Are you ready to have fun?~");
+					if (BlushieC)
+					{
+						ChrisTalk("blushiemagic (A) wasn't able to make it this time. But I can fight you in her place!");
+					}
+					else
+					{
+						AnnaTalk("Hi there! Are you ready to have fun?~");
+					}
 					LunaTalk("You think you can stand up to me? We shall see...");
 				}
 				if (Timer == 1800)
 				{
-					AnnaTalk("\x300cRay of Absolute Light\x300d!~");
+					if (BlushieC)
+					{
+						ChrisTalk("\x300cRay of Absolute Light\x300d");
+					}
+					else
+					{
+						AnnaTalk("\x300cRay of Absolute Light\x300d!~");
+					}
 				}
 				if (Timer == 2640)
 				{
@@ -426,8 +450,19 @@ namespace Bluemagic.BlushieBoss
 				}
 				if (anna != null && anna.localAI[1] == 0f && (HealBuff(kylie) || HealBuff(anna) || HealBuff(luna)))
 				{
-					AnnaTalk("You're not gonna defeat any of us on my watch! >:( Magic healing powers, go!");
+					if (BlushieC)
+					{
+						ChrisTalk("Uh oh, looks like we're in need of some healing!");
+					}
+					else
+					{
+						AnnaTalk("You're not gonna defeat any of us on my watch! >:( Magic healing powers, go!");
+					}
 					anna.localAI[1] = 1f;
+				}
+				if (kylie == null && luna == null && anna == null)
+				{
+					StartPhase3();
 				}
 			}
 			if (Timer >= 180 && Timer < 600)
@@ -495,7 +530,7 @@ namespace Bluemagic.BlushieBoss
 					kylie.dontTakeDamage = false;
 					if (HealBuff(kylie))
 					{
-						HealthK += 321;
+						HealthK += 123;
 					}
 					kylie.life = HealthK;
 					if (ShieldK < 300)
@@ -509,7 +544,7 @@ namespace Bluemagic.BlushieBoss
 					anna.dontTakeDamage = false;
 					if (HealBuff(anna))
 					{
-						HealthA += 321;
+						HealthA += 123;
 					}
 					anna.life = HealthA;
 					if (ShieldA < 300)
@@ -523,7 +558,7 @@ namespace Bluemagic.BlushieBoss
 					luna.dontTakeDamage = false;
 					if (HealBuff(luna))
 					{
-						HealthL += 321;
+						HealthL += 123;
 					}
 					luna.life = HealthL;
 					if (ShieldL < 300)
@@ -691,10 +726,10 @@ namespace Bluemagic.BlushieBoss
 						AddBullet(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()), damage);
 					}
 				}
-				if (timerL >= 1440 && timerL < 2080)
+				if (timerL >= 1440 && timerL < 2080 && (Difficulty > 1 || timerL % 2 == 0))
 				{
 					float rot = timerL;
-					int num = Difficulty;
+					int num = 1;
 					for (int k = 0; k < num; k++)
 					{
 						float useRot = rot + k * MathHelper.TwoPi / num;
@@ -734,6 +769,50 @@ namespace Bluemagic.BlushieBoss
 		{
 			int count = Phase2Count();
 			return index[2] > -1 && npc.life <= 1000000 - 250000 * count;
+		}
+
+		internal static void StartPhase3()
+		{
+			Phase = 3;
+			Timer = 0;
+			DragonPos = Origin + new Vector2(0f, -ArenaSize * 0.8f);
+			ArmLeftPos = Origin + new Vector2(ArenaSize * 0.8f, 0f);
+			ArmRightPos = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
+			SkullPos = Origin + new Vector2(0f, ArenaSize * 0.8f);
+			for (int k = 0; k < 255; k++)
+			{
+				if (Players[k])
+				{
+					BluemagicPlayer modPlayer = Main.player[k].GetModPlayer<BluemagicPlayer>();
+					if (modPlayer.blushieHealth > BluemagicWorld.blushieCheckpoint)
+					{
+						BluemagicWorld.blushieCheckpoint = modPlayer.blushieHealth;
+					}
+				}
+			}
+		}
+
+		internal static void Phase3()
+		{
+			NPC megan = Main.npc[index[4]];
+			megan.Center = Origin + new Vector2(0f, 16f * (float)Math.Sin((Timer - 480f) / 60f));
+			if (Main.netMode != 2)
+			{
+				if (Timer == 840)
+				{
+					Main.PlaySound(29, -1, -1, 92, 1f, 0f);
+				}
+				else if (Timer == 960)
+				{
+					Main.PlaySound(29, -1, -1, 104);
+				}
+				if (Timer >= 600 && Timer < 780)
+				{
+					int dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f), 160, 160, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+					Main.dust[dust].scale = 2f;
+					Main.dust[dust].noLight = true;
+				}
+			}
 		}
 
 		internal static int GetTarget()
@@ -803,6 +882,11 @@ namespace Bluemagic.BlushieBoss
 		internal static void LunaTalk(string message)
 		{
 			Talk("blushiemagic (L)", message, 128, 0, 128);
+		}
+
+		internal static void ChrisTalk(string message)
+		{
+			Talk("blushiemagic (C)", message, 255, 255, 0);
 		}
 
 		internal static void DrawArena(SpriteBatch spriteBatch)
