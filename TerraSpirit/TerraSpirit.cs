@@ -133,20 +133,24 @@ namespace Bluemagic.TerraSpirit
 			FixLife();
 			Progress++;
 			Rectangle bounds = new Rectangle((int)npc.Center.X - arenaWidth / 2, (int)npc.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
-			for (int k = 0; k < bullets.Count; k++)
+			Player player = Main.player[Main.myPlayer];
+			if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0)
 			{
-				if (bullets[k].Update(this, bounds))
+				player.GetModPlayer<BluemagicPlayer>().TerraSpiritBarrier(npc);
+				for (int k = 0; k < bullets.Count; k++)
 				{
-					Player player = Main.player[Main.myPlayer];
-					if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && bullets[k].Collides(player.Hitbox))
+					if (bullets[k].Update(this, bounds))
 					{
-						player.GetModPlayer<BluemagicPlayer>().TerraKill();
+						if (bullets[k].Collides(player.Hitbox))
+						{
+							player.GetModPlayer<BluemagicPlayer>().TerraKill();
+						}
 					}
-				}
-				else
-				{
-					bullets.RemoveAt(k);
-					k--;
+					else
+					{
+						bullets.RemoveAt(k);
+						k--;
+					}
 				}
 			}
 		}

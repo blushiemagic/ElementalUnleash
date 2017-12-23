@@ -245,8 +245,8 @@ namespace Bluemagic.BlushieBoss
 			}
 			Texture2D claw = mod.GetTexture("BlushieBoss/DragonClaw");
 			Vector2 origin = new Vector2(claw.Width / 2, claw.Height / 2);
-			spriteBatch.Draw(claw, BlushieBoss.ArmLeftPos - Main.screenPosition, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(claw, BlushieBoss.ArmRightPos - Main.screenPosition, null, Color.White, 0f, origin, 1f, SpriteEffects.FlipHorizontally, 0f);
+			spriteBatch.Draw(claw, BlushieBoss.ArmLeftPos - Main.screenPosition, null, Color.White, (BlushieBoss.ArmLeftPos - npc.Center).ToRotation(), origin, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(claw, BlushieBoss.ArmRightPos - Main.screenPosition, null, Color.White, (BlushieBoss.ArmRightPos - npc.Center).ToRotation(), origin, 1f, SpriteEffects.None, 0f);
 		}
 
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)

@@ -512,7 +512,7 @@ namespace Bluemagic
 			}
 		}
 
-		private void TerraSpiritBarrier(NPC npc)
+		internal void TerraSpiritBarrier(NPC npc)
 		{
 			Vector2 offset = player.position - lastPos;
 			if (offset.Length() > 32f)
@@ -574,7 +574,7 @@ namespace Bluemagic
 			}
 		}
 
-		private void BlushieBarrier()
+		internal void BlushieBarrier()
 		{
 			Vector2 offset = player.position - lastPos;
 			if (offset.Length() > 32f)

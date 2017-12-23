@@ -17,7 +17,7 @@ namespace Bluemagic.BlushieBoss
 		internal static Vector2 Origin;
 		internal static bool[] Players = new bool[256];
 		internal static bool CameraFocus = false;
-		private static int[] index = new int[] { -1, -1, -1, -1, -1 };
+		private static int[] index = new int[] { -1, -1, -1, -1, -1, -1 };
 		internal static bool BlushieC;
 		internal static Vector2 PosK;
 		internal static Vector2 PosA;
@@ -37,8 +37,17 @@ namespace Bluemagic.BlushieBoss
 		internal static Vector2 ArmLeftPos;
 		internal static Vector2 ArmRightPos;
 		internal static Vector2 SkullPos;
+		internal static Vector2 BoneLTPos;
+		internal static Vector2 BoneLBPos;
+		internal static Vector2 BoneRTPos;
+		internal static Vector2 BoneRBPos;
+		internal static float BoneLTRot;
+		internal static float BoneLBRot;
+		internal static float BoneRTRot;
+		internal static float BoneRBRot;
+		internal static int Phase3Attack;
 
-		private static int[] types = new int[5];
+		private static int[] types = new int[6];
 		internal static Texture2D BulletWhiteTexture;
 		internal static Texture2D BulletGoldTexture;
 		internal static Texture2D BulletGoldLargeTexture;
@@ -77,6 +86,7 @@ namespace Bluemagic.BlushieBoss
 			types[2] = Bluemagic.Instance.NPCType("BlushiemagicA");
 			types[3] = Bluemagic.Instance.NPCType("BlushiemagicL");
 			types[4] = Bluemagic.Instance.NPCType("BlushiemagicM");
+			types[5] = Bluemagic.Instance.NPCType("BlushiemagicJ");
 			BulletWhiteTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletWhite");
 			BulletGoldTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGold");
 			BulletGoldLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletGoldLarge");
@@ -164,6 +174,10 @@ namespace Bluemagic.BlushieBoss
 					Phase3();
 				}
 				Player player = Main.player[GetTarget()];
+				if (Players[player.whoAmI])
+				{
+					player.GetModPlayer<BluemagicPlayer>().BlushieBarrier();
+				}
 				for (int k = 0; k < bullets.Count; k++)
 				{
 					bullets[k].Update();
@@ -673,10 +687,10 @@ namespace Bluemagic.BlushieBoss
 				{
 					for (int k = 0; k < 20 * Difficulty; k++)
 					{
-						var bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize), new Vector2(0f, 32f));
+						var bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize - 32f), new Vector2(0f, 32f));
 						bullet.Damage = 0.2f;
 						AddBullet(bullet, damage);
-						bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize + 16f), new Vector2(0f, 32f));
+						bullet = BulletSimple.NewLight(new Vector2(DataA + 2 * raySize * Main.rand.NextFloat(), Origin.Y - ArenaSize - 16f), new Vector2(0f, 32f));
 						bullet.Damage = 0.2f;
 						AddBullet(bullet, damage);
 					}
@@ -775,10 +789,19 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 3;
 			Timer = 0;
-			DragonPos = Origin + new Vector2(0f, -ArenaSize * 0.8f);
-			ArmLeftPos = Origin + new Vector2(ArenaSize * 0.8f, 0f);
-			ArmRightPos = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
-			SkullPos = Origin + new Vector2(0f, ArenaSize * 0.8f);
+			DragonPos = Origin + new Vector2(0f, -ArenaSize * 0.6f);
+			ArmLeftPos = Origin + new Vector2(ArenaSize * 0.6f, 0f);
+			ArmRightPos = Origin + new Vector2(-ArenaSize * 0.6f, 0f);
+			SkullPos = Origin + new Vector2(0f, ArenaSize * 0.6f);
+			BoneLTPos = SkullPos + new Vector2(-ArenaSize * 0.3f - 100f, 100f);
+			BoneLBPos = SkullPos + new Vector2(-ArenaSize * 0.3f - 100f, -100f);
+			BoneRTPos = SkullPos + new Vector2(ArenaSize * 0.3f + 100f, 100f);
+			BoneRBPos = SkullPos + new Vector2(ArenaSize * 0.3f + 100f, -100f);
+			BoneLTRot = -MathHelper.Pi / 4f;
+			BoneLBRot = MathHelper.Pi / 4f;
+			BoneRTRot = MathHelper.Pi / 4f;
+			BoneRBRot = -MathHelper.Pi / 4f;
+			Phase3Attack = 0;
 			for (int k = 0; k < 255; k++)
 			{
 				if (Players[k])
@@ -808,10 +831,81 @@ namespace Bluemagic.BlushieBoss
 				}
 				if (Timer >= 600 && Timer < 780)
 				{
-					int dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f), 160, 160, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
-					Main.dust[dust].scale = 2f;
-					Main.dust[dust].noLight = true;
+					for (int k = 0; k < 5; k++)
+					{
+						int dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f), 160, 160, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+						Main.dust[dust].scale = 2.5f;
+						Main.dust[dust].noLight = true;
+					}
 				}
+				if (Timer >= 780)
+				{
+					for (int k = 0; k < 1; k++)
+					{
+						int dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f) + new Vector2(26f, 58f), 36, 16, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+						Main.dust[dust].scale = 2.5f;
+						Main.dust[dust].noLight = true;
+						dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f) + new Vector2(98f, 58f), 36, 16, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+						Main.dust[dust].scale = 2.5f;
+						Main.dust[dust].noLight = true;
+					}
+				}
+			}
+			if (Main.netMode != 1)
+			{
+				if (Timer == 100)
+				{
+					Music("Music - Fallen Blood - by Phyrnna, for Epic Battle Fantasy 4");
+				}
+				if (Timer == 300)
+				{
+					MeganTalk("I'm... all alone again...");
+				}
+				if (Timer == 600)
+				{
+					JoyceTalk("At long last... freedom!");
+				}
+				if (Timer == 660)
+				{
+					MeganTalk("Who... was that?");
+				}
+				if (Timer == 780)
+				{
+					index[5] = NPC.NewNPC((int)SkullPos.X, (int)SkullPos.Y + 80, types[5], index[4]);
+					JoyceTalk("I would thank you, player, but you shall be the first thing I destroy with my newfound power.");
+				}
+			}
+			if (Timer >= 780 && index[5] > -1)
+			{
+				Main.npc[index[5]].Bottom = SkullPos + new Vector2(0f, 80f);
+			}
+			if (Timer >= 900 && Timer < 960)
+			{
+				BoneLTRot -= MathHelper.TwoPi / 30f;
+				BoneLBRot += MathHelper.TwoPi / 30f;
+				BoneRTRot += MathHelper.TwoPi / 30f;
+				BoneRBRot -= MathHelper.TwoPi / 30f;
+			}
+			if (Timer == 960)
+			{
+				BoneLTRot = -MathHelper.Pi / 4f;
+				BoneLBRot = MathHelper.Pi / 4f;
+				BoneRTRot = MathHelper.Pi / 4f;
+				BoneRBRot = -MathHelper.Pi / 4f;
+			}
+			if (Timer >= 960 && Timer <= 990)
+			{
+				BoneLTPos += new Vector2(100f / 30f, -100f / 30f);
+				BoneLBPos += new Vector2(100f / 30f, 100f / 30f);
+				BoneRTPos += new Vector2(-100f / 30f, -100f / 30f);
+				BoneRBPos += new Vector2(-100f / 30f, 100f / 30f);
+			}
+			if (Timer == 990)
+			{
+				BoneLTPos = SkullPos + new Vector2(-ArenaSize * 0.3f, 0f);
+				BoneLBPos = SkullPos + new Vector2(-ArenaSize * 0.3f, 0f);
+				BoneRTPos = SkullPos + new Vector2(ArenaSize * 0.3f, 0f);
+				BoneRBPos = SkullPos + new Vector2(ArenaSize * 0.3f, 0f);
 			}
 		}
 
@@ -887,6 +981,16 @@ namespace Bluemagic.BlushieBoss
 		internal static void ChrisTalk(string message)
 		{
 			Talk("blushiemagic (C)", message, 255, 255, 0);
+		}
+
+		internal static void MeganTalk(string message)
+		{
+			Talk("blushiemagic (M)", message, 0, 255, 0);
+		}
+
+		internal static void JoyceTalk(string message)
+		{
+			Talk("blushiemagic (J)", message, 127, 0, 0);
 		}
 
 		internal static void DrawArena(SpriteBatch spriteBatch)

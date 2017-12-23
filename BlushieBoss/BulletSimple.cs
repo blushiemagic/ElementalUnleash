@@ -21,6 +21,13 @@ namespace Bluemagic.BlushieBoss
 			this.Position += this.Velocity;
 		}
 
+		public override bool ShouldRemove()
+		{
+			return (Velocity.X < 0f && Position.X + Size < BlushieBoss.Origin.X - BlushieBoss.ArenaSize)
+				|| (Velocity.X > 0f && Position.X - Size > BlushieBoss.Origin.X + BlushieBoss.ArenaSize)
+				|| (Velocity.Y < 0f && Position.Y + Size < BlushieBoss.Origin.Y - BlushieBoss.ArenaSize)
+				|| (Velocity.Y > 0f && Position.Y - Size > BlushieBoss.Origin.Y + BlushieBoss.ArenaSize);
+		}
 		public static BulletSimple NewWhite(Vector2 position, Vector2 velocity)
 		{
 			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletWhiteTexture);

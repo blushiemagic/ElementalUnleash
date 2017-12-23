@@ -108,6 +108,10 @@ namespace Bluemagic.BlushieBoss
 				BlushieBoss.ShieldL = 0;
 				return 0;
 			}
+			if (Bluemagic.testing)
+			{
+				return 250000;
+			}
 			damage *= 50;
 			if (damage > 100000)
 			{

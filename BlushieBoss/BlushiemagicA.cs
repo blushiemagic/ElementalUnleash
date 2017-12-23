@@ -92,6 +92,10 @@ namespace Bluemagic.BlushieBoss
 				BlushieBoss.ShieldA = 0;
 				return 0;
 			}
+			if (Bluemagic.testing)
+			{
+				return 250000;
+			}
 			float healthMult = player.GetModPlayer<BluemagicPlayer>().origHealth / 720f;
 			float regenMult = player.lifeRegen / 28f;
 			float mult = 0.6f * healthMult + 0.4f * regenMult;
@@ -108,11 +112,11 @@ namespace Bluemagic.BlushieBoss
 			{
 				if (BlushieBoss.BlushieC)
 				{
-					Main.NewText("<blushiemagic (A)> I play with my own rules! If you want to damage me, try having lots of health at the start of the fight and high life regen!", 255, 128, 128);
+					Main.NewText("<blushiemagic (C)> I'll give you a hint: maximum health and high life regen are key to damaging me. If you get hit, you won't be penalized for the max health reduction, but the damage over time you take will matter!", 255, 255, 0);
 				}
 				else
 				{
-					Main.NewText("<blushiemagic (C)> I'll give you a hint: maximum health and high life regen are key to damaging me. If you get hit, you won't be penalized for the max health reduction, but the damage over time you take will matter!", 255, 255, 0);
+					Main.NewText("<blushiemagic (A)> I play with my own rules! If you want to damage me, try having lots of health at the start of the fight and high life regen!", 255, 128, 128);
 				}
 				npc.localAI[0] = 1f;
 			}

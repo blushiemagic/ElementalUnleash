@@ -74,6 +74,10 @@ namespace Bluemagic.BlushieBoss
 				BlushieBoss.ShieldK = 0;
 				return 0;
 			}
+			if (Bluemagic.testing)
+			{
+				return 250000;
+			}
 			float defenseMult = player.statDefense / 200f;
 			float resistMult = player.endurance / 0.6f;
 			float mult = 0.6f * defenseMult + 0.4f * resistMult;

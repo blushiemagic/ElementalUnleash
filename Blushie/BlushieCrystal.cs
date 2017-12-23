@@ -40,11 +40,19 @@ namespace Bluemagic.Blushie
 
 		public override bool CanUseItem(Player player)
 		{
-			return !BlushieBoss.BlushieBoss.Active;
+			return !BlushieBoss.BlushieBoss.Active || player.altFunctionUse == 2;
 		}
 
 		public override bool UseItem(Player player)
 		{
+			if (BlushieBoss.BlushieBoss.Active)
+			{
+				if (player.altFunctionUse == 2 && player.whoAmI == Main.myPlayer)
+				{
+					BlushieBoss.BlushieBoss.CameraFocus = !BlushieBoss.BlushieBoss.CameraFocus;
+				}
+				return true;
+			}
 			if (Main.netMode != 1)
 			{
 				NPC.NewNPC((int)player.Center.X, (int)player.Center.Y + 24, mod.NPCType("Blushiemagic"));

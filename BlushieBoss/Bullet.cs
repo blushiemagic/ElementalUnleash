@@ -27,7 +27,10 @@ namespace Bluemagic.BlushieBoss
 
 		public virtual bool ShouldRemove()
 		{
-			return Position.X + Size < BlushieBoss.Origin.X - BlushieBoss.ArenaSize || Position.X - Size > BlushieBoss.Origin.X + BlushieBoss.ArenaSize || Position.Y + Size < BlushieBoss.Origin.Y - BlushieBoss.ArenaSize || Position.Y - Size > BlushieBoss.Origin.Y + BlushieBoss.ArenaSize;
+			return (Position.X + Size < BlushieBoss.Origin.X - BlushieBoss.ArenaSize)
+				|| (Position.X - Size > BlushieBoss.Origin.X + BlushieBoss.ArenaSize)
+				|| (Position.Y + Size < BlushieBoss.Origin.Y - BlushieBoss.ArenaSize)
+				|| (Position.Y - Size > BlushieBoss.Origin.Y + BlushieBoss.ArenaSize);
 		}
 	}
 }
