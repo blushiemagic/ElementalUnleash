@@ -17,11 +17,36 @@ namespace Bluemagic.BlushieBoss
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
+			npc.takenDamageMultiplier = 5f;
 			this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Phyrnna - Return of the Snow Queen");
 		}
 
 		public override void AI()
 		{
+		}
+
+		public override bool CheckDead()
+		{
+			npc.life = 1;
+			npc.active = true;
+			if (BlushieBoss.SpawnedStars && BlushieBoss.crystalStars.Count == 0)
+			{
+				npc.life = npc.lifeMax;
+				BlushieBoss.bullets.Clear();
+				BlushieBoss.Phase3Attack++;
+				BlushieBoss.SpawnedStars = false;
+				BlushieBoss.Timer = 2000;
+			}
+			if (BlushieBoss.index[5] >= 0)
+			{
+				Main.npc[BlushieBoss.index[5]].life = npc.life;
+			}
+			return false;
+		}
+
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			return Bluemagic.HealthBars != null ? (bool?)false : (bool?)null;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -42,7 +67,7 @@ namespace Bluemagic.BlushieBoss
 			{
 				Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
 				Vector2 draw = npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
-				float offset = 60f + (BlushieBoss.ArenaSize * 0.8f - 60f) * (BlushieBoss.Timer - 60f) / 300f;
+				float offset = 60f + (BlushieBoss.ArenaSize * 0.6f - 60f) * (BlushieBoss.Timer - 60f) / 300f;
 				spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), Color.White);
 				spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), Color.White);
 			}
@@ -50,7 +75,7 @@ namespace Bluemagic.BlushieBoss
 			{
 				Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
 				Vector2 draw = npc.Center - Main.screenPosition;
-				float offset = BlushieBoss.ArenaSize * 0.8f;
+				float offset = BlushieBoss.ArenaSize * 0.6f;
 				Vector2 origin;
 				if (BlushieBoss.Timer >= 600)
 				{
@@ -211,7 +236,7 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			pos.Y += 150f;
-			Texture2D dragon = mod.GetTexture("BlushieBoss/DragonHead");
+			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 60 ? mod.GetTexture("BlushieBoss/DragonHead_Hurt") : mod.GetTexture("BlushieBoss/DragonHead");
 			Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
 			spriteBatch.Draw(dragon, draw, Color.White);
 		}
@@ -264,7 +289,7 @@ namespace Bluemagic.BlushieBoss
 				spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 1f, SpriteEffects.None, 0f);
 				spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
 			}
-			else
+			else if (BlushieBoss.Phase != 3 || BlushieBoss.Phase3Attack == 0)
 			{
 				Texture2D shield = mod.GetTexture("Mounts/PurityShield");
 				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);

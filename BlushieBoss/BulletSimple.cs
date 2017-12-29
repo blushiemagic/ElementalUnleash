@@ -49,5 +49,25 @@ namespace Bluemagic.BlushieBoss
 		{
 			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletLightTexture);
 		}
+
+		public static BulletSimple NewDragon(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonTexture);
+		}
+
+		public static BulletSimple NewDragonBreath(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonBreathTexture);
+		}
+
+		public static BulletSimple NewSkull(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletSkullTexture);
+		}
+
+		public static BulletSimple NewBone(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoneTexture);
+		}
 	}
 }

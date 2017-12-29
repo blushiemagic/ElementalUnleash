@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.Localization;
 
 namespace Bluemagic.BlushieBoss
@@ -14,10 +15,11 @@ namespace Bluemagic.BlushieBoss
 		internal static int Phase = 0;
 		internal static int Timer = 0;
 		internal static List<Bullet> bullets = new List<Bullet>();
+		internal static List<Vector2> crystalStars = new List<Vector2>();
 		internal static Vector2 Origin;
 		internal static bool[] Players = new bool[256];
 		internal static bool CameraFocus = false;
-		private static int[] index = new int[] { -1, -1, -1, -1, -1, -1 };
+		internal static int[] index = new int[] { -1, -1, -1, -1, -1, -1 };
 		internal static bool BlushieC;
 		internal static Vector2 PosK;
 		internal static Vector2 PosA;
@@ -46,6 +48,11 @@ namespace Bluemagic.BlushieBoss
 		internal static float BoneRTRot;
 		internal static float BoneRBRot;
 		internal static int Phase3Attack;
+		internal static bool SpawnedStars = false;
+		internal static Vector2 Phase3Data1;
+		internal static Vector2 Phase3Data2;
+		internal static Vector2 Phase3Data3;
+		internal static Vector2 Phase3Data4;
 
 		private static int[] types = new int[6];
 		internal static Texture2D BulletWhiteTexture;
@@ -62,6 +69,11 @@ namespace Bluemagic.BlushieBoss
 		internal static Texture2D BulletFireTexture;
 		internal static Texture2D[] BulletColorTextures;
 		internal static Texture2D BulletLightTexture;
+		internal static Texture2D BulletDragonTexture;
+		internal static Texture2D BulletDragonBreathTexture;
+		internal static Texture2D BulletSkullTexture;
+		internal static Texture2D BulletBoneTexture;
+		internal static Texture2D CrystalStarTexture;
 
 		public static bool Active
 		{
@@ -71,10 +83,24 @@ namespace Bluemagic.BlushieBoss
 			}
 		}
 
+		internal static Func<int> difficultyOverride;
 		public static int Difficulty
 		{
 			get
 			{
+				if (difficultyOverride != null)
+				{
+					int temp = difficultyOverride();
+					if (temp < 1)
+					{
+						temp = 1;
+					}
+					if (temp > 4)
+					{
+						temp = 4;
+					}
+					return temp;
+				}
 				return Main.expertMode ? 2 : 1;
 			}
 		}
@@ -107,6 +133,11 @@ namespace Bluemagic.BlushieBoss
 			BulletColorTextures[4] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBlueLight");
 			BulletColorTextures[5] = Bluemagic.Instance.GetTexture("BlushieBoss/BulletPurple");
 			BulletLightTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletLight");
+			BulletDragonTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragon");
+			BulletDragonBreathTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragonBreath");
+			BulletSkullTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletSkull");
+			BulletBoneTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBone");
+			CrystalStarTexture = Bluemagic.Instance.GetTexture("BlushieBoss/CrystalStar");
 		}
 
 		internal static void Update()
@@ -192,6 +223,15 @@ namespace Bluemagic.BlushieBoss
 						player.GetModPlayer<BluemagicPlayer>().BlushieDamage(bullets[k].Damage);
 					}
 				}
+				for (int k = 0; k < crystalStars.Count; k++)
+				{
+					if (Vector2.Distance(player.Center, crystalStars[k]) < 32f)
+					{
+						crystalStars.RemoveAt(k);
+						Main.PlaySound(SoundID.Item25);
+						k--;
+					}
+				}
 			}
 			bool allDead = true;
 			for (int k = 0; k < 255; k++)
@@ -216,6 +256,7 @@ namespace Bluemagic.BlushieBoss
 		{
 			Phase = 1;
 			Timer = 0;
+			Phase3Attack = 0;
 			HealthK = 1000000;
 			HealthA = 1000000;
 			HealthL = 1000000;
@@ -230,6 +271,36 @@ namespace Bluemagic.BlushieBoss
 				if (Players[k])
 				{
 					Main.player[k].GetModPlayer<BluemagicPlayer>().blushieHealth = 1f;
+				}
+			}
+		}
+
+		internal static void InitializeCheckpoint()
+		{
+			Phase = 3;
+			Timer = 0;
+			Phase3Attack = 0;
+			index[4] = NPC.FindFirstNPC(types[4]);
+			Origin = Main.npc[index[4]].Center;
+			DragonPos = Origin + new Vector2(0f, -ArenaSize * 0.6f);
+			ArmLeftPos = Origin + new Vector2(ArenaSize * 0.6f, 0f);
+			ArmRightPos = Origin + new Vector2(-ArenaSize * 0.6f, 0f);
+			SkullPos = Origin + new Vector2(0f, ArenaSize * 0.6f);
+			BoneLTPos = SkullPos + new Vector2(-ArenaSize * 0.3f - 100f, 100f);
+			BoneLBPos = SkullPos + new Vector2(-ArenaSize * 0.3f - 100f, -100f);
+			BoneRTPos = SkullPos + new Vector2(ArenaSize * 0.3f + 100f, 100f);
+			BoneRBPos = SkullPos + new Vector2(ArenaSize * 0.3f + 100f, -100f);
+			BoneLTRot = -MathHelper.Pi / 4f;
+			BoneLBRot = MathHelper.Pi / 4f;
+			BoneRTRot = MathHelper.Pi / 4f;
+			BoneRBRot = -MathHelper.Pi / 4f;
+			for (int k = 0; k < 255; k++)
+			{
+				Player player = Main.player[k];
+				Players[k] = player.active && !player.dead && player.position.X >= Origin.X - ArenaSize && player.position.X + player.width <= Origin.X + ArenaSize && player.position.Y >= Origin.Y - ArenaSize && player.position.Y + player.height <= Origin.Y + ArenaSize;
+				if (Players[k])
+				{
+					Main.player[k].GetModPlayer<BluemagicPlayer>().blushieHealth = BluemagicWorld.blushieCheckpoint;
 				}
 			}
 		}
@@ -257,6 +328,7 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			bullets.Clear();
+			crystalStars.Clear();
 		}
 
 		private static void Phase1()
@@ -308,6 +380,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			npc.Center = Origin + new Vector2(0f, 16f * (float)Math.Sin(Timer / 60f));
 			npc.velocity = Vector2.Zero;
+			if (Bluemagic.testing && Timer < 600)
+			{
+				Timer = 3400;
+			}
 			if (Main.netMode != 2)
 			{
 				if (Timer >= 600 && Timer <= 1200 && Timer % 30 == 0)
@@ -813,6 +889,7 @@ namespace Bluemagic.BlushieBoss
 					}
 				}
 			}
+			Item.NewItem((int)Origin.X, (int)(Origin.Y + ArenaSize * 0.3f), 0, 0, Bluemagic.Instance.ItemType("BlushieCheckpoint"));
 		}
 
 		internal static void Phase3()
@@ -878,6 +955,7 @@ namespace Bluemagic.BlushieBoss
 			if (Timer >= 780 && index[5] > -1)
 			{
 				Main.npc[index[5]].Bottom = SkullPos + new Vector2(0f, 80f);
+				Main.npc[index[5]].realLife = index[4];
 			}
 			if (Timer >= 900 && Timer < 960)
 			{
@@ -907,6 +985,374 @@ namespace Bluemagic.BlushieBoss
 				BoneRTPos = SkullPos + new Vector2(ArenaSize * 0.3f, 0f);
 				BoneRBPos = SkullPos + new Vector2(ArenaSize * 0.3f, 0f);
 			}
+			if (Timer == 1320)
+			{
+				Timer = 2000;
+				Phase3Attack = 1;
+				SpawnedStars = false;
+			}
+			if (Timer >= 2000)
+			{
+				bool dontTakeDamage = !SpawnedStars || crystalStars.Count > 0;
+				Main.npc[index[4]].dontTakeDamage = dontTakeDamage;
+				Main.npc[index[5]].dontTakeDamage = dontTakeDamage;
+				if (dontTakeDamage)
+				{
+					Main.npc[index[4]].life = Main.npc[index[4]].lifeMax;
+				}
+				switch (Phase3Attack)
+				{
+				case 1:
+					Phase3_1(Timer - 2000);
+					break;
+				case 2:
+					Phase3_2(Timer - 2000);
+					break;
+				case 3:
+					Phase3_3(Timer - 2000);
+					break;
+				case 4:
+					Phase3_4(Timer - 2000);
+					break;
+				}
+			}
+		}
+
+		private static void Phase3_1(int timer)
+		{
+			if (timer == 150)
+			{
+				AddCrystalStar(new Vector2(-0.8f, -0.8f));
+				AddCrystalStar(new Vector2(0.8f, -0.8f));
+				AddCrystalStar(new Vector2(-0.8f, 0.8f));
+				AddCrystalStar(new Vector2(0.8f, 0.8f));
+				if (Main.netMode != 2)
+				{
+					Main.NewText("Collect the stars in order to damage the two blushiemagics!");
+				}
+				SpawnedStars = true;
+			}
+			if (timer < 120)
+			{
+				Vector2 target1 = Origin + new Vector2(0f, -ArenaSize * 0.8f);
+				Vector2 target2 = Origin + new Vector2(0f, ArenaSize * 0.8f);
+				Vector2 target3 = Origin + new Vector2(ArenaSize * 0.8f, 0f);
+				Vector2 target4 = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
+				if (timer == 0)
+				{
+					Phase3Data1 = BoneLTPos;
+					Phase3Data2 = BoneRTPos;
+					Phase3Data3 = ArmLeftPos;
+					Phase3Data4 = ArmRightPos;
+				}
+				BoneLTPos = Vector2.Lerp(Phase3Data1, target1, timer / 120f);
+				BoneRTPos = Vector2.Lerp(Phase3Data2, target2, timer / 120f);
+				BoneLBPos = BoneLTPos;
+				BoneRBPos = BoneRTPos;
+				ArmLeftPos = Vector2.Lerp(Phase3Data3, target3, timer / 120f);
+				ArmRightPos = Vector2.Lerp(Phase3Data4, target4, timer / 120f);
+				BoneLTRot += MathHelper.TwoPi / 30f;
+				BoneLBRot += MathHelper.TwoPi / 30f;
+				BoneRTRot += MathHelper.TwoPi / 30f;
+				BoneRBRot += MathHelper.TwoPi / 30f;
+				return;
+			}
+			if (timer == 120)
+			{
+				BoneLTPos = Origin + new Vector2(0f, -ArenaSize * 0.8f);
+				BoneRTPos = Origin + new Vector2(0f, ArenaSize * 0.8f);
+				BoneLBPos = BoneLTPos;
+				BoneRBPos = BoneRTPos;
+				ArmLeftPos = Origin + new Vector2(ArenaSize * 0.8f, 0f);
+				ArmRightPos = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
+				BoneLTRot = -MathHelper.PiOver4;
+				BoneLBRot = MathHelper.PiOver4;
+				BoneRTRot = MathHelper.PiOver4;
+				BoneRBRot = -MathHelper.PiOver4;
+			}
+			timer -= 120;
+			float theta = timer / 600f * MathHelper.TwoPi;
+			float r = ArenaSize * 0.6f;
+			DragonPos = Origin + r * (theta - MathHelper.PiOver2).ToRotationVector2();
+			SkullPos = Origin + r * (theta + MathHelper.PiOver2).ToRotationVector2();
+			for (int k = 0; k < 16 * Difficulty; k++)
+			{
+				float offset = -k * 4f / Difficulty;
+				Vector2 dir = (MathHelper.PiOver2 - theta).ToRotationVector2();
+				Vector2 norm = new Vector2(-dir.Y, dir.X);
+				Vector2 pos = DragonPos + (Main.rand.NextFloat() * 32f - 16f) * Difficulty * norm + offset * dir;
+				dir = dir.RotatedBy(Main.rand.NextFloat() * 0.2f - 0.1f);
+				AddBullet(BulletSimple.NewDragonBreath(pos, 64f * dir), 1.5f);
+				dir = (-MathHelper.PiOver2 - theta).ToRotationVector2();
+				norm = new Vector2(-dir.Y, dir.X);
+				pos = SkullPos + (Main.rand.NextFloat() * 32f - 16f) * norm + offset * dir;
+				dir = dir.RotatedBy(Main.rand.NextFloat() * 0.2f - 0.1f);
+				AddBullet(BulletSimple.NewSkull(pos, 64f * dir), 1.5f);
+			}
+			if (timer % 120 == 0)
+			{
+				Phase3Data1 = Main.player[GetTarget()].Center;
+			}
+			if (timer % (120 / Difficulty) <= 10)
+			{
+				Vector2 dir = Phase3Data1 - ArmLeftPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewDragon(ArmLeftPos, 16f * dir), 0.75f);
+				dir = dir.RotatedBy(MathHelper.Pi / 6f);
+				AddBullet(BulletSimple.NewDragon(ArmLeftPos, 16f * dir), 0.75f);
+				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
+				AddBullet(BulletSimple.NewDragon(ArmLeftPos, 16f * dir), 0.75f);
+				dir = Phase3Data1 - ArmRightPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewDragon(ArmRightPos, 16f * dir), 0.75f);
+				dir = dir.RotatedBy(MathHelper.Pi / 6f);
+				AddBullet(BulletSimple.NewDragon(ArmRightPos, 16f * dir), 0.75f);
+				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
+				AddBullet(BulletSimple.NewDragon(ArmRightPos, 16f * dir), 0.75f);
+
+				dir = Phase3Data1 - BoneLTPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				dir = dir.RotatedBy(MathHelper.Pi / 6f);
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				dir = Phase3Data1 - BoneRTPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+				dir = dir.RotatedBy(MathHelper.Pi / 6f);
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+			} 
+		}
+
+		private static void Phase3_2(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			if (timer == 60)
+			{
+				AddCrystalStar(new Vector2(-0.5f, -0.5f));
+				AddCrystalStar(new Vector2(0.5f, -0.5f));
+				AddCrystalStar(new Vector2(-0.5f, 0.5f));
+				AddCrystalStar(new Vector2(0.5f, 0.5f));
+				AddCrystalStar(Vector2.Zero);
+				SpawnedStars = true;
+			}
+			timer += 30;
+			timer %= 240;
+			float progress = (timer % 60) / 60f;
+			int side = timer / 60;
+			Vector2 start;
+			Vector2 direction;
+			float distance = progress * ArenaSize * 1.2f;
+			switch (side)
+			{
+			case 0:
+				start = new Vector2(ArenaSize * 0.6f, ArenaSize * 0.6f);
+				direction = new Vector2(0f, -1f);
+				break;
+			case 1:
+				start = new Vector2(ArenaSize * 0.6f, -ArenaSize * 0.6f);
+				direction = new Vector2(-1f, 0f);
+				break;
+			case 2:
+				start = new Vector2(-ArenaSize * 0.6f, -ArenaSize * 0.6f);
+				direction = new Vector2(0f, 1f);
+				break;
+			case 3:
+				start = new Vector2(-ArenaSize * 0.6f, ArenaSize * 0.6f);
+				direction = new Vector2(1f, 0f);
+				break;
+			default:
+				throw new InvalidOperationException();
+			}
+			Vector2 goToPos = start + distance * direction;
+			ArmLeftPos = Origin + goToPos;
+			ArmRightPos = Origin - goToPos;
+
+			if (timer % (8 / Difficulty) == 0)
+			{
+				Vector2 target = Main.player[GetTarget()].Center;
+				Vector2 dir = target - ArmLeftPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewDragon(ArmLeftPos, 6f * dir));
+				dir = target - ArmRightPos;
+				dir.Normalize();
+				AddBullet(BulletSimple.NewDragon(ArmRightPos, 6f * dir));
+			}
+		}
+
+		private static void Phase3_3(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			Vector2 target = Main.player[GetTarget()].Center;
+			float radius = 480f;
+			if (timer < 120f)
+			{
+				float progress = timer / 120f;
+				Vector2 leftStart = Origin + new Vector2(-ArenaSize * 0.3f, ArenaSize * 0.6f);
+				Vector2 rightStart = Origin + new Vector2(ArenaSize * 0.3f, ArenaSize * 0.6f);
+				BoneLTPos = Vector2.Lerp(leftStart, target + radius * (-3f * MathHelper.PiOver4).ToRotationVector2(), progress);
+				BoneLBPos = Vector2.Lerp(leftStart, target + radius * (3f * MathHelper.PiOver4).ToRotationVector2(), progress);
+				BoneRTPos = Vector2.Lerp(rightStart, target + radius * (-MathHelper.PiOver4).ToRotationVector2(), progress);
+				BoneRBPos = Vector2.Lerp(rightStart, target + radius * MathHelper.PiOver4.ToRotationVector2(), progress);
+				return;
+			}
+			timer -= 120;
+			if (timer == 0)
+			{
+				AddCrystalStar(new Vector2(-0.8f, -0.8f));
+				AddCrystalStar(new Vector2(0.8f, -0.8f));
+				AddCrystalStar(new Vector2(-0.8f, 0.8f));
+				AddCrystalStar(new Vector2(0.8f, 0.8f));
+				SpawnedStars = true;
+			}
+			float rotation = timer * MathHelper.TwoPi / 250f;
+			BoneLTPos = target + radius * (rotation - 3f * MathHelper.PiOver4).ToRotationVector2();
+			BoneLTRot = rotation - MathHelper.PiOver4;
+			BoneLBPos = target + radius * (rotation + 3f * MathHelper.PiOver4).ToRotationVector2();
+			BoneLBRot = rotation + MathHelper.PiOver4;
+			BoneRTPos = target + radius * (rotation - MathHelper.PiOver4).ToRotationVector2();
+			BoneRTRot = rotation + MathHelper.PiOver4;
+			BoneRBPos = target + radius * (rotation + MathHelper.PiOver4).ToRotationVector2();
+			BoneRBRot = rotation - MathHelper.PiOver4;
+			if (timer % (60 / Difficulty) == 0)
+			{
+				Vector2 dir = target - BoneLTPos;
+				dir.Normalize();
+				AddBullet(BulletBounce.NewBone(BoneLTPos, 6f * dir, 3));
+				dir = target - BoneLBPos;
+				dir.Normalize();
+				AddBullet(BulletBounce.NewBone(BoneLBPos, 6f * dir, 3));
+				dir = target - BoneRTPos;
+				dir.Normalize();
+				AddBullet(BulletBounce.NewBone(BoneRTPos, 6f * dir, 3));
+				dir = target - BoneRBPos;
+				dir.Normalize();
+				AddBullet(BulletBounce.NewBone(BoneRBPos, 6f * dir, 3));
+			}
+		}
+
+		private static void Phase3_4(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			if (timer == 0)
+			{
+				int num = (int)(20 * Math.Sqrt(Difficulty));
+				for (int k = 0; k < num; k++)
+				{
+					float rot = MathHelper.TwoPi * k / (float)num;
+					AddBullet(BulletRotateAround.NewDragonBreath((Func<Vector2>)(() => DragonPos), 100f * (float)Math.Sqrt(Difficulty), rot, MathHelper.TwoPi / 240f));
+					AddBullet(BulletRotateAround.NewSkull((Func<Vector2>)(() => SkullPos), 100f * (float)Math.Sqrt(Difficulty), rot, MathHelper.TwoPi / 240f));
+				}
+			}
+			if (timer % 180 == 0)
+			{
+				Phase3Data1 = timer % 360 < 180 ? DragonPos : SkullPos;
+				Phase3Data2 = Main.player[GetTarget()].Center;
+				Phase3Data3.X = (Phase3Data2 - (timer % 360 < 180 ? SkullPos : DragonPos)).ToRotation();
+			}
+			if (timer % 180 <= 60)
+			{
+				if (timer % 360 < 180)
+				{
+					DragonPos = Vector2.Lerp(Phase3Data1, Phase3Data2, (timer % 180) / 60f);
+				}
+				else
+				{
+					SkullPos = Vector2.Lerp(Phase3Data1, Phase3Data2, (timer % 180) / 60f);
+				}
+			}
+			if (timer % 180 < 120 && timer % (Math.Max(1, 2 / Difficulty)) == 0)
+			{
+				float rotation = timer * MathHelper.TwoPi / 45f - MathHelper.TwoPi / 15f;
+				Vector2 target = Main.player[GetTarget()].Center;
+				if (timer % 360 < 180)
+				{
+					rotation += Phase3Data3.X + (target - SkullPos).ToRotation();
+					AddBullet(BulletWavy.NewSkull(SkullPos, 4f * rotation.ToRotationVector2(), 8f, 120f));
+				}
+				else
+				{
+					rotation = Phase3Data3.X - rotation + (target - DragonPos).ToRotation();
+					AddBullet(BulletWavy.NewDragonBreath(DragonPos, 4f * rotation.ToRotationVector2(), 8f, 120f));
+				}
+			}
+			if (timer == 180)
+			{
+				AddCrystalStar(new Vector2(0.8f, 0.8f));
+				AddCrystalStar(new Vector2(-0.8f, 0.8f));
+				AddCrystalStar(new Vector2(0.8f, -0.8f));
+				AddCrystalStar(new Vector2(-0.8f, -0.8f));
+				SpawnedStars = true;
+			}
+		}
+
+		private static void Phase3_Reset(int timer)
+		{
+			MoveTo(ref DragonPos, Origin + new Vector2(0f, -ArenaSize * 0.6f), timer);
+			MoveTo(ref ArmLeftPos, Origin + new Vector2(ArenaSize * 0.6f, 0f), timer);
+			MoveTo(ref ArmRightPos, Origin + new Vector2(-ArenaSize * 0.6f, 0f), timer);
+			MoveTo(ref SkullPos, Origin + new Vector2(0f, ArenaSize * 0.6f), timer);
+			MoveTo(ref BoneLTPos, Origin + new Vector2(-ArenaSize * 0.3f, ArenaSize * 0.6f), timer);
+			MoveTo(ref BoneLBPos, Origin + new Vector2(-ArenaSize * 0.3f, ArenaSize * 0.6f), timer);
+			MoveTo(ref BoneRTPos, Origin + new Vector2(ArenaSize * 0.3f, ArenaSize * 0.6f), timer);
+			MoveTo(ref BoneRBPos, Origin + new Vector2(ArenaSize * 0.3f, ArenaSize * 0.6f), timer);
+			BoneLTRot = -MathHelper.PiOver4;
+			BoneLBRot = MathHelper.PiOver4;
+			BoneRTRot = MathHelper.PiOver4;
+			BoneRBRot = -MathHelper.PiOver4;
+		}
+
+		private static void MoveTo(ref Vector2 position, Vector2 target, int timer)
+		{
+			float distance = 16f;
+			int timeLeft = 60 - timer;
+			float length = Vector2.Distance(position, target);
+			if (timeLeft <= 0 || length == 0f)
+			{
+				position = target;
+				return;
+			}
+			if (distance < length / timeLeft)
+			{
+				distance = length / timeLeft;
+			}
+			if (distance > length)
+			{
+				distance = length;
+			}
+			Vector2 offset = target - position;
+			offset.Normalize();
+			position += offset * distance;
 		}
 
 		internal static int GetTarget()
@@ -929,6 +1375,11 @@ namespace Bluemagic.BlushieBoss
 		{
 			bullet.Damage *= damageMult;
 			bullets.Add(bullet);
+		}
+
+		private static void AddCrystalStar(Vector2 offset)
+		{
+			crystalStars.Add(Origin + ArenaSize * offset);
 		}
 
 		private static void Music(string message)
@@ -1027,6 +1478,10 @@ namespace Bluemagic.BlushieBoss
 			foreach (Bullet bullet in bullets)
 			{
 				spriteBatch.Draw(bullet.Texture, bullet.Position - new Vector2(bullet.Size) - Main.screenPosition, Color.White);
+			}
+			foreach (Vector2 star in crystalStars)
+			{
+				spriteBatch.Draw(CrystalStarTexture, star - new Vector2(32f) - Main.screenPosition, Color.White);
 			}
 		}
 	}

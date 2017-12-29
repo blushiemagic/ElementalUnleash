@@ -60,5 +60,10 @@ namespace Bluemagic.BlushieBoss
 			bullet.Damage = 0.075f;
 			return bullet;
 		}
+
+		public static BulletBounce NewBone(Vector2 position, Vector2 velocity, int numBounces)
+		{
+			return new BulletBounce(position, velocity, numBounces, 16f, BlushieBoss.BulletBoneTexture);
+		}
 	}
 }

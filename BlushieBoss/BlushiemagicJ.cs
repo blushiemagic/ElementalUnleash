@@ -17,6 +17,7 @@ namespace Bluemagic.BlushieBoss
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
+			npc.takenDamageMultiplier = 5f;
 			this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Phyrnna - Return of the Snow Queen");
 		}
 

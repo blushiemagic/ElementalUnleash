@@ -28,7 +28,7 @@ namespace Bluemagic.BlushieBoss
 						spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
 					}
 					Color color1 = new Color(0, 127, 255);
-					Color color2 = new Color(100, 0, 0);
+					Color color2 = new Color(200, 0, 0);
 					spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight / 3), color1 * alpha);
 					spriteBatch.Draw(Bluemagic.Instance.GetTexture("BlushieBoss/SkyGradient"), new Rectangle(0, Main.screenHeight / 3, Main.screenWidth, Main.screenHeight / 3), Color.White * alpha);
 					spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, Main.screenHeight * 2 / 3, Main.screenWidth, Main.screenHeight / 3), color2 * alpha);

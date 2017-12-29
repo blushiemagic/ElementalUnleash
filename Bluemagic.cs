@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
@@ -25,6 +26,7 @@ namespace Bluemagic
 		public static Mod Calamity;
 		public static Mod Thorium;
 		public static Mod Sushi;
+		public static Mod HealthBars;
 		public const bool testing = true;
 
 		private static Color pureColor = new Color(100, 255, 100);
@@ -139,12 +141,12 @@ namespace Bluemagic
 			Sushi = ModLoader.GetMod("imkSushisMod");
 			BlushieBoss.BlushieBoss.Load();
 
-			Mod healthBars = ModLoader.GetMod("FKBossHealthBar");
-			if (healthBars != null)
+			HealthBars = ModLoader.GetMod("FKBossHealthBar");
+			if (HealthBars != null)
 			{
-				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicK"));
-				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicA"));
-				healthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicL"));
+				HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicK"));
+				HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicA"));
+				HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicL"));
 			}
 		}
 
@@ -154,6 +156,7 @@ namespace Bluemagic
 			Calamity = null;
 			Thorium = null;
 			Sushi = null;
+			HealthBars = null;
 		}
 
 		public override void AddRecipes()
@@ -176,6 +179,10 @@ namespace Bluemagic
 				if (args[1] is Player && args[2] is string)
 				{
 					return CallPlayerSet((Player)args[1], (string)args[2], args[3]);
+				}
+				if (args[1] == "Global" && args[2] is string)
+				{
+					return CallSet((string)args[2], args[3]);
 				}
 				return null;
 			}
@@ -230,6 +237,17 @@ namespace Bluemagic
 			if (command == "noGodmode" && arg is bool)
 			{
 				modPlayer.noGodmode = (bool)arg;
+				return arg;
+			}
+			return null;
+		}
+
+		private object CallSet(string command, object arg)
+		{
+			if (command == "blushieDifficulty")
+			{
+				BlushieBoss.BlushieBoss.difficultyOverride = (Func<int>)arg;
+				return arg;
 			}
 			return null;
 		}
@@ -427,6 +445,14 @@ namespace Bluemagic
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			InterfaceHelper.ModifyInterfaceLayers(layers);
+		}
+
+		public override void PostDrawInterface(SpriteBatch spriteBatch)
+		{
+			if (BlushieBoss.BlushieBoss.Active && BlushieBoss.BlushieBoss.Phase == 3 && BlushieBoss.BlushieBoss.Phase3Attack > 0 && HealthBars != null)
+			{
+				BlushieBoss.HealthBarDraw.DrawHealthBarDefault(spriteBatch, 1f);
+			}
 		}
 
 		public static void UpdatePureColor()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -7,17 +8,20 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Blushie
 {
-	public class BlushieCrystal : ModItem
+	public class BlushieCheckpoint : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Use this item to die"
+				+ "\nStarts the fight at phase 3"
 				+ "\nCan be reused infinitely"
+				+ "\nEach player starts at {0}% max health"
 				+ "\nWARNING: Use this in the middle of a large open area (eg. the sky)"
 				+ "\nIt is highly recommended that you use the Purity Shield [i:" + mod.ItemType("PurityShield") + "] mount"
 				+ "\nRight-click to focus the camera on the entire boss arena"
 				+ "\nRight-click mid-fight to toggle the camera focus");
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
+			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
 		public override void SetDefaults()
@@ -56,25 +60,27 @@ namespace Bluemagic.Blushie
 			}
 			if (Main.netMode != 1)
 			{
-				NPC.NewNPC((int)player.Center.X, (int)player.Center.Y + 24, mod.NPCType("Blushiemagic"));
+				NPC.NewNPC((int)player.Center.X, (int)player.Center.Y + 24, mod.NPCType("BlushiemagicM"));
+				BlushieBoss.BlushieBoss.InitializeCheckpoint();
 				BlushieBoss.BlushieBoss.CameraFocus = player.altFunctionUse == 2;
 			}
 			return true;
 		}
 
-		public override void AddRecipes()
+		public override void ModifyTooltips(List<TooltipLine> lines)
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "InfinityCrystal");
-			recipe.AddIngredient(null, "ChaosCrystal");
-			recipe.AddIngredient(null, "PureSalt", 10);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			for (int k = 0; k < lines.Count; k++)
+			{
+				if (lines[k].mod == "Terraria" && lines[k].Name == "Tooltip3")
+				{
+					lines[k].text = string.Format(lines[k].text, (int)(BluemagicWorld.blushieCheckpoint * 100f));
+				}
+			}
 		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.DiscoColor;
+			return Color.White;
 		}
 	}
 }

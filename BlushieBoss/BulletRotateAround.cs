@@ -9,6 +9,7 @@ namespace Bluemagic.BlushieBoss
 	public class BulletRotateAround : Bullet
 	{
 		public Bullet Follow;
+		public Func<Vector2> FollowFunc;
 		public float Radius;
 		public float Angle;
 		public float RotSpeed;
@@ -22,20 +23,40 @@ namespace Bluemagic.BlushieBoss
 			this.RotSpeed = rotSpeed;
 		}
 
+		public BulletRotateAround(Func<Vector2> follow, float radius, float angle, float rotSpeed, float size, Texture2D texture)
+			: base(follow() + radius * angle.ToRotationVector2(), size, texture)
+		{
+			this.FollowFunc = follow;
+			this.Radius = radius;
+			this.Angle = angle;
+			this.RotSpeed = rotSpeed;
+		}
+
 		public override void Update()
 		{
 			Angle += RotSpeed;
-			Position = Follow.Position + Radius * Angle.ToRotationVector2();
+			Vector2 follow = FollowFunc == null ? Follow.Position : FollowFunc();
+			Position = follow + Radius * Angle.ToRotationVector2();
 		}
 
 		public override bool ShouldRemove()
 		{
-			return !Follow.Active;
+			return Follow != null && !Follow.Active;
 		}
 
 		public static BulletRotateAround NewBlueSmall(Bullet follow, float radius, float angle, float rotSpeed)
 		{
 			return new BulletRotateAround(follow, radius, angle, rotSpeed, 8f, BlushieBoss.BulletBlueSmallTexture);
+		}
+
+		public static BulletRotateAround NewDragonBreath(Func<Vector2> follow, float radius, float angle, float rotSpeed)
+		{
+			return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletDragonBreathTexture);
+		}
+
+		public static BulletRotateAround NewSkull(Func<Vector2> follow, float radius, float angle, float rotSpeed)
+		{
+			return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletSkullTexture);
 		}
 	}
 }
