@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3B1253A-4759-4857-8146-0401209BF48F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		favicon.ico = favicon.ico
+		index.html = index.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Template", "Template", "{AAFF1DF9-0FAA-43BF-A97F-8BD3263D4B39}"
+	ProjectSection(SolutionItems) = preProject
+		Template\Item.html = Template\Item.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "style", "style", "{93CB54F2-671B-4DEB-8CB7-04DBE6A8D40A}"
+	ProjectSection(SolutionItems) = preProject
+		style\style.css = style\style.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{B0ED9C16-F34D-4D5F-A546-92BBBE5E3C5E}"
+	ProjectSection(SolutionItems) = preProject
+		img\TemplateItem.png = img\TemplateItem.png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AAFF1DF9-0FAA-43BF-A97F-8BD3263D4B39} = {C3B1253A-4759-4857-8146-0401209BF48F}
+		{93CB54F2-671B-4DEB-8CB7-04DBE6A8D40A} = {C3B1253A-4759-4857-8146-0401209BF48F}
+		{B0ED9C16-F34D-4D5F-A546-92BBBE5E3C5E} = {C3B1253A-4759-4857-8146-0401209BF48F}
+	EndGlobalSection
+EndGlobal

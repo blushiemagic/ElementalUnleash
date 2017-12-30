@@ -1,0 +1,58 @@
+body {
+    font-family: sans-serif;
+}
+
+div.page {
+    max-width: 800px;
+}
+
+h1 {
+    font-size: 1.8em;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 0.25em;
+    border-bottom: 1px solid #a2a9b1;
+}
+
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+a:visited {
+    color: #0b0080;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a {
+    text-decoration: none;
+    color: #0645ad;
+}
+
+div.content {
+    position: relative;
+    line-height: 1.6;
+    font-size: 0.875em;
+    z-index: 0;
+}
+
+table.infobox {
+    float: right;
+    border: 1px solid #aaaaaa;
+    border-radius: 0.7em;
+    width: 21em;
+    background-color: #f9f9f9;
+    color: black;
+    font-size: 89%;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+    padding: 0.2em;
+}
+
+th {
+    background-color: #e4f0f7;
+    text-align: center;
+}
