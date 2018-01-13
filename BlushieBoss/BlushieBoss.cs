@@ -225,7 +225,7 @@ namespace Bluemagic.BlushieBoss
 				}
 				for (int k = 0; k < crystalStars.Count; k++)
 				{
-					if (Vector2.Distance(player.Center, crystalStars[k]) < 32f)
+					if (player.Hitbox.Intersects(new Rectangle((int)crystalStars[k].X - 32, (int)crystalStars[k].Y - 32, 64, 64)))
 					{
 						crystalStars.RemoveAt(k);
 						Main.PlaySound(SoundID.Item25);
@@ -883,6 +883,11 @@ namespace Bluemagic.BlushieBoss
 				if (Players[k])
 				{
 					BluemagicPlayer modPlayer = Main.player[k].GetModPlayer<BluemagicPlayer>();
+					modPlayer.blushieHealth += 0.3f;
+					if (k == Main.myPlayer)
+					{
+						Main.NewText("You gained 30% of your health back!");
+					}
 					if (modPlayer.blushieHealth > BluemagicWorld.blushieCheckpoint)
 					{
 						BluemagicWorld.blushieCheckpoint = modPlayer.blushieHealth;
@@ -1014,6 +1019,18 @@ namespace Bluemagic.BlushieBoss
 				case 4:
 					Phase3_4(Timer - 2000);
 					break;
+				case 5:
+					Phase3_5(Timer - 2000);
+					break;
+				case 6:
+					Phase3_6(Timer - 2000);
+					break;
+				case 7:
+					Phase3_7(Timer - 2000);
+					break;
+				case 8:
+					Phase3_8(Timer - 2000);
+					break;
 				}
 			}
 		}
@@ -1034,10 +1051,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			if (timer < 120)
 			{
-				Vector2 target1 = Origin + new Vector2(0f, -ArenaSize * 0.8f);
-				Vector2 target2 = Origin + new Vector2(0f, ArenaSize * 0.8f);
-				Vector2 target3 = Origin + new Vector2(ArenaSize * 0.8f, 0f);
-				Vector2 target4 = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
+				Vector2 target1 = Origin + new Vector2(0f, -ArenaSize * 0.9f);
+				Vector2 target2 = Origin + new Vector2(0f, ArenaSize * 0.9f);
+				Vector2 target3 = Origin + new Vector2(ArenaSize * 0.9f, 0f);
+				Vector2 target4 = Origin + new Vector2(-ArenaSize * 0.9f, 0f);
 				if (timer == 0)
 				{
 					Phase3Data1 = BoneLTPos;
@@ -1059,12 +1076,12 @@ namespace Bluemagic.BlushieBoss
 			}
 			if (timer == 120)
 			{
-				BoneLTPos = Origin + new Vector2(0f, -ArenaSize * 0.8f);
-				BoneRTPos = Origin + new Vector2(0f, ArenaSize * 0.8f);
+				BoneLTPos = Origin + new Vector2(0f, -ArenaSize * 0.9f);
+				BoneRTPos = Origin + new Vector2(0f, ArenaSize * 0.9f);
 				BoneLBPos = BoneLTPos;
 				BoneRBPos = BoneRTPos;
-				ArmLeftPos = Origin + new Vector2(ArenaSize * 0.8f, 0f);
-				ArmRightPos = Origin + new Vector2(-ArenaSize * 0.8f, 0f);
+				ArmLeftPos = Origin + new Vector2(ArenaSize * 0.9f, 0f);
+				ArmRightPos = Origin + new Vector2(-ArenaSize * 0.9f, 0f);
 				BoneLTRot = -MathHelper.PiOver4;
 				BoneLBRot = MathHelper.PiOver4;
 				BoneRTRot = MathHelper.PiOver4;
@@ -1112,18 +1129,18 @@ namespace Bluemagic.BlushieBoss
 
 				dir = Phase3Data1 - BoneLTPos;
 				dir.Normalize();
-				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(MathHelper.Pi / 6f);
-				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
-				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir), 0.75f);
 				dir = Phase3Data1 - BoneRTPos;
 				dir.Normalize();
-				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(MathHelper.Pi / 6f);
-				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
-				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir));
+				AddBullet(BulletSimple.NewBone(BoneRTPos, 16f * dir), 0.75f);
 			} 
 		}
 
@@ -1218,7 +1235,7 @@ namespace Bluemagic.BlushieBoss
 				return;
 			}
 			timer -= 120;
-			if (timer == 0)
+			if (timer == 120)
 			{
 				AddCrystalStar(new Vector2(-0.8f, -0.8f));
 				AddCrystalStar(new Vector2(0.8f, -0.8f));
@@ -1314,6 +1331,321 @@ namespace Bluemagic.BlushieBoss
 				AddCrystalStar(new Vector2(-0.8f, -0.8f));
 				SpawnedStars = true;
 			}
+		}
+
+		private static void Phase3_5(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			int num = 2 * ArenaSize / 32;
+			if (timer < 4 * num)
+			{
+				Vector2 start;
+				Vector2 end;
+				float progress = (timer % num) / (float)num;
+				if (timer < num)
+				{
+					start = Origin + new Vector2(-ArenaSize + 16f, -ArenaSize + 16f);
+					end = Origin + new Vector2(-ArenaSize + 16f, ArenaSize - 16f);
+				}
+				else if (timer < 2 * num)
+				{
+					start = Origin + new Vector2(-ArenaSize + 16f, ArenaSize - 16f);
+					end = Origin + new Vector2(ArenaSize - 16f, ArenaSize - 16f);
+				}
+				else if (timer < 3 * num)
+				{
+					start = Origin + new Vector2(ArenaSize - 16f, ArenaSize - 16f);
+					end = Origin + new Vector2(ArenaSize - 16f, -ArenaSize + 16f);
+				}
+				else
+				{
+					start = Origin + new Vector2(ArenaSize - 16f, -ArenaSize + 16f);
+					end = Origin + new Vector2(-ArenaSize + 16f, -ArenaSize + 16f);
+				}
+				AddBullet(BulletSimple.NewDragon(Vector2.Lerp(start, end, progress), Vector2.Zero));
+				return;
+			}
+			timer -= 4 * num;
+
+			const int space = 6;
+			if (timer < 3 * (num - space) / 2)
+			{
+				if (timer % 3 == 0)
+				{
+					Vector2 start = Origin + new Vector2(-ArenaSize + 16f, 0f);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(timer / 3 * 32f, 0f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize - 16f, 0f);
+					AddBullet(BulletSimple.NewDragon(start - new Vector2(timer / 3 * 32f, 0f), Vector2.Zero));
+				}
+				return;
+			}
+			timer -= 3 * (num - space) / 2;
+
+			if (timer < 3 * (num - space) / 2)
+			{
+				if (timer % 3 == 0)
+				{
+					Vector2 start = Origin + new Vector2(-ArenaSize * 0.75f, ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(-ArenaSize * 0.75f, -ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.75f, ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.75f, -ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+				}
+				return;
+			}
+			timer -= 3 * (num - space) / 2;
+
+			if (timer < 3 * (num - space) / 2)
+			{
+				if (timer % 3 == 0)
+				{
+					Vector2 start = Origin + new Vector2(-ArenaSize * 0.5f, 0f);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.5f, 0f);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+				}
+				return;
+			}
+			timer -= 3 * (num - space) / 2;
+
+			if (timer < 3 * (num - space) / 2)
+			{
+				if (timer % 3 == 0)
+				{
+					Vector2 start = Origin + new Vector2(-ArenaSize * 0.25f, ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(-ArenaSize * 0.25f, -ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.25f, ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.25f, -ArenaSize);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+				}
+				return;
+			}
+			timer -= 3 * (num - space) / 2;
+
+			if (timer < 3 * (num - space) / 2)
+			{
+				if (timer % 3 == 0)
+				{
+					Vector2 start = Origin;
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+					start = Origin + new Vector2(ArenaSize * 0.5f, 0f);
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
+					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
+				}
+				return;
+			}
+			timer -= 3 * (num - space) / 2;
+
+			if (timer == 180)
+			{
+				AddCrystalStar(new Vector2(-0.875f, -0.875f));
+				AddCrystalStar(new Vector2(-0.875f, 0.875f));
+				AddCrystalStar(new Vector2(0.875f, -0.875f));
+				AddCrystalStar(new Vector2(.875f, 0.875f));
+				SpawnedStars = true;
+			}
+			int rows = 6 * Difficulty;
+			if (timer % 8 == 0)
+			{
+				timer /= 8;
+				if (timer % 8 < 4)
+				{
+					float x = Origin.X - ArenaSize;
+					for (int k = 1; k < rows; k++)
+					{
+						if (k % 2 == 0)
+						{
+							continue;
+						}
+						float y = Origin.Y + ArenaSize * (2f * k / rows - 1f);
+						AddBullet(BulletSimple.NewSkull(new Vector2(x, y), new Vector2(4f, 0f)));
+					}
+				}
+				else
+				{
+					float x = Origin.X + ArenaSize;
+					for (int k = 1; k < rows; k++)
+					{
+						if (k % 2 != 0)
+						{
+							continue;
+						}
+						float y = Origin.Y + ArenaSize * (2f * k / rows - 1f);
+						AddBullet(BulletSimple.NewSkull(new Vector2(x, y), new Vector2(-4f, 0f)));
+					}
+				}
+			}
+		}
+
+		private static void Phase3_6(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			if (timer == 240f)
+			{
+				AddCrystalStar(new Vector2(0f, -0.9f));
+				AddCrystalStar(new Vector2(0f, 0.9f));
+				SpawnedStars = true;
+			}
+			if (timer % 4 == 0)
+			{
+				float amplitude = 160f / Difficulty;
+				float period = 120f;
+				float offset = amplitude * (float)Math.Sin(timer / period * MathHelper.TwoPi);
+				float start = -ArenaSize;
+				if (timer % 480f < 240f)
+				{
+					start -= amplitude;
+				}
+				if (timer % 960 < 480)
+				{
+					start += 2f * amplitude;
+				}
+				int waveHeight = (int)(2f * amplitude);
+				bool alternate = true;
+				for (int k = (int)start; k <= ArenaSize; k += waveHeight)
+				{
+					float y = Origin.Y + k + offset;
+					if (alternate)
+					{
+						AddBullet(BulletSimple.NewDragon(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
+					}
+					else
+					{
+						AddBullet(BulletSimple.NewSkull(new Vector2(Origin.X + ArenaSize, y), new Vector2(-8f, 0f)));
+					}
+					alternate = !alternate;
+				} 
+			}
+		}
+
+		private static void Phase3_7(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			if (timer == 0)
+			{
+				Phase3Data1.X = 0f;
+				for (int k = 0; k < 255; k++)
+				{
+					if (Players[k] && Main.player[k].mount.Active)
+					{
+						Phase3Data1.X = 1f;
+						break;
+					}
+				}
+				if (Phase3Data1.X == 1f)
+				{
+					JoyceTalk("You know what, that mount of yours is getting REALLY annoying...");
+				}
+				else
+				{
+					JoyceTalk("You're not even using the Purity Shield mount right now?");
+				}
+			}
+			if (timer == 240)
+			{
+				if (Phase3Data1.X == 1f)
+				{
+					JoyceTalk("There we go. Much better.");
+				}
+				else
+				{
+					JoyceTalk("Good. Keep it that way.");
+				}
+			}
+			if (timer < 300)
+			{
+				return;
+			}
+			timer -= 300;
+
+			if (timer % (120 / Difficulty) == 0)
+			{
+				const float speed = 6f;
+				const int interval = 192;
+				for (int k = -ArenaSize; k <= ArenaSize; k += 32)
+				{
+					if (((k + ArenaSize) / interval) % 2 == 0)
+					{
+						AddBullet(BulletSimple.NewDragon(Origin + new Vector2(-ArenaSize, k), new Vector2(speed, 0f)));
+					}
+					else
+					{
+						AddBullet(BulletSimple.NewDragon(Origin + new Vector2(ArenaSize, k), new Vector2(-speed, 0f)));
+					}
+				}
+			}
+			if (timer % 180 < 90)
+			{
+				float distance = Main.player[GetTarget()].Center.X - SkullPos.X;
+				SkullPos.X += distance / 4f;
+			}
+			else
+			{
+				float speed = 8f + (timer % 180 - 90) / 4f;
+				for (int k = 0; k < 3; k++)
+				{
+					float x = SkullPos.X + (60f * Main.rand.NextFloat() - 30f) * Difficulty;
+					AddBullet(BulletSimple.NewSkull(new Vector2(x, Origin.Y - ArenaSize - speed), new Vector2(0f, speed)));
+				}
+			}
+			if (timer == 240)
+			{
+				AddCrystalStar(new Vector2(-0.4f, 0.8f));
+				AddCrystalStar(new Vector2(0.4f, 0.8f));
+				AddCrystalStar(new Vector2(0f, -0.5f));
+				SpawnedStars = true;
+			}
+		}
+
+		private static void Phase3_8(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			
 		}
 
 		private static void Phase3_Reset(int timer)

@@ -84,6 +84,7 @@ namespace Bluemagic
 		internal float blushieHealth = 0f;
 		internal int origHealth;
 		private int blushieImmune = 0;
+		public bool frostFairy = false;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
@@ -133,6 +134,7 @@ namespace Bluemagic
 			triedGodmode = false;
 			godmode = false;
 			noGodmode = false;
+			frostFairy = false;
 			if (extraAccessory2)
 			{
 				player.extraAccessorySlots = 2;
@@ -441,7 +443,20 @@ namespace Bluemagic
 					blushieHealth = 0f;
 				}
 			}
+			if (CursedMount())
+			{
+				if (player.mount.Active)
+				{
+					player.mount.Dismount(player);
+				}
+				player.AddBuff(mod.BuffType("NoMount"), 5);
+			}
 			lastPos = player.position;
+		}
+
+		public bool CursedMount()
+		{
+			return BlushieBoss.BlushieBoss.Players[player.whoAmI] && BlushieBoss.BlushieBoss.Phase == 3 && (BlushieBoss.BlushieBoss.Phase3Attack > 7 || (BlushieBoss.BlushieBoss.Phase3Attack == 7 && BlushieBoss.BlushieBoss.Timer >= 2210));
 		}
 
 		public void CheckBadHeal()
@@ -885,6 +900,10 @@ namespace Bluemagic
 
 		public override void FrameEffects()
 		{
+			if (player.inventory[player.selectedItem].type == mod.ItemType("DarkLightningPack"))
+			{
+				player.back = mod.GetAccessorySlot("DarkLightningPack_Back", EquipType.Back);
+			}
 			if (nullified)
 			{
 				Nullify();

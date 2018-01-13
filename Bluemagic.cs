@@ -65,6 +65,7 @@ namespace Bluemagic
 				}
 			}
 			InterfaceHelper.Initialize();
+			AddEquipTexture(null, EquipType.Back, "DarkLightningPack_Back", "Bluemagic/Blushie/DarkLightningPack_Back");
 			for (int k = 1; k <= 4; k++)
 			{
 				AddBossHeadTexture(captiveElementHead + k);

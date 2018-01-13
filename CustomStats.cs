@@ -125,7 +125,7 @@ namespace Bluemagic
 			return clone;
 		}
 
-		public bool Equals(object other)
+		public override bool Equals(object other)
 		{
 			CustomStats stats = other as CustomStats;
 			if (stats == null || Points != stats.Points || Stats.Count != stats.Stats.Count)

@@ -8,6 +8,16 @@ namespace Bluemagic
 {
 	public class BluemagicItem : GlobalItem
 	{
+		public override bool CanUseItem(Item item, Player player)
+		{
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			if (item.mountType > -1 && modPlayer.CursedMount())
+			{
+				return false;
+			}
+			return base.CanUseItem(item, player);
+		}
+
 		public override bool ConsumeItem(Item item, Player player)
 		{
 			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);

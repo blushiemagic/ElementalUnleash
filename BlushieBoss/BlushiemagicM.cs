@@ -236,7 +236,7 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			pos.Y += 150f;
-			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 60 ? mod.GetTexture("BlushieBoss/DragonHead_Hurt") : mod.GetTexture("BlushieBoss/DragonHead");
+			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? mod.GetTexture("BlushieBoss/DragonHead_Hurt") : mod.GetTexture("BlushieBoss/DragonHead");
 			Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
 			spriteBatch.Draw(dragon, draw, Color.White);
 		}
