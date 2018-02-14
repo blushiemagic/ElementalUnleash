@@ -140,21 +140,26 @@ namespace Bluemagic.BlushieBoss
 
 		private void DrawDragonHead(SpriteBatch spriteBatch)
 		{
-			Vector2 pos = BlushieBoss.DragonPos;
+			DrawDragonHead(spriteBatch, npc.Center, BlushieBoss.DragonPos);
+		}
+
+		internal static void DrawDragonHead(SpriteBatch spriteBatch, Vector2 origin, Vector2 dragonPos)
+		{
+			Vector2 pos = dragonPos;
 			pos.Y -= 150f;
-			if (pos.X == npc.Center.X)
+			if (pos.X == origin.X)
 			{
 				pos.X += 2f;
 			}
-			Vector2 neck = (npc.Center + new Vector2(0f, -BlushieBoss.ArenaSize * 0.4f) + pos) / 2f;
-			float slope = (pos.Y - npc.Center.Y) / (pos.X - npc.Center.X);
+			Vector2 neck = (origin + new Vector2(0f, -BlushieBoss.ArenaSize * 0.4f) + pos) / 2f;
+			float slope = (pos.Y - origin.Y) / (pos.X - origin.X);
 			Matrix left = new Matrix(pos.X * pos.X, pos.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, 2f * neck.X, 1f, 0f, 0f, 0f, 0f, 0f, 1f);
 			Matrix right = new Matrix(pos.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, slope, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
 			Matrix solution = Matrix.Invert(left) * right;
 			float a = solution.M11;
 			float b = solution.M21;
 			float c = solution.M31;
-			Vector2 pos2 = npc.Center;
+			Vector2 pos2 = origin;
 			left = new Matrix(pos2.X * pos2.X, pos2.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, 2f * neck.X, 1f, 0f, 0f, 0f, 0f, 0f, 1f);
 			right = new Matrix(pos2.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, slope, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
 			solution = Matrix.Invert(left) * right;
@@ -163,9 +168,9 @@ namespace Bluemagic.BlushieBoss
 			float c2 = solution.M31;
 			float test = a * neck.X * neck.X + b * neck.X + c;
 			float test2 = a2 * neck.X * neck.X + b2 * neck.X + c2;
-			Texture2D neckTexture = mod.GetTexture("BlushieBoss/DragonNeck");
+			Texture2D neckTexture = Bluemagic.Instance.GetTexture("BlushieBoss/DragonNeck");
 			Vector2 zero = Main.screenPosition + new Vector2(neckTexture.Width / 2, neckTexture.Height / 2);
-			if (Math.Abs(test - test2) < 16f && Math.Abs(pos.X - npc.Center.X) >= 16f)
+			if (Math.Abs(test - test2) < 16f && Math.Abs(pos.X - origin.X) >= 16f)
 			{
 				float start = pos.X;
 				float end = neck.X;
@@ -223,10 +228,10 @@ namespace Bluemagic.BlushieBoss
 					}
 				}
 			}
-			else if (Math.Abs(pos.Y - npc.Center.Y) > 32f)
+			else if (Math.Abs(pos.Y - origin.Y) > 32f)
 			{
 				Vector2 top = pos;
-				Vector2 bottom = npc.Center;
+				Vector2 bottom = origin;
 				Vector2 d = top - bottom;
 				float length = d.Length();
 				d.Normalize();
@@ -236,42 +241,47 @@ namespace Bluemagic.BlushieBoss
 				}
 			}
 			pos.Y += 150f;
-			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? mod.GetTexture("BlushieBoss/DragonHead_Hurt") : mod.GetTexture("BlushieBoss/DragonHead");
+			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead_Hurt") : Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead");
 			Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
 			spriteBatch.Draw(dragon, draw, Color.White);
 		}
 
 		private void DrawDragonArms(SpriteBatch spriteBatch, bool connect)
 		{
+			DrawDragonArms(spriteBatch, npc.Center, BlushieBoss.ArmLeftPos, BlushieBoss.ArmRightPos, connect);
+		}
+
+		internal static void DrawDragonArms(SpriteBatch spriteBatch, Vector2 origin, Vector2 armLeftPos, Vector2 armRightPos, bool connect)
+		{
 			if (connect)
 			{
-				Texture2D arm = mod.GetTexture("BlushieBoss/DragonArm");
+				Texture2D arm = Bluemagic.Instance.GetTexture("BlushieBoss/DragonArm");
 				Vector2 zero = Main.screenPosition + new Vector2(arm.Width / 2, arm.Height / 2);
-				Vector2 direction = BlushieBoss.ArmLeftPos - npc.Center;
+				Vector2 direction = armLeftPos - origin;
 				float length = direction.Length();
 				if (length > 0f)
 				{
 					direction.Normalize();
 					for (float k = 0f; k <= length; k += 2f)
 					{
-						spriteBatch.Draw(arm, npc.Center + k * direction - zero, Color.White);
+						spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
 					}
 				}
-				direction = BlushieBoss.ArmRightPos - npc.Center;
+				direction = armRightPos - origin;
 				length = direction.Length();
 				if (length > 0f)
 				{
 					direction.Normalize();
 					for (float k = 0f; k <= length; k += 2f)
 					{
-						spriteBatch.Draw(arm, npc.Center + k * direction - zero, Color.White);
+						spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
 					}
 				}
 			}
-			Texture2D claw = mod.GetTexture("BlushieBoss/DragonClaw");
-			Vector2 origin = new Vector2(claw.Width / 2, claw.Height / 2);
-			spriteBatch.Draw(claw, BlushieBoss.ArmLeftPos - Main.screenPosition, null, Color.White, (BlushieBoss.ArmLeftPos - npc.Center).ToRotation(), origin, 1f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(claw, BlushieBoss.ArmRightPos - Main.screenPosition, null, Color.White, (BlushieBoss.ArmRightPos - npc.Center).ToRotation(), origin, 1f, SpriteEffects.None, 0f);
+			Texture2D claw = Bluemagic.Instance.GetTexture("BlushieBoss/DragonClaw");
+			Vector2 textOrigin = new Vector2(claw.Width / 2, claw.Height / 2);
+			spriteBatch.Draw(claw, armLeftPos - Main.screenPosition, null, Color.White, (armLeftPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(claw, armRightPos - Main.screenPosition, null, Color.White, (armRightPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
 		}
 
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)

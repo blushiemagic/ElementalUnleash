@@ -49,6 +49,7 @@ namespace Bluemagic.BlushieBoss
 				if (Main.netMode != 1)
 				{
 					BlushieBoss.LunaTalk("Hmph. I will admit I underestimated you. I shall concede defeat...");
+					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DarkLightningPack"));
 				}
 				npc.active = false;
 			}

@@ -16,7 +16,8 @@ namespace Bluemagic.Blushie
 				+ "\nWARNING: Use this in the middle of a large open area (eg. the sky)"
 				+ "\nIt is highly recommended that you use the Purity Shield [i:" + mod.ItemType("PurityShield") + "] mount"
 				+ "\nRight-click to focus the camera on the entire boss arena"
-				+ "\nRight-click mid-fight to toggle the camera focus");
+				+ "\nRight-click mid-fight to toggle the camera focus"
+				+ "\nYour hitbox becomes a single pixel");
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
 		}
 

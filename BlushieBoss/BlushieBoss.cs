@@ -74,6 +74,7 @@ namespace Bluemagic.BlushieBoss
 		internal static Texture2D BulletSkullTexture;
 		internal static Texture2D BulletBoneTexture;
 		internal static Texture2D CrystalStarTexture;
+		internal static Texture2D BulletDragonLargeTexture;
 
 		public static bool Active
 		{
@@ -137,6 +138,7 @@ namespace Bluemagic.BlushieBoss
 			BulletDragonBreathTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragonBreath");
 			BulletSkullTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletSkull");
 			BulletBoneTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBone");
+			BulletDragonLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragonLarge");
 			CrystalStarTexture = Bluemagic.Instance.GetTexture("BlushieBoss/CrystalStar");
 		}
 
@@ -883,10 +885,10 @@ namespace Bluemagic.BlushieBoss
 				if (Players[k])
 				{
 					BluemagicPlayer modPlayer = Main.player[k].GetModPlayer<BluemagicPlayer>();
-					modPlayer.blushieHealth += 0.3f;
+					modPlayer.blushieHealth += 0.5f;
 					if (k == Main.myPlayer)
 					{
-						Main.NewText("You gained 30% of your health back!");
+						Main.NewText("You gained 50% of your health back!");
 					}
 					if (modPlayer.blushieHealth > BluemagicWorld.blushieCheckpoint)
 					{
@@ -1086,6 +1088,7 @@ namespace Bluemagic.BlushieBoss
 				BoneLBRot = MathHelper.PiOver4;
 				BoneRTRot = MathHelper.PiOver4;
 				BoneRBRot = -MathHelper.PiOver4;
+				JoyceTalk("\x300cEncircling Flame Trap\x300d");
 			}
 			timer -= 120;
 			float theta = timer / 600f * MathHelper.TwoPi;
@@ -1156,6 +1159,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 90;
 
+			if (timer == 0)
+			{
+				MeganTalk("\x300cBroken Box\x300d");
+			}
 			if (timer == 60)
 			{
 				AddCrystalStar(new Vector2(-0.5f, -0.5f));
@@ -1221,6 +1228,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 90;
 
+			if (timer == 0)
+			{
+				JoyceTalk("\x300cBouncing Bones\x300d");
+			}
 			Vector2 target = Main.player[GetTarget()].Center;
 			float radius = 480f;
 			if (timer < 120f)
@@ -1283,6 +1294,7 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 0)
 			{
+				MeganTalk("\x300cLunging Wavering\x300d");
 				int num = (int)(20 * Math.Sqrt(Difficulty));
 				for (int k = 0; k < num; k++)
 				{
@@ -1345,6 +1357,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 90;
 
+			if (timer == 0)
+			{
+				MeganTalk("\x300cBarrier of Light\x300d");
+			}
 			int num = 2 * ArenaSize / 32;
 			if (timer < 4 * num)
 			{
@@ -1394,45 +1410,13 @@ namespace Bluemagic.BlushieBoss
 			{
 				if (timer % 3 == 0)
 				{
-					Vector2 start = Origin + new Vector2(-ArenaSize * 0.75f, ArenaSize);
+					Vector2 start = Origin + new Vector2(-ArenaSize * 0.5f, ArenaSize);
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(-ArenaSize * 0.75f, -ArenaSize);
+					start = Origin + new Vector2(-ArenaSize * 0.5f, -ArenaSize);
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.75f, ArenaSize);
+					start = Origin + new Vector2(ArenaSize * 0.5f, ArenaSize);
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.75f, -ArenaSize);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
-				}
-				return;
-			}
-			timer -= 3 * (num - space) / 2;
-
-			if (timer < 3 * (num - space) / 2)
-			{
-				if (timer % 3 == 0)
-				{
-					Vector2 start = Origin + new Vector2(-ArenaSize * 0.5f, 0f);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.5f, 0f);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-				}
-				return;
-			}
-			timer -= 3 * (num - space) / 2;
-
-			if (timer < 3 * (num - space) / 2)
-			{
-				if (timer % 3 == 0)
-				{
-					Vector2 start = Origin + new Vector2(-ArenaSize * 0.25f, ArenaSize);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(-ArenaSize * 0.25f, -ArenaSize);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.25f, ArenaSize);
-					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.25f, -ArenaSize);
+					start = Origin + new Vector2(ArenaSize * 0.5f, -ArenaSize);
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
 				}
 				return;
@@ -1446,7 +1430,7 @@ namespace Bluemagic.BlushieBoss
 					Vector2 start = Origin;
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
-					start = Origin + new Vector2(ArenaSize * 0.5f, 0f);
+					start = Origin;
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, timer / 3 * 32f), Vector2.Zero));
 					AddBullet(BulletSimple.NewDragon(start + new Vector2(0f, -timer / 3 * 32f), Vector2.Zero));
 				}
@@ -1456,13 +1440,13 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 180)
 			{
-				AddCrystalStar(new Vector2(-0.875f, -0.875f));
-				AddCrystalStar(new Vector2(-0.875f, 0.875f));
-				AddCrystalStar(new Vector2(0.875f, -0.875f));
-				AddCrystalStar(new Vector2(.875f, 0.875f));
+				AddCrystalStar(new Vector2(-0.75f, -0.875f));
+				AddCrystalStar(new Vector2(-0.75f, 0.875f));
+				AddCrystalStar(new Vector2(0.75f, -0.875f));
+				AddCrystalStar(new Vector2(0.75f, 0.875f));
 				SpawnedStars = true;
 			}
-			int rows = 6 * Difficulty;
+			int rows = 4 * Difficulty + 2;
 			if (timer % 8 == 0)
 			{
 				timer /= 8;
@@ -1507,41 +1491,63 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 90;
 
-			if (timer == 240f)
+			if (timer == 0)
 			{
-				AddCrystalStar(new Vector2(0f, -0.9f));
-				AddCrystalStar(new Vector2(0f, 0.9f));
-				SpawnedStars = true;
+				JoyceTalk("\x300cConfusion Gear\x300d");
+				float r1 = ArenaSize * 0.8f;
+				float r2 = ArenaSize * 1.4f;
+				int numCogs = 8;
+				float cogInterval = MathHelper.Pi / numCogs;
+				int numBullets = (int)(r2 / 5f);
+				List<Vector2> cache = new List<Vector2>();
+				bool prevOuter = false;
+				for (int k = 0; k < numBullets; k++)
+				{
+					float theta = MathHelper.TwoPi * k / numBullets;
+					bool outer = theta % (2f * cogInterval) < cogInterval;
+					float r;
+					if (outer != prevOuter)
+					{
+						r = r1;
+						while (r <= r2)
+						{
+							cache.Add(new Vector2(r, theta));
+							r += 32f;
+						}
+					}
+					r = outer ? r2 : r1;
+					cache.Add(new Vector2(r, theta));
+					prevOuter = outer;
+				}
+				foreach (Vector2 pos in cache)
+				{
+					AddBullet(BulletRotateTarget.NewBone(Origin, pos.X, pos.Y, MathHelper.TwoPi / 16f / 60f, -1));
+				}
+				cache.Clear();
 			}
-			if (timer % 4 == 0)
+			if (timer < 60)
 			{
-				float amplitude = 160f / Difficulty;
-				float period = 120f;
-				float offset = amplitude * (float)Math.Sin(timer / period * MathHelper.TwoPi);
-				float start = -ArenaSize;
-				if (timer % 480f < 240f)
+				float distance = (ArenaSize * 0.6f - 64f) / 60f;
+				ArmLeftPos.X -= distance;
+				ArmRightPos.X += distance;
+			}
+			else if (timer % (8 / Difficulty) == 0)
+			{
+				float theta = MathHelper.TwoPi * timer / 120f;
+				int num = 4;
+				for (int k = 0; k < num; k++)
 				{
-					start -= amplitude;
+					float rot = theta + MathHelper.TwoPi * k / num;
+					AddBullet(BulletSimple.NewDragon(Origin, 4f * rot.ToRotationVector2()));
 				}
-				if (timer % 960 < 480)
-				{
-					start += 2f * amplitude;
-				}
-				int waveHeight = (int)(2f * amplitude);
-				bool alternate = true;
-				for (int k = (int)start; k <= ArenaSize; k += waveHeight)
-				{
-					float y = Origin.Y + k + offset;
-					if (alternate)
-					{
-						AddBullet(BulletSimple.NewDragon(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)));
-					}
-					else
-					{
-						AddBullet(BulletSimple.NewSkull(new Vector2(Origin.X + ArenaSize, y), new Vector2(-8f, 0f)));
-					}
-					alternate = !alternate;
-				} 
+			}
+			if (timer == 180)
+			{
+				AddCrystalStar(new Vector2(0.85f, 0.85f));
+				AddCrystalStar(new Vector2(0.85f, -0.85f));
+				AddCrystalStar(new Vector2(-0.85f, 0.85f));
+				AddCrystalStar(new Vector2(-0.85f, -0.85f));
+				SpawnedStars = true;
 			}
 		}
 
@@ -1594,6 +1600,10 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 300;
 
+			if (timer == 0)
+			{
+				JoyceTalk("\x300cRay of Absolute Darkness\x300d");
+			}
 			if (timer % (120 / Difficulty) == 0)
 			{
 				const float speed = 6f;
@@ -1645,7 +1655,70 @@ namespace Bluemagic.BlushieBoss
 			}
 			timer -= 90;
 
-			
+			if (timer == 0)
+			{
+				MeganTalk("\x300cSky Dragon's Rage\x300d");
+			}
+			if (timer < 30)
+			{
+				return;
+			}
+			timer -= 30;
+			if (timer == 0)
+			{
+				Main.PlaySound(29, -1, -1, 104);
+			}
+			float speed = 4f + 28f * timer / 120f;
+			if (speed > 32f)
+			{
+				speed = 32f;
+			}
+			for (int k = 0; k < 3; k++)
+			{
+				float rotation = Main.rand.NextFloat() * 0.4f - 0.2f - MathHelper.PiOver2;
+				Vector2 vel = speed * rotation.ToRotationVector2();
+				AddBullet(BulletTimed.NewDragonBreath(DragonPos - vel, vel, 120));
+			}
+			if (timer >= 120)
+			{
+				int sections = 8;
+				float sectionWidth = 2f * ArenaSize / sections;
+				bool spawnBig = timer % 2 == 0;
+				int chance = 32 / Difficulty;
+				for (int k = 0; k < sections; k++)
+				{
+					if (Main.rand.Next(chance) == 0)
+					{
+						float x = Origin.X - ArenaSize + k * sectionWidth;
+						x += sectionWidth * Main.rand.NextFloat();
+						float y = Origin.Y - ArenaSize - 8f;
+						AddBullet(BulletSimple.NewDragonBreath(new Vector2(x, y), new Vector2(0f, 8f)));
+					}
+				}
+				if (spawnBig)
+				{
+					for (int k = 0; k < sections; k++)
+					{
+						if (Main.rand.Next(chance) == 0)
+						{
+							float x = Origin.X - ArenaSize + k * sectionWidth;
+							x += sectionWidth * Main.rand.NextFloat();
+							float y = Origin.Y - ArenaSize - 4f;
+							AddBullet(BulletSimple.NewDragonLarge(new Vector2(x, y), new Vector2(0f, 4f)));
+						}
+					}
+				}
+			}
+			if (timer == 240)
+			{
+				AddCrystalStar(new Vector2(-0.6f, -0.1f));
+				AddCrystalStar(new Vector2(0f, -0.1f));
+				AddCrystalStar(new Vector2(0.6f, -0f));
+				AddCrystalStar(new Vector2(-0.6f, 0.2f));
+				AddCrystalStar(new Vector2(0f, 0.2f));
+				AddCrystalStar(new Vector2(0.6f, 0.2f));
+				SpawnedStars = true;
+			}
 		}
 
 		private static void Phase3_Reset(int timer)

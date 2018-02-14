@@ -56,10 +56,12 @@ namespace Bluemagic.BlushieBoss
 					if (BlushieBoss.BlushieC)
 					{
 						BlushieBoss.ChrisTalk("You are incredibly powerful! It was a pleasure to be able to spar with you.");
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FirePulsar"));
 					}
 					else
 					{
 						BlushieBoss.AnnaTalk("Wow, you're really strong! It was very fun playing with you~");
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RadiantRainbowRondure"));
 					}
 				}
 			}
@@ -80,7 +82,7 @@ namespace Bluemagic.BlushieBoss
 		{
 			if (BlushieBoss.ShieldA >= 300 && BlushieBoss.ShieldBuff(npc))
 			{
-				Texture2D shield = mod.GetTexture("BlushieBoss/ShieldA");
+				Texture2D shield = mod.GetTexture(BlushieBoss.BlushieC ? "BlushieBoss/ShieldC" : "BlushieBoss/ShieldA");
 				spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
 			}
 		}

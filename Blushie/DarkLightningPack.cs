@@ -11,6 +11,7 @@ namespace Bluemagic.Blushie
 		{
 			Tooltip.SetDefault("Zaps enemies across the entire screen"
 				+ "\n'Great for impersonating tModLoader devs!'");
+			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
 		public override void SetDefaults()
@@ -30,7 +31,7 @@ namespace Bluemagic.Blushie
 			item.shootSpeed = 0f;
 			item.knockBack = 4f;
 			item.ranged = true;
-			item.value = Item.sellPrice(1, 0, 0, 0);
+			item.value = Item.sellPrice(2, 0, 0, 0);
 		}
 	}
 }

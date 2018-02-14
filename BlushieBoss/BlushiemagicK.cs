@@ -43,6 +43,7 @@ namespace Bluemagic.BlushieBoss
 				if (Main.netMode != 1)
 				{
 					BlushieBoss.KylieTalk("I knew it. I'm so useless...");
+					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostFairyWings"));
 				}
 			}
 			return false;

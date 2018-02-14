@@ -85,6 +85,7 @@ namespace Bluemagic
 		internal int origHealth;
 		private int blushieImmune = 0;
 		public bool frostFairy = false;
+		public bool skyDragon = false;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
@@ -135,6 +136,7 @@ namespace Bluemagic
 			godmode = false;
 			noGodmode = false;
 			frostFairy = false;
+			skyDragon = false;
 			if (extraAccessory2)
 			{
 				player.extraAccessorySlots = 2;

@@ -28,12 +28,15 @@ namespace Bluemagic.BlushieBoss
 		{
 			Angle += RotSpeed;
 			Position = Center + Radius * Angle.ToRotationVector2();
-			TimeLeft--;
+			if (TimeLeft > 0)
+			{
+				TimeLeft--;
+			}
 		}
 
 		public override bool ShouldRemove()
 		{
-			return TimeLeft <= 0;
+			return TimeLeft == 0;
 		}
 
 		public static BulletRotate NewGold(Vector2 center, float radius, float angle, float rotSpeed, int timeLeft)

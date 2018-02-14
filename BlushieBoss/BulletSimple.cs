@@ -69,5 +69,10 @@ namespace Bluemagic.BlushieBoss
 		{
 			return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoneTexture);
 		}
+
+		public static BulletSimple NewDragonLarge(Vector2 position, Vector2 velocity)
+		{
+			return new BulletSimple(position, velocity, 32f, BlushieBoss.BulletDragonLargeTexture);
+		}
 	}
 }

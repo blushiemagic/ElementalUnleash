@@ -27,7 +27,7 @@ namespace Bluemagic
 		public static Mod Thorium;
 		public static Mod Sushi;
 		public static Mod HealthBars;
-		public const bool testing = true;
+		public const bool testing = false;
 
 		private static Color pureColor = new Color(100, 255, 100);
 		private static int pureColorStyle = 0;
