@@ -15,7 +15,7 @@ namespace Bluemagic.Items.Abomination
 
 		public override void SetDefaults()
 		{
-			item.width = 30;
+			item.width = 20;
 			item.height = 30;
 			item.maxStack = 20;
 			item.rare = 10;
