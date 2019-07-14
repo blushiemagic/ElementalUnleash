@@ -10,3 +10,4 @@ buffed the elemental sprayer
 fixed bug where chaos spirit arms have health bars
 resprited many many things
 purity shield mount can pass through platforms
+updated to tModLoader v0.11

@@ -77,6 +77,8 @@ namespace Bluemagic.TerraSpirit
 			music = MusicID.LunarBoss;
 		}
 
+		private IList<Particle> particles = new List<Particle>();
+		private float[,] aura = new float[size, size];
 		internal List<Bullet> bullets = new List<Bullet>();
 
 		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -88,6 +90,10 @@ namespace Bluemagic.TerraSpirit
 		public override void AI()
 		{
 			int numPlayers = CountPlayers();
+			if (!Main.dedServ)
+			{
+				UpdateParticles();
+			}
 			npc.timeLeft = NPC.activeTime;
 			if (Stage >= 0 && numPlayers == 0)
 			{
@@ -146,6 +152,55 @@ namespace Bluemagic.TerraSpirit
 				}
 			}
 			return count;
+		}
+
+		private void UpdateParticles()
+		{
+			foreach (Particle particle in particles)
+			{
+				particle.Update();
+			}
+			Vector2 newPos = new Vector2(Main.rand.Next(3 * size / 8, 5 * size / 8), Main.rand.Next(3 * size / 8, 5 * size / 8));
+			double newAngle = 2 * Math.PI * Main.rand.NextDouble();
+			Vector2 newVel = new Vector2((float)Math.Cos(newAngle), (float)Math.Sin(newAngle));
+			newVel *= 0.5f * (1f + (float)Main.rand.NextDouble());
+			particles.Add(new Particle(newPos, newVel));
+			if (particles[0].strength <= 0f)
+			{
+				particles.RemoveAt(0);
+			}
+			for (int x = 0; x < size; x++)
+			{
+				for (int y = 0; y < size; y++)
+				{
+					aura[x, y] *= 0.97f;
+				}
+			}
+			foreach (Particle particle in particles)
+			{
+				int minX = (int)particle.position.X - particleSize / 2;
+				int minY = (int)particle.position.Y - particleSize / 2;
+				int maxX = minX + particleSize;
+				int maxY = minY + particleSize;
+				for (int x = minX; x <= maxX; x++)
+				{
+					for (int y = minY; y <= maxY; y++)
+					{
+						if (x >= 0 && x < size && y >= 0 && y < size)
+						{
+							float strength = particle.strength;
+							float offX = particle.position.X - x;
+							float offY = particle.position.Y - y;
+							strength *= 1f - (float)Math.Sqrt(offX * offX + offY * offY) / particleSize * 2;
+							if (strength < 0f)
+							{
+								strength = 0f;
+							}
+							aura[x, y] = 1f - (1f - aura[x, y]) * (1f - strength);
+						}
+					}
+				}
+			}
 		}
 
 		public void RunAway()
@@ -285,17 +340,31 @@ namespace Bluemagic.TerraSpirit
 			return false;
 		}
 
-		public override void FindFrame(int frameHeight)
+		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			npc.frameCounter += 1;
-			npc.frameCounter %= 40;
-			int frame = (int)npc.frameCounter / 10;
-			npc.frame.Y = frame * frameHeight;
-		}
-
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return Color.White;
+			if (Stage != 3)
+			{
+				spriteBatch.Draw(mod.GetTexture("TerraSpirit/NegativeCircle"), npc.Center - Main.screenPosition, null, Color.White * 0.25f, 0f, new Vector2(120f, 120f), 1f, SpriteEffects.None, 0f);
+			}
+			float scale = 1f;
+			if (Stage == 3)
+			{
+				scale += 9f * Progress / 400f;
+			}
+			float alpha = 1f;
+			alpha -= 0.8f * (scale - 1f) / 9f;
+			for (int x = 0; x < size; x++)
+			{
+				for (int y = 0; y < size; y++)
+				{
+					Vector2 drawPos = npc.Center - Main.screenPosition;
+					drawPos.X += scale * (x * 2 - size);
+					drawPos.Y += scale * (y * 2 - size);
+					spriteBatch.Draw(mod.GetTexture("TerraSpirit/NegativeParticle"), drawPos, null, Color.White * aura[x, y] * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+				}
+			}
+			spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			return false;
 		}
 
 		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
