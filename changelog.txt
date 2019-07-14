@@ -6,7 +6,7 @@ added salt
 nerfed purium armor defense
 nerfed emblem of the void damage
 buffed terra spirit's final phase
-resprited cleanser beam
 buffed the elemental sprayer
-resprited abomination phase 2
 fixed bug where chaos spirit arms have health bars
+resprited many many things
+purity shield mount can pass through platforms

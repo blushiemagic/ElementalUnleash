@@ -21,8 +21,9 @@ namespace Bluemagic.Items.Abomination
 			item.height = 24;
 			item.rare = 9;
 			item.expert = true;
-			bossBagNPC = mod.NPCType("Abomination");
 		}
+
+		public override int BossBagNPC => mod.NPCType("Abomination");
 
 		public override bool CanRightClick()
 		{

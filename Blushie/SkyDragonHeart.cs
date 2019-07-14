@@ -19,7 +19,7 @@ namespace Bluemagic.Blushie
 
 		public override void SetDefaults()
 		{
-			item.damage = 800;
+			item.damage = 812;
 			item.summon = true;
 			item.mana = 20;
 			item.width = 34;

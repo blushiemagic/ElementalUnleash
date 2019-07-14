@@ -21,8 +21,9 @@ namespace Bluemagic.Items.Phantom
 			item.height = 24;
 			item.rare = 8;
 			item.expert = true;
-			bossBagNPC = mod.NPCType("Phantom");
 		}
+
+		public override int BossBagNPC => mod.NPCType("Phantom");
 
 		public override bool CanRightClick()
 		{

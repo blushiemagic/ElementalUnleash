@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Bluemagic.Blushie;
 using Bluemagic.BlushieBoss;
 
 namespace Bluemagic
@@ -251,6 +252,8 @@ namespace Bluemagic
 		public override void PostUpdate()
 		{
 			Bluemagic.UpdatePureColor();
+			WorldReaver.UpdateGlitchText();
+			WorldReaverData.Update();
 			if (Main.eclipse)
 			{
 				eclipsePassed = true;
@@ -288,7 +291,7 @@ namespace Bluemagic
 		{
 			if (BlushieBoss.BlushieBoss.Active)
 			{
-				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, (RasterizerState)typeof(Main).GetField("Rasterizer", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Main.instance), null, Main.Transform);
+				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.instance.Rasterizer, null, Main.Transform);
 				BlushieBoss.BlushieBoss.DrawArena(Main.spriteBatch);
 				Main.spriteBatch.End();
 			}

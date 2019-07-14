@@ -26,8 +26,9 @@ namespace Bluemagic.Items.Purium.Weapons
 			item.UseSound = SoundID.Item1;
 			item.shoot = mod.ProjectileType("PuriumSlice");
 			item.shootSpeed = 0.5f;
-			projOnSwing = true;
 		}
+
+		public override bool OnlyShootOnSwing => true;
 
 		public override void AddRecipes()
 		{

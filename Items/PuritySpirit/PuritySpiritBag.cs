@@ -21,8 +21,9 @@ namespace Bluemagic.Items.PuritySpirit
 			item.height = 24;
 			item.rare = 11;
 			item.expert = true;
-			bossBagNPC = mod.NPCType("PuritySpirit");
 		}
+
+		public override int BossBagNPC => mod.NPCType("PuritySpirit");
 
 		public override bool CanRightClick()
 		{

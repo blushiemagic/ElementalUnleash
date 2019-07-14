@@ -27,7 +27,7 @@ namespace Bluemagic
 		public static Mod Thorium;
 		public static Mod Sushi;
 		public static Mod HealthBars;
-		public const bool testing = false;
+		public const bool testing = true;
 
 		private static Color pureColor = new Color(100, 255, 100);
 		private static int pureColorStyle = 0;
@@ -57,9 +57,9 @@ namespace Bluemagic
 		public override void Load()
 		{
 			Instance = this;
-			foreach (string checkMod in ModLoader.GetLoadedMods())
+			foreach (Mod checkMod in ModLoader.Mods)
 			{
-				if (checkMod == "ExampleMod")
+				if (checkMod.Name == "ExampleMod")
 				{
 					throw new Exception("ExampleMod and Bluemagic cannot be loaded at the same time");
 				}
@@ -80,6 +80,8 @@ namespace Bluemagic
 			Filters.Scene["Bluemagic:TerraSpirit"] = new Filter(new TerraSpiritScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0.1f), EffectPriority.VeryHigh);
 			SkyManager.Instance["Bluemagic:TerraSpirit"] = new TerraSpiritSky();
 			SkyManager.Instance["Bluemagic:BlushieBoss"] = new BlushieSky();
+			Overlays.Scene["Bluemagic:WorldReaver"] = new WorldReaverOverlay();
+			Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/WorldReaver")), "WorldReaver"), EffectPriority.VeryHigh);
 
 			ModTranslation text = CreateTranslation("PhantomSummon");
 			text.SetDefault("You feel something cold leeching your life...");
@@ -433,6 +435,10 @@ namespace Bluemagic
 					packet.Send(-1, whoAmI);
 				}
 			}
+			else if (type == MessageType.WorldReaver)
+			{
+				WorldReaverData.Begin(reader.ReadInt32());
+			}
 		}
 
 		public override void UpdateMusic(ref int music)
@@ -493,6 +499,7 @@ namespace Bluemagic
 		GoldBlob,
 		ExtraLives,
 		BulletNegative,
-		CustomStats
+		CustomStats,
+		WorldReaver
 	}
 }

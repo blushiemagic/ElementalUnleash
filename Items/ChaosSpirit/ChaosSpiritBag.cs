@@ -21,8 +21,9 @@ namespace Bluemagic.Items.ChaosSpirit
 			item.height = 24;
 			item.rare = 11;
 			item.expert = true;
-			bossBagNPC = mod.NPCType("ChaosSpirit");
 		}
+
+		public override int BossBagNPC => mod.NPCType("ChaosSpirit");
 
 		public override bool CanRightClick()
 		{

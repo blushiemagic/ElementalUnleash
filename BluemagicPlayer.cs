@@ -875,6 +875,11 @@ namespace Bluemagic
 				else if (player.controlDown)
 				{
 					player.velocity.Y = Mounts.PurityShield.speed;
+					Vector2 test = Collision.TileCollision(player.position, player.velocity, player.width, player.height, true, false, (int)player.gravDir);
+					if (test.Y == 0f)
+					{
+						player.velocity.Y = 0.5f;
+					}
 				}
 				else
 				{
