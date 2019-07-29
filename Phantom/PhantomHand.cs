@@ -101,7 +101,7 @@ namespace Bluemagic.Phantom
 				npc.active = false;
 				return;
 			}
-			headNPC.timeLeft = headNPC.timeLeft;
+			npc.timeLeft = headNPC.timeLeft;
 
 			if (Head.Enraged)
 			{

@@ -382,10 +382,6 @@ namespace Bluemagic.BlushieBoss
 			}
 			npc.Center = Origin + new Vector2(0f, 16f * (float)Math.Sin(Timer / 60f));
 			npc.velocity = Vector2.Zero;
-			if (Bluemagic.testing && Timer < 600)
-			{
-				Timer = 3400;
-			}
 			if (Main.netMode != 2)
 			{
 				if (Timer >= 600 && Timer <= 1200 && Timer % 30 == 0)
@@ -505,16 +501,16 @@ namespace Bluemagic.BlushieBoss
 				{
 					if (BlushieC)
 					{
-						ChrisTalk("\x300cRay of Absolute Light\x300d");
+						ChrisTalk("\x300cRay of Burning Light\x300d");
 					}
 					else
 					{
-						AnnaTalk("\x300cRay of Absolute Light\x300d!~");
+						AnnaTalk("\x300cRay of Blinding Light\x300d!~");
 					}
 				}
 				if (Timer == 2640)
 				{
-					KylieTalk("\x300cMirrors of Imprisonment\x300d");
+					KylieTalk("\x300cImprisoning Mirrors\x300d");
 				}
 				if (Timer == 2040)
 				{
@@ -1088,7 +1084,7 @@ namespace Bluemagic.BlushieBoss
 				BoneLBRot = MathHelper.PiOver4;
 				BoneRTRot = MathHelper.PiOver4;
 				BoneRBRot = -MathHelper.PiOver4;
-				JoyceTalk("\x300cEncircling Flame Trap\x300d");
+				JoyceTalk("\x300cAround the Flames\x300d");
 			}
 			timer -= 120;
 			float theta = timer / 600f * MathHelper.TwoPi;
@@ -1161,7 +1157,7 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 0)
 			{
-				MeganTalk("\x300cBroken Box\x300d");
+				MeganTalk("\x300cBreaking Box\x300d");
 			}
 			if (timer == 60)
 			{
@@ -1294,7 +1290,7 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 0)
 			{
-				MeganTalk("\x300cLunging Wavering\x300d");
+				MeganTalk("\x300cUnstable Vortex\x300d");
 				int num = (int)(20 * Math.Sqrt(Difficulty));
 				for (int k = 0; k < num; k++)
 				{
@@ -1327,12 +1323,12 @@ namespace Bluemagic.BlushieBoss
 				if (timer % 360 < 180)
 				{
 					rotation += Phase3Data3.X + (target - SkullPos).ToRotation();
-					AddBullet(BulletWavy.NewSkull(SkullPos, 4f * rotation.ToRotationVector2(), 8f, 120f));
+					AddBullet(BulletWavy.NewSkull(SkullPos, 4f * rotation.ToRotationVector2(), 10f, 90f));
 				}
 				else
 				{
 					rotation = Phase3Data3.X - rotation + (target - DragonPos).ToRotation();
-					AddBullet(BulletWavy.NewDragonBreath(DragonPos, 4f * rotation.ToRotationVector2(), 8f, 120f));
+					AddBullet(BulletWavy.NewDragonBreath(DragonPos, 4f * rotation.ToRotationVector2(), 10f, 90f));
 				}
 			}
 			if (timer == 180)
@@ -1493,7 +1489,7 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 0)
 			{
-				JoyceTalk("\x300cConfusion Gear\x300d");
+				JoyceTalk("\x300cSpiraling Gear\x300d");
 				float r1 = ArenaSize * 0.8f;
 				float r2 = ArenaSize * 1.4f;
 				int numCogs = 8;
@@ -1602,7 +1598,7 @@ namespace Bluemagic.BlushieBoss
 
 			if (timer == 0)
 			{
-				JoyceTalk("\x300cRay of Absolute Darkness\x300d");
+				JoyceTalk("\x300cApocalypse Beam\x300d");
 			}
 			if (timer % (120 / Difficulty) == 0)
 			{
@@ -1711,9 +1707,9 @@ namespace Bluemagic.BlushieBoss
 			}
 			if (timer == 240)
 			{
-				AddCrystalStar(new Vector2(-0.6f, -0.1f));
-				AddCrystalStar(new Vector2(0f, -0.1f));
-				AddCrystalStar(new Vector2(0.6f, -0f));
+				AddCrystalStar(new Vector2(-0.6f, -0.2f));
+				AddCrystalStar(new Vector2(0f, -0.2f));
+				AddCrystalStar(new Vector2(0.6f, -0.2f));
 				AddCrystalStar(new Vector2(-0.6f, 0.2f));
 				AddCrystalStar(new Vector2(0f, 0.2f));
 				AddCrystalStar(new Vector2(0.6f, 0.2f));

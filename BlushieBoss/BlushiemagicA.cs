@@ -94,10 +94,6 @@ namespace Bluemagic.BlushieBoss
 				BlushieBoss.ShieldA = 0;
 				return 0;
 			}
-			if (Bluemagic.testing)
-			{
-				return 250000;
-			}
 			float healthMult = player.GetModPlayer<BluemagicPlayer>().origHealth / 720f;
 			float regenMult = player.lifeRegen / 28f;
 			float mult = 0.6f * healthMult + 0.4f * regenMult;

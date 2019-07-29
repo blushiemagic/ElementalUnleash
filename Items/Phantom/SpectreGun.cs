@@ -32,9 +32,9 @@ namespace Bluemagic.Items.Phantom
 			item.useAmmo = mod.ItemType("Wisp");
 		}
 
-		public override void GetWeaponDamage(Player player, ref int damage)
+		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult)
 		{
-			damage = (int)(damage * player.bulletDamage + 5E-06);
+			mult *= player.bulletDamage;
 		}
 
 		public override Vector2? HoldoutOffset()

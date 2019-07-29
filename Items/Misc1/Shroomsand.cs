@@ -28,7 +28,7 @@ namespace Bluemagic.Items.Misc1
 			item.notAmmo = true;
 		}
 
-		public override void PickAmmo(Player player, ref int type, ref float speed, ref int damage, ref float knockback)
+		public override void PickAmmo(Item weapon, Player player, ref int type, ref float speed, ref int damage, ref float knockback)
 		{
 			if (type == ProjectileID.SandBallGun)
 			{

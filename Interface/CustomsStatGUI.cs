@@ -21,7 +21,7 @@ namespace Bluemagic.Interface
 		private static Vector2 chaosButtonPos = new Vector2(-1f, -1f);
 		private static Vector2 cataclysmButtonPos = new Vector2(-1f, -1f);
 		private static UIPanel panel = new UIPanel();
-		private static CustomStats curStats = curStats;
+		private static CustomStats curStats;
 		private static CustomStat[] visibleStats = new CustomStat[5];
 		private static int scroll = 0;
 

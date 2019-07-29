@@ -819,7 +819,7 @@ namespace Bluemagic
 				terraKill--;
 				player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " was torn apart by the force of Terraria!"), player.statLifeMax2 * 100, 0, false);
 			}
-			int origHealth = player.statLifeMax2;
+			origHealth = player.statLifeMax2;
 			if (blushieHealth > 0f)
 			{
 				player.statLifeMax2 = (int)(blushieHealth * player.statLifeMax2);

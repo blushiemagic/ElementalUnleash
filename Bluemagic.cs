@@ -441,11 +441,12 @@ namespace Bluemagic
 			}
 		}
 
-		public override void UpdateMusic(ref int music)
+		public override void UpdateMusic(ref int music, ref MusicPriority priority)
 		{
 			if (!Main.gameMenu && BlushieBoss.BlushieBoss.Active && BlushieBoss.BlushieBoss.Phase >= 3)
 			{
 				music = GetSoundSlot(SoundType.Music, "Sounds/Music/Fallen Blood");
+				priority = MusicPriority.BossHigh;
 			}
 		}
 
