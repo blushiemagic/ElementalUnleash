@@ -147,47 +147,70 @@ namespace Bluemagic.BlushieBoss
 		{
 			Vector2 pos = dragonPos;
 			pos.Y -= 150f;
-			if (pos.X == origin.X)
-			{
-				pos.X += 2f;
-			}
-			Vector2 neck = (origin + new Vector2(0f, -BlushieBoss.ArenaSize * 0.4f) + pos) / 2f;
-			float slope = (pos.Y - origin.Y) / (pos.X - origin.X);
-			Matrix left = new Matrix(pos.X * pos.X, pos.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, 2f * neck.X, 1f, 0f, 0f, 0f, 0f, 0f, 1f);
-			Matrix right = new Matrix(pos.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, slope, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
-			Matrix solution = Matrix.Invert(left) * right;
-			float a = solution.M11;
-			float b = solution.M21;
-			float c = solution.M31;
-			Vector2 pos2 = origin;
-			left = new Matrix(pos2.X * pos2.X, pos2.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, 2f * neck.X, 1f, 0f, 0f, 0f, 0f, 0f, 1f);
-			right = new Matrix(pos2.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, slope, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
-			solution = Matrix.Invert(left) * right;
-			float a2 = solution.M11;
-			float b2 = solution.M21;
-			float c2 = solution.M31;
-			float test = a * neck.X * neck.X + b * neck.X + c;
-			float test2 = a2 * neck.X * neck.X + b2 * neck.X + c2;
 			Texture2D neckTexture = Bluemagic.Instance.GetTexture("BlushieBoss/DragonNeck");
 			Vector2 zero = Main.screenPosition + new Vector2(neckTexture.Width / 2, neckTexture.Height / 2);
-			if (Math.Abs(test - test2) < 16f && Math.Abs(pos.X - origin.X) >= 16f)
+			if (Math.Abs(pos.X - origin.X) <= 4f)
 			{
+				Vector2 direction = pos - origin;
+				float length = direction.Length();
+				if (length > 0f)
+				{
+					direction.Normalize();
+					for (float k = 0f; k <= length; k += 2f)
+					{
+						spriteBatch.Draw(neckTexture, origin + k * direction - zero, Color.White);
+					}
+				}
+			}
+			else
+			{
+				float angle = (float)Math.Atan2(pos.Y - origin.Y, pos.X - origin.X);
+				Vector2 midpoint = (pos + origin) / 2f;
+				float targetAngle = (angle - MathHelper.PiOver2) / 2f;
+				if (angle > 0f)
+				{
+					targetAngle += angle;
+				}
+				float normal = angle;
+				if (angle < targetAngle)
+				{
+					normal += MathHelper.PiOver2;
+				}
+				else
+				{
+					normal -= MathHelper.PiOver2;
+				}
+				float translatedNormal = normal - targetAngle;
+				Vector2 translatedPos = (midpoint - origin).RotatedBy(-targetAngle);
+				float distanceTo = translatedPos.X - translatedPos.Y / (float)Math.Tan(translatedNormal);
+				Vector2 neck = origin + distanceTo * new Vector2((float)Math.Cos(targetAngle), (float)Math.Sin(targetAngle));
+
+				pos -= zero;
+				neck -= zero;
+				origin -= zero;
+				Matrix left = new Matrix(pos.X * pos.X, pos.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, origin.X * origin.X, origin.X, 1f, 0f, 0f, 0f, 0f, 1f);
+				Matrix right = new Matrix(pos.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, origin.Y, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
+				Matrix solution = Matrix.Invert(left) * right;
+				float a = solution.M11;
+				float b = solution.M21;
+				float c = solution.M31;
+
 				float start = pos.X;
-				float end = neck.X;
+				float end = origin.X;
 				if (end < start)
 				{
-					start = neck.X;
+					start = origin.X;
 					end = pos.X;
 				}
 				for (float x = start; x < end; x += 1f)
 				{
-					float yStart = a * x * x + b * x + c;
+					float yStart = (float)(a * x * x + b * x + c);
 					float useEnd = x + 1f;
 					if (useEnd > end)
 					{
 						useEnd = end;
 					}
-					float yEnd = a * useEnd * useEnd + b * useEnd + c;
+					float yEnd = (float)(a * useEnd * useEnd + b * useEnd + c);
 					if (yEnd < yStart)
 					{
 						float temp = yEnd;
@@ -196,50 +219,21 @@ namespace Bluemagic.BlushieBoss
 					}
 					for (float y = yStart; y <= yEnd; y += 1f)
 					{
-						spriteBatch.Draw(neckTexture, new Vector2(x, y) - zero, Color.White);
+						spriteBatch.Draw(neckTexture, new Vector2(x, y), Color.White);
 					}
 				}
+				/* debug
+				spriteBatch.Draw(neckTexture, pos - zero, Color.White);
+				spriteBatch.Draw(neckTexture, neck - zero, Color.White);
+				spriteBatch.Draw(neckTexture, origin - zero, Color.White);
+				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+				*/
+				pos += zero;
+			}
 
-				start = pos2.X;
-				end = neck.X;
-				if (end < start)
-				{
-					start = neck.X;
-					end = pos2.X;
-				}
-				for (float x = start; x < end; x += 1f)
-				{
-					float yStart = a2 * x * x + b2 * x + c2;
-					float useEnd = x + 1f;
-					if (useEnd > end)
-					{
-						useEnd = end;
-					}
-					float yEnd = a * useEnd * useEnd + b * useEnd + c;
-					if (yEnd < yStart)
-					{
-						float temp = yEnd;
-						yEnd = yStart;
-						yStart = temp;
-					}
-					for (float y = yStart; y <= yEnd; y += 1f)
-					{
-						spriteBatch.Draw(neckTexture, new Vector2(x, y) - zero, Color.White);
-					}
-				}
-			}
-			else if (Math.Abs(pos.Y - origin.Y) > 32f)
-			{
-				Vector2 top = pos;
-				Vector2 bottom = origin;
-				Vector2 d = top - bottom;
-				float length = d.Length();
-				d.Normalize();
-				for (float k = 0; k <= length; k += 2f)
-				{
-					spriteBatch.Draw(neckTexture, bottom + k * d - zero, Color.White);
-				}
-			}
 			pos.Y += 150f;
 			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead_Hurt") : Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead");
 			Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
