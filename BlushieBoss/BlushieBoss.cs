@@ -918,7 +918,7 @@ namespace Bluemagic.BlushieBoss
 						Main.dust[dust].noLight = true;
 					}
 				}
-				if (Timer >= 780)
+				if ((Phase3Attack < 8 && Timer >= 780) || (Phase3Attack == 8 && Timer < 2420))
 				{
 					for (int k = 0; k < 1; k++)
 					{
@@ -926,6 +926,15 @@ namespace Bluemagic.BlushieBoss
 						Main.dust[dust].scale = 2.5f;
 						Main.dust[dust].noLight = true;
 						dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f) + new Vector2(98f, 58f), 36, 16, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+						Main.dust[dust].scale = 2.5f;
+						Main.dust[dust].noLight = true;
+					}
+				}
+				if (Phase3Attack == 8 && Timer == 2420)
+				{
+					for (int k = 0; k < 300; k++)
+					{
+						int dust = Dust.NewDust(SkullPos - new Vector2(80f, 80f), 160, 160, Bluemagic.Instance.DustType("Smoke"), 0f, 0f, 0, Color.Black);
 						Main.dust[dust].scale = 2.5f;
 						Main.dust[dust].noLight = true;
 					}
@@ -1608,11 +1617,11 @@ namespace Bluemagic.BlushieBoss
 				{
 					if (((k + ArenaSize) / interval) % 2 == 0)
 					{
-						AddBullet(BulletSimple.NewDragon(Origin + new Vector2(-ArenaSize, k), new Vector2(speed, 0f)));
+						AddBullet(BulletSimple.NewBone(Origin + new Vector2(-ArenaSize, k), new Vector2(speed, 0f)));
 					}
 					else
 					{
-						AddBullet(BulletSimple.NewDragon(Origin + new Vector2(ArenaSize, k), new Vector2(-speed, 0f)));
+						AddBullet(BulletSimple.NewBone(Origin + new Vector2(ArenaSize, k), new Vector2(-speed, 0f)));
 					}
 				}
 			}
@@ -1650,6 +1659,20 @@ namespace Bluemagic.BlushieBoss
 				return;
 			}
 			timer -= 90;
+
+			if (timer == 0)
+			{
+				Main.PlaySound(4, -1, -1, 61);
+			}
+			if (timer == 390)
+			{
+				JoyceTalk("I... I wasn't... strong enough...?");
+			}
+			if (timer < 520)
+			{
+				return;
+			}
+			timer -= 520;
 
 			if (timer == 0)
 			{
@@ -1707,12 +1730,12 @@ namespace Bluemagic.BlushieBoss
 			}
 			if (timer == 240)
 			{
-				AddCrystalStar(new Vector2(-0.6f, -0.2f));
-				AddCrystalStar(new Vector2(0f, -0.2f));
-				AddCrystalStar(new Vector2(0.6f, -0.2f));
-				AddCrystalStar(new Vector2(-0.6f, 0.2f));
-				AddCrystalStar(new Vector2(0f, 0.2f));
-				AddCrystalStar(new Vector2(0.6f, 0.2f));
+				AddCrystalStar(new Vector2(-0.6f, -0.3f));
+				AddCrystalStar(new Vector2(0f, -0.3f));
+				AddCrystalStar(new Vector2(0.6f, -0.3f));
+				AddCrystalStar(new Vector2(-0.6f, 0.3f));
+				AddCrystalStar(new Vector2(0f, 0.3f));
+				AddCrystalStar(new Vector2(0.6f, 0.3f));
 				SpawnedStars = true;
 			}
 		}
