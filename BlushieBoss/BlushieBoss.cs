@@ -47,6 +47,7 @@ namespace Bluemagic.BlushieBoss
 		internal static float BoneLBRot;
 		internal static float BoneRTRot;
 		internal static float BoneRBRot;
+		internal static float flash = 0f;
 		internal static int Phase3Attack;
 		internal static bool SpawnedStars = false;
 		internal static Vector2 Phase3Data1;
@@ -1038,6 +1039,9 @@ namespace Bluemagic.BlushieBoss
 				case 8:
 					Phase3_8(Timer - 2000);
 					break;
+				case 9:
+					Phase3_9(Timer - 2000);
+					break;
 				}
 			}
 		}
@@ -1740,6 +1744,75 @@ namespace Bluemagic.BlushieBoss
 			}
 		}
 
+		private static void Phase3_9(int timer)
+		{
+			if (timer <= 60)
+			{
+				Phase3_Reset(timer);
+			}
+			if (timer < 90)
+			{
+				return;
+			}
+			timer -= 90;
+
+			if (timer < 120)
+			{
+				flash = ((timer + 1) % 60) / 60f;
+			}
+			if (timer == 60 || timer == 120)
+			{
+				Main.PlaySound(40);
+			}
+			if (timer == 120)
+			{
+				flash = 0f;
+			}
+
+			if (timer == 240)
+			{
+				int gore;
+				for (int k = 0; k < 10; k++)
+				{
+					gore = Gore.NewGore(ArmLeftPos, Vector2.Zero, Main.rand.Next(435, 438), 2f);
+					Main.gore[gore].velocity = 0.25f * k * (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2();
+					gore = Gore.NewGore(ArmRightPos, Vector2.Zero, Main.rand.Next(435, 438), 2f);
+					Main.gore[gore].velocity = 0.25f * k * (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2();
+				}
+				Main.PlaySound(16);
+			}
+			if (timer == 360)
+			{
+				Main.PlaySound(SoundID.DD2_WinScene);
+			}
+			if (timer > 360 && timer <= 960)
+			{
+				flash = (timer - 360) / 600f;
+			}
+			if (timer == 961)
+			{
+				flash = 0f;
+			}
+			if (timer == 1080)
+			{
+				MeganTalk("I'm free...");
+			}
+			if (timer == 1200)
+			{
+				BluemagicWorld.downedBlushie = true;
+				if (Main.netMode == 2)
+				{
+					NetMessage.SendData(MessageID.WorldData);
+				}
+				Item.NewItem((int)Origin.X, (int)Origin.Y, 0, 0, Bluemagic.Instance.ItemType("PuriumCoin"), Main.expertMode ? Main.rand.Next(48, 53) : Main.rand.Next(24, 27));
+				Item.NewItem((int)SkullPos.X, (int)SkullPos.Y, 0, 0, Bluemagic.Instance.ItemType("PuriumCoin"), Main.expertMode ? Main.rand.Next(48, 53) : Main.rand.Next(24, 27));
+				Item.NewItem((int)Origin.X, (int)Origin.Y, 0, 0, Bluemagic.Instance.ItemType("SkyDragonHeart"));
+				Item.NewItem((int)SkullPos.X, (int)SkullPos.Y, 0, 0, Bluemagic.Instance.ItemType("WorldReaver"));
+				Main.NewText(Language.GetTextValue("Announcement.HasBeenDefeated_Single", "blushiemagic"));
+				Reset();
+			}
+		}
+
 		private static void Phase3_Reset(int timer)
 		{
 			MoveTo(ref DragonPos, Origin + new Vector2(0f, -ArenaSize * 0.6f), timer);
@@ -1894,6 +1967,13 @@ namespace Bluemagic.BlushieBoss
 				drawPos.X += 2 * ArenaSize + blockSize;
 				spriteBatch.Draw(outlineTexture, drawPos, Color.White);
 				spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
+			}
+			if (flash > 0)
+			{
+				Texture2D pixel = Bluemagic.Instance.GetTexture("Pixel");
+				int left = centerX - ArenaSize - (int)Main.screenPosition.X;
+				int top = centerY - ArenaSize - (int)Main.screenPosition.Y;
+				spriteBatch.Draw(pixel, new Rectangle(left, top, 2 * ArenaSize, 2 * ArenaSize), Color.White * flash);
 			}
 		}
 

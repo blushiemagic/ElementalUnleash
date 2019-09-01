@@ -132,109 +132,118 @@ namespace Bluemagic.BlushieBoss
 			}
 			else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 1200)
 			{
-				DrawDragonArms(spriteBatch, true);
-				DrawDragonHead(spriteBatch);
+				if (BlushieBoss.Phase3Attack < 9 || BlushieBoss.Timer < 2330)
+				{
+					DrawDragonArms(spriteBatch, BlushieBoss.Phase3Attack < 9 || BlushieBoss.Timer < 2150);
+				}
+				if (BlushieBoss.Phase3Attack < 9 || BlushieBoss.Timer < 3050)
+				{
+					DrawDragonHead(spriteBatch, BlushieBoss.Phase3Attack < 9 || BlushieBoss.Timer < 2210);
+				}
 			}
 			return true;
 		}
 
-		private void DrawDragonHead(SpriteBatch spriteBatch)
+		private void DrawDragonHead(SpriteBatch spriteBatch, bool connect=true)
 		{
-			DrawDragonHead(spriteBatch, npc.Center, BlushieBoss.DragonPos);
+			DrawDragonHead(spriteBatch, npc.Center, BlushieBoss.DragonPos, connect);
 		}
 
-		internal static void DrawDragonHead(SpriteBatch spriteBatch, Vector2 origin, Vector2 dragonPos)
+		internal static void DrawDragonHead(SpriteBatch spriteBatch, Vector2 origin, Vector2 dragonPos, bool connect=true)
 		{
 			Vector2 pos = dragonPos;
-			pos.Y -= 150f;
-			Texture2D neckTexture = Bluemagic.Instance.GetTexture("BlushieBoss/DragonNeck");
-			Vector2 zero = Main.screenPosition + new Vector2(neckTexture.Width / 2, neckTexture.Height / 2);
-			if (Math.Abs(pos.X - origin.X) <= 4f)
+
+			if (connect)
 			{
-				Vector2 direction = pos - origin;
-				float length = direction.Length();
-				if (length > 0f)
+				pos.Y -= 150f;
+				Texture2D neckTexture = Bluemagic.Instance.GetTexture("BlushieBoss/DragonNeck");
+				Vector2 zero = Main.screenPosition + new Vector2(neckTexture.Width / 2, neckTexture.Height / 2);
+				if (Math.Abs(pos.X - origin.X) <= 4f)
 				{
-					direction.Normalize();
-					for (float k = 0f; k <= length; k += 2f)
+					Vector2 direction = pos - origin;
+					float length = direction.Length();
+					if (length > 0f)
 					{
-						spriteBatch.Draw(neckTexture, origin + k * direction - zero, Color.White);
+						direction.Normalize();
+						for (float k = 0f; k <= length; k += 2f)
+						{
+							spriteBatch.Draw(neckTexture, origin + k * direction - zero, Color.White);
+						}
 					}
-				}
-			}
-			else
-			{
-				float angle = (float)Math.Atan2(pos.Y - origin.Y, pos.X - origin.X);
-				Vector2 midpoint = (pos + origin) / 2f;
-				float targetAngle = (angle - MathHelper.PiOver2) / 2f;
-				if (angle > 0f)
-				{
-					targetAngle += angle;
-				}
-				float normal = angle;
-				if (angle < targetAngle)
-				{
-					normal += MathHelper.PiOver2;
 				}
 				else
 				{
-					normal -= MathHelper.PiOver2;
-				}
-				float translatedNormal = normal - targetAngle;
-				Vector2 translatedPos = (midpoint - origin).RotatedBy(-targetAngle);
-				float distanceTo = translatedPos.X - translatedPos.Y / (float)Math.Tan(translatedNormal);
-				Vector2 neck = origin + distanceTo * new Vector2((float)Math.Cos(targetAngle), (float)Math.Sin(targetAngle));
+					float angle = (float)Math.Atan2(pos.Y - origin.Y, pos.X - origin.X);
+					Vector2 midpoint = (pos + origin) / 2f;
+					float targetAngle = (angle - MathHelper.PiOver2) / 2f;
+					if (angle > 0f)
+					{
+						targetAngle += angle;
+					}
+					float normal = angle;
+					if (angle < targetAngle)
+					{
+						normal += MathHelper.PiOver2;
+					}
+					else
+					{
+						normal -= MathHelper.PiOver2;
+					}
+					float translatedNormal = normal - targetAngle;
+					Vector2 translatedPos = (midpoint - origin).RotatedBy(-targetAngle);
+					float distanceTo = translatedPos.X - translatedPos.Y / (float)Math.Tan(translatedNormal);
+					Vector2 neck = origin + distanceTo * new Vector2((float)Math.Cos(targetAngle), (float)Math.Sin(targetAngle));
 
-				pos -= zero;
-				neck -= zero;
-				origin -= zero;
-				Matrix left = new Matrix(pos.X * pos.X, pos.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, origin.X * origin.X, origin.X, 1f, 0f, 0f, 0f, 0f, 1f);
-				Matrix right = new Matrix(pos.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, origin.Y, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
-				Matrix solution = Matrix.Invert(left) * right;
-				float a = solution.M11;
-				float b = solution.M21;
-				float c = solution.M31;
+					pos -= zero;
+					neck -= zero;
+					origin -= zero;
+					Matrix left = new Matrix(pos.X * pos.X, pos.X, 1f, 0f, neck.X * neck.X, neck.X, 1f, 0f, origin.X * origin.X, origin.X, 1f, 0f, 0f, 0f, 0f, 1f);
+					Matrix right = new Matrix(pos.Y, 0f, 0f, 0f, neck.Y, 0f, 0f, 0f, origin.Y, 0f, 0f, 0f, 0f, 0f, 0f, 1f);
+					Matrix solution = Matrix.Invert(left) * right;
+					float a = solution.M11;
+					float b = solution.M21;
+					float c = solution.M31;
 
-				float start = pos.X;
-				float end = origin.X;
-				if (end < start)
-				{
-					start = origin.X;
-					end = pos.X;
+					float start = pos.X;
+					float end = origin.X;
+					if (end < start)
+					{
+						start = origin.X;
+						end = pos.X;
+					}
+					for (float x = start; x < end; x += 1f)
+					{
+						float yStart = (float)(a * x * x + b * x + c);
+						float useEnd = x + 1f;
+						if (useEnd > end)
+						{
+							useEnd = end;
+						}
+						float yEnd = (float)(a * useEnd * useEnd + b * useEnd + c);
+						if (yEnd < yStart)
+						{
+							float temp = yEnd;
+							yEnd = yStart;
+							yStart = temp;
+						}
+						for (float y = yStart; y <= yEnd; y += 1f)
+						{
+							spriteBatch.Draw(neckTexture, new Vector2(x, y), Color.White);
+						}
+					}
+					/* debug
+					spriteBatch.Draw(neckTexture, pos - zero, Color.White);
+					spriteBatch.Draw(neckTexture, neck - zero, Color.White);
+					spriteBatch.Draw(neckTexture, origin - zero, Color.White);
+					spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+					*/
+					pos += zero;
 				}
-				for (float x = start; x < end; x += 1f)
-				{
-					float yStart = (float)(a * x * x + b * x + c);
-					float useEnd = x + 1f;
-					if (useEnd > end)
-					{
-						useEnd = end;
-					}
-					float yEnd = (float)(a * useEnd * useEnd + b * useEnd + c);
-					if (yEnd < yStart)
-					{
-						float temp = yEnd;
-						yEnd = yStart;
-						yStart = temp;
-					}
-					for (float y = yStart; y <= yEnd; y += 1f)
-					{
-						spriteBatch.Draw(neckTexture, new Vector2(x, y), Color.White);
-					}
-				}
-				/* debug
-				spriteBatch.Draw(neckTexture, pos - zero, Color.White);
-				spriteBatch.Draw(neckTexture, neck - zero, Color.White);
-				spriteBatch.Draw(neckTexture, origin - zero, Color.White);
-				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
-				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
-				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
-				spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
-				*/
-				pos += zero;
+				pos.Y += 150f;
 			}
-
-			pos.Y += 150f;
 			Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead_Hurt") : Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead");
 			Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
 			spriteBatch.Draw(dragon, draw, Color.White);
