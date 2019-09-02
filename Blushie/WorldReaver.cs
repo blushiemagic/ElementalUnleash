@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -16,14 +17,21 @@ namespace Bluemagic.Blushie
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Terra Cleaver");
+			DisplayName.SetDefault("Terra Reaver");
 			Tooltip.SetDefault("Cleaves the world to erase your enemies"
+				+ "\nHas a 60 second cooldown"
 				+ "\n'Great for impersonating... someone?'");
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
+		public override bool CanUseItem(Player player)
+		{
+			return player.GetModPlayer<BluemagicPlayer>().worldReaverCooldown <= 0;
+		}
+
 		public override bool UseItem(Player player)
 		{
+			player.GetModPlayer<BluemagicPlayer>().worldReaverCooldown = 3600;
 			if (Main.netMode == 0)
 			{
 				WorldReaverData.Begin(player.whoAmI);
@@ -101,6 +109,22 @@ namespace Bluemagic.Blushie
 			else
 			{
 				player.itemLocation.X += 24f * player.direction;
+			}
+		}
+
+		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor,
+			Color itemColor, Vector2 origin, float scale)
+		{
+			int cooldown = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>().worldReaverCooldown;
+			if (cooldown > 0)
+			{
+				Texture2D texture = Main.cdTexture;
+				Vector2 slotSize = new Vector2(52f, 52f);
+				position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
+				Vector2 drawPos = position + slotSize * Main.inventoryScale / 2f/* - texture.Size() * Main.inventoryScale / 2f*/;
+				float alpha = 0.1f + 0.9f * (cooldown / 3600f);
+				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
+				spriteBatch.Draw(texture, drawPos, null, drawColor * alpha, 0f, textureOrigin, Main.inventoryScale, SpriteEffects.None, 0f);
 			}
 		}
 	}

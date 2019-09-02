@@ -86,6 +86,7 @@ namespace Bluemagic
 		private int blushieImmune = 0;
 		public bool frostFairy = false;
 		public bool skyDragon = false;
+		public int worldReaverCooldown = 0;
 
 		//permanent data
 		public float puriumShieldCharge = 0f;
@@ -897,6 +898,10 @@ namespace Bluemagic
 			StartBadHeal();
 			miscTimer++;
 			miscTimer %= 60;
+			if (worldReaverCooldown > 0)
+			{
+				worldReaverCooldown--;
+			}
 			if (purityShieldMount)
 			{
 				player.hairFrame.Y = 5 * player.hairFrame.Height;
