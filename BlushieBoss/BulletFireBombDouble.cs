@@ -6,15 +6,17 @@ using Terraria;
 
 namespace Bluemagic.BlushieBoss
 {
-	public class BulletFireBomb : Bullet
+	public class BulletFireBombDouble : Bullet
 	{
 		public int Time;
+		public int Time2;
 		public float BombDamageMult;
 
-		public BulletFireBomb(Vector2 position, int time, float damageMult = 1f)
+		public BulletFireBombDouble(Vector2 position, int time, int time2, float damageMult = 1f)
 			: base(position, 32f, BlushieBoss.BulletFireLargeTexture)
 		{
 			this.Time = time;
+			this.Time2 = time2;
 			this.BombDamageMult = damageMult;
 			this.Damage = 0f;
 		}
@@ -31,6 +33,19 @@ namespace Bluemagic.BlushieBoss
 					BlushieBoss.AddBullet(bullet, BombDamageMult);
 				}
 			}
+			if (Time < 0)
+			{
+				Time2--;
+			}
+			if (Time2 == 0)
+			{
+				for (int k = 0; k < 16; k++)
+				{
+					float rot = MathHelper.TwoPi * (k + 0.5f) / 16f;
+					Bullet bullet = new BulletFire(Position, 8f * rot.ToRotationVector2());
+					BlushieBoss.AddBullet(bullet, BombDamageMult);
+				}
+			}
 			for (int k = 0; k < 1; k++)
 			{
 				int dust = Dust.NewDust(Position - new Vector2(Size), 64, 64, 6, 0f, 0f, 0, default(Color), 4f);
@@ -41,7 +56,7 @@ namespace Bluemagic.BlushieBoss
 
 		public override bool ShouldRemove()
 		{
-			return Time < 0;
+			return Time < 0 && Time2 < 0;
 		}
 	}
 }

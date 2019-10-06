@@ -848,7 +848,7 @@ namespace Bluemagic.PuritySpirit
 			}
 		}
 
-		public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
+		/*public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
 		{
 			if (damageTotal >= dpsCap * 60)
 			{
@@ -861,7 +861,7 @@ namespace Bluemagic.PuritySpirit
 				return false;
 			}
 			return true;
-		}
+		}*/
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
@@ -876,10 +876,10 @@ namespace Bluemagic.PuritySpirit
 				}
 			}
 			spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-			if (damageTotal >= dpsCap * 60)
+			/*if (damageTotal >= dpsCap * 60)
 			{
 				spriteBatch.Draw(mod.GetTexture("Mounts/PurityShield"), npc.Center - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(32, 32), 2.5f, SpriteEffects.None, 0f);
-			}
+			}*/
 			return false;
 		}
 

@@ -81,7 +81,10 @@ namespace Bluemagic
 			SkyManager.Instance["Bluemagic:TerraSpirit"] = new TerraSpiritSky();
 			SkyManager.Instance["Bluemagic:BlushieBoss"] = new BlushieSky();
 			Overlays.Scene["Bluemagic:WorldReaver"] = new WorldReaverOverlay();
-			Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/WorldReaver")), "WorldReaver"), EffectPriority.VeryHigh);
+			if (!Main.dedServ)
+			{
+				Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/WorldReaver")), "WorldReaver"), EffectPriority.VeryHigh);
+			}
 
 			ModTranslation text = CreateTranslation("PhantomSummon");
 			text.SetDefault("You feel something cold leeching your life...");
@@ -160,6 +163,7 @@ namespace Bluemagic
 			Thorium = null;
 			Sushi = null;
 			HealthBars = null;
+			BlushieBoss.BlushieBoss.Unload();
 		}
 
 		public override void AddRecipes()

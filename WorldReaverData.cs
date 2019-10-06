@@ -43,7 +43,7 @@ namespace Bluemagic
 
 		public static void Begin(int player)
 		{
-			if (instance == null)
+			if (instance == null && !Main.dedServ)
 			{
 				instance = new WorldReaverData(player);
 				Overlays.Scene.Activate("Bluemagic:WorldReaver");
@@ -53,7 +53,7 @@ namespace Bluemagic
 
 		public static void Update()
 		{
-			if (instance != null)
+			if (instance != null && !Main.dedServ)
 			{
 				instance.UpdateInstance();
 				if (instance.timer >= 300)

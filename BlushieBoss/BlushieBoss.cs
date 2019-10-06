@@ -76,6 +76,7 @@ namespace Bluemagic.BlushieBoss
 		internal static Texture2D BulletBoneTexture;
 		internal static Texture2D CrystalStarTexture;
 		internal static Texture2D BulletDragonLargeTexture;
+		internal static Texture2D BulletDragonDiamondTexture;
 
 		public static bool Active
 		{
@@ -140,7 +141,36 @@ namespace Bluemagic.BlushieBoss
 			BulletSkullTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletSkull");
 			BulletBoneTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletBone");
 			BulletDragonLargeTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragonLarge");
+			BulletDragonDiamondTexture = Bluemagic.Instance.GetTexture("BlushieBoss/BulletDragonDiamond");
 			CrystalStarTexture = Bluemagic.Instance.GetTexture("BlushieBoss/CrystalStar");
+		}
+
+		internal static void Unload()
+		{
+			BulletWhiteTexture = null;
+			BulletGoldTexture = null;
+			BulletGoldLargeTexture = null;
+			BulletStarTexture = null;
+			BulletPurpleTexture = null;
+			BulletBlackTexture = null;
+			BulletBlueTexture = null;
+			BulletBlueLargeTexture = null;
+			BulletBlueSmallTexture = null;
+			BulletBoxBlueTexture = null;
+			BulletFireLargeTexture = null;
+			BulletFireTexture = null;
+			for (var k = 0; k < BulletColorTextures.Length; k++)
+			{
+				BulletColorTextures[k] = null;
+			}
+			BulletLightTexture = null;
+			BulletDragonTexture = null;
+			BulletDragonBreathTexture = null;
+			BulletSkullTexture = null;
+			BulletBoneTexture = null;
+			BulletDragonLargeTexture = null;
+			BulletDragonDiamondTexture = null;
+			CrystalStarTexture = null;
 		}
 
 		internal static void Update()
@@ -408,11 +438,11 @@ namespace Bluemagic.BlushieBoss
 						AddBullet(BulletRotate.NewGold(center, length / 2f, useRotate + MathHelper.Pi, -MathHelper.TwoPi / 180f, 180));
 					}
 				}
-				if (Timer >= 1320 && Timer <= 1920 && Timer % 60 == 0)
+				if (Timer >= 1320 && Timer <= 1920 && Timer % (120 / (Difficulty + 1)) == 0)
 				{
 					Bullet center = BulletTarget.NewGoldLarge(Origin, Main.player[GetTarget()].Center, 60);
 					AddBullet(center);
-					int num = 8 * Difficulty;
+					int num = 8;
 					for (int k = 0; k < num; k++)
 					{
 						float rotate = k / (float)num * MathHelper.TwoPi;
@@ -431,10 +461,10 @@ namespace Bluemagic.BlushieBoss
 						float nextAngle = MathHelper.Pi * 1.5f - (k + 2) * MathHelper.TwoPi / 5f;
 						Vector2 start = angle.ToRotationVector2();
 						Vector2 end = nextAngle.ToRotationVector2();
-						int num = 6 * Difficulty;
+						int num = 6;
 						for (int i = 0; i < num; i++)
 						{
-							if (i == num / 2 - 1 || i == num / 2)
+							if (Difficulty == 1 && (i == num / 2 - 1 || i == num / 2))
 							{
 								continue;
 							}
@@ -474,7 +504,7 @@ namespace Bluemagic.BlushieBoss
 				}
 				if (Timer == 100)
 				{
-					Music("Music - Return of the Snow Queen - by Phyrnna");
+					Music("Music - Return of the Snow Queen - by Phyrnna, for Epic Battle Fantasy 5");
 				}
 				if (Timer == 180)
 				{
@@ -694,23 +724,20 @@ namespace Bluemagic.BlushieBoss
 						uv.Y -= (float)Math.Floor(uv.Y / 400f) * 400f;
 						DataK = Origin - new Vector2(ArenaSize) + uv;
 					}
-					if (timerK % 8 == 0)
+					int spacing = 8;
+					if (Difficulty > 1)
+					{
+						spacing = 4;
+					}
+					if (timerK % spacing == 0)
 					{
 						for (float x = DataK.X; x <= Origin.X + ArenaSize; x += 400f)
 						{
 							AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y - ArenaSize), new Vector2(0f, 8f)), damage);
-							if (Difficulty >= 2)
-							{
-								AddBullet(BulletSimple.NewBoxBlue(new Vector2(x, Origin.Y + ArenaSize), new Vector2(0f, -8f)), damage);
-							}
 						}
 						for (float y = DataK.Y; y <= Origin.Y + ArenaSize; y += 400f)
 						{
 							AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X - ArenaSize, y), new Vector2(8f, 0f)), damage);
-							if (Difficulty >= 2)
-							{
-								AddBullet(BulletSimple.NewBoxBlue(new Vector2(Origin.X + ArenaSize, y), new Vector2(-8f, 0f)), damage);
-							}
 						}
 					}
 				}
@@ -725,9 +752,16 @@ namespace Bluemagic.BlushieBoss
 			int timerA = (Timer - 600) % 1800;
 			for (int i = 0; i < numCycles; i++)
 			{
-				if (timerA < 450 && timerA % (90 / Difficulty) == 0)
+				if (timerA < 450 && timerA % 90 == 0)
 				{
-					AddBullet(new BulletFireBomb(Main.player[GetTarget()].Center, 120, damage));
+					if (Difficulty == 1)
+					{
+						AddBullet(new BulletFireBomb(Main.player[GetTarget()].Center, 120, damage));
+					}
+					else
+					{
+						AddBullet(new BulletFireBombDouble(Main.player[GetTarget()].Center, 120, 45, damage));
+					}
 				}
 				if (timerA >= 600 && timerA < 1080 && timerA % (12 / Difficulty) == 0)
 				{
@@ -808,21 +842,49 @@ namespace Bluemagic.BlushieBoss
 						Vector2 dir = Main.player[GetTarget()].Center - PosL;
 						DataL2 = dir.ToRotation();
 					}
-					if (timerL % 120 >= 60 && timerL % 120 < 60 + 30 * Difficulty)
+					if (timerL % 120 >= 60 && timerL % 120 < 90)
 					{
 						float normal = DataL2 + MathHelper.PiOver2;
 						Vector2 pos = DataL + (32f * Main.rand.NextFloat() - 16f) * normal.ToRotationVector2();
 						AddBullet(new BulletLightning(pos, 10f * DataL2.ToRotationVector2()), damage);
 					}
+					if (Difficulty > 1 && timerL % 120 >= 60 && timerL % 120 < 75)
+					{
+						float normal = DataL2 + MathHelper.PiOver2;
+						Vector2 pos = DataL + (32f * Main.rand.NextFloat() - 16f) * normal.ToRotationVector2();
+						AddBullet(new BulletLightning(pos, 10f * -DataL2.ToRotationVector2()), damage);
+					}
 				}
-				if (timerL >= 1440 && timerL < 2080 && (Difficulty > 1 || timerL % 2 == 0))
+				if (timerL >= 1440 && timerL < 2080)
 				{
 					float rot = timerL;
-					int num = 1;
-					for (int k = 0; k < num; k++)
+					if (Difficulty == 1 || Difficulty >= 4)
 					{
-						float useRot = rot + k * MathHelper.TwoPi / num;
-						AddBullet(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * useRot.ToRotationVector2()), damage);
+						if (timerL % 2 == 0 || Difficulty >= 4)
+						{
+							AddBullet(new BulletPull(PosL + 1600f * (float)Math.Sqrt(2) * rot.ToRotationVector2()), damage);
+						}
+					}
+					else
+					{
+						float useRot = rot;
+						float useDistance = 1600f * (float)Math.Sqrt(2);
+						if (timerL % 4 == 0)
+						{
+							AddBullet(new BulletPull(PosL + useDistance * useRot.ToRotationVector2()), damage);
+						}
+						if (timerL % 4 == 1)
+						{
+							useRot += 1f / 3f;
+							useDistance += 2f;
+							AddBullet(new BulletPull(PosL + useDistance * useRot.ToRotationVector2()), damage);
+						}
+						if (timerL % 4 == 3)
+						{
+							useRot -= 1f / 3f;
+							useDistance -= 2f;
+							AddBullet(new BulletPull(PosL + useDistance * useRot.ToRotationVector2()), damage);
+						}
 					}
 				}
 				timerL = (timerL + 1100) % 2200;
@@ -1118,13 +1180,21 @@ namespace Bluemagic.BlushieBoss
 				dir = dir.RotatedBy(Main.rand.NextFloat() * 0.2f - 0.1f);
 				AddBullet(BulletSimple.NewSkull(pos, 64f * dir), 1.5f);
 			}
-			if (timer % 120 == 0)
+			if (timer % (240 / (1 + Difficulty)) == 0)
 			{
 				Phase3Data1 = Main.player[GetTarget()].Center;
+				if (Difficulty >= 2)
+				{
+					Phase3Data2 = 5f * Main.player[GetTarget()].velocity;
+				}
+				else
+				{
+					Phase3Data2 = Vector2.Zero;
+				}
 			}
-			if (timer % (120 / Difficulty) <= 10)
+			if (timer % (240 / (1 + Difficulty)) <= 10)
 			{
-				Vector2 dir = Phase3Data1 - ArmLeftPos;
+				Vector2 dir = Phase3Data1 + Phase3Data2 - ArmLeftPos;
 				dir.Normalize();
 				AddBullet(BulletSimple.NewDragon(ArmLeftPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(MathHelper.Pi / 6f);
@@ -1139,7 +1209,7 @@ namespace Bluemagic.BlushieBoss
 				dir = dir.RotatedBy(-MathHelper.Pi / 3f);
 				AddBullet(BulletSimple.NewDragon(ArmRightPos, 16f * dir), 0.75f);
 
-				dir = Phase3Data1 - BoneLTPos;
+				dir = Phase3Data1 + Phase3Data2 - BoneLTPos;
 				dir.Normalize();
 				AddBullet(BulletSimple.NewBone(BoneLTPos, 16f * dir), 0.75f);
 				dir = dir.RotatedBy(MathHelper.Pi / 6f);
@@ -1213,7 +1283,16 @@ namespace Bluemagic.BlushieBoss
 			ArmLeftPos = Origin + goToPos;
 			ArmRightPos = Origin - goToPos;
 
-			if (timer % (8 / Difficulty) == 0)
+			int interval = 8;
+			if (Difficulty == 2)
+			{
+				interval = 6;
+			}
+			if (Difficulty > 2)
+			{
+				interval = 4;
+			}
+			if (timer % interval == 0)
 			{
 				Vector2 target = Main.player[GetTarget()].Center;
 				Vector2 dir = target - ArmLeftPos;
@@ -1272,7 +1351,12 @@ namespace Bluemagic.BlushieBoss
 			BoneRTRot = rotation + MathHelper.PiOver4;
 			BoneRBPos = target + radius * (rotation + MathHelper.PiOver4).ToRotationVector2();
 			BoneRBRot = rotation - MathHelper.PiOver4;
-			if (timer % (60 / Difficulty) == 0)
+			int difficulty = Difficulty;
+			if (difficulty > 3)
+			{
+				difficulty = 3;
+			}
+			if (timer % (120 / (Difficulty + 1)) == 0)
 			{
 				Vector2 dir = target - BoneLTPos;
 				dir.Normalize();
@@ -1707,7 +1791,7 @@ namespace Bluemagic.BlushieBoss
 				int sections = 8;
 				float sectionWidth = 2f * ArenaSize / sections;
 				bool spawnBig = timer % 2 == 0;
-				int chance = 32 / Difficulty;
+				int chance = 32;
 				for (int k = 0; k < sections; k++)
 				{
 					if (Main.rand.Next(chance) == 0)
@@ -1728,6 +1812,20 @@ namespace Bluemagic.BlushieBoss
 							x += sectionWidth * Main.rand.NextFloat();
 							float y = Origin.Y - ArenaSize - 4f;
 							AddBullet(BulletSimple.NewDragonLarge(new Vector2(x, y), new Vector2(0f, 4f)));
+						}
+					}
+				}
+				if (Difficulty >= 2 && timer % 4 == 0)
+				{
+					for (int k = 0; k < sections; k++)
+					{
+						if (Main.rand.Next(2 * chance) == 0)
+						{
+							float x = Origin.X - ArenaSize + k * sectionWidth;
+							x += sectionWidth * Main.rand.NextFloat();
+							float y = Origin.Y - ArenaSize - 4f;
+							float threshold = Origin.Y - ArenaSize / 2f + ArenaSize * Main.rand.NextFloat();
+							AddBullet(BulletSplit.NewDragonDiamond(new Vector2(x, y), 6f, threshold));
 						}
 					}
 				}
