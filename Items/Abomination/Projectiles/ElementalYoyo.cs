@@ -62,7 +62,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 						}
 					}
 					shootVel *= 0.8f;
-					Projectile.NewProjectile(projectile.Center - shootVel, shootVel, mod.ProjectileType<ElementalYoyoBeam>(), projectile.damage, projectile.knockBack, projectile.owner, Main.rand.Next(6), 0f);
+					Projectile.NewProjectile(projectile.Center - shootVel, shootVel, ModContent.ProjectileType<ElementalYoyoBeam>(), projectile.damage, projectile.knockBack, projectile.owner, Main.rand.Next(6), 0f);
 					projectile.localAI[1] = 0f;
 				}
 			}
