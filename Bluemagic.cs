@@ -145,7 +145,10 @@ namespace Bluemagic
             Calamity = ModLoader.GetMod("CalamityMod");
             Thorium = ModLoader.GetMod("ThoriumMod");
             Sushi = ModLoader.GetMod("imkSushisMod");
-            BlushieBoss.BlushieBoss.Load();
+            if (!Main.dedServ)
+            {
+                BlushieBoss.BlushieBoss.Load();
+            }
 
             HealthBars = ModLoader.GetMod("FKBossHealthBar");
             if (HealthBars != null)
