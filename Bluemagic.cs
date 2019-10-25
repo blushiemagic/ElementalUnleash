@@ -139,8 +139,6 @@ namespace Bluemagic
                 bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
                 bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
                 bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
-                bossList.Call("AddBossWithInfo", "blushiemagic (Phases 1-2)", float.MaxValue - 1e37f, (Func<bool>)(() => BluemagicWorld.blushieCheckpoint > 0f), "Please don't do this");
-                bossList.Call("AddBossWithInfo", "blushiemagic", float.MaxValue, (Func<bool>)(() => BluemagicWorld.downedBlushie), "How did you do this");
             }
             Calamity = ModLoader.GetMod("CalamityMod");
             Thorium = ModLoader.GetMod("ThoriumMod");

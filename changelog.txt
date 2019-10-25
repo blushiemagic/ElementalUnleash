@@ -1,13 +1,3 @@
-memory improvements on reloading mods
-purium slicer no longer flies across the entire map
-fixed bug where item icon can hide custom stat boosts
-added shield visuals for bosses with dps caps
-added salt
-nerfed purium armor defense
-nerfed emblem of the void damage
-buffed terra spirit's final phase
-buffed the elemental sprayer
-fixed bug where chaos spirit arms have health bars
-resprited many many things
-purity shield mount can pass through platforms
-updated to tModLoader v0.11
+updated to tModLoader v0.11.5
+fixed loading crash on dedicated servers
+reduced mod file size

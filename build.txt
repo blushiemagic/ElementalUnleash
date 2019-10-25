@@ -5,4 +5,4 @@ homepage = https://forums.terraria.org/index.php?threads/elemental-unleash-bluem
 hideCode = false
 hideResources = false
 includeSource = true
-buildIgnore = Sounds\MusicFull\*, .git\*, changelog.txt, OldArt\*, NewArt\*
+buildIgnore = Sounds\MusicFull\*, .git\*, changelog.txt, OldArt\*, NewArt\*, OldSounds\*
