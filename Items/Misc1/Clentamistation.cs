@@ -5,37 +5,37 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Misc1
 {
-	public class Clentamistation : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			Tooltip.SetDefault("Clentaminates items");
-		}
+    public class Clentamistation : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+            Tooltip.SetDefault("Clentaminates items");
+        }
 
-		public override void SetDefaults()
-		{
-			item.width = 26;
-			item.height = 20;
-			item.maxStack = 99;
-			item.rare = 5;
-			item.value = 2000000;
-			item.useStyle = 1;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.createTile = mod.TileType("Clentamistation");
-		}
+        public override void SetDefaults()
+        {
+            item.width = 26;
+            item.height = 20;
+            item.maxStack = 99;
+            item.rare = 5;
+            item.value = 2000000;
+            item.useStyle = 1;
+            item.useTurn = true;
+            item.useAnimation = 15;
+            item.useTime = 10;
+            item.autoReuse = true;
+            item.consumable = true;
+            item.createTile = mod.TileType("Clentamistation");
+        }
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ImbuingStation);
-			recipe.AddIngredient(ItemID.Clentaminator);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
-	}
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.ImbuingStation);
+            recipe.AddIngredient(ItemID.Clentaminator);
+            recipe.AddTile(TileID.TinkerersWorkbench);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
+    }
 }

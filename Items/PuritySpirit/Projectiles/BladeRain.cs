@@ -5,36 +5,36 @@ using Terraria.ModLoader;
 
 namespace Bluemagic.Items.PuritySpirit.Projectiles
 {
-	public class BladeRain : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Dance of Blades");
-		}
+    public class BladeRain : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Dance of Blades");
+        }
 
-		public override void SetDefaults()
-		{
-			projectile.width = 32;
-			projectile.height = 100;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-			projectile.melee = true;
-			projectile.alpha = 30;
-		}
+        public override void SetDefaults()
+        {
+            projectile.width = 32;
+            projectile.height = 100;
+            projectile.friendly = true;
+            projectile.penetrate = -1;
+            projectile.tileCollide = false;
+            projectile.ignoreWater = true;
+            projectile.melee = true;
+            projectile.alpha = 30;
+        }
 
-		public override void AI()
-		{
-			if (projectile.position.Y > Main.player[projectile.owner].position.Y + 400)
-			{
-				projectile.Kill();
-			}
-		}
+        public override void AI()
+        {
+            if (projectile.position.Y > Main.player[projectile.owner].position.Y + 400)
+            {
+                projectile.Kill();
+            }
+        }
 
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return Color.White * 0.8f;
-		}
-	}
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White * 0.8f;
+        }
+    }
 }
