@@ -389,7 +389,7 @@ namespace Bluemagic.ChaosSpirit
 
 		public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
 		{
-			BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>();
 			modPlayer.constantDamage = npc.damage;
 			modPlayer.percentDamage = 1f / 3f;
 			if (Main.expertMode)

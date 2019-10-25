@@ -47,7 +47,7 @@ namespace Bluemagic.PuritySpirit
 			projectile.localAI[0] += 1f;
 			if (!Main.dedServ && projectile.localAI[0] >= 180f && projectile.localAI[0] < 480f && Main.rand.Next(10) == 0)
 			{
-				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 				if (modPlayer.heroLives > 0)
 				{
 					Main.PlaySound(2, -1, -1, 14);
@@ -123,7 +123,7 @@ namespace Bluemagic.PuritySpirit
 		{
 			if (target.hurtCooldowns[1] <= 0)
 			{
-				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>();
 				modPlayer.constantDamage = projectile.damage;
 				modPlayer.percentDamage = Main.expertMode ? 1.2f : 1f;
 			}

@@ -20,7 +20,7 @@ namespace Bluemagic.Buffs.PuritySpirit
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).nullified = true;
+			player.GetModPlayer<BluemagicPlayer>().nullified = true;
 		}
 	}
 }

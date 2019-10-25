@@ -17,7 +17,7 @@ namespace Bluemagic.Buffs.Summons
 		{
 			player.mount.SetMount(mod.MountType("PurityShield"), player);
 			player.buffTime[buffIndex] = 10;
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.puriumShieldChargeRate += 0.1f;
 			modPlayer.purityShieldMount = true;
 		}

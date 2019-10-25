@@ -47,7 +47,7 @@ namespace Bluemagic.PuritySpirit
 			}
 			if (projectile.localAI[0] % 10 == 0)
 			{
-				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 				if (modPlayer.heroLives > 0)
 				{
 					Main.PlaySound(2, -1, -1, 20);
@@ -88,7 +88,7 @@ namespace Bluemagic.PuritySpirit
 		{
 			if (target.hurtCooldowns[1] <= 0)
 			{
-				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>();
 				modPlayer.defenseEffect = 1f;
 			}
 		}

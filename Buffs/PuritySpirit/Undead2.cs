@@ -21,7 +21,7 @@ namespace Bluemagic.Buffs.PuritySpirit
 		{
 			int extra = player.buffTime[buffIndex] / 60;
 			player.buffTime[buffIndex] -= extra;
-			player.GetModPlayer<BluemagicPlayer>(mod).healHurt = extra + 1;
+			player.GetModPlayer<BluemagicPlayer>().healHurt = extra + 1;
 		}
 
 		public override bool ReApply(Player player, int time, int buffIndex)

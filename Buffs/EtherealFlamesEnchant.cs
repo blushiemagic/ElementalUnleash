@@ -16,7 +16,7 @@ namespace Bluemagic.Buffs
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant = 1;
+			player.GetModPlayer<BluemagicPlayer>().customMeleeEnchant = 1;
 		}
 	}
 }

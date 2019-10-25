@@ -99,7 +99,7 @@ namespace Bluemagic.ChaosSpirit
 		{
 			if (target.hurtCooldowns[1] <= 0)
 			{
-				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>();
 				modPlayer.constantDamage = 360;
 				modPlayer.percentDamage = 0.6f;
 				if (Main.expertMode)

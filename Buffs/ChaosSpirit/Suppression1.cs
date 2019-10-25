@@ -20,7 +20,7 @@ namespace Bluemagic.Buffs.ChaosSpirit
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).suppression = 0.25f;
+			player.GetModPlayer<BluemagicPlayer>().suppression = 0.25f;
 		}
 	}
 }

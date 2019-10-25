@@ -1,5 +1,5 @@
 author = blushiemagic
-version = 1.3.3.1
+version = 1.3.4
 displayName = Elemental Unleash
 homepage = https://forums.terraria.org/index.php?threads/elemental-unleash-bluemagics-endgame-bosses-mod.45905/
 hideCode = false

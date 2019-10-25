@@ -27,7 +27,7 @@ namespace Bluemagic.Items.PurityCraft
 		{
 			player.manaMagnet = true;
 			player.magicDamage += 0.3f;
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.manaMagnet2 = true;
 		}
 

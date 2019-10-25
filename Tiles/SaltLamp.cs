@@ -30,7 +30,7 @@ namespace Bluemagic.Tiles
 		{
 			if (closer)
 			{
-				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 				modPlayer.saltLamp = true;
 			}
 		}

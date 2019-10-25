@@ -883,7 +883,7 @@ namespace Bluemagic.TerraSpirit
 			{
 				byte lives = reader.ReadByte();
 				Player player = Main.player[Main.myPlayer];
-				player.GetModPlayer<BluemagicPlayer>(mod).terraLives = lives;
+				player.GetModPlayer<BluemagicPlayer>().terraLives = lives;
 				Main.NewText("You have " + lives + " lives!");
 			}
 		}

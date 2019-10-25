@@ -31,13 +31,13 @@ namespace Bluemagic.Items.ChaosSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).chaosStats;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>().chaosStats;
 			return stats.CanUpgrade();
 		}
 
 		public override bool UseItem(Player player)
 		{
-			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).chaosStats;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>().chaosStats;
 			stats.Points++;
 			return true;
 		}

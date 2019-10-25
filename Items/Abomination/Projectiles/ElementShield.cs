@@ -47,7 +47,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 				projectile.Kill();
 				return;
 			}
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (modPlayer.elementShields <= projectile.ai[0])
 			{
 				projectile.Kill();

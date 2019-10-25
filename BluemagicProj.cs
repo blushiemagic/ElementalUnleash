@@ -12,7 +12,7 @@ namespace Bluemagic.Projectiles
 		{
 			if (projectile.type != ProjectileID.NorthPoleSnowflake && !projectile.npcProj && projectile.melee && !projectile.noEnchantments && Main.player[projectile.owner].active)
 			{
-				int meleeEnchant = Main.player[projectile.owner].GetModPlayer<BluemagicPlayer>(mod).customMeleeEnchant;
+				int meleeEnchant = Main.player[projectile.owner].GetModPlayer<BluemagicPlayer>().customMeleeEnchant;
 				if (meleeEnchant == 1)
 				{
 					if (Main.rand.Next(2) == 0)

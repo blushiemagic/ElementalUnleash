@@ -149,7 +149,7 @@ namespace Bluemagic.ChaosSpirit
 				targets.Clear();
 				for (int k = 0; k < 255; k++)
 				{
-					if (Main.player[k].active && Main.player[k].GetModPlayer<BluemagicPlayer>(mod).heroLives > 0)
+					if (Main.player[k].active && Main.player[k].GetModPlayer<BluemagicPlayer>().heroLives > 0)
 					{
 						targets.Add(k);
 					}
@@ -477,7 +477,7 @@ namespace Bluemagic.ChaosSpirit
 			if (type == ChaosSpiritMessageType.HeroPlayer)
 			{
 				Player player = Main.player[Main.myPlayer];
-				player.GetModPlayer<BluemagicPlayer>(mod).heroLives = reader.ReadInt32();
+				player.GetModPlayer<BluemagicPlayer>().heroLives = reader.ReadInt32();
 			}
 			else if (type == ChaosSpiritMessageType.TargetList)
 			{

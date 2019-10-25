@@ -258,12 +258,12 @@ namespace Bluemagic.Interface
 
 		private static CustomStats GetChaosStats()
 		{
-			return Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(Bluemagic.Instance).chaosStats;
+			return Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>().chaosStats;
 		}
 
 		private static CustomStats GetCataclysmStats()
 		{
-			return Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(Bluemagic.Instance).cataclysmStats;
+			return Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>().cataclysmStats;
 		}
 
 		public static void DrawMouseOver()
@@ -278,7 +278,7 @@ namespace Bluemagic.Interface
 				return;
 			}
 			Mod mod = Bluemagic.Instance;
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 
 			for (int k = 0; k < 5; k++)
 			{

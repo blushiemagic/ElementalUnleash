@@ -32,13 +32,13 @@ namespace Bluemagic.Items.ChaosSpirit
 
 		public override bool CanUseItem(Player player)
 		{
-			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).cataclysmStats;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>().cataclysmStats;
 			return stats.CanUpgrade();
 		}
 
 		public override bool UseItem(Player player)
 		{
-			CustomStats stats = player.GetModPlayer<BluemagicPlayer>(mod).cataclysmStats;
+			CustomStats stats = player.GetModPlayer<BluemagicPlayer>().cataclysmStats;
 			stats.Points++;
 			return true;
 		}

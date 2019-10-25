@@ -10,7 +10,7 @@ namespace Bluemagic
 	{
 		public override bool CanUseItem(Item item, Player player)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (item.mountType > -1 && modPlayer.CursedMount())
 			{
 				return false;
@@ -20,7 +20,7 @@ namespace Bluemagic
 
 		public override bool ConsumeItem(Item item, Player player)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (item.thrown && Main.rand.NextFloat() < modPlayer.thrownCost)
 			{
 				return false;
@@ -30,7 +30,7 @@ namespace Bluemagic
 
 		public override void GrabRange(Item item, Player player, ref int grabRange)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if ((item.type == ItemID.Star || item.type == ItemID.SoulCake || item.type == ItemID.SugarPlum) && modPlayer.manaMagnet2)
 			{
 				grabRange += 100;
@@ -43,7 +43,7 @@ namespace Bluemagic
 
 		public override bool OnPickup(Item item, Player player)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if ((item.type == ItemID.Star || item.type == ItemID.SoulCake || item.type == ItemID.SugarPlum) && modPlayer.manaMagnet2)
 			{
 				Main.PlaySound(7, (int)player.position.X, (int)player.position.Y, 1);

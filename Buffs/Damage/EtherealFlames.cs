@@ -20,7 +20,7 @@ namespace Bluemagic.Buffs.Damage
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).eFlames = true;
+			player.GetModPlayer<BluemagicPlayer>().eFlames = true;
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)

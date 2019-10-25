@@ -35,7 +35,7 @@ namespace Bluemagic.Tiles
 		{
 			if (Main.tile[i, j].frameY >= 56)
 			{
-				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 				modPlayer.voidMonolith = true;
 			}
 		}

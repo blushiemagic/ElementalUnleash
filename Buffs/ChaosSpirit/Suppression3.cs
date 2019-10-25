@@ -20,7 +20,7 @@ namespace Bluemagic.Buffs.ChaosSpirit
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).suppression = 0.75f;
+			player.GetModPlayer<BluemagicPlayer>().suppression = 0.75f;
 			if (player.buffTime[buffIndex] == 1)
 			{
 				player.buffType[buffIndex] = mod.BuffType("Suppression2");

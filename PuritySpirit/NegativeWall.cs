@@ -64,7 +64,7 @@ namespace Bluemagic.PuritySpirit
 				Player player = Main.player[k];
 				if (player.active && !player.dead && player.Hitbox.Intersects(projectile.Hitbox))
 				{
-					BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+					BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 					if (modPlayer.purityDebuffCooldown <= 0)
 					{
 						modPlayer.PuritySpiritDebuff();

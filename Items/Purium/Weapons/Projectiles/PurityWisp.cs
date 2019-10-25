@@ -36,7 +36,7 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 		public override void CheckActive()
 		{
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (player.dead)
 			{
 				modPlayer.purityMinion = false;

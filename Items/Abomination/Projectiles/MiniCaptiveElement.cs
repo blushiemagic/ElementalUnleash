@@ -109,7 +109,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 				projectile.localAI[0] = 1f;
 			}
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			projectile.frame = element;
 			if (Main.rand.Next(4) == 0)
 			{

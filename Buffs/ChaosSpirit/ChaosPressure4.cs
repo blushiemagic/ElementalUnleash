@@ -22,7 +22,7 @@ namespace Bluemagic.Buffs.ChaosSpirit
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.chaosPressure = 4;
 			modPlayer.puriumShieldChargeRate -= 0.4f;
 		}

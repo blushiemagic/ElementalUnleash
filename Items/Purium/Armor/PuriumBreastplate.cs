@@ -45,7 +45,7 @@ namespace Bluemagic.Items.Purium.Armor
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).puriumShieldChargeMax += 1200f;
+			player.GetModPlayer<BluemagicPlayer>().puriumShieldChargeMax += 1200f;
 			player.setBonus = "Increases purity shield capacity by 1200";
 		}
 

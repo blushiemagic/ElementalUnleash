@@ -16,7 +16,7 @@ namespace Bluemagic.Buffs.Summons
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (player.ownedProjectileCounts[mod.ProjectileType("SkyDragonHead")] > 0)
 			{
 				modPlayer.skyDragon = true;

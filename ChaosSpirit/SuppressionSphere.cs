@@ -36,7 +36,7 @@ namespace Bluemagic.ChaosSpirit
 				if (player.active && !player.dead && Ellipse.Collides(projectile.position, new Vector2(projectile.width, projectile.height), player.position, new Vector2(player.width, player.height)))
 				{
 					bool flag = true;
-					for (int i = 0; i < Player.maxBuffs; i++)
+					for (int i = 0; i < Player.MaxBuffs; i++)
 					{
 						if (player.buffType[i] == mod.BuffType("Suppression1"))
 						{

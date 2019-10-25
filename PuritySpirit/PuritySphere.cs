@@ -106,7 +106,7 @@ namespace Bluemagic.PuritySpirit
 			}
 			if (timer == maxTimer)
 			{
-				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 				if (modPlayer.heroLives > 0)
 				{
 					Main.PlaySound(2, -1, -1, 12);

@@ -58,7 +58,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 		public override void CheckActive()
 		{
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (player.dead)
 			{
 				modPlayer.voidEmissary = false;

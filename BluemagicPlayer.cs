@@ -784,7 +784,7 @@ namespace Bluemagic
 			if (puriumShieldChargeMax > 0f)
 			{
 				ChargePuriumShield(0.001f);
-				for (int k = 0; k < Player.maxBuffs; k++)
+				for (int k = 0; k < Player.MaxBuffs; k++)
 				{
 					if (puriumShieldCharge < buffImmuneCost)
 					{
@@ -1648,7 +1648,7 @@ namespace Bluemagic
 					return;
 				}
 				Mod mod = ModLoader.GetMod("Bluemagic");
-				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
 				if (modPlayer.reviveTime > 0)
 				{
 					Texture2D texture = mod.GetTexture("PuritySpirit/Revive");
@@ -1670,7 +1670,7 @@ namespace Bluemagic
 					return;
 				}
 				Mod mod = ModLoader.GetMod("Bluemagic");
-				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>(mod);
+				BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
 				if (modPlayer.badHeal)
 				{
 					Texture2D texture = mod.GetTexture("Buffs/PuritySpirit/Skull");

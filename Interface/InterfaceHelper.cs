@@ -67,7 +67,7 @@ namespace Bluemagic.Interface
 				return true;
 			}
 			Mod mod = Bluemagic.Instance;
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (modPlayer.puriumShieldChargeMax <= 0f)
 			{
 				return true;
@@ -128,7 +128,7 @@ namespace Bluemagic.Interface
 				return;
 			}
 			Mod mod = Bluemagic.Instance;
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (modPlayer.puriumShieldChargeMax <= 0f)
 			{
 				return;

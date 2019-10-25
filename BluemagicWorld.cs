@@ -244,7 +244,7 @@ namespace Bluemagic
 
 		public override void ResetNearbyTileEffects()
 		{
-			BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>();
 			modPlayer.voidMonolith = false;
 			modPlayer.saltLamp = false;
 		}

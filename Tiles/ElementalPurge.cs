@@ -18,7 +18,7 @@ namespace Bluemagic.Tiles
 			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Origin = new Point16(1, 2);
 			TileObjectData.newTile.CoordinateHeights = new int[]{ 16, 16, 18 };
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEElementalPurge>().Hook_AfterPlacement, -1, 0, false);
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<TEElementalPurge>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Elemental Purge");
@@ -30,7 +30,7 @@ namespace Bluemagic.Tiles
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			Item.NewItem(i * 16, j * 16, 32, 48, mod.ItemType("ElementalPurge"));
-			mod.GetTileEntity<TEElementalPurge>().Kill(i, j);
+			ModContent.GetInstance<TEElementalPurge>().Kill(i, j);
 		}
 
 		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

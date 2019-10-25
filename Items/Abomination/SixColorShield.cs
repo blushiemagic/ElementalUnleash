@@ -31,7 +31,7 @@ namespace Bluemagic.Items.Abomination
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.GetModPlayer<BluemagicPlayer>(mod).elementShield = true;
+			player.GetModPlayer<BluemagicPlayer>().elementShield = true;
 		}
 
 		public override Color? GetAlpha(Color lightColor)

@@ -56,7 +56,7 @@ namespace Bluemagic.Blushie
 		public override void CheckActive()
 		{
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (player.dead)
 			{
 				modPlayer.skyDragon = false;

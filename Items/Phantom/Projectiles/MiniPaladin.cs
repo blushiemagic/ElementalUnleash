@@ -35,7 +35,7 @@ namespace Bluemagic.Items.Phantom.Projectiles
 		public override void CheckActive()
 		{
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (player.dead)
 			{
 				modPlayer.paladinMinion = false;
@@ -49,7 +49,7 @@ namespace Bluemagic.Items.Phantom.Projectiles
 		public override void Behavior()
 		{
 			Player player = Main.player[projectile.owner];
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(mod);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			if (projectile.ai[1] > 0)
 			{
 				projectile.ai[1]--;

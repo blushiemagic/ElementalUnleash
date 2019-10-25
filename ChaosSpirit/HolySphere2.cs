@@ -36,7 +36,7 @@ namespace Bluemagic.ChaosSpirit
 					Player player = Main.player[Main.myPlayer];
 					if (!Ellipse.Collides(projectile.position, new Vector2(projectile.width, projectile.height), player.position, new Vector2(player.width, player.height)))
 					{
-						player.GetModPlayer<BluemagicPlayer>(mod).ChaosKill();
+						player.GetModPlayer<BluemagicPlayer>().ChaosKill();
 						player.AddBuff(mod.BuffType("Undead"), 300, false);
 					}
 				}

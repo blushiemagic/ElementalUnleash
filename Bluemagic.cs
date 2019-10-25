@@ -303,7 +303,7 @@ namespace Bluemagic
 			{
 				Player player = Main.player[reader.ReadInt32()];
 				int lives = reader.ReadInt32();
-				player.GetModPlayer<BluemagicPlayer>(this).heroLives = lives;
+				player.GetModPlayer<BluemagicPlayer>().heroLives = lives;
 				if (lives > 0)
 				{
 					NetworkText text;

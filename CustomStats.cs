@@ -319,7 +319,7 @@ namespace Bluemagic
 		public static void AmmoCost(Player player, int points)
 		{
 			Mod mod = ModLoader.GetMod("Bluemagic");
-			player.GetModPlayer<BluemagicPlayer>(mod).ammoCost += 0.08f * points;
+			player.GetModPlayer<BluemagicPlayer>().ammoCost += 0.08f * points;
 		}
 
 		public const string AmmoCostTip = "+ 8% chance not to consume ammo per level";
@@ -340,7 +340,7 @@ namespace Bluemagic
 
 		public static void ThrownCost(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.thrownCost += 0.08f * points;
 		}
 
@@ -369,7 +369,7 @@ namespace Bluemagic
 
 		public static void PuriumShieldChargeMax(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.puriumShieldChargeMax += 100 * points;
 		}
 
@@ -377,7 +377,7 @@ namespace Bluemagic
 
 		public static void PuriumShieldFillRate(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.puriumShieldChargeRate += 0.1f * points;
 		}
 
@@ -385,7 +385,7 @@ namespace Bluemagic
 
 		public static void PuriumShieldEnduranceMult(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.puriumShieldEnduranceMult += 0.1f * points;
 		}
 
@@ -422,7 +422,7 @@ namespace Bluemagic
 
 		public static void MiscOffense(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			player.meleeSpeed += 0.03f * points;
 			modPlayer.ammoCost += 0.04f * points;
 			player.manaCost *= (1f - 0.05f * points);
@@ -485,7 +485,7 @@ namespace Bluemagic
 
 		public static void LifeRegen2(Player player, int points)
 		{
-			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>(Bluemagic.Instance);
+			BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
 			modPlayer.cancelBadRegen += 4 * points;
 		}
 
