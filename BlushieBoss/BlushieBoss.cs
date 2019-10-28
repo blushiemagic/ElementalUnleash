@@ -159,9 +159,12 @@ namespace Bluemagic.BlushieBoss
             BulletBoxBlueTexture = null;
             BulletFireLargeTexture = null;
             BulletFireTexture = null;
-            for (var k = 0; k < BulletColorTextures.Length; k++)
+            if (BulletColorTextures != null)
             {
-                BulletColorTextures[k] = null;
+                for (var k = 0; k < BulletColorTextures.Length; k++)
+                {
+                    BulletColorTextures[k] = null;
+                }
             }
             BulletLightTexture = null;
             BulletDragonTexture = null;

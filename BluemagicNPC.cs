@@ -135,6 +135,22 @@ namespace Bluemagic
             }
         }
 
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            if (BluemagicWorld.elementalUnleash)
+            {
+                spawnRate = (int)(spawnRate * 0.8);
+                maxSpawns = (int)(maxSpawns * 1.2);
+                int x = (int)(player.position.X / 16f);
+                int y = (int)(player.position.Y / 16f);
+                if (y < Main.worldSurface * 16 && (player.ZoneDesert || x < 250 || x > Main.maxTilesX - 250 || player.ZoneHoly))
+                {
+                    spawnRate = (int)(spawnRate * 2f / 3f);
+                    maxSpawns++;
+                }
+            }
+        }
+
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             if (eFlames)

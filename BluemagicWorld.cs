@@ -249,6 +249,13 @@ namespace Bluemagic
             modPlayer.saltLamp = false;
         }
 
+        public override void TileCountsAvailable(int[] tileCounts)
+        {
+            Main.shroomTiles += tileCounts[mod.TileType("Shroomstone")];
+            Main.shroomTiles += tileCounts[mod.TileType("Shroomsand")];
+            Main.shroomTiles += tileCounts[mod.TileType("DarkBlueIce")];
+        }
+
         public override void PostUpdate()
         {
             Bluemagic.UpdatePureColor();

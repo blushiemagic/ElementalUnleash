@@ -48,6 +48,8 @@ namespace Bluemagic
         public const float reviveCost = 1000f;
         private int miscTimer = 0;
         public bool purityMinion = false;
+        public int liquified = 0;
+        private int transformFrameCounter = 0;
 
         public int heroLives = 0;
         public int reviveTime = 0;
@@ -116,6 +118,18 @@ namespace Bluemagic
             puriumShieldChargeRate = 1f;
             puriumShieldEnduranceMult = 1f;
             purityMinion = false;
+            if (liquified < 0)
+            {
+                liquified = 0;
+                player.position.X -= (player.width - Player.defaultWidth) / 2f;
+                player.position.Y += player.height - Player.defaultHeight;
+                player.width = Player.defaultWidth;
+                player.height = Player.defaultHeight;
+            }
+            else
+            {
+                liquified *= -1;
+            }
             constantDamage = 0;
             percentDamage = 0f;
             defenseEffect = -1f;
@@ -729,7 +743,7 @@ namespace Bluemagic
 
         public override void PostUpdateBuffs()
         {
-            if (nullified)
+            if (IsTransformed())
             {
                 Nullify();
             }
@@ -741,7 +755,7 @@ namespace Bluemagic
 
         public override void PostUpdateEquips()
         {
-            if (nullified)
+            if (IsTransformed())
             {
                 Nullify();
             }
@@ -851,6 +865,53 @@ namespace Bluemagic
             return 0.2f * enduranceFill;
         }
 
+        public override void PostUpdateRunSpeeds()
+        {
+            if (liquified > 0)
+            {
+                if (player.velocity.Y == 0 || player.sliding)
+                {
+                    if (player.velocity.X != 0f)
+                    {
+                        player.velocity.X *= 0.8f;
+                        if (player.velocity.X < 0.1f && player.velocity.X > -0.1f)
+                        {
+                            player.velocity.X = 0f;
+                        }
+                        transformFrameCounter++;
+                    }
+                }
+                else if (player.wet)
+                {
+                    if (player.controlLeft)
+                    {
+                        player.velocity.X = -4f;
+                    }
+                    else if (player.controlRight)
+                    {
+                        player.velocity.X = 4f;
+                    }
+                    if (player.controlJump)
+                    {
+                        player.velocity.Y = -4f;
+                    }
+                }
+                else
+                {
+                    if (player.velocity.X > 0.1f)
+                    {
+                        player.velocity.X = 4f;
+                    }
+                    if (player.velocity.X < -0.1f)
+                    {
+                        player.velocity.X = -4f;
+                    }
+                }
+                transformFrameCounter++;
+                transformFrameCounter %= 16;
+            }
+        }
+
         public override void PreUpdateMovement()
         {
             if (purityShieldMount)
@@ -916,14 +977,21 @@ namespace Bluemagic
             {
                 player.back = mod.GetAccessorySlot("DarkLightningPack_Back", EquipType.Back);
             }
-            if (nullified)
+            if (IsTransformed())
             {
                 Nullify();
             }
         }
 
+        private bool IsTransformed()
+        {
+            return liquified > 0 || nullified;
+        }
+
         private void Nullify()
         {
+            bool saveNullified = this.nullified;
+            int saveLiquified = this.liquified;
             player.ResetEffects();
             player.head = -1;
             player.body = -1;
@@ -938,7 +1006,11 @@ namespace Bluemagic
             player.neck = -1;
             player.face = -1;
             player.balloon = -1;
-            nullified = true;
+            this.nullified = saveNullified;
+            if (!this.nullified)
+            {
+                this.liquified = saveLiquified;
+            }
         }
 
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
@@ -962,6 +1034,36 @@ namespace Bluemagic
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit,
             ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
+            if (liquified != 0)
+            {
+                genGore = false;
+                for (int k = 0; k < damage / (double)player.statLifeMax2 * 100.0; k++)
+                {
+                    Color color = new Color(0, 220, 40, 100);
+                    if (liquified == 2)
+                    {
+                        color = new Color(0, 80, 255, 100);
+                    }
+                    Dust.NewDust(player.position, player.width, player.height, 4, hitDirection, -1f, 175, color, 1f);
+                }
+                playSound = false;
+                Main.PlaySound(3, (int)player.position.X, (int)player.position.Y, 1);
+                int choice = Main.rand.Next(3);
+                string deathText;
+                if (choice == 0)
+                {
+                    deathText = " was reduced to a puddle of gel.";
+                }
+                else if (choice == 1)
+                {
+                    deathText = " was squished.";
+                }
+                else
+                {
+                    deathText = " was not a very good slime.";
+                }
+                damageSource = PlayerDeathReason.ByCustomReason(player.name + deathText);
+            }
             if (constantDamage > 0 || percentDamage > 0f)
             {
                 int damageFromPercent = (int)(player.statLifeMax2 * percentDamage);
@@ -1637,140 +1739,192 @@ namespace Bluemagic
         }
 
         public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("Bluemagic", "MiscEffectsBack", PlayerLayer.MiscEffectsBack, delegate(PlayerDrawInfo drawInfo)
+        {
+            if (drawInfo.shadow != 0f)
             {
-                if (drawInfo.shadow != 0f)
-                {
-                    return;
-                }
-                Player drawPlayer = drawInfo.drawPlayer;
-                if (drawPlayer.dead)
-                {
-                    return;
-                }
-                Mod mod = ModLoader.GetMod("Bluemagic");
-                BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
-                if (modPlayer.reviveTime > 0)
-                {
-                    Texture2D texture = mod.GetTexture("PuritySpirit/Revive");
-                    int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-                    int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 4f - 60f + modPlayer.reviveTime - Main.screenPosition.Y);
-                    DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * (modPlayer.reviveTime / 60f), 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
-                    Main.playerDrawData.Add(data);
-                }
-            });
+                return;
+            }
+            Player drawPlayer = drawInfo.drawPlayer;
+            if (drawPlayer.dead)
+            {
+                return;
+            }
+            Mod mod = ModLoader.GetMod("Bluemagic");
+            BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
+            if (modPlayer.reviveTime > 0)
+            {
+                Texture2D texture = mod.GetTexture("PuritySpirit/Revive");
+                int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 4f - 60f + modPlayer.reviveTime - Main.screenPosition.Y);
+                DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * (modPlayer.reviveTime / 60f), 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+                Main.playerDrawData.Add(data);
+            }
+        });
         public static readonly PlayerLayer MiscEffects = new PlayerLayer("Bluemagic", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate(PlayerDrawInfo drawInfo)
+        {
+            if (drawInfo.shadow != 0f)
             {
-                if (drawInfo.shadow != 0f)
+                return;
+            }
+            Player drawPlayer = drawInfo.drawPlayer;
+            if (drawPlayer.dead)
+            {
+                return;
+            }
+            Mod mod = ModLoader.GetMod("Bluemagic");
+            BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
+            if (modPlayer.badHeal)
+            {
+                Texture2D texture = mod.GetTexture("Buffs/PuritySpirit/Skull");
+                int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
+                DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
+                Main.playerDrawData.Add(data);
+                for (int k = 0; k < 2; k++)
                 {
-                    return;
+                    int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, mod.DustType("Smoke"), 0f, 0f, 0, Color.Black);
+                    Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+                    Main.playerDrawDust.Add(dust);
                 }
-                Player drawPlayer = drawInfo.drawPlayer;
-                if (drawPlayer.dead)
+            }
+            if (modPlayer.puriumShieldChargeMax > 0f && modPlayer.puriumShieldCharge > 0f && !modPlayer.purityShieldMount)
+            {
+                Texture2D texture = mod.GetTexture("PuriumShield");
+                int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
+                float strength = (modPlayer.miscTimer % 30f) / 15f;
+                if (strength > 1f)
                 {
-                    return;
+                    strength = 2f - strength;
                 }
-                Mod mod = ModLoader.GetMod("Bluemagic");
-                BluemagicPlayer modPlayer = drawPlayer.GetModPlayer<BluemagicPlayer>();
-                if (modPlayer.badHeal)
+                strength = 0.1f + strength * 0.2f;
+                DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+                data.shader = drawInfo.bodyArmorShader;
+                Main.playerDrawData.Add(data);
+            }
+            if (modPlayer.purityShieldMount)
+            {
+                Texture2D texture = mod.GetTexture("Mounts/PurityShield");
+                int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
+                float strength = (modPlayer.miscTimer % 30f) / 15f;
+                if (strength > 1f)
                 {
-                    Texture2D texture = mod.GetTexture("Buffs/PuritySpirit/Skull");
-                    int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-                    int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
-                    DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
-                    Main.playerDrawData.Add(data);
-                    for (int k = 0; k < 2; k++)
-                    {
-                        int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, mod.DustType("Smoke"), 0f, 0f, 0, Color.Black);
-                        Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
-                        Main.playerDrawDust.Add(dust);
-                    }
+                    strength = 2f - strength;
                 }
-                if (modPlayer.puriumShieldChargeMax > 0f && modPlayer.puriumShieldCharge > 0f && !modPlayer.purityShieldMount)
-                {
-                    Texture2D texture = mod.GetTexture("PuriumShield");
-                    int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-                    int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
-                    float strength = (modPlayer.miscTimer % 30f) / 15f;
-                    if (strength > 1f)
-                    {
-                        strength = 2f - strength;
-                    }
-                    strength = 0.1f + strength * 0.2f;
-                    DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
-                    data.shader = drawInfo.bodyArmorShader;
-                    Main.playerDrawData.Add(data);
-                }
-                if (modPlayer.purityShieldMount)
-                {
-                    Texture2D texture = mod.GetTexture("Mounts/PurityShield");
-                    int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-                    int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
-                    float strength = (modPlayer.miscTimer % 30f) / 15f;
-                    if (strength > 1f)
-                    {
-                        strength = 2f - strength;
-                    }
-                    strength = 0.4f + strength * 0.2f;
-                    DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
-                    data.shader = drawInfo.drawPlayer.miscDyes[3].dye;
-                    Main.playerDrawData.Add(data);
-                }
-                if (modPlayer.blushieHealth > 0f && drawPlayer.whoAmI == Main.myPlayer)
-                {
-                    Texture2D texture = mod.GetTexture(BlushieBoss.BlushieBoss.CameraFocus ? "BlushieBoss/IndicatorBig" : "BlushieBoss/Indicator");
-                    DrawData data = new DrawData(texture, drawPlayer.Center - new Vector2(texture.Width / 2, texture.Height / 2) - Main.screenPosition, Color.White);
-                    Main.playerDrawData.Add(data);
-                }
-            });
+                strength = 0.4f + strength * 0.2f;
+                DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Color.White * strength, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1f, SpriteEffects.None, 0);
+                data.shader = drawInfo.drawPlayer.miscDyes[3].dye;
+                Main.playerDrawData.Add(data);
+            }
+            if (modPlayer.blushieHealth > 0f && drawPlayer.whoAmI == Main.myPlayer)
+            {
+                Texture2D texture = mod.GetTexture(BlushieBoss.BlushieBoss.CameraFocus ? "BlushieBoss/IndicatorBig" : "BlushieBoss/Indicator");
+                DrawData data = new DrawData(texture, drawPlayer.Center - new Vector2(texture.Width / 2, texture.Height / 2) - Main.screenPosition, Color.White);
+                Main.playerDrawData.Add(data);
+            }
+        });
         public static readonly PlayerLayer RedLine = new PlayerLayer("Bluemagic", "RedLine", delegate(PlayerDrawInfo drawInfo)
+        {
+            if (drawInfo.shadow != 0f)
             {
-                if (drawInfo.shadow != 0f)
+                return;
+            }
+            Player drawPlayer = drawInfo.drawPlayer;
+            if (drawPlayer.whoAmI != Main.myPlayer || drawPlayer.itemAnimation > 0 || Main.gamePaused)
+            {
+                return;
+            }
+            Mod mod = ModLoader.GetMod("Bluemagic");
+            if (drawPlayer.inventory[drawPlayer.selectedItem].type == mod.ItemType("CleanserBeam"))
+            {
+                Texture2D texture = mod.GetTexture("RedLine");
+                Vector2 origin = drawPlayer.RotatedRelativePoint(drawPlayer.MountedCenter, true);
+                Vector2 mousePos = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
+                Vector2 unit = mousePos - origin;
+                float length = unit.Length();
+                unit.Normalize();
+                float rotation = unit.ToRotation();
+                for (float k = 16f; k <= length; k += 32f)
                 {
-                    return;
+                    Vector2 drawPos = origin + unit * k - Main.screenPosition;
+                    Main.playerDrawData.Add(new DrawData(texture, drawPos, null, Color.White, rotation, new Vector2(2f, 8f), 1f, SpriteEffects.None, 0));
                 }
-                Player drawPlayer = drawInfo.drawPlayer;
-                if (drawPlayer.whoAmI != Main.myPlayer || drawPlayer.itemAnimation > 0 || Main.gamePaused)
-                {
-                    return;
-                }
-                Mod mod = ModLoader.GetMod("Bluemagic");
-                if (drawPlayer.inventory[drawPlayer.selectedItem].type == mod.ItemType("CleanserBeam"))
-                {
-                    Texture2D texture = mod.GetTexture("RedLine");
-                    Vector2 origin = drawPlayer.RotatedRelativePoint(drawPlayer.MountedCenter, true);
-                    Vector2 mousePos = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
-                    Vector2 unit = mousePos - origin;
-                    float length = unit.Length();
-                    unit.Normalize();
-                    float rotation = unit.ToRotation();
-                    for (float k = 16f; k <= length; k += 32f)
-                    {
-                        Vector2 drawPos = origin + unit * k - Main.screenPosition;
-                        Main.playerDrawData.Add(new DrawData(texture, drawPos, null, Color.White, rotation, new Vector2(2f, 8f), 1f, SpriteEffects.None, 0));
-                    }
-                }
-            });
+            }
+        });
         public static readonly PlayerLayer PreHeldItem = new PlayerLayer("Bluemagic", "PreHeldItem", PlayerLayer.HeldItem, delegate(PlayerDrawInfo drawInfo)
-            {
-                Mod mod = Bluemagic.Instance;
-                Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystalNoAnim");
-                Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystalNoAnim");
-            });
+        {
+            Mod mod = Bluemagic.Instance;
+            Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystalNoAnim");
+            Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystalNoAnim");
+        });
         public static readonly PlayerLayer PostHeldItem = new PlayerLayer("Bluemagic", "PostHeldItem", PlayerLayer.HeldItem, delegate(PlayerDrawInfo drawInfo)
+        {
+            Mod mod = Bluemagic.Instance;
+            Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystal");
+            Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystal");
+        });
+        public static readonly PlayerLayer Transform = new PlayerLayer("Bluemagic", "Transform", delegate (PlayerDrawInfo info)
+        {
+            BluemagicPlayer modPlayer = info.drawPlayer.GetModPlayer<BluemagicPlayer>();
+            if (modPlayer.liquified > 0)
             {
-                Mod mod = Bluemagic.Instance;
-                Main.itemTexture[mod.ItemType("ChaosCrystal")] = mod.GetTexture("Items/ChaosSpirit/ChaosCrystal");
-                Main.itemTexture[mod.ItemType("CataclysmCrystal")] = mod.GetTexture("Items/ChaosSpirit/CataclysmCrystal");
-            });
+                if (!Main.NPCLoaded[1])
+                {
+                    Main.instance.LoadNPC(1);
+                }
+                Color color = new Color(0, 220, 40, 100);
+                if (modPlayer.liquified == 2)
+                {
+                    color = new Color(0, 80, 255, 100);
+                }
+                int frame = 0;
+                if (modPlayer.transformFrameCounter >= 8)
+                {
+                    frame = 26;
+                }
+                float alpha = 175f;
+                Color lightColor = Lighting.GetColor((int)(info.drawPlayer.Center.X / 16), (int)(info.drawPlayer.Center.Y / 16));
+                float transp = (255f - alpha) / 255f;
+                int r = (int)(lightColor.R * transp);
+                int g = (int)(lightColor.G * transp);
+                int b = (int)(lightColor.B * transp);
+                int a = (int)(lightColor.A - alpha);
+                if (a < 0)
+                {
+                    a = 0;
+                }
+                DrawData item = new DrawData(Main.npcTexture[1], info.drawPlayer.position - Main.screenPosition, new Rectangle(0, frame, 32, 26), new Color(r, g, b, a));
+                Main.playerDrawData.Add(item);
+                r = (int)(lightColor.R - (255 - color.R));
+                g = (int)(lightColor.G - (255 - color.G));
+                b = (int)(lightColor.B - (255 - color.B));
+                a = (int)(lightColor.A - (255 - color.A));
+                if (r < 0)
+                {
+                    r = 0;
+                }
+                if (g < 0)
+                {
+                    g = 0;
+                }
+                if (b < 0)
+                {
+                    b = 0;
+                }
+                if (a < 0)
+                {
+                    a = 0;
+                }
+                item = new DrawData(Main.npcTexture[1], info.drawPlayer.position - Main.screenPosition, new Rectangle(0, frame, 32, 26), new Color(r, g, b, a));
+                Main.playerDrawData.Add(item);
+            }
+        });
 
         public override void ModifyDrawLayers(List<PlayerLayer> layers)
         {
             RedLine.visible = true;
             layers.Add(RedLine);
-            MiscEffectsBack.visible = true;
-            layers.Insert(0, MiscEffectsBack);
-            MiscEffects.visible = true;
-            layers.Add(MiscEffects);
             for (int k = 0; k < layers.Count; k++)
             {
                 if (layers[k] == PlayerLayer.HeldItem)
@@ -1781,6 +1935,22 @@ namespace Bluemagic
                     k++;
                 }
             }
+            if (!nullified && IsTransformed())
+            {
+                foreach (PlayerLayer layer in layers)
+                {
+                    if (layer != PlayerLayer.MiscEffectsBack && layer != PlayerLayer.MiscEffectsFront)
+                    {
+                        layer.visible = false;
+                    }
+                }
+                Transform.visible = true;
+                layers.Add(Transform);
+            }
+            MiscEffectsBack.visible = true;
+            layers.Insert(0, MiscEffectsBack);
+            MiscEffects.visible = true;
+            layers.Add(MiscEffects);
         }
     }
 }
