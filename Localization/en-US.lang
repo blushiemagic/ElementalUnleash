@@ -1,0 +1,16 @@
+﻿
+NPCName.Retineye=Retineye
+NPCName.Spazmateye=Spazmateye
+
+PhantomSummon=You feel something cold leeching your life...
+ElementalUnleash=The elements have been unleashed!
+PuriumOreGen=Your world has been blessed with Purium!
+NPCTalk=<{0}> {1}
+LivesLeft={0} has {1} lives left!
+LifeLeft={0} has 1 life left!
+ChaosDpsCap=A heavy pressure protects the chaos from rapid damage.
+ChaosPressureStart=The air grows heavy with chaotic pressure
+ChaosPressureLight=A protective sphere of light has appeared!
+CataclysmCountdown={0} seconds until the end
+TerraSpiritExpert=The Spirit of Purity is losing control!
+ExtraLives=Everyone has been granted 3 extra lives!

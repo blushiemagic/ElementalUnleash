@@ -2,3 +2,4 @@ updated to tModLoader v0.11.5
 fixed loading crash on dedicated servers
 reduced mod file size
 removed blushie boss from boss checklist
+minor fixes

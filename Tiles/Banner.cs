@@ -36,6 +36,9 @@ namespace Bluemagic.Tiles
 				case 0:
 					item = "NightSlimeBanner";
 					break;
+                case 1:
+                    item = "TwinEyeBanner";
+                    break;
 				default:
 					return;
 			}
@@ -51,6 +54,9 @@ namespace Bluemagic.Tiles
 					case 0:
 						type = "NightSlime";
 						break;
+                    case 1:
+                        type = "TwinEye";
+                        break;
 					default:
 						return;
 				}

@@ -85,43 +85,6 @@ namespace Bluemagic
             {
                 Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/WorldReaver")), "WorldReaver"), EffectPriority.VeryHigh);
             }
-
-            ModTranslation text = CreateTranslation("PhantomSummon");
-            text.SetDefault("You feel something cold leeching your life...");
-            AddTranslation(text);
-            text = CreateTranslation("ElementalUnleash");
-            text.SetDefault("The elements have been unleashed!");
-            AddTranslation(text);
-            text = CreateTranslation("PuriumOreGen");
-            text.SetDefault("Your world has been blessed with Purium!");
-            AddTranslation(text);
-            text = CreateTranslation("NPCTalk");
-            text.SetDefault("<{0}> {1}");
-            AddTranslation(text);
-            text = CreateTranslation("LivesLeft");
-            text.SetDefault("{0} has {1} lives left!");
-            AddTranslation(text);
-            text = CreateTranslation("LifeLeft");
-            text.SetDefault("{0} has 1 life left!");
-            AddTranslation(text);
-            text = CreateTranslation("ChaosDpsCap");
-            text.SetDefault("A heavy pressure protects the chaos from rapid damage.");
-            AddTranslation(text);
-            text = CreateTranslation("ChaosPressureStart");
-            text.SetDefault("The air grows heavy with chaotic pressure");
-            AddTranslation(text);
-            text = CreateTranslation("ChaosPressureLight");
-            text.SetDefault("A protective sphere of light has appeared!");
-            AddTranslation(text);
-            text = CreateTranslation("CataclysmCountdown");
-            text.SetDefault("{0} seconds until the end");
-            AddTranslation(text);
-            text = CreateTranslation("TerraSpiritExpert");
-            text.SetDefault("The Spirit of Purity is losing control!");
-            AddTranslation(text);
-            text = CreateTranslation("ExtraLives");
-            text.SetDefault("Everyone has been granted 3 extra lives!");
-            AddTranslation(text);
         }
 
         public override void PostSetupContent()

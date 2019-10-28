@@ -25,6 +25,7 @@ namespace Bluemagic.Items.Banners
         public override bool Autoload(ref string name)
         {
             AddBanner("NightSlime", 0);
+            AddBanner("TwinEye", 1);
             return false;
         }
 

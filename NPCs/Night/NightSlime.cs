@@ -41,7 +41,7 @@ namespace Bluemagic.NPCs.Night
         public override void AI()
         {
             Player player = Main.player[npc.target];
-            if (npc.type == mod.NPCType("NightSlime") && Main.rand.Next(10) == 0)
+            if (npc.type == mod.NPCType("NightSlime") && Main.rand.Next(20) == 0)
             {
                 Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, Color.White, 1.5f);
             }
@@ -144,7 +144,7 @@ namespace Bluemagic.NPCs.Night
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.SlimeStaff);
             }
-            if (Main.expertMode || Main.rand.Next(2) == 0)
+            if (Main.rand.Next(Main.expertMode ? 3 : 2) != 0)
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SuspiciousGel"));
             }
