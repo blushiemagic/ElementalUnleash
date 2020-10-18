@@ -1,3 +1,8 @@
+===1.3.4.1===
+Updated boss checklist integration
+Re-added blushie boss, however will only appear after Terra Spirit has been defeated
+
+===Previous changes===
 updated to tModLoader v0.11.5
 fixed loading crash on dedicated servers
 reduced mod file size
