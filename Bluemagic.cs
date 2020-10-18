@@ -92,16 +92,131 @@ namespace Bluemagic
             Mod bossList = ModLoader.GetMod("BossChecklist");
             if (bossList != null)
             {
-                bossList.Call("AddBossWithInfo", "The Phantom", 12.05f, (Func<bool>)(() => BluemagicWorld.downedPhantom), string.Format("Use a [i:{0}] in the Dungeon (Plantera must be defeated)", ItemType("PaladinEmblem")));
-                bossList.Call("AddBossWithInfo", "The Abomination", 12.8f, (Func<bool>)(() => BluemagicWorld.downedAbomination), string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", ItemType("FoulOrb")));
-                bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.elementalUnleash), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
-                bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
-                bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 1)", 42f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0), string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", ItemType("RitualOfBunnies")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 2)", 256f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint1")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
-                bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
+                bossList.Call(
+                    "AddBoss",
+                    12.05f,
+                    Bluemagic.Instance.NPCType("Phantom"),
+                    this,
+                    "The Phantom",
+                    (Func<bool>)(() => BluemagicWorld.downedPhantom),
+                    Bluemagic.Instance.ItemType("PaladinEmblem"),
+                    new List<int> {Bluemagic.Instance.ItemType("PhantomTrophy"), Bluemagic.Instance.ItemType("PhantomMask")},
+                    new List<int> {Bluemagic.Instance.ItemType("PhantomBag"), Bluemagic.Instance.ItemType("PhantomPlate"), Bluemagic.Instance.ItemType("PhantomBlade"), Bluemagic.Instance.ItemType("SpectreGun"), Bluemagic.Instance.ItemType("PhantomSphere"), Bluemagic.Instance.ItemType("PaladinStaff"), ItemID.GreaterHealingPotion},
+                    string.Format("Use a [i:{0}] in the Dungeon (Plantera must be defeated)", ItemType("PaladinEmblem")));
+                bossList.Call(
+                    "AddBoss",
+                    12.8f,
+                    new List<int> {Bluemagic.Instance.NPCType("Abomination"), Bluemagic.Instance.NPCType("CaptiveElement"), Bluemagic.Instance.NPCType("CaptiveElement2")},
+                    this,
+                    "The Abomination",
+                    (Func<bool>)(() => BluemagicWorld.downedAbomination),
+                    Bluemagic.Instance.ItemType("FoulOrb"),
+                    new List<int> {Bluemagic.Instance.ItemType("AbominationTrophy"), Bluemagic.Instance.ItemType("AbominationMask")},
+                    new List<int> {Bluemagic.Instance.ItemType("AbominationBag"), Bluemagic.Instance.ItemType("MoltenDrill"), Bluemagic.Instance.ItemType("DimensionalChest"), Bluemagic.Instance.ItemType("MoltenBar"), Bluemagic.Instance.ItemType("SixColorShield"), ItemID.GreaterHealingPotion},
+                    string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", ItemType("FoulOrb")));
+                bossList.Call(
+                    "AddBoss",
+                    14.5f,
+                    new List<int> {Bluemagic.Instance.NPCType("Abomination"), Bluemagic.Instance.NPCType("CaptiveElement"), Bluemagic.Instance.NPCType("CaptiveElement2")},
+                    this,
+                    "The Abomination (Rematch)",
+                    (Func<bool>)(() => BluemagicWorld.elementalUnleash),
+                    Bluemagic.Instance.ItemType("FoulOrb"),
+                    new List<int> {Bluemagic.Instance.ItemType("AbominationTrophy"), Bluemagic.Instance.ItemType("AbominationMask")},
+                    new List<int> {Bluemagic.Instance.ItemType("AbominationBag2"), Bluemagic.Instance.ItemType("MoltenDrill"), Bluemagic.Instance.ItemType("DimensionalChest"), Bluemagic.Instance.ItemType("MoltenBar"), Bluemagic.Instance.ItemType("SixColorShield"), Bluemagic.Instance.ItemType("ElementalEye"), Bluemagic.Instance.ItemType("ElementalYoyo"), Bluemagic.Instance.ItemType("ElementalSprayer"), Bluemagic.Instance.ItemType("EyeballTome"), Bluemagic.Instance.ItemType("ElementalStaff"), Bluemagic.Instance.ItemType("EyeballGlove"), ItemID.GreaterHealingPotion},
+                    string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
+                bossList.Call(
+                    "AddBoss",
+                    16f,
+                    Bluemagic.Instance.NPCType("PuritySpirit"),
+                    this,
+                    "The Spirit of Purity",
+                    (Func<bool>)(() => BluemagicWorld.downedPuritySpirit),
+                    Bluemagic.Instance.ItemType("ElementalPurge"),
+                    new List<int> {Bluemagic.Instance.ItemType("PuritySpiritTrophy"), Bluemagic.Instance.ItemType("BunnyTrophy"), Bluemagic.Instance.ItemType("TreeTrophy"), Bluemagic.Instance.ItemType("PuritySpiritMask"), Bluemagic.Instance.ItemType("BunnyMask")},
+                    new List<int> {Bluemagic.Instance.ItemType("InfinityCrystal"), Bluemagic.Instance.ItemType("PuritySpiritBag"), ItemID.SuperHealingPotion},
+                    string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
+                bossList.Call(
+                    "AddBoss",
+                    18f,
+                    new List<int> {Bluemagic.Instance.NPCType("ChaosSpirit"), Bluemagic.Instance.NPCType("ChaosSpirit2"), Bluemagic.Instance.NPCType("ChaosSpirit3")},
+                    this,
+                    "The Spirit of Chaos",
+                    (Func<bool>)(() => BluemagicWorld.downedChaosSpirit),
+                    Bluemagic.Instance.ItemType("RitualOfEndings"),
+                    new List<int> {Bluemagic.Instance.ItemType("ChaosTrophy"), Bluemagic.Instance.ItemType("CataclysmTrophy"), Bluemagic.Instance.ItemType("ChaosSpiritMask"), Bluemagic.Instance.ItemType("CataclysmMask")},
+                    new List<int> {Bluemagic.Instance.ItemType("ChaosCrystal"), Bluemagic.Instance.ItemType("CataclysmCrystal"), ItemID.SuperHealingPotion},
+                    string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
+                bossList.Call(
+                    "AddBoss",
+                    42f,
+                    new List<int> {Bluemagic.Instance.NPCType("TerraSpirit"), Bluemagic.Instance.NPCType("TerraSpirit2"), Bluemagic.Instance.NPCType("TerraProbe2"), Bluemagic.Instance.NPCType("TerraProbe3"), Bluemagic.Instance.NPCType("TerraProbe4"), Bluemagic.Instance.NPCType("TerraProbe5")},
+                    this,
+                    "????? (Phase 1)",
+                    (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0),
+                    Bluemagic.Instance.ItemType("RitualOfBunnies"),
+                    null,
+                    Bluemagic.Instance.ItemType("Checkpoint1"),
+                    string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", ItemType("RitualOfBunnies")));
+                bossList.Call(
+                    "AddBoss",
+                    256f,
+                    new List<int> {Bluemagic.Instance.NPCType("TerraSpirit"), Bluemagic.Instance.NPCType("TerraSpirit2"), Bluemagic.Instance.NPCType("TerraProbe2"), Bluemagic.Instance.NPCType("TerraProbe3"), Bluemagic.Instance.NPCType("TerraProbe4"), Bluemagic.Instance.NPCType("TerraProbe5")},
+                    this,
+                    "????? (Phase 2)",
+                    (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0),
+                    Bluemagic.Instance.ItemType("Checkpoint1"),
+                    null,
+                    Bluemagic.Instance.ItemType("Checkpoint2"),
+                    string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint1")));
+                bossList.Call(
+                    "AddBoss",
+                    666f,
+                    new List<int> {Bluemagic.Instance.NPCType("TerraSpirit"), Bluemagic.Instance.NPCType("TerraSpirit2"), Bluemagic.Instance.NPCType("TerraProbe2"), Bluemagic.Instance.NPCType("TerraProbe3"), Bluemagic.Instance.NPCType("TerraProbe4"), Bluemagic.Instance.NPCType("TerraProbe5")},
+                    this,
+                    "????? (Phase 3)",
+                    (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0),
+                    Bluemagic.Instance.ItemType("Checkpoint2"),
+                    null,
+                    Bluemagic.Instance.ItemType("Checkpoint3"),
+                    string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
+                bossList.Call(
+                    "AddBoss",
+                    1337f,
+                    new List<int> {Bluemagic.Instance.NPCType("TerraSpirit"), Bluemagic.Instance.NPCType("TerraSpirit2"), Bluemagic.Instance.NPCType("TerraProbe2"), Bluemagic.Instance.NPCType("TerraProbe3"), Bluemagic.Instance.NPCType("TerraProbe4"), Bluemagic.Instance.NPCType("TerraProbe5")},
+                    this,
+                    "????? (Phase 4)",
+                    (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0),
+                    Bluemagic.Instance.ItemType("Checkpoint3"),
+                    null,
+                    Bluemagic.Instance.ItemType("CheckpointS"),
+                    string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
+                bossList.Call(
+                    "AddBoss",
+                    9001f,
+                    new List<int> {Bluemagic.Instance.NPCType("TerraSpirit"), Bluemagic.Instance.NPCType("TerraSpirit2"), Bluemagic.Instance.NPCType("TerraProbe2"), Bluemagic.Instance.NPCType("TerraProbe3"), Bluemagic.Instance.NPCType("TerraProbe4"), Bluemagic.Instance.NPCType("TerraProbe5")},
+                    this,
+                    "?????",
+                    (Func<bool>)(() => BluemagicWorld.downedTerraSpirit),
+                    Bluemagic.Instance.ItemType("CheckpointS"),
+                    Bluemagic.Instance.ItemType("BlushieCharm"),
+                    new List<int> {Bluemagic.Instance.ItemType("PuriumCoin"), Bluemagic.Instance.ItemType("RainbowStar")},
+                    "Overcome all phases and defeat the boss once and for all!");
+                bossList.Call(
+                    "AddBoss",
+                    9002f,
+                    new List<int> {Bluemagic.Instance.NPCType("Blushiemagic"), Bluemagic.Instance.NPCType("BlushiemagicK"), Bluemagic.Instance.NPCType("BlushiemagicA"), Bluemagic.Instance.NPCType("BlushiemagicL"), Bluemagic.Instance.NPCType("BlushiemagicM"), Bluemagic.Instance.NPCType("BlushiemagicJ")},
+                    this,
+                    "Blushiemagic",
+                    (Func<bool>)(() => BluemagicWorld.downedBlushie),
+                    Bluemagic.Instance.ItemType("BlushieCrystal"),
+                    null,
+                    new List<int> {Bluemagic.Instance.ItemType("PuriumCoin"), Bluemagic.Instance.ItemType("SkyDragonHeart"), Bluemagic.Instance.ItemType("WorldReaver")},
+                    string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses). Be warned, it will be very difficult.", ItemType("BlushieCrystal")),
+                    null,
+                    null,
+                    null,
+                    (Func<bool>)(() => BluemagicWorld.downedTerraSpirit)); //Boss is only shown when Terra Spirit has been defeated
             }
             Calamity = ModLoader.GetMod("CalamityMod");
             Thorium = ModLoader.GetMod("ThoriumMod");
