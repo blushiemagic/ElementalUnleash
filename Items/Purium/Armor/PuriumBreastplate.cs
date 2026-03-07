@@ -11,36 +11,36 @@ namespace Bluemagic.Items.Purium.Armor
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("10% increased damage and critical strike chance"
-                + "\nIncreases your max number of minions by 1");
+            /* Tooltip.SetDefault("10% increased damage and critical strike chance"
+                + "\nIncreases your max number of minions by 1");*/
         }
 
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.defense = 29;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.width = 18;
+            Item.height = 18;
+            Item.defense = 29;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.meleeDamage += 0.1f;
-            player.rangedDamage += 0.1f;
-            player.magicDamage += 0.1f;
-            player.minionDamage += 0.1f;
-            player.thrownDamage += 0.1f;
-            player.meleeCrit += 10;
-            player.rangedCrit += 10;
-            player.magicCrit += 10;
-            player.thrownCrit += 10;
+            player.GetDamage(DamageClass.Melee) += 0.1f;
+            player.GetDamage(DamageClass.Ranged) += 0.1f;
+            player.GetDamage(DamageClass.Magic) += 0.1f;
+            player.GetDamage(DamageClass.Summon) += 0.1f;
+            player.GetDamage(DamageClass.Throwing) += 0.1f;
+            player.GetCritChance(DamageClass.Melee) += 10;
+            player.GetCritChance(DamageClass.Ranged) += 10;
+            player.GetCritChance(DamageClass.Magic) += 10;
+            player.GetCritChance(DamageClass.Throwing) += 10;
             player.maxMinions += 1;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return (head.type == mod.ItemType("PuriumHelmet") || head.type == mod.ItemType("PuriumVisor") || head.type == mod.ItemType("PuriumHeadgear") || head.type == mod.ItemType("PuriumMask") || head.type == mod.ItemType("PuriumHat")) && body.type == mod.ItemType("PuriumBreastplate") && legs.type == mod.ItemType("PuriumLeggings");
+            return (head.type == Mod.Find<ModItem>("PuriumHelmet").Type || head.type == Mod.Find<ModItem>("PuriumVisor").Type || head.type == Mod.Find<ModItem>("PuriumHeadgear").Type || head.type == Mod.Find<ModItem>("PuriumMask").Type || head.type == Mod.Find<ModItem>("PuriumHat").Type) && body.type == Mod.Find<ModItem>("PuriumBreastplate").Type && legs.type == Mod.Find<ModItem>("PuriumLeggings").Type;
         }
 
         public override void UpdateArmorSet(Player player)
@@ -51,11 +51,10 @@ namespace Bluemagic.Items.Purium.Armor
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 20);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

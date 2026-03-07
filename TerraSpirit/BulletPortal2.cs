@@ -21,7 +21,7 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Bluemagic.Instance.GetTexture("TerraSpirit/BulletPortal");
+                return Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletPortal").Value;
             }
         }
 

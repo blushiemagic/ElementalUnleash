@@ -10,67 +10,67 @@ namespace Bluemagic.Items.Abomination.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Six-Color Shield");
-            Main.projFrames[projectile.type] = 6;
+            // DisplayName.SetDefault("Six-Color Shield");
+            Main.projFrames[Projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.alpha = 75;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.alpha = 75;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                if (projectile.ai[0] == 1)
+                if (Projectile.ai[0] == 1)
                 {
-                    projectile.coldDamage = true;
+                    Projectile.coldDamage = true;
                 }
-                if (projectile.ai[0] == 3)
+                if (Projectile.ai[0] == 3)
                 {
-                    projectile.damage = (int)(1.2f * projectile.damage);
+                    Projectile.damage = (int)(1.2f * Projectile.damage);
                 }
-                projectile.Name = GetName();
-                projectile.localAI[0] = 1f;
+                Projectile.Name = GetName();
+                Projectile.localAI[0] = 1f;
             }
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             if (!player.active || player.dead)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
-            if (modPlayer.elementShields <= projectile.ai[0])
+            if (modPlayer.elementShields <= Projectile.ai[0])
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
-            projectile.timeLeft = 2;
-            projectile.Center = player.Center;
-            if (projectile.ai[0] > 0f)
+            Projectile.timeLeft = 2;
+            Projectile.Center = player.Center;
+            if (Projectile.ai[0] > 0f)
             {
-                float offset = (projectile.ai[0] - 1f) / (modPlayer.elementShields - 1);
+                float offset = (Projectile.ai[0] - 1f) / (modPlayer.elementShields - 1);
                 float rotation = modPlayer.elementShieldPos / 300f + offset;
                 rotation = (rotation % 1f) * 2f * (float)Math.PI;
-                projectile.position += 160f * new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
-                projectile.rotation = -rotation;
+                Projectile.position += 160f * new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation));
+                Projectile.rotation = -rotation;
             }
             LightColor();
-            projectile.frame = (int)projectile.ai[0];
-            projectile.ai[1] += 1f;
-            projectile.ai[1] %= 300f;
-            projectile.alpha = 75 + (int)(50 * Math.Sin(projectile.ai[1] * 2f * (float)Math.PI / 300f));
+            Projectile.frame = (int)Projectile.ai[0];
+            Projectile.ai[1] += 1f;
+            Projectile.ai[1] %= 300f;
+            Projectile.alpha = 75 + (int)(50 * Math.Sin(Projectile.ai[1] * 2f * (float)Math.PI / 300f));
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Main.rand.Next(2) == 0)
             {
@@ -82,7 +82,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override void OnHitPvp(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (Main.rand.Next(2) == 0)
             {
@@ -101,7 +101,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public string GetName()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case 0:
                     return "Fire Shield";
@@ -116,7 +116,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 case 5:
                     return "Ichor Shield";
                 default:
-                    return projectile.Name;
+                    return Projectile.Name;
             }
         }
 
@@ -125,7 +125,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             float r = 0f;
             float g = 0f;
             float b = 0f;
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case 0:
                     r = 1f;
@@ -158,19 +158,19 @@ namespace Bluemagic.Items.Abomination.Projectiles
                     b = 0.25f;
                     break;
             }
-            Lighting.AddLight(projectile.position, r, g, b);
+            Lighting.AddLight(Projectile.position, r, g, b);
         }
 
         public int GetDebuff()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case 0:
                     return BuffID.OnFire;
                 case 1:
                     return BuffID.Frostburn;
                 case 2:
-                    return mod.BuffType("EtherealFlames");
+                    return Mod.Find<ModBuff>("EtherealFlames").Type;
                 case 3:
                     return 0;
                 case 4:
@@ -184,7 +184,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuffTime()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case 0:
                     return 600;

@@ -19,45 +19,45 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 3;
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-            ProjectileID.Sets.Homing[projectile.type] = true;
+            Main.projFrames[Projectile.type] = 3;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 32;
-            projectile.height = 48;
-            projectile.friendly = true;
-            projectile.minion = true;
-            projectile.minionSlots = 1;
-            projectile.penetrate = -1;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 10;
-            projectile.timeLeft = 18000;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.netImportant = true;
+            Projectile.width = 32;
+            Projectile.height = 48;
+            Projectile.friendly = true;
+            Projectile.minion = true;
+            Projectile.minionSlots = 1;
+            Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 10;
+            Projectile.timeLeft = 18000;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
             hand1.offset = new Vector2(-16f, 24f);
             hand2.offset = new Vector2(16f, 24f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(projectile.localAI[0]);
-            writer.Write(projectile.localAI[1]);
+            writer.Write(Projectile.localAI[0]);
+            writer.Write(Projectile.localAI[1]);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            projectile.localAI[0] = reader.ReadSingle();
-            projectile.localAI[1] = reader.ReadSingle();
+            Projectile.localAI[0] = reader.ReadSingle();
+            Projectile.localAI[1] = reader.ReadSingle();
         }
 
         public override void CheckActive()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if (player.dead)
             {
@@ -65,41 +65,41 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             }
             if (modPlayer.voidEmissary)
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
         }
 
         public override void Behavior()
         {
-            if (projectile.ai[0] == 0f)
+            if (Projectile.ai[0] == 0f)
             {
                 ChooseAttack();
             }
-            projectile.rotation = 0f;
-            if (projectile.ai[0] == 0f)
+            Projectile.rotation = 0f;
+            if (Projectile.ai[0] == 0f)
             {
                 IdleBehavior();
             }
-            else if (projectile.ai[0] == 1f)
+            else if (Projectile.ai[0] == 1f)
             {
                 VoidPortalAttack();
             }
-            else if (projectile.ai[0] == 2f)
+            else if (Projectile.ai[0] == 2f)
             {
                 LaserAttack();
             }
-            else if (projectile.ai[0] == 3f)
+            else if (Projectile.ai[0] == 3f)
             {
                 ChargeAttack();
             }
             else
             {
-                projectile.ai[0] = 0f;
-                projectile.netUpdate = true;
+                Projectile.ai[0] = 0f;
+                Projectile.netUpdate = true;
             }
-            if (projectile.localAI[0] > 0f)
+            if (Projectile.localAI[0] > 0f)
             {
-                projectile.localAI[0] -= 1f;
+                Projectile.localAI[0] -= 1f;
             }
             CreateDust();
             SelectFrame();
@@ -111,7 +111,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             bool flag = false;
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].CanBeChasedBy(projectile) && NPCInRange(Main.npc[k]))
+                if (Main.npc[k].CanBeChasedBy(Projectile) && NPCInRange(Main.npc[k]))
                 {
                     targets.Add(Main.npc[k]);
                     if (Main.npc[k].boss)
@@ -124,20 +124,20 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             {
                 return;
             }
-            if ((flag || targets.Count > 1) && projectile.localAI[0] <= 0f)
+            if ((flag || targets.Count > 1) && Projectile.localAI[0] <= 0f)
             {
-                projectile.ai[0] = 1f;
-                projectile.ai[1] = 0f;
-                projectile.netUpdate = true;
+                Projectile.ai[0] = 1f;
+                Projectile.ai[1] = 0f;
+                Projectile.netUpdate = true;
                 return;
             }
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             bool canHitLine = false;
             float distance = -1f;
             float rotation = 0f;
             foreach (NPC npc in targets)
             {
-                bool testCanHitLine = Collision.CanHitLine(projectile.position, projectile.width, projectile.height, npc.position, npc.width, npc.height);
+                bool testCanHitLine = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
                 if (testCanHitLine)
                 {
                     canHitLine = true;
@@ -148,7 +148,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
                     if (distance < 0f || testDistance < distance)
                     {
                         distance = testDistance;
-                        rotation = (npc.Center - projectile.Center).ToRotation();
+                        rotation = (npc.Center - Projectile.Center).ToRotation();
                     }
                 }
             }
@@ -156,23 +156,23 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             {
                 rotation = -MathHelper.PiOver2;
             }
-            projectile.ai[0] = canHitLine ? 2f : 3f;
-            projectile.ai[1] = rotation;
-            projectile.localAI[1] = 0f;
-            projectile.netUpdate = true;
+            Projectile.ai[0] = canHitLine ? 2f : 3f;
+            Projectile.ai[1] = rotation;
+            Projectile.localAI[1] = 0f;
+            Projectile.netUpdate = true;
         }
 
         private void IdleBehavior()
         {
             Vector2 target = GetIdleTarget();
-            Vector2 offset = target - projectile.Center;
+            Vector2 offset = target - Projectile.Center;
             if (offset.Length() > 2000f)
             {
-                projectile.Center = target;
+                Projectile.Center = target;
             }
             else if (offset.Length() > 16f)
             {
-                Vector2 velocityDir = projectile.velocity;
+                Vector2 velocityDir = Projectile.velocity;
                 Vector2 offsetDir = offset;
                 velocityDir.Normalize();
                 offsetDir.Normalize();
@@ -183,27 +183,27 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
                 }
                 if (Vector2.Dot(velocityDir, offsetDir) <= 0)
                 {
-                    projectile.velocity *= 0.8f;
+                    Projectile.velocity *= 0.8f;
                 }
-                if (projectile.velocity.Length() > maxSpeed)
+                if (Projectile.velocity.Length() > maxSpeed)
                 {
-                    projectile.velocity *= 0.8f;
+                    Projectile.velocity *= 0.8f;
                 }
-                projectile.velocity *= 0.9f;
-                projectile.velocity += maxSpeed * 0.1f * offsetDir;
+                Projectile.velocity *= 0.9f;
+                Projectile.velocity += maxSpeed * 0.1f * offsetDir;
                 if (offset.X > 0f)
                 {
-                    projectile.direction = 1;
+                    Projectile.direction = 1;
                 }
                 else if (offset.X < 0f)
                 {
-                    projectile.direction = -1;
+                    Projectile.direction = -1;
                 }
-                projectile.spriteDirection = -projectile.direction;
+                Projectile.spriteDirection = -Projectile.direction;
             }
             else
             {
-                projectile.velocity *= 0.9f;
+                Projectile.velocity *= 0.9f;
             }
             IdleUpdateHand(ref hand1, new Vector2(-16f, 24f));
             IdleUpdateHand(ref hand2, new Vector2(16f, 24f));
@@ -217,9 +217,9 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             for (int k = 0; k < 1000; k++)
             {
                 Projectile proj = Main.projectile[k];
-                if (proj.active && proj.owner == projectile.owner && proj.type == projectile.type)
+                if (proj.active && proj.owner == Projectile.owner && proj.type == Projectile.type)
                 {
-                    if (k < projectile.whoAmI)
+                    if (k < Projectile.whoAmI)
                     {
                         myNum++;
                     }
@@ -229,7 +229,7 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             float rotation = (float)myNum / (float)num * MathHelper.TwoPi;
             rotation -= MathHelper.PiOver2;
             Vector2 offset = 96f * rotation.ToRotationVector2();
-            return Main.player[projectile.owner].Center + offset;
+            return Main.player[Projectile.owner].Center + offset;
         }
 
         private void IdleUpdateHand(ref VoidEmissaryHand hand, Vector2 target)
@@ -255,10 +255,10 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 
         private void VoidPortalAttack()
         {
-            projectile.ai[1] += 1f;
-            if (projectile.ai[1] <= 60f)
+            Projectile.ai[1] += 1f;
+            if (Projectile.ai[1] <= 60f)
             {
-                Vector2 target = projectile.position + new Vector2(projectile.width / 2, projectile.height * 2 / 3);
+                Vector2 target = Projectile.position + new Vector2(Projectile.width / 2, Projectile.height * 2 / 3);
                 for (int k = 0; k < 3; k++)
                 {
                     CreateChargeDust(target, 48);
@@ -266,21 +266,21 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             }
             else
             {
-                if (projectile.owner == Main.myPlayer)
+                if (Projectile.owner == Main.myPlayer)
                 {
                     for (int k = 0; k < 200; k++)
                     {
-                        if (Main.npc[k].CanBeChasedBy(projectile) && NPCInRange(Main.npc[k]))
+                        if (Main.npc[k].CanBeChasedBy(Projectile) && NPCInRange(Main.npc[k]))
                         {
-                            Projectile.NewProjectile(Main.npc[k].Center.X, Main.npc[k].Center.Y, 0f, 0f, mod.ProjectileType("VoidPortal"), projectile.damage * 2, projectile.knockBack, projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.npc[k].Center.X, Main.npc[k].Center.Y, 0f, 0f, Mod.Find<ModProjectile>("VoidPortal").Type, Projectile.damage * 2, Projectile.knockBack, Projectile.owner);
                         }
                     }
                 }
-                projectile.ai[0] = 0f;
-                projectile.localAI[0] = voidPortalCooldown;
-                projectile.netUpdate = true;
+                Projectile.ai[0] = 0f;
+                Projectile.localAI[0] = voidPortalCooldown;
+                Projectile.netUpdate = true;
             }
-            projectile.velocity *= 0.95f;
+            Projectile.velocity *= 0.95f;
             VoidPortalUpdateHand(ref hand1, new Vector2(-16f, 8f));
             VoidPortalUpdateHand(ref hand2, new Vector2(16f, 8f));
             handsOpen = false;
@@ -308,37 +308,37 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 
         private void LaserAttack()
         {
-            projectile.velocity *= 0.8f;
-            if (Math.Abs(projectile.ai[1]) > MathHelper.PiOver2)
+            Projectile.velocity *= 0.8f;
+            if (Math.Abs(Projectile.ai[1]) > MathHelper.PiOver2)
             {
-                projectile.direction = -1;
+                Projectile.direction = -1;
             }
             else
             {
-                projectile.direction = 1;
+                Projectile.direction = 1;
             }
-            projectile.spriteDirection = -projectile.direction;
-            Vector2 direction = projectile.ai[1].ToRotationVector2();
-            if (projectile.localAI[1] < 15f)
+            Projectile.spriteDirection = -Projectile.direction;
+            Vector2 direction = Projectile.ai[1].ToRotationVector2();
+            if (Projectile.localAI[1] < 15f)
             {
-                CreateChargeDust(projectile.Center + 30f * direction, 16);
+                CreateChargeDust(Projectile.Center + 30f * direction, 16);
             }
-            if (projectile.localAI[1] == 15f && projectile.owner == Main.myPlayer)
+            if (Projectile.localAI[1] == 15f && Projectile.owner == Main.myPlayer)
             {
-                int laser = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, direction.X, direction.Y, mod.ProjectileType("VoidLaser"), projectile.damage, projectile.knockBack, projectile.owner, 0f, projectile.whoAmI);
+                int laser = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X, Projectile.Center.Y, direction.X, direction.Y, Mod.Find<ModProjectile>("VoidLaser").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, Projectile.whoAmI);
             }
-            projectile.localAI[1] += 1f;
-            if (projectile.localAI[1] >= 60f)
+            Projectile.localAI[1] += 1f;
+            if (Projectile.localAI[1] >= 60f)
             {
-                projectile.ai[0] = 0f;
-                projectile.netUpdate = true;
+                Projectile.ai[0] = 0f;
+                Projectile.netUpdate = true;
             }
             Vector2 normal = new Vector2(-direction.Y, direction.X);
             hand1.offset = 24 * direction + 16f * normal;
             hand2.offset = 24 * direction - 16f * normal;
-            hand1.rotation = projectile.ai[1];
-            hand2.rotation = projectile.ai[1];
-            if (projectile.spriteDirection == -1)
+            hand1.rotation = Projectile.ai[1];
+            hand2.rotation = Projectile.ai[1];
+            if (Projectile.spriteDirection == -1)
             {
                 hand1.offset.X *= -1f;
                 hand2.offset.X *= -1f;
@@ -351,23 +351,23 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
         private void ChargeAttack()
         {
             IdleBehavior();
-            projectile.rotation = projectile.ai[1] + MathHelper.PiOver2;
-            if (Math.Abs(projectile.ai[1]) > MathHelper.PiOver2)
+            Projectile.rotation = Projectile.ai[1] + MathHelper.PiOver2;
+            if (Math.Abs(Projectile.ai[1]) > MathHelper.PiOver2)
             {
-                projectile.direction = -1;
+                Projectile.direction = -1;
             }
             else
             {
-                projectile.direction = 1;
+                Projectile.direction = 1;
             }
-            projectile.spriteDirection = -projectile.direction;
-            projectile.velocity = 12f * projectile.ai[1].ToRotationVector2();
-            projectile.localAI[1] += 1f;
-            if (projectile.localAI[1] >= 30f)
+            Projectile.spriteDirection = -Projectile.direction;
+            Projectile.velocity = 12f * Projectile.ai[1].ToRotationVector2();
+            Projectile.localAI[1] += 1f;
+            if (Projectile.localAI[1] >= 30f)
             {
-                projectile.rotation = 0f;
-                projectile.ai[0] = 0f;
-                projectile.netUpdate = true;
+                Projectile.rotation = 0f;
+                Projectile.ai[0] = 0f;
+                Projectile.netUpdate = true;
             }
             hand1.offset = new Vector2(-16f, 24f);
             hand2.offset = new Vector2(16f, 24f);
@@ -378,14 +378,14 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
 
         private bool NPCInRange(NPC npc)
         {
-            Vector2 playerCenter = Main.player[projectile.owner].Center;
+            Vector2 playerCenter = Main.player[Projectile.owner].Center;
             Vector2 npcCenter = npc.Center;
             return Math.Abs(playerCenter.X - npcCenter.X) <= 600f && Math.Abs(playerCenter.Y - npcCenter.Y) <= 350f;
         }
 
         private void CreateChargeDust(Vector2 center, int radius)
         {
-            int dust = Dust.NewDust(center - new Vector2(radius, radius), 2 * radius, 2 * radius, mod.DustType("CleanserBeamCharge"), 0f, 0f, 70);
+            int dust = Dust.NewDust(center - new Vector2(radius, radius), 2 * radius, 2 * radius, Mod.Find<ModDust>("CleanserBeamCharge").Type, 0f, 0f, 70);
             Main.dust[dust].customData = center;
         }
 
@@ -393,26 +393,26 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
         {
             if (Main.rand.Next(3) == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height / 3, mod.DustType("PuriumFlame"));
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height / 3, Mod.Find<ModDust>("PuriumFlame").Type);
                 Main.dust[dust].velocity.Y -= 1.2f;
-                Main.dust[dust].velocity += projectile.velocity * 0.5f;
+                Main.dust[dust].velocity += Projectile.velocity * 0.5f;
             }
-            Lighting.AddLight(projectile.Center, 0.6f, 0.9f, 0.3f);
+            Lighting.AddLight(Projectile.Center, 0.6f, 0.9f, 0.3f);
         }
 
         private void SelectFrame()
         {
-            projectile.frameCounter++;
-            if (projectile.frameCounter >= 8)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 8)
             {
-                projectile.frameCounter = 0;
-                projectile.frame = (projectile.frame + 1) % 3;
+                Projectile.frameCounter = 0;
+                Projectile.frame = (Projectile.frame + 1) % 3;
             }
         }
 
         public override bool MinionContactDamage()
         {
-            return projectile.ai[0] == 3f;
+            return Projectile.ai[0] == 3f;
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -420,41 +420,41 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles.VoidEmissary
             return Color.White;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            DrawHand(hand1, spriteBatch);
-            DrawHand(hand2, spriteBatch);
-            if (projectile.ai[0] == 3f)
+            DrawHand(hand1, Main.spriteBatch);
+            DrawHand(hand2, Main.spriteBatch);
+            if (Projectile.ai[0] == 3f)
             {
-                Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryCharge");
-                Vector2 position = projectile.Center - Main.screenPosition;
-                float alpha = Math.Abs((projectile.localAI[1] % 10f) / 5f - 1f);
+                Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryCharge").Value;
+                Vector2 position = Projectile.Center - Main.screenPosition;
+                float alpha = Math.Abs((Projectile.localAI[1] % 10f) / 5f - 1f);
                 alpha = 0.1f + 0.9f * alpha;
                 Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-                spriteBatch.Draw(texture, position, null, Color.White * alpha, projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, position, null, Color.White * alpha, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
             }
         }
 
         private void DrawHand(VoidEmissaryHand hand, SpriteBatch spriteBatch)
         {
-            Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryHand");
+            Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/Items/PuritySpirit/Projectiles/VoidEmissary/VoidEmissaryHand").Value;
             Vector2 position = hand.offset;
             Rectangle frame = new Rectangle(0, 0, texture.Width, texture.Height / 2 - 2);
             if (handsOpen)
             {
                 frame.Y += texture.Height / 2;
             }
-            float rotation = hand.rotation + projectile.rotation;
+            float rotation = hand.rotation + Projectile.rotation;
             SpriteEffects effects = SpriteEffects.None;
-            if (projectile.spriteDirection == -1)
+            if (Projectile.spriteDirection == -1)
             {
                 position.X = -hand.offset.X;
                 rotation = MathHelper.Pi - rotation;
             }
-            position = position.RotatedBy(projectile.rotation);
-            position += projectile.Center - Main.screenPosition;
+            position = position.RotatedBy(Projectile.rotation);
+            position += Projectile.Center - Main.screenPosition;
             Vector2 origin = new Vector2(frame.Width / 2, frame.Height / 2);
-            spriteBatch.Draw(texture, position, frame, Color.White, rotation, origin, 1f, effects, 0f);
+            Main.spriteBatch.Draw(texture, position, frame, Color.White, rotation, origin, 1f, effects, 0f);
         }
     }
 

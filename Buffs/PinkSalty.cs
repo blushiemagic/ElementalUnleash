@@ -7,13 +7,13 @@ namespace Bluemagic.Buffs
 {
     public class PinkSalty : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Pink Salty");
-            Description.SetDefault("Greatly increased life regeneration but decreased defense");
+            // DisplayName.SetDefault("Pink Salty");
+            // Description.SetDefault("Greatly increased life regeneration but decreased defense");
             Main.buffNoSave[Type] = true;
             Main.debuff[Type] = true;
-            longerExpertDebuff = true;
+            BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

@@ -9,32 +9,32 @@ namespace Bluemagic.Items.Phantom
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Uses wisps as ammo");
+            // Tooltip.SetDefault("Uses wisps as ammo");
         }
 
         public override void SetDefaults()
         {
-            item.damage = 68;
-            item.ranged = true;
-            item.width = 42;
-            item.height = 30;
-            item.useTime = 35;
-            item.useAnimation = 35;
-            item.useStyle = 5;
-            item.noMelee = true;
-            item.knockBack = 5f;
-            item.value = Item.sellPrice(0, 10, 0, 0);
-            item.rare = 8;
-            item.UseSound = SoundID.Item43;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("Wisp");
-            item.shootSpeed = 8f;
-            item.useAmmo = mod.ItemType("Wisp");
+            Item.damage = 68;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 42;
+            Item.height = 30;
+            Item.useTime = 35;
+            Item.useAnimation = 35;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 5f;
+            Item.value = Item.sellPrice(0, 10, 0, 0);
+            Item.rare = ItemRarityID.Yellow;
+            Item.UseSound = SoundID.Item43;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("Wisp").Type;
+            Item.shootSpeed = 8f;
+            Item.useAmmo = Mod.Find<ModItem>("Wisp").Type;
         }
 
-        public override void ModifyWeaponDamage(Player player, ref float add, ref float mult)
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
-            mult *= player.bulletDamage;
+            damage *= player.bulletDamage.Base;
         }
 
         public override Vector2? HoldoutOffset()
@@ -46,28 +46,25 @@ namespace Bluemagic.Items.Phantom
         {
             if (Bluemagic.Sushi != null)
             {
-                ModRecipe recipe;
+                Recipe recipe;
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PhantomBlade");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PhantomSphere");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PaladinStaff");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
             }
         }
     }

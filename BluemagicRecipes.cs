@@ -12,29 +12,28 @@ namespace Bluemagic
         {
             AddClentamistationRecipes(mod);
 
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = Recipe.Create(ItemID.TruffleWorm);
             recipe.AddIngredient(ItemID.EnchantedNightcrawler);
             recipe.AddIngredient(ItemID.GlowingMushroom, 20);
             recipe.AddIngredient(ItemID.Ectoplasm, 2);
             recipe.AddIngredient(ItemID.DarkBlueSolution, 5);
             recipe.AddTile(TileID.DemonAltar);
-            recipe.AddTile(mod.TileType("Clentamistation"));
-            recipe.SetResult(ItemID.TruffleWorm);
-            recipe.AddRecipe();
+            recipe.AddTile(mod.Find<ModTile>("Clentamistation").Type);
+            recipe.Register();
         }
 
         private static void AddClentamistationRecipes(Mod mod)
         {
-            int greenDroplet = mod.ItemType("GreenDroplet");
-            int blueDroplet = mod.ItemType("BlueDroplet");
-            int purpleDroplet = mod.ItemType("PurpleDroplet");
-            int darkBlueDroplet = mod.ItemType("DarkBlueDroplet");
-            int redDroplet = mod.ItemType("RedDroplet");
+            int greenDroplet = mod.Find<ModItem>("GreenDroplet").Type;
+            int blueDroplet = mod.Find<ModItem>("BlueDroplet").Type;
+            int purpleDroplet = mod.Find<ModItem>("PurpleDroplet").Type;
+            int darkBlueDroplet = mod.Find<ModItem>("DarkBlueDroplet").Type;
+            int redDroplet = mod.Find<ModItem>("RedDroplet").Type;
             int[] solutionIDs = { ItemID.GreenSolution, ItemID.BlueSolution, ItemID.PurpleSolution, ItemID.DarkBlueSolution, ItemID.RedSolution };
             int[] dropletIDs = { greenDroplet, blueDroplet, purpleDroplet, darkBlueDroplet, redDroplet };
-            int[] stoneIDs = { ItemID.StoneBlock, ItemID.PearlstoneBlock, ItemID.EbonstoneBlock, mod.ItemType("Shroomstone"), ItemID.CrimstoneBlock };
-            int[] sandIDs = { ItemID.SandBlock, ItemID.PearlsandBlock, ItemID.EbonsandBlock, mod.ItemType("Shroomsand"), ItemID.CrimsandBlock };
-            int[] iceIDs = { ItemID.IceBlock, ItemID.PinkIceBlock, ItemID.PurpleIceBlock, mod.ItemType("DarkBlueIce"), ItemID.RedIceBlock };
+            int[] stoneIDs = { ItemID.StoneBlock, ItemID.PearlstoneBlock, ItemID.EbonstoneBlock, mod.Find<ModItem>("Shroomstone").Type, ItemID.CrimstoneBlock };
+            int[] sandIDs = { ItemID.SandBlock, ItemID.PearlsandBlock, ItemID.EbonsandBlock, mod.Find<ModItem>("Shroomsand").Type, ItemID.CrimsandBlock };
+            int[] iceIDs = { ItemID.IceBlock, ItemID.PinkIceBlock, ItemID.PurpleIceBlock, mod.Find<ModItem>("DarkBlueIce").Type, ItemID.RedIceBlock };
             int[] woodIDs = { ItemID.Wood, ItemID.Pearlwood, ItemID.Ebonwood, -1, ItemID.Shadewood };
             int[][] itemIDs = { stoneIDs, sandIDs, iceIDs, woodIDs };
             for (int j = 0; j < 5; j++)
@@ -59,19 +58,17 @@ namespace Bluemagic
 
         private static void AddClentaminationRecipe(Mod mod, int result, int ingredient, int solution, int droplet)
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = Recipe.Create(result, 100);
             recipe.AddIngredient(ingredient, 100);
             recipe.AddIngredient(solution);
             recipe.AddTile(null, "Clentamistation");
-            recipe.SetResult(result, 100);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(result);
             recipe.AddIngredient(ingredient);
             recipe.AddIngredient(droplet);
             recipe.AddTile(null, "Clentamistation");
-            recipe.SetResult(result);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

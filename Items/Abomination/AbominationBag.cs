@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,38 +10,33 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            // DisplayName.SetDefault("Treasure Bag");
+            // Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            ItemID.Sets.BossBag[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.consumable = true;
-            item.width = 24;
-            item.height = 24;
-            item.rare = 9;
-            item.expert = true;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.width = 24;
+            Item.height = 24;
+            Item.rare = ItemRarityID.Cyan;
+            Item.expert = true;
         }
-
-        public override int BossBagNPC => mod.NPCType("Abomination");
 
         public override bool CanRightClick()
         {
             return true;
         }
 
-        public override void OpenBossBag(Player player)
+        public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            player.TryGettingDevArmor();
-            if (Main.rand.Next(7) == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("AbominationMask"));
-            }
-            player.QuickSpawnItem(mod.ItemType("MoltenDrill"));
-            player.QuickSpawnItem(mod.ItemType("DimensionalChest"));
-            player.QuickSpawnItem(mod.ItemType("MoltenBar"), 5);
-            player.QuickSpawnItem(mod.ItemType("SixColorShield"));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("AbominationMask").Type, 7));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("MoltenDrill").Type));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("DimensionalChest").Type));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("MoltenBar").Type, 1, 5, 5));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SixColorShield>()));
         }
     }
 }

@@ -11,16 +11,16 @@ namespace Bluemagic.Items.Purium.Armor
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("12% increased movement speed");
+            // Tooltip.SetDefault("12% increased movement speed");
         }
 
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.defense = 21;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 9, 0, 0);
+            Item.width = 18;
+            Item.height = 18;
+            Item.defense = 21;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 9, 0, 0);
         }
 
         public override void UpdateEquip(Player player)
@@ -30,11 +30,10 @@ namespace Bluemagic.Items.Purium.Armor
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 15);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

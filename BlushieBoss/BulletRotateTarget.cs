@@ -29,7 +29,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletRotate NewBone(Vector2 center, float radiusTarget, float angle, float rotSpeed, int timeLeft)
         {
-            return new BulletRotateTarget(center, radiusTarget, angle, rotSpeed, timeLeft, 16f, BlushieBoss.BulletBoneTexture);
+            return new BulletRotateTarget(center, radiusTarget, angle, rotSpeed, timeLeft, 16f, BlushieBoss.BulletBoneTexture.Value);
         }
     }
 }

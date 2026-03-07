@@ -14,7 +14,7 @@ namespace Bluemagic.Dusts
             {
                 color = new Color(200, 255, 120);
             }
-            return Dust.NewDust(pos, width, height, Bluemagic.Instance.DustType("PuriumSlice"), 0f, 0f, 100, color, 1f);
+            return Dust.NewDust(pos, width, height, Bluemagic.Instance.Find<ModDust>("PuriumSlice").Type, 0f, 0f, 100, color, 1f);
         }
 
         public override bool Update(Dust dust)

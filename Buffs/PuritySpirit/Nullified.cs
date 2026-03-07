@@ -8,14 +8,14 @@ namespace Bluemagic.Buffs.PuritySpirit
 {
     public class Nullified : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Nullified");
-            Description.SetDefault("Your abilities are nullified");
+            // DisplayName.SetDefault("Nullified");
+            // Description.SetDefault("Your abilities are nullified");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            longerExpertDebuff = true;
+            BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

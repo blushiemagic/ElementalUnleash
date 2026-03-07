@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Abomination
@@ -9,48 +11,48 @@ namespace Bluemagic.Abomination
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elemental Ball");
+            // DisplayName.SetDefault("Elemental Ball");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 30;
-            projectile.height = 30;
-            projectile.alpha = 255;
-            projectile.timeLeft = 600;
-            projectile.penetrate = -1;
-            projectile.hostile = true;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 30;
+            Projectile.height = 30;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 600;
+            Projectile.penetrate = -1;
+            Projectile.hostile = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
                 PlaySound();
-                if (projectile.ai[0] < 0f)
+                if (Projectile.ai[0] < 0f)
                 {
-                    projectile.alpha = 0;
+                    Projectile.alpha = 0;
                 }
-                if (projectile.ai[0] == 44f)
+                if (Projectile.ai[0] == 44f)
                 {
-                    projectile.coldDamage = true;
+                    Projectile.coldDamage = true;
                 }
-                if (projectile.ai[0] < 0f && Main.expertMode)
+                if (Projectile.ai[0] < 0f && Main.expertMode)
                 {
-                    cooldownSlot = 1;
+                    CooldownSlot = 1;
                 }
-                projectile.Name = GetName();
-                projectile.localAI[0] = 1f;
+                Projectile.Name = GetName();
+                Projectile.localAI[0] = 1f;
             }
             CreateDust();
         }
 
         public virtual void PlaySound()
         {
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 20);
+            SoundEngine.PlaySound(SoundID.Item20, Projectile.position);
         }
 
         public virtual void CreateDust()
@@ -58,39 +60,39 @@ namespace Bluemagic.Abomination
             Color? color = GetColor();
             if (color.HasValue)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("Flame"), 0f, 0f, 0, color.Value);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("Flame").Type, 0f, 0f, 0, color.Value);
                 Main.dust[dust].velocity *= 0.4f;
-                Main.dust[dust].velocity += projectile.velocity;
+                Main.dust[dust].velocity += Projectile.velocity;
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if ((Main.expertMode || Main.rand.Next(2) == 0) && projectile.ai[0] >= 0f)
+            if ((Main.expertMode || Main.rand.Next(2) == 0) && Projectile.ai[0] >= 0f)
             {
-                target.AddBuff((int)projectile.ai[0], (int)projectile.ai[1], true);
+                target.AddBuff((int)Projectile.ai[0], (int)Projectile.ai[1], true);
             }
         }
 
         public virtual string GetName()
         {
-            if (projectile.ai[0] == 24f)
+            if (Projectile.ai[0] == 24f)
             {
                 return "Fireball";
             }
-            if (projectile.ai[0] == 44f)
+            if (Projectile.ai[0] == 44f)
             {
                 return "Frost Ball";
             }
-            if (projectile.ai[0] == mod.BuffType("EtherealFlames"))
+            if (Projectile.ai[0] == Mod.Find<ModBuff>("EtherealFlames").Type)
             {
                 return "Ethereal Fireball";
             }
-            if (projectile.ai[0] == 70f)
+            if (Projectile.ai[0] == 70f)
             {
                 return "Venom Ball";
             }
-            if (projectile.ai[0] == 69f)
+            if (Projectile.ai[0] == 69f)
             {
                 return "Ichor Ball";
             }
@@ -99,23 +101,23 @@ namespace Bluemagic.Abomination
 
         public Color? GetColor()
         {
-            if (projectile.ai[0] == 24f)
+            if (Projectile.ai[0] == 24f)
             {
                 return new Color(250, 10, 0);
             }
-            if (projectile.ai[0] == 44f)
+            if (Projectile.ai[0] == 44f)
             {
                 return new Color(0, 230, 230);
             }
-            if (projectile.ai[0] == mod.BuffType("EtherealFlames"))
+            if (Projectile.ai[0] == Mod.Find<ModBuff>("EtherealFlames").Type)
             {
                 return new Color(0, 153, 230);
             }
-            if (projectile.ai[0] == 70f)
+            if (Projectile.ai[0] == 70f)
             {
                 return new Color(0, 178, 0);
             }
-            if (projectile.ai[0] == 69f)
+            if (Projectile.ai[0] == 69f)
             {
                 return new Color(230, 192, 0);
             }

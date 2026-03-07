@@ -14,21 +14,21 @@ namespace Bluemagic.Tiles
         {
             int i = Position.X + Main.rand.Next(-range, range + 1);
             int j = Position.Y + Main.rand.Next(-range, range + 1);
-            WorldGen.Convert(i, j, 0, 0);
+            WorldGen.Convert(i, j, 0, 0, false, false);
         }
 
-        public override bool ValidTile(int i, int j)
+        public override bool IsTileValidForEntity(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType("ElementalPurge") && tile.frameX == 0 && tile.frameY == 0;
+            return tile.HasTile && tile.TileType == ModContent.TileType<ElementalPurge>() && tile.TileFrameX == 0 && tile.TileFrameY == 0;
         }
 
-        public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
+        public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
         {
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                NetMessage.SendTileRange(Main.myPlayer, i - 1, j - 2, 2, 3);
-                NetMessage.SendData(87, -1, -1, null, i - 1, j - 2, Type, 0f, 0, 0, 0);
+                NetMessage.SendTileSquare(Main.myPlayer, i - 1, j - 2, 2, 3);
+                NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i - 1, j - 2, Type, 0f, 0, 0, 0);
                 return -1;
             }
             return Place(i - 1, j - 2);

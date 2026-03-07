@@ -32,11 +32,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
             set
             {
-                npc.ai[0] = value;
+                NPC.ai[0] = value;
             }
         }
 
@@ -44,11 +44,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[1];
+                return (int)NPC.ai[1];
             }
             set
             {
-                npc.ai[1] = value;
+                NPC.ai[1] = value;
             }
         }
 
@@ -56,11 +56,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return npc.ai[2];
+                return NPC.ai[2];
             }
             set
             {
-                npc.ai[2] = value;
+                NPC.ai[2] = value;
             }
         }
 
@@ -68,69 +68,74 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[3];
+                return (int)NPC.ai[3];
             }
             set
             {
-                npc.ai[3] = value;
+                NPC.ai[3] = value;
             }
         }
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 10;
+            Main.npcFrameCount[NPC.type] = 10;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 15000;
-            npc.damage = 100;
-            npc.defense = 55;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 15000;
+            NPC.damage = 100;
+            NPC.defense = 55;
             if (NPC.downedMoonlord)
             {
-                npc.lifeMax = 30000;
-                npc.damage = 120;
-                npc.defense = 80;
+                NPC.lifeMax = 30000;
+                NPC.damage = 120;
+                NPC.defense = 80;
             }
-            npc.knockBackResist = 0f;
-            npc.dontTakeDamage = true;
-            npc.width = 100;
-            npc.height = 100;
-            npc.value = Item.buyPrice(0, 20, 0, 0);
-            npc.npcSlots = 10f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            music = MusicID.Boss2;
+            NPC.knockBackResist = 0f;
+            NPC.dontTakeDamage = true;
+            NPC.width = 100;
+            NPC.height = 100;
+            NPC.value = Item.buyPrice(0, 20, 0, 0);
+            NPC.npcSlots = 10f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            Music = MusicID.Boss2;
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.75f);
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * balance);
+            NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
         public override void AI()
         {
             NPC abomination = Main.npc[center];
-            if (!abomination.active || abomination.type != mod.NPCType("Abomination"))
+            if (!abomination.active || abomination.type != Mod.Find<ModNPC>("Abomination").Type)
             {
-                if (change > 0 || NPC.AnyNPCs(mod.NPCType("AbominationRun")))
+                if (change > 0 || NPC.AnyNPCs(Mod.Find<ModNPC>("AbominationRun").Type))
                 {
                     if (change == 0)
                     {
-                        npc.netUpdate = true;
+                        NPC.netUpdate = true;
                     }
                     change++;
                 }
                 else
                 {
-                    npc.life = -1;
-                    npc.active = false;
+                    NPC.life = -1;
+                    NPC.active = false;
                     return;
                 }
             }
@@ -141,69 +146,69 @@ namespace Bluemagic.Abomination
                 {
                     for (int x = 0; x < 5; x++)
                     {
-                        int dust = Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Pixel"), 0f, 0f, 0, color.Value);
+                        int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Pixel").Type, 0f, 0f, 0, color.Value);
                         double angle = Main.rand.NextDouble() * 2.0 * Math.PI;
                         Main.dust[dust].velocity = 3f * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                     }
                 }
-                if (Main.netMode != 1 && change >= 100f)
+                if (Main.netMode != NetmodeID.MultiplayerClient && change >= 100f)
                 {
-                    int next = NPC.NewNPC((int)npc.Center.X, (int)npc.position.Y + npc.height, mod.NPCType("CaptiveElement2"));
+                    int next = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.position.Y + NPC.height, Mod.Find<ModNPC>("CaptiveElement2").Type);
                     Main.npc[next].ai[0] = captiveType;
                     if (captiveType != 4)
                     {
                         Main.npc[next].ai[1] = 300f + (float)Main.rand.Next(100);
                     }
-                    npc.life = -1;
-                    npc.active = false;
+                    NPC.life = -1;
+                    NPC.active = false;
                 }
                 return;
             }
-            else if (npc.timeLeft < 750)
+            else if (NPC.timeLeft < 750)
             {
-                npc.timeLeft = 750;
+                NPC.timeLeft = 750;
             }
-            if (npc.localAI[0] == 0f)
+            if (NPC.localAI[0] == 0f)
             {
                 if (GetDebuff() >= 0f)
                 {
-                    npc.buffImmune[GetDebuff()] = true;
+                    NPC.buffImmune[GetDebuff()] = true;
                 }
                 if (captiveType == 2f)
                 {
-                    npc.damage += 20;
+                    NPC.damage += 20;
                     if (Main.expertMode)
                     {
-                        npc.damage += 20;
+                        NPC.damage += 20;
                     }
                 }
                 if (captiveType == 3f)
                 {
-                    npc.buffImmune[20] = true;
+                    NPC.buffImmune[20] = true;
                 }
                 if (captiveType == 0f)
                 {
-                    npc.coldDamage = true;
+                    NPC.coldDamage = true;
                 }
-                npc.localAI[0] = 1f;
+                NPC.localAI[0] = 1f;
             }
-            SetPosition(npc);
+            SetPosition(NPC);
             attackCool -= 1f;
-            if (Main.netMode != 1 && difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0)
+            if (Main.netMode != NetmodeID.MultiplayerClient && difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0)
             {
                 Shoot(abomination);
             }
-            if (Main.netMode != 1 && attackCool <= 0f)
+            if (Main.netMode != NetmodeID.MultiplayerClient && attackCool <= 0f)
             {
                 attackCool = 200f + 200f * (float)abomination.life / (float)abomination.lifeMax + (float)Main.rand.Next(200);
                 Shoot(abomination);
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
         }
 
         private void Shoot(NPC abomination)
         {
-            Vector2 delta = Main.player[abomination.target].Center - npc.Center;
+            Vector2 delta = Main.player[abomination.target].Center - NPC.Center;
             float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
             if (magnitude > 0)
             {
@@ -213,17 +218,17 @@ namespace Bluemagic.Abomination
             {
                 delta = new Vector2(0f, 5f);
             }
-            int damage = (npc.damage - 30) / 2;
+            int damage = (NPC.damage - 30) / 2;
             if (Main.expertMode)
             {
-                damage = (int)(damage / Main.expertDamage);
+                damage = (int)(damage / Main.GameModeInfo.EnemyDamageMultiplier);
             }
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, mod.ProjectileType("ElementBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
+            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y, delta.X, delta.Y, Mod.Find<ModProjectile>("ElementBall").Type, damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
         }
 
         public static void SetPosition(NPC npc)
         {
-            CaptiveElement modNPC = npc.modNPC as CaptiveElement;
+            CaptiveElement modNPC = npc.ModNPC as CaptiveElement;
             if (modNPC != null)
             {
                 Vector2 center = Main.npc[modNPC.center].Center;
@@ -234,18 +239,18 @@ namespace Bluemagic.Abomination
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = captiveType * frameHeight;
+            NPC.frame.Y = captiveType * frameHeight;
             if (captiveType == 1)
             {
-                npc.alpha = 100;
+                NPC.alpha = 100;
             }
             if (attackCool < 50f)
             {
-                npc.frame.Y += 5 * frameHeight;
+                NPC.frame.Y += 5 * frameHeight;
             }
             else if (difficulty > 1 && attackCool < 110f)
             {
-                npc.frame.Y += 5 * frameHeight;
+                NPC.frame.Y += 5 * frameHeight;
             }
         }
 
@@ -258,14 +263,14 @@ namespace Bluemagic.Abomination
             return true;
         }
 
-        public override void OnHitPlayer(Player player, int dmgDealt, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             if (Main.expertMode || Main.rand.Next(2) == 0)
             {
                 int debuff = GetDebuff();
                 if (debuff >= 0)
                 {
-                    player.AddBuff(debuff, GetDebuffTime(), true);
+                    target.AddBuff(debuff, GetDebuffTime(), true);
                 }
             }
         }
@@ -277,7 +282,7 @@ namespace Bluemagic.Abomination
                 case 0:
                     return BuffID.Frostburn;
                 case 1:
-                    return mod.BuffType("EtherealFlames");
+                    return Mod.Find<ModBuff>("EtherealFlames").Type;
                 case 3:
                     return BuffID.Venom;
                 case 4:
@@ -335,10 +340,10 @@ namespace Bluemagic.Abomination
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Abomination abomination = Main.npc[center].modNPC as Abomination;
-            if (difficulty > 0 && abomination != null && abomination.npc.active && abomination.laserTimer <= 60 && (abomination.laser1 == captiveType || abomination.laser2 == captiveType))
+            Abomination abomination = Main.npc[center].ModNPC as Abomination;
+            if (difficulty > 0 && abomination != null && abomination.NPC.active && abomination.laserTimer <= 60 && (abomination.laser1 == captiveType || abomination.laser2 == captiveType))
             {
                 Color? color = GetColor();
                 if (!color.HasValue)
@@ -350,7 +355,7 @@ namespace Bluemagic.Abomination
                 {
                     rotation *= -1f;
                 }
-                spriteBatch.Draw(mod.GetTexture("Abomination/Rune"), npc.Center - Main.screenPosition, null, color.Value, rotation, new Vector2(64, 64), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Abomination/Rune").Value, NPC.Center - Main.screenPosition, null, color.Value, rotation, new Vector2(64, 64), 1f, SpriteEffects.None, 0f);
             }
             return true;
         }

@@ -21,39 +21,39 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+            ProjectileID.Sets.NeedsUUID[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.hide = true;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.hide = true;
             //projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.MaxUpdates = 16;
-            projectile.melee = true;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.MaxUpdates = 16;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void AI()
         {
             for (int k = 0; k < positions.Count; k++)
             {
-                if (Collision.TileCollision(positions[k], projectile.velocity, projectile.width, projectile.height, true, true) != projectile.velocity)
+                if (Collision.TileCollision(positions[k], Projectile.velocity, Projectile.width, Projectile.height, true, true) != Projectile.velocity)
                 {
                     positions.RemoveAt(k);
                     k--;
                     if (positions.Count == 0)
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                 }
                 else
                 {
-                    positions[k] += projectile.velocity;
-                    int dust = Dust.NewDust(positions[k] + projectile.Size / 2f, 0, 0, mod.DustType("PuriumBullet"));
+                    positions[k] += Projectile.velocity;
+                    int dust = Dust.NewDust(positions[k] + Projectile.Size / 2f, 0, 0, Mod.Find<ModDust>("PuriumBullet").Type);
                     Main.dust[dust].customData = 4;
                 }
             }
@@ -70,11 +70,11 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
                     positions.RemoveAt(k);
                     if (positions.Count == 0)
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                     else
                     {
-                        projectile.penetrate++;
+                        Projectile.penetrate++;
                     }
                     return true;
                 }
@@ -84,7 +84,7 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 
         public void AddPosition(Vector2 pos)
         {
-            positions.Add(pos - projectile.Size / 2f);
+            positions.Add(pos - Projectile.Size / 2f);
         }
     }
 }

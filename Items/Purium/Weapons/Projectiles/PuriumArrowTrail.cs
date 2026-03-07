@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,44 +20,44 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Purium Arrow");
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 90;
+            // DisplayName.SetDefault("Purium Arrow");
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 90;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.ranged = true;
-            projectile.penetrate = -1;
-            projectile.usesIDStaticNPCImmunity = true;
-            projectile.idStaticNPCHitCooldown = 10;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = -1;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 10;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            int uuid = Projectile.GetByUUID(projectile.owner, projectile.ai[0]);
-            if (uuid >= 0 && Main.projectile[uuid].active && Main.projectile[uuid].type == mod.ProjectileType("PuriumArrow"))
+            int uuid = Projectile.GetByUUID(Projectile.owner, Projectile.ai[0]);
+            if (uuid >= 0 && Main.projectile[uuid].active && Main.projectile[uuid].type == Mod.Find<ModProjectile>("PuriumArrow").Type)
             {
-                projectile.position = Main.projectile[uuid].position;
+                Projectile.position = Main.projectile[uuid].position;
             }
             else
             {
-                projectile.ai[0] = -1f;
+                Projectile.ai[0] = -1f;
             }
-            if (projectile.position == projectile.oldPos[projectile.oldPos.Length - 1])
+            if (Projectile.position == Projectile.oldPos[Projectile.oldPos.Length - 1])
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            foreach (Vector2 position in projectile.oldPos)
+            foreach (Vector2 position in Projectile.oldPos)
             {
                 projHitbox.X = (int)position.X;
                 projHitbox.Y = (int)position.Y;
@@ -68,23 +69,23 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                float alpha = 1f - 0.65f * (float)k / (float)projectile.oldPos.Length;
-                if (k == projectile.oldPos.Length - 1)
+                float alpha = 1f - 0.65f * (float)k / (float)Projectile.oldPos.Length;
+                if (k == Projectile.oldPos.Length - 1)
                 {
-                    spriteBatch.Draw(texture, projectile.oldPos[k] - Main.screenPosition, Color.White * alpha);
+                    Main.spriteBatch.Draw(texture, Projectile.oldPos[k] - Main.screenPosition, Color.White * alpha);
                 }
-                else if (projectile.oldPos[k] != projectile.oldPos[k + 1])
+                else if (Projectile.oldPos[k] != Projectile.oldPos[k + 1])
                 {
-                    Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition;
+                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition;
                     for (int l = 0; l < 4; l++)
                     {
-                        spriteBatch.Draw(texture, drawPos, Color.White * alpha);
-                        drawPos += (projectile.oldPos[k + 1] - projectile.oldPos[k]) / 4f;
+                        Main.spriteBatch.Draw(texture, drawPos, Color.White * alpha);
+                        drawPos += (Projectile.oldPos[k + 1] - Projectile.oldPos[k]) / 4f;
                     }
                 }
             }

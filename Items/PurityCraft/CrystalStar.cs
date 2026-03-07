@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,39 +11,39 @@ namespace Bluemagic.Items.PurityCraft
     {
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.aiStyle = 5;
-            aiType = ProjectileID.HallowStar;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.alpha = 50;
-            projectile.tileCollide = false;
-            projectile.magic = true;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.aiStyle = ProjAIStyleID.FallingStar;
+            AIType = ProjectileID.HallowStar;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 50;
+            Projectile.tileCollide = false;
+            Projectile.DamageType = DamageClass.Magic;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
             for (int k = 0; k < 10; k++)
             {
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("CrystalStar"), projectile.velocity.X * 0.1f, projectile.velocity.Y * 0.1f, 150, default(Color), 1.2f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("CrystalStar").Type, Projectile.velocity.X * 0.1f, Projectile.velocity.Y * 0.1f, 150, default(Color), 1.2f);
             }
             for (int k = 0; k < 3; k++)
             {
-                int goreType = mod.GetGoreSlot(Main.rand.Next(2) == 0 ? "Gores/GreenStar" : "Gores/WhiteStar");
-                Gore.NewGore(projectile.position, 0.05f * projectile.velocity, goreType, 1f);
+                int goreType = Mod.Find<ModGore>(Main.rand.Next(2) == 0 ? "GreenStar" : "WhiteStar").Type;
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, 0.05f * Projectile.velocity, goreType, 1f);
             }
-            if (projectile.owner == Main.myPlayer)
+            if (Projectile.owner == Main.myPlayer)
             {
-                Vector2 center = projectile.Center;
+                Vector2 center = Projectile.Center;
                 float offset = 6f;
-                int type = mod.ProjectileType("CrystalShard");
-                int damage = projectile.damage - 10;
-                Projectile.NewProjectile(center.X - offset, center.Y - offset, -8f, -6f, type, damage, projectile.knockBack, projectile.owner);
-                Projectile.NewProjectile(center.X + offset, center.Y - offset, 8f, -6f, type, damage, projectile.knockBack, projectile.owner);
-                Projectile.NewProjectile(center.X - offset, center.Y + offset, -10f, -2f, type, damage, projectile.knockBack, projectile.owner);
-                Projectile.NewProjectile(center.X + offset, center.Y + offset, 10f, -2f, type, damage, projectile.knockBack, projectile.owner);
+                int type = Mod.Find<ModProjectile>("CrystalShard").Type;
+                int damage = Projectile.damage - 10;
+                Projectile.NewProjectile(Projectile.GetSource_Death(), center.X - offset, center.Y - offset, -8f, -6f, type, damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_Death(), center.X + offset, center.Y - offset, 8f, -6f, type, damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_Death(), center.X - offset, center.Y + offset, -10f, -2f, type, damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_Death(), center.X + offset, center.Y + offset, 10f, -2f, type, damage, Projectile.knockBack, Projectile.owner);
             }
         }
 

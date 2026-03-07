@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -27,57 +28,57 @@ namespace Bluemagic.Abomination
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Abomination");
-            Main.npcFrameCount[npc.type] = 2;
+            // DisplayName.SetDefault("The Abomination");
+            Main.npcFrameCount[NPC.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 40000;
-            npc.damage = 100;
-            npc.defense = 55;
-            npc.knockBackResist = 0f;
-            npc.dontTakeDamage = true;
-            npc.width = 100;
-            npc.height = 100;
-            npc.value = Item.buyPrice(0, 20, 0, 0);
-            npc.npcSlots = 15f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.buffImmune[24] = true;
-            music = MusicID.Boss2;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 40000;
+            NPC.damage = 100;
+            NPC.defense = 55;
+            NPC.knockBackResist = 0f;
+            NPC.dontTakeDamage = true;
+            NPC.width = 100;
+            NPC.height = 100;
+            NPC.value = Item.buyPrice(0, 20, 0, 0);
+            NPC.npcSlots = 15f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.buffImmune[24] = true;
+            Music = MusicID.Boss2;
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.75f);
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * balance);
+            NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
         public override void AI()
         {
-            if (npc.localAI[0] == 0f)
+            if (NPC.localAI[0] == 0f)
             {
-                Main.PlaySound(15, (int)npc.position.X, (int)npc.position.Y, 0);
-                npc.localAI[0] = 1f;
+                SoundEngine.PlaySound(SoundID.Roar, NPC.position);
+                NPC.localAI[0] = 1f;
             }
-            npc.velocity.Y += 1f;
-            if (npc.timeLeft > 10)
+            NPC.velocity.Y += 1f;
+            if (NPC.timeLeft > 10)
             {
-                npc.timeLeft = 10;
+                NPC.timeLeft = 10;
             }
         }
 
-        public override void OnHitPlayer(Player player, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             if (Main.expertMode || Main.rand.Next(2) == 0)
             {
-                player.AddBuff(BuffID.OnFire, 600, true);
+                target.AddBuff(BuffID.OnFire, 600, true);
             }
         }
     }

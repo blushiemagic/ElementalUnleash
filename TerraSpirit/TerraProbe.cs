@@ -12,7 +12,7 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Main.npc[(int)npc.ai[0]];
+                return Main.npc[(int)NPC.ai[0]];
             }
         }
 
@@ -20,11 +20,11 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return (int)npc.localAI[1];
+                return (int)NPC.localAI[1];
             }
             set
             {
-                npc.localAI[1] = value;
+                NPC.localAI[1] = value;
             }
         }
 
@@ -38,39 +38,39 @@ namespace Bluemagic.TerraSpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Purity Probe");
-            NPCID.Sets.NeedsExpertScaling[npc.type] = false;
+            // DisplayName.SetDefault("Purity Probe");
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = false;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 50000;
-            npc.damage = 0;
-            npc.defense = 140;
-            npc.knockBackResist = 0f;
-            npc.width = 64;
-            npc.height = 96;
-            npc.boss = true;
-            npc.npcSlots = 42f;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit4;
-            npc.DeathSound = SoundID.NPCDeath14;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 50000;
+            NPC.damage = 0;
+            NPC.defense = 140;
+            NPC.knockBackResist = 0f;
+            NPC.width = 64;
+            NPC.height = 96;
+            NPC.boss = true;
+            NPC.npcSlots = 42f;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit4;
+            NPC.DeathSound = SoundID.NPCDeath14;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Despicable beautiful");
+            Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Despicable beautiful");
         }
 
         public override void AI()
         {
             NPC spirit = Spirit;
-            if (!spirit.active || !(spirit.modNPC is TerraSpirit))
+            if (!spirit.active || !(spirit.ModNPC is TerraSpirit))
             {
-                npc.active = false;
+                NPC.active = false;
             }
             Behavior();
             Player target = null;
@@ -85,14 +85,14 @@ namespace Bluemagic.TerraSpirit
             }
             if (target != null)
             {
-                Vector2 offset = target.Center - npc.Center;
+                Vector2 offset = target.Center - NPC.Center;
                 float distance = offset.Length();
                 if (distance == 0f)
                 {
                     offset = new Vector2(-1f, 0f);
                 }
                 offset.Normalize();
-                npc.velocity = 0.05f * offset * (distance - 320f);
+                NPC.velocity = 0.05f * offset * (distance - 320f);
             }
         }
 
@@ -112,11 +112,11 @@ namespace Bluemagic.TerraSpirit
             return false;
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
         {
             if (Main.expertMode)
             {
-                damage = (int)(damage * 0.8f);
+                modifiers.SourceDamage *= 0.8f;
             }
         }
 
@@ -129,23 +129,23 @@ namespace Bluemagic.TerraSpirit
             return false;
         }
 
-        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (Main.expertMode)
             {
-                damage = (int)(damage * 0.8f);
+                modifiers.SourceDamage *= 0.8f;
             }
         }
 
-        public override bool PreNPCLoot()
+        public override bool PreKill()
         {
             NPC spirit = Spirit;
-            if (spirit.active && spirit.modNPC is TerraSpirit)
+            if (spirit.active && spirit.ModNPC is TerraSpirit)
             {
-                TerraSpirit modSpirit = (TerraSpirit)spirit.modNPC;
+                TerraSpirit modSpirit = (TerraSpirit)spirit.ModNPC;
                 modSpirit.Stage += 2;
                 modSpirit.Progress = 0;
-                if (Main.netMode == 2)
+                if (Main.netMode == NetmodeID.Server)
                 {
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, spirit.whoAmI);
                 }

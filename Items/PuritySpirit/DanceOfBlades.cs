@@ -9,63 +9,59 @@ namespace Bluemagic.Items.PuritySpirit
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Dance the dance of death."
-                + "\nPurifies the screen of enemies.");
+            /* Tooltip.SetDefault("Dance the dance of death."
+                + "\nPurifies the screen of enemies.");*/
         }
 
         public override void SetDefaults()
         {
-            item.damage = 500;
-            item.melee = true;
-            item.width = 80;
-            item.height = 80;
-            item.useTime = 10;
-            item.useAnimation = 10;
-            item.channel = true;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.useStyle = 100;
-            item.knockBack = 8f;
-            item.value = Item.sellPrice(0, 50, 0, 0);
-            item.rare = 11;
-            item.expert = true;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("DanceOfBlades");
-            item.shootSpeed = 0f;
+            Item.damage = 500;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 80;
+            Item.height = 80;
+            Item.useTime = 10;
+            Item.useAnimation = 10;
+            Item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.useStyle = 100;
+            Item.knockBack = 8f;
+            Item.value = Item.sellPrice(0, 50, 0, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.expert = true;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("DanceOfBlades").Type;
+            Item.shootSpeed = 0f;
         }
 
-        public override bool UseItemFrame(Player player)
+        public override void UseItemFrame(Player player)
         {
             player.bodyFrame.Y = 3 * player.bodyFrame.Height;
-            return true;
         }
 
         public override void AddRecipes()
         {
             if (Bluemagic.Sushi != null)
             {
-                ModRecipe recipe;
+                Recipe recipe;
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "CleanserBeam");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PrismaticShocker");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "VoidEmblem");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
             }
         }
     }

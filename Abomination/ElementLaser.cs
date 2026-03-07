@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,54 +12,54 @@ namespace Bluemagic.Abomination
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elemental Laser");
+            // DisplayName.SetDefault("Elemental Laser");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
-            projectile.timeLeft = 630;
-            projectile.penetrate = -1;
-            projectile.hostile = true;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 4;
+            Projectile.height = 4;
+            Projectile.timeLeft = 630;
+            Projectile.penetrate = -1;
+            Projectile.hostile = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (!npc.active || npc.type != mod.NPCType("CaptiveElement"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (!npc.active || npc.type != Mod.Find<ModNPC>("CaptiveElement").Type)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                if (npc.type == mod.NPCType("CaptiveElement") && npc.ai[1] == 2f && (Main.expertMode || NPC.downedMoonlord))
+                if (npc.type == Mod.Find<ModNPC>("CaptiveElement").Type && npc.ai[1] == 2f && (Main.expertMode || NPC.downedMoonlord))
                 {
-                    cooldownSlot = 1;
+                    CooldownSlot = 1;
                 }
-                projectile.Name = GetName();
+                Projectile.Name = GetName();
             }
-            projectile.Center = npc.Center;
-            projectile.localAI[0] += 1f;
+            Projectile.Center = npc.Center;
+            Projectile.localAI[0] += 1f;
             float maxTime = Main.expertMode && NPC.downedMoonlord ? 450f : 300f;
-            if (projectile.localAI[0] > maxTime)
+            if (Projectile.localAI[0] > maxTime)
             {
-                projectile.damage = 0;
-                projectile.alpha = (int)((projectile.localAI[0] - maxTime) / 30f);
+                Projectile.damage = 0;
+                Projectile.alpha = (int)((Projectile.localAI[0] - maxTime) / 30f);
             }
-            if (projectile.localAI[0] > maxTime + 30f)
+            if (Projectile.localAI[0] > maxTime + 30f)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (Main.rand.Next(2) == 0 && projectile.ai[0] >= 0f)
+            if (Main.rand.Next(2) == 0 && Projectile.ai[0] >= 0f)
             {
                 int debuff = GetDebuff();
                 if (debuff >= 0)
@@ -71,14 +72,14 @@ namespace Bluemagic.Abomination
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float point = 0f;
-            Vector2 endPoint = Main.npc[(int)projectile.ai[1]].Center;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, endPoint, 4f, ref point);
+            Vector2 endPoint = Main.npc[(int)Projectile.ai[1]].Center;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, endPoint, 4f, ref point);
         }
 
         public string GetName()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (npc.type == mod.NPCType("Abomination"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (npc.type == Mod.Find<ModNPC>("Abomination").Type)
             {
                 return "Fire Beam";
             }
@@ -107,8 +108,8 @@ namespace Bluemagic.Abomination
 
         public Color GetColor()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (npc.type == mod.NPCType("Abomination"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (npc.type == Mod.Find<ModNPC>("Abomination").Type)
             {
                 return new Color(250, 10, 0);
             }
@@ -133,8 +134,8 @@ namespace Bluemagic.Abomination
 
         public int GetDebuff()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (npc.type == mod.NPCType("Abomination"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (npc.type == Mod.Find<ModNPC>("Abomination").Type)
             {
                 return BuffID.OnFire;
             }
@@ -144,7 +145,7 @@ namespace Bluemagic.Abomination
             }
             if (npc.ai[1] == 1f)
             {
-                return mod.BuffType("EtherealFlames");
+                return Mod.Find<ModBuff>("EtherealFlames").Type;
             }
             if (npc.ai[1] == 3f)
             {
@@ -159,8 +160,8 @@ namespace Bluemagic.Abomination
 
         public int GetDebuffTime()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (npc.type == mod.NPCType("Abomination"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (npc.type == Mod.Find<ModNPC>("Abomination").Type)
             {
                 return 600;
             }
@@ -183,17 +184,17 @@ namespace Bluemagic.Abomination
             return -1;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 endPoint = Main.npc[(int)projectile.ai[1]].Center;
-            Vector2 unit = endPoint - projectile.Center;
+            Vector2 endPoint = Main.npc[(int)Projectile.ai[1]].Center;
+            Vector2 unit = endPoint - Projectile.Center;
             float length = unit.Length();
             unit.Normalize();
-            Color alpha = GetColor() * ((255 - projectile.alpha) / 255f);
+            Color alpha = GetColor() * ((255 - Projectile.alpha) / 255f);
             for (float k = 0; k <= length; k += 4f)
             {
-                Vector2 drawPos = projectile.Center + unit * k - Main.screenPosition;
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, alpha, k, new Vector2(2, 2), 1f, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.Center + unit * k - Main.screenPosition;
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, alpha, k, new Vector2(2, 2), 1f, SpriteEffects.None, 0f);
             }
             return false;
         }

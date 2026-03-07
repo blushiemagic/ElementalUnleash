@@ -8,13 +8,13 @@ namespace Bluemagic.Buffs
 {
     public class SaltLamp : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Salt Lamp");
-            Description.SetDefault("Increase defense by 4");
+            // DisplayName.SetDefault("Salt Lamp");
+            // Description.SetDefault("Increase defense by 4");
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            canBeCleared = false;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
     }
 }

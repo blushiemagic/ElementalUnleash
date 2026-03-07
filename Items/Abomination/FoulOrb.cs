@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,45 +10,44 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("The underworld would like this.");
+            // Tooltip.SetDefault("The underworld would like this.");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 20;
-            item.rare = 9;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = 4;
-            item.UseSound = SoundID.Item44;
-            item.consumable = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 20;
+            Item.rare = ItemRarityID.Cyan;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item44;
+            Item.consumable = true;
         }
 
         public override bool CanUseItem(Player player)
         {
-            return NPC.downedPlantBoss && player.position.Y / 16f > Main.maxTilesY - 200 && !NPC.AnyNPCs(mod.NPCType("Abomination")) && !NPC.AnyNPCs(mod.NPCType("CaptiveElement")) && !NPC.AnyNPCs(mod.NPCType("CaptiveElement2"));
+            return NPC.downedPlantBoss && player.position.Y / 16f > Main.maxTilesY - 200 && !NPC.AnyNPCs(Mod.Find<ModNPC>("Abomination").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("CaptiveElement").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("CaptiveElement2").Type);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Abomination"));
-            Main.PlaySound(15, (int)player.position.X, (int)player.position.Y, 0);
+            NPC.SpawnOnPlayer(player.whoAmI, Mod.Find<ModNPC>("Abomination").Type);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.BeetleHusk);
             recipe.AddIngredient(null, "ScytheBlade");
             recipe.AddIngredient(null, "Icicle");
             recipe.AddIngredient(null, "Bubble");
             recipe.AddIngredient(null, "PhantomPlate");
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

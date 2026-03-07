@@ -11,14 +11,14 @@ namespace Bluemagic.BlushieBoss
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
-            DisplayName.SetDefault("blushiemagic");
+            // DisplayName.SetDefault("blushiemagic");
         }
 
         public override void SetDefaults()
         {
             base.SetDefaults();
-            this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Shelter");
-            npc.takenDamageMultiplier = 10f;
+            this.Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Shelter");
+            NPC.takenDamageMultiplier = 10f;
         }
 
         public override void AI()
@@ -29,17 +29,17 @@ namespace Bluemagic.BlushieBoss
                 {
                     float radius = 32f;
                     float rotation = Main.rand.NextFloat() * MathHelper.TwoPi;
-                    Vector2 dustPos = npc.Center + new Vector2(0f, 15f) + radius * rotation.ToRotationVector2();
-                    int dust = Dust.NewDust(dustPos, 0, 0, mod.DustType("Particle"), 0f, 0f, 0, Color.White);
-                    Main.dust[dust].customData = npc;
+                    Vector2 dustPos = NPC.Center + new Vector2(0f, 15f) + radius * rotation.ToRotationVector2();
+                    int dust = Dust.NewDust(dustPos, 0, 0, Mod.Find<ModDust>("Particle").Type, 0f, 0f, 0, Color.White);
+                    Main.dust[dust].customData = NPC;
                 }
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("BlushieBoss/Wing");
-            Vector2 drawPos = new Vector2(npc.position.X + npc.width / 2, npc.position.Y + npc.height * 3 / 4) - Main.screenPosition;
+            Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/Wing").Value;
+            Vector2 drawPos = new Vector2(NPC.position.X + NPC.width / 2, NPC.position.Y + NPC.height * 3 / 4) - Main.screenPosition;
             float scale = (BlushieBoss.Timer - 60f) / 90f;
             if (scale < 0f)
             {
@@ -63,8 +63,8 @@ namespace Bluemagic.BlushieBoss
             for (int k = 0; k <= 3; k++)
             {
                 float rot = rotate * k / 3f;
-                spriteBatch.Draw(texture, drawPos, null, Color.White, baseRot - rot, new Vector2(0f, 34f), new Vector2(scale, 1f), SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, -baseRot + rot, new Vector2(100f, 34f), new Vector2(scale, 1f), SpriteEffects.FlipHorizontally, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, baseRot - rot, new Vector2(0f, 34f), new Vector2(scale, 1f), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, -baseRot + rot, new Vector2(100f, 34f), new Vector2(scale, 1f), SpriteEffects.FlipHorizontally, 0f);
             }
             return true;
         }
@@ -73,19 +73,19 @@ namespace Bluemagic.BlushieBoss
         {
             if (BlushieBoss.Timer < 3600)
             {
-                npc.life = npc.lifeMax;
+                NPC.life = NPC.lifeMax;
             }
             else
             {
-                npc.active = false;
+                NPC.active = false;
                 BlushieBoss.StartPhase2();
             }
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D shield = mod.GetTexture("BlushieBoss/Shield");
+            Texture2D shield = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/Shield").Value;
             float alpha;
             if (BlushieBoss.Timer < 60)
             {
@@ -120,7 +120,7 @@ namespace Bluemagic.BlushieBoss
             alpha *= 0.5f;
             if (alpha > 0f)
             {
-                spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * alpha);
+                Main.spriteBatch.Draw(shield, NPC.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * alpha);
             }
             BlushieBoss.DrawBullets(spriteBatch);
         }

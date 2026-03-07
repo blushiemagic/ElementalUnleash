@@ -4,6 +4,9 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.ChaosSpirit
@@ -12,14 +15,14 @@ namespace Bluemagic.ChaosSpirit
     {
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.hostile = true;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            cooldownSlot = 1;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            CooldownSlot = 1;
         }
 
         private int timer = 0;
@@ -47,68 +50,68 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return new Vector2(projectile.ai[0], projectile.ai[1]);
+                return new Vector2(Projectile.ai[0], Projectile.ai[1]);
             }
         }
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(projectile.localAI[0]);
-            writer.Write(projectile.localAI[1]);
+            writer.Write(Projectile.localAI[0]);
+            writer.Write(Projectile.localAI[1]);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            projectile.localAI[0] = reader.ReadSingle();
-            projectile.localAI[1] = reader.ReadSingle();
+            Projectile.localAI[0] = reader.ReadSingle();
+            Projectile.localAI[1] = reader.ReadSingle();
         }
 
         public override void AI()
         {
-            if (projectile.velocity.X != 0f)
+            if (Projectile.velocity.X != 0f)
             {
-                projectile.localAI[0] = projectile.velocity.X == -1f ? 0f : projectile.velocity.X;
-                projectile.velocity.X = 0f;
+                Projectile.localAI[0] = Projectile.velocity.X == -1f ? 0f : Projectile.velocity.X;
+                Projectile.velocity.X = 0f;
             }
-            if (projectile.velocity.Y != 0f)
+            if (Projectile.velocity.Y != 0f)
             {
-                projectile.localAI[1] = projectile.velocity.Y;
-                projectile.velocity.Y = 0f;
+                Projectile.localAI[1] = Projectile.velocity.Y;
+                Projectile.velocity.Y = 0f;
             }
             if (timer == 0)
             {
                 color = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.5f);
             }
-            if (projectile.localAI[1] > 0f)
+            if (Projectile.localAI[1] > 0f)
             {
                 timer++;
                 int interval = Main.expertMode ? 40 : 50;
-                if (timer == interval && projectile.localAI[1] > interval + 10f && Main.netMode != 1)
+                if (timer == interval && Projectile.localAI[1] > interval + 10f && Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Player player = Main.player[(int)projectile.localAI[0]];
+                    Player player = Main.player[(int)Projectile.localAI[0]];
                     int damage = 150;
                     if (Main.expertMode)
                     {
                         damage = (int)(damage * 1.5f / 2f);
                     }
-                    int proj = Projectile.NewProjectile(player.Center, Vector2.Zero, projectile.type, damage, 0f, Main.myPlayer, projectile.Center.X, projectile.Center.Y);
-                    Main.projectile[proj].localAI[0] = projectile.localAI[0];
-                    Main.projectile[proj].localAI[1] = projectile.localAI[1];
-                    NetMessage.SendData(27, -1, -1, null, proj);
+                    int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.Center, Vector2.Zero, Projectile.type, damage, 0f, Main.myPlayer, Projectile.Center.X, Projectile.Center.Y);
+                    Main.projectile[proj].localAI[0] = Projectile.localAI[0];
+                    Main.projectile[proj].localAI[1] = Projectile.localAI[1];
+                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj);
                 }
                 if (timer == interval)
                 {
-                    Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 81);
+                    SoundEngine.PlaySound(SoundID.Item81, Projectile.position);
                 }
             }
-            projectile.localAI[1] -= 1f;
-            if (projectile.localAI[1] <= -15f)
+            Projectile.localAI[1] -= 1f;
+            if (Projectile.localAI[1] <= -15f)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 
-        public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
             if (target.hurtCooldowns[1] <= 0)
             {
@@ -124,14 +127,14 @@ namespace Bluemagic.ChaosSpirit
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(mod.BuffType("Undead"), 300, false);
+            target.AddBuff(Mod.Find<ModBuff>("Undead").Type, 300, false);
         }
 
         public override bool? CanHitNPC(NPC target)
         {
-            if (Vector2.Distance(target.Center, projectile.Center) >= 600f)
+            if (Vector2.Distance(target.Center, Projectile.Center) >= 600f)
             {
                 return false;
             }
@@ -140,7 +143,7 @@ namespace Bluemagic.ChaosSpirit
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (projectile.localAI[1] <= 0f)
+            if (Projectile.localAI[1] <= 0f)
             {
                 return false;
             }
@@ -149,7 +152,7 @@ namespace Bluemagic.ChaosSpirit
             {
                 float num = 0f;
                 Vector2 center = Source;
-                Vector2 direction = projectile.Center - center;
+                Vector2 direction = Projectile.Center - center;
                 if (direction == Vector2.Zero)
                 {
                     direction = new Vector2(0f, 1f);
@@ -166,29 +169,29 @@ namespace Bluemagic.ChaosSpirit
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Vector2 drawCenter = Source - Main.screenPosition;
-            Vector2 direction = projectile.Center - Source;
+            Vector2 direction = Projectile.Center - Source;
             if (direction == Vector2.Zero)
             {
                 direction = new Vector2(0f, 1f);
             }
             direction.Normalize();
             float alpha = 1f;
-            if (projectile.localAI[1] < 0f)
+            if (Projectile.localAI[1] < 0f)
             {
-                alpha = 1f + projectile.localAI[1] / 15f;
+                alpha = 1f + Projectile.localAI[1] / 15f;
             }
             Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
             float length = Length;
-            for (float k = 0f; k < length; k += projectile.width / 2)
+            for (float k = 0f; k < length; k += Projectile.width / 2)
             {
-                spriteBatch.Draw(texture, drawCenter + k * direction, null, color * alpha, 0f, origin, 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawCenter - k * direction, null, color * alpha, 0f, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawCenter + k * direction, null, color * alpha, 0f, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawCenter - k * direction, null, color * alpha, 0f, origin, 1f, SpriteEffects.None, 0f);
             }
-            spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, ChaosSpirit.mainColor * alpha, 0f, origin, 2f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, ChaosSpirit.mainColor * alpha, 0f, origin, 2f, SpriteEffects.None, 0f);
             return false;
         }
     }

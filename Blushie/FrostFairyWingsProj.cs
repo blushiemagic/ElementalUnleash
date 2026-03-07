@@ -13,25 +13,25 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Wings of the Frost Fairy");
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            // DisplayName.SetDefault("Wings of the Frost Fairy");
+            ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 62;
-            projectile.height = 52;
-            projectile.minion = true;
-            projectile.minionSlots = 1;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 18000;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
+            Projectile.width = 62;
+            Projectile.height = 52;
+            Projectile.minion = true;
+            Projectile.minionSlots = 1;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 18000;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
         }
 
         public override void CheckActive()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if (player.dead)
             {
@@ -39,63 +39,63 @@ namespace Bluemagic.Blushie
             }
             if (modPlayer.frostFairy)
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
         }
 
         public override void Behavior()
         {
-            if (projectile.owner == Main.myPlayer)
+            if (Projectile.owner == Main.myPlayer)
             {
-                for (int k = 0; k < projectile.whoAmI; k++)
+                for (int k = 0; k < Projectile.whoAmI; k++)
                 {
-                    if (Main.projectile[k].active && Main.projectile[k].owner == projectile.owner && Main.projectile[k].type == projectile.type)
+                    if (Main.projectile[k].active && Main.projectile[k].owner == Projectile.owner && Main.projectile[k].type == Projectile.type)
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                         break;
                     }
                 }
             }
-            projectile.Center = Main.player[projectile.owner].Center;
+            Projectile.Center = Main.player[Projectile.owner].Center;
 
-            projectile.ai[0] += 1f;
-            if (projectile.ai[0] >= 10f)
+            Projectile.ai[0] += 1f;
+            if (Projectile.ai[0] >= 10f)
             {
-                if (projectile.owner == Main.myPlayer)
+                if (Projectile.owner == Main.myPlayer)
                 {
-                    Vector2 origin = projectile.Center + new Vector2(-18f, -13f);
-                    int target = GetTarget((NPC npc) => npc.Center.X <= projectile.Center.X && npc.Center.Y <= projectile.Center.Y, origin);
+                    Vector2 origin = Projectile.Center + new Vector2(-18f, -13f);
+                    int target = GetTarget((NPC npc) => npc.Center.X <= Projectile.Center.X && npc.Center.Y <= Projectile.Center.Y, origin);
                     if (target >= 0)
                     {
                         Vector2 dir = Main.npc[target].Center - origin;
                         dir.Normalize();
-                        Projectile.NewProjectile(origin, dir, mod.ProjectileType("FrostFairyLaser"), projectile.damage, projectile.knockBack, projectile.owner, 0f, projectile.identity);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), origin, dir, Mod.Find<ModProjectile>("FrostFairyLaser").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, Projectile.identity);
                     }
-                    origin = projectile.Center + new Vector2(18f, -13f);
-                    target = GetTarget((NPC npc) => npc.Center.X >= projectile.Center.X && npc.Center.Y <= projectile.Center.Y, origin);
+                    origin = Projectile.Center + new Vector2(18f, -13f);
+                    target = GetTarget((NPC npc) => npc.Center.X >= Projectile.Center.X && npc.Center.Y <= Projectile.Center.Y, origin);
                     if (target >= 0)
                     {
                         Vector2 dir = Main.npc[target].Center - origin;
                         dir.Normalize();
-                        Projectile.NewProjectile(origin, dir, mod.ProjectileType("FrostFairyLaser"), projectile.damage, projectile.knockBack, projectile.owner, 1f, projectile.identity);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), origin, dir, Mod.Find<ModProjectile>("FrostFairyLaser").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 1f, Projectile.identity);
                     }
-                    origin = projectile.Center + new Vector2(-16f, 15f);
-                    target = GetTarget((NPC npc) => npc.Center.X <= projectile.Center.X && npc.Center.Y >= projectile.Center.Y, origin);
+                    origin = Projectile.Center + new Vector2(-16f, 15f);
+                    target = GetTarget((NPC npc) => npc.Center.X <= Projectile.Center.X && npc.Center.Y >= Projectile.Center.Y, origin);
                     if (target >= 0)
                     {
                         Vector2 dir = Main.npc[target].Center - origin;
                         dir.Normalize();
-                        Projectile.NewProjectile(origin, dir, mod.ProjectileType("FrostFairyLaser"), projectile.damage, projectile.knockBack, projectile.owner, 2f, projectile.identity);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), origin, dir, Mod.Find<ModProjectile>("FrostFairyLaser").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 2f, Projectile.identity);
                     }
-                    origin = projectile.Center + new Vector2(16f, 15f);
-                    target = GetTarget((NPC npc) => npc.Center.X >= projectile.Center.X && npc.Center.Y >= projectile.Center.Y, origin);
+                    origin = Projectile.Center + new Vector2(16f, 15f);
+                    target = GetTarget((NPC npc) => npc.Center.X >= Projectile.Center.X && npc.Center.Y >= Projectile.Center.Y, origin);
                     if (target >= 0)
                     {
                         Vector2 dir = Main.npc[target].Center - origin;
                         dir.Normalize();
-                        Projectile.NewProjectile(origin, dir, mod.ProjectileType("FrostFairyLaser"), projectile.damage, projectile.knockBack, projectile.owner, 3f, projectile.identity);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), origin, dir, Mod.Find<ModProjectile>("FrostFairyLaser").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 3f, Projectile.identity);
                     }
-                    projectile.ai[0] = 0f;
+                    Projectile.ai[0] = 0f;
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace Bluemagic.Blushie
             int index = -1;
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].CanBeChasedBy(projectile))
+                if (Main.npc[k].CanBeChasedBy(Projectile))
                 {
                     float distance = Vector2.Distance(origin, Main.npc[k].Center);
                     if (distance < 800f)

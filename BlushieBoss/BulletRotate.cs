@@ -41,7 +41,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletRotate NewGold(Vector2 center, float radius, float angle, float rotSpeed, int timeLeft)
         {
-            return new BulletRotate(center, radius, angle, rotSpeed, timeLeft, 16f, BlushieBoss.BulletGoldTexture);
+            return new BulletRotate(center, radius, angle, rotSpeed, timeLeft, 16f, BlushieBoss.BulletGoldTexture.Value);
         }
     }
 }

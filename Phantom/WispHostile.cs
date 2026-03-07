@@ -9,28 +9,28 @@ namespace Bluemagic.Phantom
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Wisp");
+            // DisplayName.SetDefault("Wisp");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.alpha = 70;
-            projectile.penetrate = 1;
-            projectile.hostile = true;
-            projectile.ranged = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 600;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.alpha = 70;
+            Projectile.penetrate = 1;
+            Projectile.hostile = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 600;
         }
 
         public override void AI()
         {
-            if (projectile.ai[1] > 0f)
+            if (Projectile.ai[1] > 0f)
             {
-                projectile.Center = Main.npc[(int)projectile.ai[0]].Center;
-                projectile.ai[1] -= 1f;
+                Projectile.Center = Main.npc[(int)Projectile.ai[0]].Center;
+                Projectile.ai[1] -= 1f;
                 return;
             }
             Vector2 move = new Vector2(0f, 0f);
@@ -40,7 +40,7 @@ namespace Bluemagic.Phantom
             {
                 if (Main.player[k].active && !Main.player[k].dead)
                 {
-                    Vector2 newMove = Main.player[k].Center - projectile.Center;
+                    Vector2 newMove = Main.player[k].Center - Projectile.Center;
                     float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
                     if (distanceTo < distance)
                     {
@@ -53,13 +53,13 @@ namespace Bluemagic.Phantom
             if (target != null)
             {
                 AdjustMagnitude(ref move);
-                projectile.velocity = (5 * projectile.velocity + move) / 6f;
-                AdjustMagnitude(ref projectile.velocity);
-                if (projectile.Hitbox.Intersects(target.Hitbox))
+                Projectile.velocity = (5 * Projectile.velocity + move) / 6f;
+                AdjustMagnitude(ref Projectile.velocity);
+                if (Projectile.Hitbox.Intersects(target.Hitbox))
                 {
                     target.immune = false;
                     target.immuneTime = 0;
-                    projectile.Damage();
+                    Projectile.Damage();
                     if (!target.immune && target.immuneTime <= 0)
                     {
                         target.immune = true;
@@ -69,7 +69,7 @@ namespace Bluemagic.Phantom
             }
             for (int k2 = 0; k2 < 3; k2++)
             {
-                int dust = Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, mod.DustType("Phantom"));
+                int dust = Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, Mod.Find<ModDust>("Phantom").Type);
                 Main.dust[dust].velocity /= 2f;
             }
         }
@@ -83,13 +83,13 @@ namespace Bluemagic.Phantom
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (Main.rand.Next(4) == 0)
             {
-                target.AddBuff(mod.BuffType("EtherealFlames"), 300, true);
+                target.AddBuff(Mod.Find<ModBuff>("EtherealFlames").Type, 300, true);
             }
-            projectile.Kill();
+            Projectile.Kill();
         }
     }
 }

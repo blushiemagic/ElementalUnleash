@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,53 +11,53 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.alpha = 255;
-            projectile.ranged = true;
-            projectile.penetrate = 20;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 10;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
-            projectile.MaxUpdates = 16;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.alpha = 255;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 20;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 10;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
+            Projectile.MaxUpdates = 16;
         }
 
         public override void AI()
         {
-            if (projectile.soundDelay > 0)
+            if (Projectile.soundDelay > 0)
             {
-                projectile.soundDelay--;
+                Projectile.soundDelay--;
             }
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 12);
-                projectile.localAI[0] = 1f;
-                projectile.soundDelay = 96;
-                float speed = (float)Math.Sqrt(projectile.velocity.X * projectile.velocity.X + projectile.velocity.Y * projectile.velocity.Y);
-                projectile.velocity *= 2f / speed;
+                SoundEngine.PlaySound(SoundID.Item12, Projectile.position);
+                Projectile.localAI[0] = 1f;
+                Projectile.soundDelay = 96;
+                float speed = (float)Math.Sqrt(Projectile.velocity.X * Projectile.velocity.X + Projectile.velocity.Y * Projectile.velocity.Y);
+                Projectile.velocity *= 2f / speed;
             }
-            Dust.NewDust(projectile.position, 0, 0, mod.DustType("PuriumBullet"));
+            Dust.NewDust(Projectile.position, 0, 0, Mod.Find<ModDust>("PuriumBullet").Type);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.penetrate--;
-            if (projectile.penetrate > 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate > 0)
             {
-                if (projectile.velocity.X != oldVelocity.X)
+                if (Projectile.velocity.X != oldVelocity.X)
                 {
-                    projectile.velocity.X = -oldVelocity.X;
+                    Projectile.velocity.X = -oldVelocity.X;
                 }
-                if (projectile.velocity.Y != oldVelocity.Y)
+                if (Projectile.velocity.Y != oldVelocity.Y)
                 {
-                    projectile.velocity.Y = -oldVelocity.Y;
+                    Projectile.velocity.Y = -oldVelocity.Y;
                 }
-                if (projectile.soundDelay <= 0f)
+                if (Projectile.soundDelay <= 0f)
                 {
-                    Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 12);
-                    projectile.soundDelay = 96;
+                    SoundEngine.PlaySound(SoundID.Item12, Projectile.position);
+                    Projectile.soundDelay = 96;
                 }
             }
             else
@@ -65,12 +66,11 @@ namespace Bluemagic.Items.Purium.Weapons.Projectiles
             }
             return false;
         }
-
-        public override void OnHitPvp(Player player, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (Main.rand.Next(2) == 0)
             {
-                player.AddBuff(BuffID.BrokenArmor, 600, true);
+                target.AddBuff(BuffID.BrokenArmor, 600, true);
             }
         }
     }

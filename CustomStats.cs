@@ -230,56 +230,56 @@ namespace Bluemagic
     {
         public static void MeleeDamage(Player player, int points)
         {
-            player.meleeDamage += 0.05f * points;
+            player.GetDamage(DamageClass.Melee) += 0.05f * points;
         }
 
         public const string MeleeDamageTip = "+ 5% melee damage per level";
 
         public static void RangedDamage(Player player, int points)
         {
-            player.rangedDamage += 0.05f * points;
+            player.GetDamage(DamageClass.Ranged) += 0.05f * points;
         }
 
         public const string RangedDamageTip = "+ 5% ranged damage per level";
 
         public static void MagicDamage(Player player, int points)
         {
-            player.magicDamage += 0.05f * points;
+            player.GetDamage(DamageClass.Magic) += 0.05f * points;
         }
 
         public const string MagicDamageTip = "+ 5% magic damage per level";
 
         public static void MinionDamage(Player player, int points)
         {
-            player.minionDamage += 0.05f * points;
+            player.GetDamage(DamageClass.Summon) += 0.05f * points;
         }
 
         public const string MinionDamageTip = "+ 5% minion damage per level";
 
         public static void ThrownDamage(Player player, int points)
         {
-            player.thrownDamage += 0.05f * points;
+            player.GetDamage(DamageClass.Throwing) += 0.05f * points;
         }
 
         public const string ThrownDamageTip = "+ 5% throwing damage per level";
 
         public static void MeleeCrit(Player player, int points)
         {
-            player.meleeCrit += 5 * points;
+            player.GetCritChance(DamageClass.Melee) += 5 * points;
         }
 
         public const string MeleeCritTip = "+ 5% melee crit chance per level";
 
         public static void RangedCrit(Player player, int points)
         {
-            player.rangedCrit += 5 * points;
+            player.GetCritChance(DamageClass.Ranged) += 5 * points;
         }
 
         public const string RangedCritTip = "+ 5% ranged crit chance per level";
 
         public static void MagicCrit(Player player, int points)
         {
-            player.magicCrit += 5 * points;
+            player.GetCritChance(DamageClass.Magic) += 5 * points;
         }
 
         public const string MagicCritTip = "+ 5% magic crit chance per level";
@@ -304,14 +304,14 @@ namespace Bluemagic
 
         public static void ThrownCrit(Player player, int points)
         {
-            player.thrownCrit += 5 * points;
+            player.GetCritChance(DamageClass.Throwing) += 5 * points;
         }
 
         public const string ThrownCritTip = "+ 5% throwing crit chance per level";
 
         public static void MeleeSpeed(Player player, int points)
         {
-            player.meleeSpeed += 0.06f * points;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.06f * points;
         }
 
         public const string MeleeSpeedTip = "+ 6% melee speed per level";
@@ -333,7 +333,7 @@ namespace Bluemagic
 
         public static void MinionKB(Player player, int points)
         {
-            player.minionKB += 0.6f * points;
+            player.GetKnockback(DamageClass.Summon).Base += 0.6f * points;
         }
 
         public const string MinionKBTip = "Increases minion knockback with each level";
@@ -393,21 +393,21 @@ namespace Bluemagic
 
         public static void AllDamage(Player player, int points)
         {
-            player.meleeDamage += 0.03f * points;
-            player.rangedDamage += 0.03f * points;
-            player.magicDamage += 0.03f * points;
-            player.minionDamage += 0.03f * points;
-            player.thrownDamage += 0.03f * points;
+            player.GetDamage(DamageClass.Melee) += 0.03f * points;
+            player.GetDamage(DamageClass.Ranged) += 0.03f * points;
+            player.GetDamage(DamageClass.Magic) += 0.03f * points;
+            player.GetDamage(DamageClass.Summon) += 0.03f * points;
+            player.GetDamage(DamageClass.Throwing) += 0.03f * points;
         }
 
         public const string AllDamageTip = "+ 3% damage per level";
 
         public static void AllCrit(Player player, int points)
         {
-            player.meleeCrit += 3 * points;
-            player.rangedCrit += 3 * points;
-            player.magicCrit += 3 * points;
-            player.thrownCrit += 3 * points;
+            player.GetCritChance(DamageClass.Melee) += 3 * points;
+            player.GetCritChance(DamageClass.Ranged) += 3 * points;
+            player.GetCritChance(DamageClass.Magic) += 3 * points;
+            player.GetCritChance(DamageClass.Throwing) += 3 * points;
             if (points >= 2)
             {
                 player.maxMinions++;
@@ -423,10 +423,10 @@ namespace Bluemagic
         public static void MiscOffense(Player player, int points)
         {
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
-            player.meleeSpeed += 0.03f * points;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.03f * points;
             modPlayer.ammoCost += 0.04f * points;
             player.manaCost *= (1f - 0.05f * points);
-            player.minionKB += 0.3f * points;
+            player.GetKnockback(DamageClass.Summon).Base += 0.3f * points;
             modPlayer.thrownCost += 0.04f * points;
         }
 

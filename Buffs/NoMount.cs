@@ -7,14 +7,14 @@ namespace Bluemagic.Buffs
 {
     public class NoMount : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cursed Mount");
-            Description.SetDefault("You cannot use your mount");
+            // DisplayName.SetDefault("Cursed Mount");
+            // Description.SetDefault("You cannot use your mount");
             Main.buffNoSave[Type] = true;
             Main.debuff[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = false;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
     }
 }

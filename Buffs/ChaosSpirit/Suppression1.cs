@@ -8,14 +8,14 @@ namespace Bluemagic.Buffs.ChaosSpirit
 {
     public class Suppression1 : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Suppression");
-            Description.SetDefault("25% reduced damage");
+            // DisplayName.SetDefault("Suppression");
+            // Description.SetDefault("25% reduced damage");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            longerExpertDebuff = false;
+            BuffID.Sets.LongerExpertDebuff[Type] = false;
         }
 
         public override void Update(Player player, ref int buffIndex)

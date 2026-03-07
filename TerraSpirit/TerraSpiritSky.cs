@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -27,7 +28,7 @@ namespace Bluemagic.TerraSpirit
 
         private bool UpdateTerraSpiritIndex()
         {
-            int terraSpiritType = ModLoader.GetMod("Bluemagic").NPCType("TerraSpirit");
+            int terraSpiritType = ModLoader.GetMod("Bluemagic").Find<ModNPC>("TerraSpirit").Type;
             if (terraSpiritIndex >= 0 && Main.npc[terraSpiritIndex].active && Main.npc[terraSpiritIndex].type == terraSpiritType)
             {
                 return true;
@@ -48,7 +49,7 @@ namespace Bluemagic.TerraSpirit
         {
             if (maxDepth >= 0 && minDepth < 0)
             {
-                spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(200, 200, 200) * intensity);
+                Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(200, 200, 200) * intensity);
             }
         }
 

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -77,7 +78,7 @@ namespace Bluemagic.Interface
             const int padding = 4;
             const int chargeSize = barSize - 2 * padding;
             const int chargeHeight = 20;
-            DynamicSpriteFont font = Main.fontMouseText;
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
             float puriumShieldCharge = Math.Min(modPlayer.puriumShieldCharge, modPlayer.puriumShieldChargeMax);
             string chargeText = (int)puriumShieldCharge + "/" + (int)modPlayer.puriumShieldChargeMax;
             string maxText = "Purity Shield Charge: " + (int)modPlayer.puriumShieldChargeMax + "/" + (int)modPlayer.puriumShieldChargeMax;
@@ -87,8 +88,8 @@ namespace Bluemagic.Interface
             Main.spriteBatch.DrawString(font, chargeText, new Vector2(anchorX + barSize / 2 + maxTextSize.X / 2f, 6f), textColor, 0f, new Vector2(font.MeasureString(chargeText).X, 0f), 1f, SpriteEffects.None, 0f);
 
             float fill = puriumShieldCharge / modPlayer.puriumShieldChargeMax;
-            Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldBar"), new Vector2(anchorX, 32f), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(mod.GetTexture("PuriumShieldCharge"), new Vector2(anchorX + padding, 32f + padding), new Rectangle(0, 0, (int)(fill * chargeSize), chargeHeight), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuriumShieldBar").Value, new Vector2(anchorX, 32f), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuriumShieldCharge").Value, new Vector2(anchorX + padding, 32f + padding), new Rectangle(0, 0, (int)(fill * chargeSize), chargeHeight), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             return true;
         }
@@ -140,7 +141,7 @@ namespace Bluemagic.Interface
             Rectangle rect = new Rectangle(screenAnchorX, 32, (int)(barSize * Main.UIScale), (int)(barHeight * Main.UIScale));
             if (Main.mouseX > rect.Left && Main.mouseX < rect.Right && Main.mouseY > rect.Top && Main.mouseY < rect.Bottom)
             {
-                Main.player[Main.myPlayer].showItemIcon = false;
+                Main.player[Main.myPlayer].cursorItemIconEnabled = false;
                 float enduranceCap = (int)(20 * modPlayer.puriumShieldEnduranceMult);
                 string text = "Damaging enemies powers a purity shield around you";
                 text += "\nShield also regenerates over time";

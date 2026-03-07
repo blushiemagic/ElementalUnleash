@@ -7,13 +7,13 @@ namespace Bluemagic.Buffs
 {
     public class Salty : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Salty");
-            Description.SetDefault("Greatly increased speed but decreased defense");
+            // DisplayName.SetDefault("Salty");
+            // Description.SetDefault("Greatly increased speed but decreased defense");
             Main.buffNoSave[Type] = true;
             Main.debuff[Type] = true;
-            longerExpertDebuff = true;
+            BuffID.Sets.LongerExpertDebuff[Type] = false;
         }
 
         public override void Update(Player player, ref int buffIndex)

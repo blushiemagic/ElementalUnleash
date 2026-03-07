@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -17,11 +18,11 @@ namespace Bluemagic.Blushie
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Terra Reaver");
-            Tooltip.SetDefault("Cleaves the world to erase your enemies"
+            // DisplayName.SetDefault("Terra Reaver");
+            /* Tooltip.SetDefault("Cleaves the world to erase your enemies"
                 + "\nHas a 60 second cooldown"
-                + "\n'Great for impersonating... someone?'");
-            ItemID.Sets.ItemNoGravity[item.type] = true;
+                + "\n'Great for impersonating... someone?'");*/
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override bool CanUseItem(Player player)
@@ -29,16 +30,16 @@ namespace Bluemagic.Blushie
             return player.GetModPlayer<BluemagicPlayer>().worldReaverCooldown <= 0;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             player.GetModPlayer<BluemagicPlayer>().worldReaverCooldown = 3600;
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 WorldReaverData.Begin(player.whoAmI);
             }
-            else if (Main.netMode == 2)
+            else if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = mod.GetPacket();
+                ModPacket packet = Mod.GetPacket();
                 packet.Write((byte)MessageType.WorldReaver);
                 packet.Write(player.whoAmI);
                 packet.Send();
@@ -48,18 +49,18 @@ namespace Bluemagic.Blushie
 
         public override void SetDefaults()
         {
-            item.rare = 13;
-            item.UseSound = mod.GetLegacySoundSlot(SoundType.Item, "Sounds/Item/Slice");
-            item.noMelee = true;
-            item.useStyle = 1;
-            item.damage = 666;
-            item.useAnimation = 40;
-            item.useTime = 40;
-            item.width = 138;
-            item.height = 114;
-            item.knockBack = 5f;
-            item.melee = true;
-            item.value = Item.sellPrice(2, 0, 0, 0);
+            Item.rare = ItemRarityID.Expert;
+            // Todo: Uhh this sound doesnt exist? Item.UseSound = new Terraria.Audio.SoundStyle("Bluemagic/Sounds/Item/Slice");
+            Item.noMelee = true;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.damage = 666;
+            Item.useAnimation = 40;
+            Item.useTime = 40;
+            Item.width = 138;
+            Item.height = 114;
+            Item.knockBack = 5f;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = Item.sellPrice(2, 0, 0, 0);
         }
 
         public static void UpdateGlitchText()
@@ -89,14 +90,14 @@ namespace Bluemagic.Blushie
         {
             for (int k = 0; k < lines.Count; k++)
             {
-                if (lines[k].mod == "Terraria" && lines[k].Name == "Damage")
+                if (lines[k].Mod == "Terraria" && lines[k].Name == "Damage")
                 {
-                    lines[k].text = glitchText + Language.GetTextValue("LegacyTooltip.2");
+                    lines[k].Text = glitchText + Language.GetTextValue("LegacyTooltip.2");
                 }
             }
         }
 
-        public override void UseStyle(Player player)
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
         {
             if (player.itemAnimation < player.itemAnimationMax * 0.333)
             {
@@ -118,13 +119,13 @@ namespace Bluemagic.Blushie
             int cooldown = Main.player[Main.myPlayer].GetModPlayer<BluemagicPlayer>().worldReaverCooldown;
             if (cooldown > 0)
             {
-                Texture2D texture = Main.cdTexture;
+                Texture2D texture = TextureAssets.Cd.Value;
                 Vector2 slotSize = new Vector2(52f, 52f);
                 position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
                 Vector2 drawPos = position + slotSize * Main.inventoryScale / 2f/* - texture.Size() * Main.inventoryScale / 2f*/;
                 float alpha = 0.1f + 0.9f * (cooldown / 3600f);
                 Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-                spriteBatch.Draw(texture, drawPos, null, drawColor * alpha, 0f, textureOrigin, Main.inventoryScale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, drawColor * alpha, 0f, textureOrigin, Main.inventoryScale, SpriteEffects.None, 0f);
             }
         }
     }

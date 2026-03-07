@@ -8,9 +8,9 @@ namespace Bluemagic.Walls
 {
     public class ShroomstoneWall : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            dustType = 26;
+            DustType = DustID.Bone;
             WallID.Sets.Conversion.Stone[Type] = true;
             AddMapEntry(new Color(64, 62, 80));
         }

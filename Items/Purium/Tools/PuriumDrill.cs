@@ -9,39 +9,38 @@ namespace Bluemagic.Items.Purium.Tools
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Can mine Frostbyte");
+            // Tooltip.SetDefault("Can mine Frostbyte");
         }
 
         public override void SetDefaults()
         {
-            item.damage = 90;
-            item.melee = true;
-            item.width = 20;
-            item.height = 12;
-            item.useTime = 6;
-            item.useAnimation = 11;
-            item.channel = true;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.pick = 250;
-            item.tileBoost += 4;
-            item.useStyle = 5;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 12, 0, 0);
-            item.rare = 11;
-            item.UseSound = SoundID.Item23;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("PuriumDrill");
-            item.shootSpeed = 40f;
+            Item.damage = 90;
+            Item.DamageType = DamageClass.MeleeNoSpeed;
+            Item.width = 20;
+            Item.height = 12;
+            Item.useTime = 6;
+            Item.useAnimation = 11;
+            Item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.pick = 250;
+            Item.tileBoost += 4;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.UseSound = SoundID.Item23;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("PuriumDrill").Type;
+            Item.shootSpeed = 40f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 15);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

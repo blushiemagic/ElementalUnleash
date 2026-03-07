@@ -10,33 +10,32 @@ namespace Bluemagic.Items.Purium.Weapons
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Bounces at high speeds");
+            // Tooltip.SetDefault("Bounces at high speeds");
         }
 
         public override void SetDefaults()
         {
-            item.width = 8;
-            item.height = 8;
-            item.maxStack = 999;
-            item.damage = 20;
-            item.knockBack = 4f;
-            item.consumable = true;
-            item.ammo = AmmoID.Bullet;
-            item.rare = 11;
-            item.ranged = true;
-            item.value = Item.sellPrice(0, 0, 0, 25);
-            item.shoot = mod.ProjectileType("PuriumBullet");
-            item.shootSpeed = 2f;
+            Item.width = 8;
+            Item.height = 8;
+            Item.maxStack = 999;
+            Item.damage = 20;
+            Item.knockBack = 4f;
+            Item.consumable = true;
+            Item.ammo = AmmoID.Bullet;
+            Item.rare = ItemRarityID.Purple;
+            Item.DamageType = DamageClass.Ranged;
+            Item.value = Item.sellPrice(0, 0, 0, 25);
+            Item.shoot = Mod.Find<ModProjectile>("PuriumBullet").Type;
+            Item.shootSpeed = 2f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe(111);
             recipe.AddIngredient(ItemID.MusketBall, 111);
             recipe.AddIngredient(null, "PuriumBar");
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this, 111);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

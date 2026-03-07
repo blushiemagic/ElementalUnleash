@@ -10,33 +10,34 @@ namespace Bluemagic.Items.Purium.Weapons
     {
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 40;
-            item.scale = 1.2f;
-            item.useStyle = 1;
-            item.useAnimation = 20;
-            item.useTime = 12;
-            item.damage = 502;
-            item.knockBack = 4.5f;
-            item.autoReuse = true;
-            item.useTurn = false;
-            item.rare = 11;
-            item.melee = true;
-            item.value = Item.sellPrice(0, 12, 0, 0);
-            item.UseSound = SoundID.Item1;
-            item.shoot = mod.ProjectileType("PuriumSlice");
-            item.shootSpeed = 0.5f;
+            Item.width = 40;
+            Item.height = 40;
+            Item.scale = 1.2f;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useAnimation = 20;
+            Item.useTime = 12;
+            Item.damage = 502;
+            Item.knockBack = 4.5f;
+            Item.autoReuse = true;
+            Item.useTurn = false;
+            Item.rare = ItemRarityID.Purple;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = Mod.Find<ModProjectile>("PuriumSlice").Type;
+            Item.shootSpeed = 0.5f;
         }
 
-        public override bool OnlyShootOnSwing => true;
+
+
+        // PORT TODO: uh this: public override bool OnlyShootOnSwing/* tModPorter Note: Removed. If you returned true, set Item.useTime to a multiple of Item.useAnimation */ => true;
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 12);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

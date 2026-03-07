@@ -9,40 +9,38 @@ namespace Bluemagic.Items.Purium
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Used to smelt elemental ores");
+            // Tooltip.SetDefault("Used to smelt elemental ores");
         }
 
         public override void SetDefaults()
         {
-            item.width = 44;
-            item.height = 30;
-            item.maxStack = 99;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 13, 0, 0);
-            item.createTile = mod.TileType("PuriumForge");
+            Item.width = 44;
+            Item.height = 30;
+            Item.maxStack = 99;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.consumable = true;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 13, 0, 0);
+            Item.createTile = Mod.Find<ModTile>("PuriumForge").Type;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.AdamantiteForge);
             recipe.AddIngredient(null, "PuriumOre", 60);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.TitaniumForge);
             recipe.AddIngredient(null, "PuriumOre", 60);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

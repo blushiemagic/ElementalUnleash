@@ -38,7 +38,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletTargetSmooth NewBlueLarge(Vector2 position, Vector2 target, int time)
         {
-            return new BulletTargetSmooth(position, target, time, 32f, BlushieBoss.BulletBlueLargeTexture);
+            return new BulletTargetSmooth(position, target, time, 32f, BlushieBoss.BulletBlueLargeTexture.Value);
         }
     }
 }

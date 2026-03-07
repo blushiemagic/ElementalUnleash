@@ -46,17 +46,17 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletRotateAround NewBlueSmall(Bullet follow, float radius, float angle, float rotSpeed)
         {
-            return new BulletRotateAround(follow, radius, angle, rotSpeed, 8f, BlushieBoss.BulletBlueSmallTexture);
+            return new BulletRotateAround(follow, radius, angle, rotSpeed, 8f, BlushieBoss.BulletBlueSmallTexture.Value);
         }
 
         public static BulletRotateAround NewDragonBreath(Func<Vector2> follow, float radius, float angle, float rotSpeed)
         {
-            return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletDragonBreathTexture);
+            return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletDragonBreathTexture.Value);
         }
 
         public static BulletRotateAround NewSkull(Func<Vector2> follow, float radius, float angle, float rotSpeed)
         {
-            return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletSkullTexture);
+            return new BulletRotateAround(follow, radius, angle, rotSpeed, 16f, BlushieBoss.BulletSkullTexture.Value);
         }
     }
 }

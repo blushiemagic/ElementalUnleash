@@ -8,14 +8,14 @@ namespace Bluemagic.Buffs.PuritySpirit
 {
     public class Undead : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Undead");
-            Description.SetDefault("Recovering harms you");
+            // DisplayName.SetDefault("Undead");
+            // Description.SetDefault("Recovering harms you");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            longerExpertDebuff = true;
+            BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

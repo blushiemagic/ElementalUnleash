@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Dusts
@@ -9,7 +10,7 @@ namespace Bluemagic.Dusts
     {
         public override void OnSpawn(Dust dust)
         {
-            updateType = 226;
+            UpdateType = DustID.Electric;
         }
 
         public override Color? GetAlpha(Dust dust, Color lightColor)

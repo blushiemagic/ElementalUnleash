@@ -12,44 +12,49 @@ namespace Bluemagic.Phantom
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Phantom");
+            // DisplayName.SetDefault("The Phantom");
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 50000;
-            npc.damage = 100;
-            npc.defense = 50;
-            npc.knockBackResist = 0f;
-            npc.dontTakeDamage = true;
-            npc.width = 32;
-            npc.height = 40;
-            npc.alpha = 70;
-            npc.value = Item.buyPrice(0, 15, 0, 0);
-            npc.npcSlots = 0f;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath6;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 50000;
+            NPC.damage = 100;
+            NPC.defense = 50;
+            NPC.knockBackResist = 0f;
+            NPC.dontTakeDamage = true;
+            NPC.width = 32;
+            NPC.height = 40;
+            NPC.alpha = 70;
+            NPC.value = Item.buyPrice(0, 15, 0, 0);
+            NPC.npcSlots = 0f;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath6;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.7f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.7f);
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.7f * balance);
+            NPC.damage = (int)(NPC.damage * 0.7f);
         }
 
         public Phantom Head
         {
             get
             {
-                return (Phantom)Main.npc[(int)npc.ai[0]].modNPC;
+                return (Phantom)Main.npc[(int)NPC.ai[0]].ModNPC;
             }
         }
 
@@ -57,7 +62,7 @@ namespace Bluemagic.Phantom
         {
             get
             {
-                return npc.ai[1];
+                return NPC.ai[1];
             }
         }
 
@@ -65,11 +70,11 @@ namespace Bluemagic.Phantom
         {
             get
             {
-                return npc.ai[2];
+                return NPC.ai[2];
             }
             set
             {
-                npc.ai[2] = value;
+                NPC.ai[2] = value;
             }
         }
 
@@ -77,11 +82,11 @@ namespace Bluemagic.Phantom
         {
             get
             {
-                return npc.ai[3];
+                return NPC.ai[3];
             }
             set
             {
-                npc.ai[3] = value;
+                NPC.ai[3] = value;
             }
         }
 
@@ -89,30 +94,30 @@ namespace Bluemagic.Phantom
         {
             get
             {
-                return 60f + 120f * (float)Head.npc.life / (float)Head.npc.lifeMax;
+                return 60f + 120f * (float)Head.NPC.life / (float)Head.NPC.lifeMax;
             }
         }
 
         public override void AI()
         {
-            NPC headNPC = Main.npc[(int)npc.ai[0]];
-            if (!headNPC.active || headNPC.type != mod.NPCType("Phantom"))
+            NPC headNPC = Main.npc[(int)NPC.ai[0]];
+            if (!headNPC.active || headNPC.type != Mod.Find<ModNPC>("Phantom").Type)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
-            npc.timeLeft = headNPC.timeLeft;
+            NPC.timeLeft = headNPC.timeLeft;
 
             if (Head.Enraged)
             {
-                npc.damage = npc.defDamage * 3;
-                npc.defense = npc.defDefense * 3;
+                NPC.damage = NPC.defDamage * 3;
+                NPC.defense = NPC.defDefense * 3;
             }
-            npc.direction = (int)Direction;
-            npc.spriteDirection = (int)Direction;
-            if (!npc.HasValidTarget)
+            NPC.direction = (int)Direction;
+            NPC.spriteDirection = (int)Direction;
+            if (!NPC.HasValidTarget)
             {
-                npc.TargetClosest(false);
+                NPC.TargetClosest(false);
             }
 
             if (AttackTimer >= 0f)
@@ -191,67 +196,67 @@ namespace Bluemagic.Phantom
             {
                 AttackTimer = -60f;
             }
-            npc.TargetClosest(false);
-            npc.netUpdate = true;
+            NPC.TargetClosest(false);
+            NPC.netUpdate = true;
         }
 
         private void IdleBehavior()
         {
-            Vector2 target = Head.npc.Bottom + new Vector2(Direction * 128f, 64f);
-            Vector2 change = target - npc.Bottom;
+            Vector2 target = Head.NPC.Bottom + new Vector2(Direction * 128f, 64f);
+            Vector2 change = target - NPC.Bottom;
             CapVelocity(ref change, maxSpeed * 2f);
             ModifyVelocity(change);
-            CapVelocity(ref npc.velocity, maxSpeed * 2f);
+            CapVelocity(ref NPC.velocity, maxSpeed * 2f);
         }
 
         private void HammerAttack()
         {
-            Vector2 target = Main.player[npc.target].Center;
+            Vector2 target = Main.player[NPC.target].Center;
             Vector2 moveTarget = target + new Vector2(Direction * 240f, -240f);
-            Vector2 offset = moveTarget - npc.Center;
+            Vector2 offset = moveTarget - NPC.Center;
             CapVelocity(ref offset, maxSpeed);
             ModifyVelocity(offset);
-            CapVelocity(ref npc.velocity, maxSpeed);
+            CapVelocity(ref NPC.velocity, maxSpeed);
 
             int attackTimer = (int)AttackTimer + 210;
-            if (attackTimer % 20 == 0 && attackTimer < 100 && Main.netMode != 1)
+            if (attackTimer % 20 == 0 && attackTimer < 100 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                int damage = (npc.damage - 20) / 2;
+                int damage = (NPC.damage - 20) / 2;
                 if (Main.expertMode)
                 {
                     damage /= 2;
                 }
-                Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("PhantomHammer"), damage, 6f, Main.myPlayer, npc.whoAmI);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, Mod.Find<ModProjectile>("PhantomHammer").Type, damage, 6f, Main.myPlayer, NPC.whoAmI);
             }
         }
 
         private void BladeAttack()
         {
-            Vector2 target = Main.player[npc.target].Center;
+            Vector2 target = Main.player[NPC.target].Center;
             Vector2 moveTarget = target + new Vector2(Direction * 240f, 0f);
-            Vector2 offset = moveTarget - npc.Center;
+            Vector2 offset = moveTarget - NPC.Center;
             CapVelocity(ref offset, maxSpeed);
             ModifyVelocity(offset);
-            CapVelocity(ref npc.velocity, maxSpeed);
+            CapVelocity(ref NPC.velocity, maxSpeed);
 
-            if (AttackTimer == -240f && Main.netMode != 1)
+            if (AttackTimer == -240f && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 2f, npc.whoAmI, 0f, 0f, npc.target);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("PhantomOrb").Type, 0, 2f, NPC.whoAmI, 0f, 0f, NPC.target);
             }
         }
 
         private void WispAttack()
         {
-            Vector2 target = Main.player[npc.target].Center;
+            Vector2 target = Main.player[NPC.target].Center;
             Vector2 moveTarget = target + new Vector2(Direction * 240f, 0f);
-            Vector2 offset = moveTarget - npc.Center;
+            Vector2 offset = moveTarget - NPC.Center;
             CapVelocity(ref offset, maxSpeed);
             ModifyVelocity(offset);
-            CapVelocity(ref npc.velocity, maxSpeed);
+            CapVelocity(ref NPC.velocity, maxSpeed);
 
-            if (AttackTimer == -240f && Main.netMode != 1)
+            if (AttackTimer == -240f && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("PhantomOrb"), 0, 1f, npc.whoAmI, 0f, 0f, npc.target);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("PhantomOrb").Type, 0, 1f, NPC.whoAmI, 0f, 0f, NPC.target);
             }
         }
 
@@ -259,18 +264,18 @@ namespace Bluemagic.Phantom
         {
             if (AttackTimer < -40f)
             {
-                Vector2 offset = Main.player[npc.target].Center - npc.Center;
+                Vector2 offset = Main.player[NPC.target].Center - NPC.Center;
                 CapVelocity(ref offset, maxSpeed);
                 ModifyVelocity(offset, 0.1f);
-                CapVelocity(ref npc.velocity, maxSpeed);
+                CapVelocity(ref NPC.velocity, maxSpeed);
             }
         }
 
         private void CreateDust()
         {
-            Vector2 target = Head.npc.Center;
+            Vector2 target = Head.NPC.Center;
             target += new Vector2(Direction * 60f, 60f);
-            Vector2 offset = target - npc.Center;
+            Vector2 offset = target - NPC.Center;
             float length = offset.Length();
             if (offset != Vector2.Zero)
             {
@@ -280,7 +285,7 @@ namespace Bluemagic.Phantom
             {
                 if (Main.rand.Next(10) == 0)
                 {
-                    int dust = Dust.NewDust(npc.Center + offset * k, 0, 0, mod.DustType("Phantom"));
+                    int dust = Dust.NewDust(NPC.Center + offset * k, 0, 0, Mod.Find<ModDust>("Phantom").Type);
                     Main.dust[dust].alpha = 100;
                 }
             }
@@ -288,7 +293,7 @@ namespace Bluemagic.Phantom
 
         private void ModifyVelocity(Vector2 modify, float weight = 0.05f)
         {
-            npc.velocity = Vector2.Lerp(npc.velocity, modify, weight);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, modify, weight);
         }
 
         private void CapVelocity(ref Vector2 velocity, float max)

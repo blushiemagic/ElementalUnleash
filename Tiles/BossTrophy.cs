@@ -1,7 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -9,7 +11,7 @@ namespace Bluemagic.Tiles
 {
     public class BossTrophy : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -17,44 +19,15 @@ namespace Bluemagic.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 36;
             TileObjectData.addTile(Type);
-            dustType = 7;
-            disableSmartCursor = true;
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Trophy");
+            DustType = DustID.WoodFurniture;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Trophy");
             AddMapEntry(new Color(120, 85, 60), name);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            int item = 0;
-            switch (frameX / 54)
-            {
-                case 0:
-                    item = mod.ItemType("AbominationTrophy");
-                    break;
-                case 1:
-                    item = mod.ItemType("PuritySpiritTrophy");
-                    break;
-                case 2:
-                    item = mod.ItemType("BunnyTrophy");
-                    break;
-                case 3:
-                    item = mod.ItemType("TreeTrophy");
-                    break;
-                case 4:
-                    item = mod.ItemType("ChaosTrophy");
-                    break;
-                case 5:
-                    item = mod.ItemType("CataclysmTrophy");
-                    break;
-                case 6:
-                    item = mod.ItemType("PhantomTrophy");
-                    break;
-            }
-            if (item > 0)
-            {
-                Item.NewItem(i * 16, j * 16, 48, 48, item);
-            }
         }
     }
 }

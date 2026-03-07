@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.ChaosSpirit
@@ -11,15 +12,15 @@ namespace Bluemagic.Items.ChaosSpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spirit of Chaos Mask");
+            // DisplayName.SetDefault("Spirit of Chaos Mask");
         }
 
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.rare = 1;
-            item.vanity = true;
+            Item.width = 18;
+            Item.height = 18;
+            Item.rare = ItemRarityID.Blue;
+            Item.vanity = true;
         }
 
         public override void DrawArmorColor(Player drawPlayer, float shadow, ref Color color, ref int glowMask, ref Color glowMaskColor)

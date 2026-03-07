@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
@@ -17,6 +18,11 @@ using Bluemagic.Interface;
 using Bluemagic.PuritySpirit;
 using Bluemagic.TerraSpirit;
 using Bluemagic.Tiles;
+using ReLogic.Content;
+using Bluemagic.Items.Phantom;
+using Bluemagic.Items.Abomination;
+using Bluemagic.Items.ChaosSpirit;
+using Bluemagic.Items.TerraSpirit;
 
 namespace Bluemagic
 {
@@ -44,16 +50,6 @@ namespace Bluemagic
             }
         }
 
-        public Bluemagic()
-        {
-            Properties = new ModProperties()
-            {
-                Autoload = true,
-                AutoloadGores = true,
-                AutoloadSounds = true
-            };
-        }
-
         public override void Load()
         {
             Instance = this;
@@ -65,7 +61,7 @@ namespace Bluemagic
                 }
             }
             InterfaceHelper.Initialize();
-            AddEquipTexture(null, EquipType.Back, "DarkLightningPack_Back", "Bluemagic/Blushie/DarkLightningPack_Back");
+            EquipLoader.AddEquipTexture(this, "Bluemagic/Blushie/DarkLightningPack_Back", EquipType.Back, name: "DarkLightningPack_Back");
             for (int k = 1; k <= 4; k++)
             {
                 AddBossHeadTexture(captiveElementHead + k);
@@ -83,40 +79,178 @@ namespace Bluemagic
             Overlays.Scene["Bluemagic:WorldReaver"] = new WorldReaverOverlay();
             if (!Main.dedServ)
             {
-                Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/WorldReaver")), "WorldReaver"), EffectPriority.VeryHigh);
+                Filters.Scene["Bluemagic:WorldReaver"] = new Filter(new ScreenShaderData(ModContent.Request<Effect>("Bluemagic/Effects/WorldReaver"), "WorldReaver"), EffectPriority.VeryHigh);
             }
         }
 
         public override void PostSetupContent()
         {
-            Mod bossList = ModLoader.GetMod("BossChecklist");
-            if (bossList != null)
+            ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist);
+            if (bossChecklist != null)
             {
-                bossList.Call("AddBossWithInfo", "The Phantom", 12.05f, (Func<bool>)(() => BluemagicWorld.downedPhantom), string.Format("Use a [i:{0}] in the Dungeon (Plantera must be defeated)", ItemType("PaladinEmblem")));
-                bossList.Call("AddBossWithInfo", "The Abomination", 12.8f, (Func<bool>)(() => BluemagicWorld.downedAbomination), string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", ItemType("FoulOrb")));
-                bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.elementalUnleash), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", ItemType("FoulOrb")));
-                bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", ItemType("ElementalPurge")));
-                bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", ItemType("RitualOfEndings")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 1)", 42f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0), string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", ItemType("RitualOfBunnies")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 2)", 256f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint1")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint2")));
-                bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", ItemType("Checkpoint3")));
-                bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    nameof(Phantom.Phantom),
+                    13.05f,
+                    () => BluemagicWorld.downedPhantom,
+                    ModContent.NPCType<Phantom.Phantom>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<PaladinEmblem>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.Phantom.SpawnInfo")
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "Abomination",
+                    13.8f,
+                    () => BluemagicWorld.downedAbomination,
+                    ModContent.NPCType<Abomination.Abomination>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<FoulOrb>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.Abomination.SpawnInfo")
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "AbominationRematch",
+                    18.5f,
+                    () => BluemagicWorld.elementalUnleash,
+                    ModContent.NPCType<Abomination.Abomination>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<FoulOrb>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.Abomination.SpawnInfoRematch"),
+                        ["displayName"] = GetLocalization("NPCs.Abomination.Rematch"),
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "TheSpiritofPurity",
+                    20,
+                    () => BluemagicWorld.downedPuritySpirit,
+                    ModContent.NPCType<PuritySpirit.PuritySpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<Items.PuritySpirit.ElementalPurge>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo")
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "TheSpiritofChaos",
+                    22,
+                    () => BluemagicWorld.downedChaosSpirit,
+                    ModContent.NPCType<ChaosSpirit.ChaosSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<RitualOfEndings>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.ChaosSpirit.SpawnInfo")
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "QMarxOne",
+                    42,
+                    () => BluemagicWorld.terraCheckpoint1 > 0,
+                    ModContent.NPCType<TerraSpirit.TerraSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<RitualOfBunnies>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo2"),
+                        ["displayName"] = GetLocalization("NPCs.PuritySpirit.Terra1"),
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "QMarxTwo",
+                    256,
+                    () => BluemagicWorld.terraCheckpoint2 > 0,
+                    ModContent.NPCType<TerraSpirit.TerraSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<Checkpoint1>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo3"),
+                        ["displayName"] = GetLocalization("NPCs.PuritySpirit.Terra2"),
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "QMarxThree",
+                    666,
+                    () => BluemagicWorld.terraCheckpoint3 > 0,
+                    ModContent.NPCType<TerraSpirit.TerraSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<Checkpoint2>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo4"),
+                        ["displayName"] = GetLocalization("NPCs.PuritySpirit.Terra3"),
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "QMarxFour",
+                    1337,
+                    () => BluemagicWorld.terraCheckpointS > 0,
+                    ModContent.NPCType<TerraSpirit.TerraSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnItems"] = ModContent.ItemType<Checkpoint3>(),
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo5"),
+                        ["displayName"] = GetLocalization("NPCs.PuritySpirit.Terra4"),
+                    }
+                );
+                bossChecklist.Call(
+                    "LogBoss",
+                    Instance,
+                    "QMarx",
+                    9001,
+                    () => BluemagicWorld.downedTerraSpirit,
+                    ModContent.NPCType<TerraSpirit.TerraSpirit>(),
+                    new Dictionary<string, object>()
+                    {
+                        ["spawnInfo"] = GetLocalization("NPCs.PuritySpirit.SpawnInfo6"),
+                        ["displayName"] = GetLocalization("NPCs.PuritySpirit.Terra5"),
+                    }
+                );
+
+
+
+                /*bossList.Call("AddBossWithInfo", "The Phantom", 12.05f, (Func<bool>)(() => BluemagicWorld.downedPhantom), string.Format("Use a [i:{0}] in the Dungeon (Plantera must be defeated)", Find<ModItem>("PaladinEmblem").Type));
+                bossList.Call("AddBossWithInfo", "The Abomination", 12.8f, (Func<bool>)(() => BluemagicWorld.downedAbomination), string.Format("Use a [i:{0}] in the Underworld (Plantera must be defeated)", Find<ModItem>("FoulOrb").Type));
+                bossList.Call("AddBossWithInfo", "The Abomination (Rematch)", 14.5f, (Func<bool>)(() => BluemagicWorld.elementalUnleash), string.Format("Use a [i:{0}] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]", Find<ModItem>("FoulOrb").Type));
+                bossList.Call("AddBossWithInfo", "The Spirit of Purity", 16f, (Func<bool>)(() => BluemagicWorld.downedPuritySpirit), string.Format("Kill a Bunny while the Bunny is standing in front of a placed [i:{0}]", Find<ModItem>("ElementalPurge").Type));
+                bossList.Call("AddBossWithInfo", "The Spirit of Chaos", 18f, (Func<bool>)(() => BluemagicWorld.downedChaosSpirit), string.Format("Use a [i:{0}] anytime, anywhere (has infinite reuses)", Find<ModItem>("RitualOfEndings").Type));
+                bossList.Call("AddBossWithInfo", "????? (Phase 1)", 42f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint1 > 0), string.Format("Use a [i:{0}] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)", Find<ModItem>("RitualOfBunnies").Type));
+                bossList.Call("AddBossWithInfo", "????? (Phase 2)", 256f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint2 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", Find<ModItem>("Checkpoint1").Type));
+                bossList.Call("AddBossWithInfo", "????? (Phase 3)", 666f, (Func<bool>)(() => BluemagicWorld.terraCheckpoint3 > 0), string.Format("Defeat the previous phase or use a [i:{0}]", Find<ModItem>("Checkpoint2").Type));
+                bossList.Call("AddBossWithInfo", "????? (Phase 4)", 1337f, (Func<bool>)(() => BluemagicWorld.terraCheckpointS > 0), string.Format("Defeat the previous phase or use a [i:{0}]", Find<ModItem>("Checkpoint3").Type));
+                bossList.Call("AddBossWithInfo", "?????", 9001f, (Func<bool>)(() => BluemagicWorld.downedTerraSpirit), "Overcome all phases and defeat the boss once and for all!");*/
             }
-            Calamity = ModLoader.GetMod("CalamityMod");
-            Thorium = ModLoader.GetMod("ThoriumMod");
-            Sushi = ModLoader.GetMod("imkSushisMod");
+            ModLoader.TryGetMod("CalamityMod", out Calamity);
+            ModLoader.TryGetMod("ThoriumMod", out Thorium);
+            ModLoader.TryGetMod("imkSushisMod", out Sushi);
             if (!Main.dedServ)
             {
                 BlushieBoss.BlushieBoss.Load();
             }
 
-            HealthBars = ModLoader.GetMod("FKBossHealthBar");
+            ModLoader.TryGetMod("FKBossHealthBar", out HealthBars);
             if (HealthBars != null)
             {
-                HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicK"));
-                HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicA"));
-                HealthBars.Call("RegisterHealthBarMini", NPCType("BlushiemagicL"));
+                HealthBars.Call("RegisterHealthBarMini", Find<ModNPC>("BlushiemagicK").Type);
+                HealthBars.Call("RegisterHealthBarMini", Find<ModNPC>("BlushiemagicA").Type);
+                HealthBars.Call("RegisterHealthBarMini", Find<ModNPC>("BlushiemagicL").Type);
             }
         }
 
@@ -128,11 +262,6 @@ namespace Bluemagic
             Sushi = null;
             HealthBars = null;
             BlushieBoss.BlushieBoss.Unload();
-        }
-
-        public override void AddRecipes()
-        {
-            BluemagicRecipes.AddRecipes(this);
         }
 
         public override object Call(object[] args)
@@ -257,8 +386,8 @@ namespace Bluemagic
             MessageType type = (MessageType)reader.ReadByte();
             if (type == MessageType.PuritySpirit)
             {
-                PuritySpirit.PuritySpirit spirit = Main.npc[reader.ReadInt32()].modNPC as PuritySpirit.PuritySpirit;
-                if (spirit != null && spirit.npc.active)
+                PuritySpirit.PuritySpirit spirit = Main.npc[reader.ReadInt32()].ModNPC as PuritySpirit.PuritySpirit;
+                if (spirit != null && spirit.NPC.active)
                 {
                     spirit.HandlePacket(reader);
                 }
@@ -279,7 +408,7 @@ namespace Bluemagic
                     {
                         text = NetworkText.FromKey("Mods.Bluemagic.LivesLeft", player.name, lives);
                     }
-                    NetMessage.BroadcastChatMessage(text, new Color(255, 25, 25));
+                    ChatHelper.BroadcastChatMessage(text, new Color(255, 25, 25));
                 }
             }
             else if (type == MessageType.ChaosSpirit)
@@ -287,17 +416,17 @@ namespace Bluemagic
                 NPC npc = Main.npc[reader.ReadInt32()];
                 if (npc.active)
                 {
-                    ChaosSpirit.ChaosSpirit spirit = npc.modNPC as ChaosSpirit.ChaosSpirit;
+                    ChaosSpirit.ChaosSpirit spirit = npc.ModNPC as ChaosSpirit.ChaosSpirit;
                     if (spirit != null)
                     {
                         spirit.HandlePacket(reader);
                     }
-                    ChaosSpirit2 spirit2 = npc.modNPC as ChaosSpirit2;
+                    ChaosSpirit2 spirit2 = npc.ModNPC as ChaosSpirit2;
                     if (spirit2 != null)
                     {
                         spirit2.HandlePacket(reader);
                     }
-                    ChaosSpirit3 spirit3 = npc.modNPC as ChaosSpirit3;
+                    ChaosSpirit3 spirit3 = npc.ModNPC as ChaosSpirit3;
                     if (spirit3 != null)
                     {
                         spirit3.HandlePacket(reader);
@@ -310,11 +439,11 @@ namespace Bluemagic
                 Vector2 push = new Vector2(reader.ReadSingle(), reader.ReadSingle());
                 if (npc.active)
                 {
-                    ChaosSpiritArm arm = npc.modNPC as ChaosSpiritArm;
+                    ChaosSpiritArm arm = npc.ModNPC as ChaosSpiritArm;
                     if (arm != null)
                     {
                         arm.offset += push;
-                        if (Main.netMode == 2)
+                        if (Main.netMode == NetmodeID.Server)
                         {
                             ModPacket packet = GetPacket();
                             packet.Write((byte)MessageType.PushChaosArm);
@@ -330,7 +459,7 @@ namespace Bluemagic
                 NPC npc = Main.npc[reader.ReadInt32()];
                 if (npc.active)
                 {
-                    TerraSpirit.TerraSpirit spirit = npc.modNPC as TerraSpirit.TerraSpirit;
+                    TerraSpirit.TerraSpirit spirit = npc.ModNPC as TerraSpirit.TerraSpirit;
                     if (spirit != null)
                     {
                         spirit.HandlePacket(reader);
@@ -353,14 +482,14 @@ namespace Bluemagic
                     {
                         text = NetworkText.FromKey("Mods.Bluemagic.LivesLeft", player.name, lives);
                     }
-                    NetMessage.BroadcastChatMessage(text, new Color(255, 25, 25));
+                    ChatHelper.BroadcastChatMessage(text, new Color(255, 25, 25));
                 }
             }
             else if (type == MessageType.GoldBlob)
             {
                 NPC npc = Main.npc[reader.ReadByte()];
                 float value = reader.ReadByte();
-                if (npc.active && npc.type == NPCType("GoldBlob"))
+                if (npc.active && npc.type == Find<ModNPC>("GoldBlob").Type)
                 {
                     npc.localAI[0] = value;
                 }
@@ -376,9 +505,9 @@ namespace Bluemagic
             else if (type == MessageType.BulletNegative)
             {
                 NPC npc = Main.npc[reader.ReadByte()];
-                if (npc.active && npc.type == NPCType("TerraSpirit2") && npc.modNPC is TerraSpirit2)
+                if (npc.active && npc.type == Find<ModNPC>("TerraSpirit2").Type && npc.ModNPC is TerraSpirit2)
                 {
-                    var bullets = ((TerraSpirit2)npc.modNPC).bullets;
+                    var bullets = ((TerraSpirit2)npc.ModNPC).bullets;
                     int count = reader.ReadByte();
                     for (int k = 0; k < count; k++)
                     {
@@ -394,7 +523,7 @@ namespace Bluemagic
                 BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
                 CustomStats stats = byte2 == 0 ? modPlayer.chaosStats : modPlayer.cataclysmStats;
                 stats.NetReceive(reader);
-                if (Main.netMode == 2)
+                if (Main.netMode == NetmodeID.Server)
                 {
                     ModPacket packet = GetPacket(512);
                     packet.Write(byte1);
@@ -409,28 +538,6 @@ namespace Bluemagic
             }
         }
 
-        public override void UpdateMusic(ref int music, ref MusicPriority priority)
-        {
-            if (!Main.gameMenu && BlushieBoss.BlushieBoss.Active && BlushieBoss.BlushieBoss.Phase >= 3)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/Fallen Blood");
-                priority = MusicPriority.BossHigh;
-            }
-        }
-
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-        {
-            InterfaceHelper.ModifyInterfaceLayers(layers);
-        }
-
-        public override void PostDrawInterface(SpriteBatch spriteBatch)
-        {
-            if (BlushieBoss.BlushieBoss.Active && BlushieBoss.BlushieBoss.Phase == 3 && BlushieBoss.BlushieBoss.Phase3Attack > 0 && HealthBars != null)
-            {
-                BlushieBoss.HealthBarDraw.DrawHealthBarDefault(spriteBatch, 1f);
-            }
-        }
-
         public static void UpdatePureColor()
         {
             pureColor.R = (byte)(255 - 155f * Math.Abs(Math.Cos(pureColorStyle * Math.PI / 200.0)));
@@ -440,14 +547,14 @@ namespace Bluemagic
 
         public static void NewText(string key, int r, int g, int b)
         {
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Main.NewText(Language.GetTextValue(key), (byte)r, (byte)g, (byte)b);
             }
-            else if (Main.netMode == 2)
+            else if (Main.netMode == NetmodeID.Server)
             {
                 NetworkText text = NetworkText.FromKey(key);
-                NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+                ChatHelper.BroadcastChatMessage(text, new Color(r, g, b));
             }
         }
 

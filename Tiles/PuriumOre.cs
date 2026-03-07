@@ -3,13 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Tiles
 {
     public class PuriumOre : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
@@ -17,16 +18,14 @@ namespace Bluemagic.Tiles
             Main.tileShine[Type] = 800;
             Main.tileShine2[Type] = true;
             Main.tileSpelunker[Type] = true;
-            Main.tileValue[Type] = 750;
+            Main.tileOreFinderPriority[Type] = 750;
             TileID.Sets.Ore[Type] = true;
-            soundType = 21;
-            soundStyle = 1;
-            dustType = 128;
-            drop = mod.ItemType("PuriumOre");
-            minPick = 225;
-            mineResist = 5f;
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Purium");
+            HitSound = SoundID.Tink;
+            DustType = DustID.Chlorophyte;
+            MinPick = 225;
+            MineResist = 5f;
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Purium");
             AddMapEntry(new Color(100, 210, 100), name);
         }
 
@@ -36,12 +35,12 @@ namespace Bluemagic.Tiles
             {
                 for (int y = -5; y <= 5; y++)
                 {
-                    WorldGen.Convert(i + x, j + y, 0, 0);
+                    WorldGen.Convert(i + x, j + y, 0, 0, true, true);
                     Tile tile = Main.tile[i + x, j + y];
-                    if (tile.active() && (tile.type == TileID.Demonite || tile.type == TileID.Crimtane) && Main.rand.Next(3) == 0)
+                    if (tile.HasTile && (tile.TileType == TileID.Demonite || tile.TileType == TileID.Crimtane) && Main.rand.Next(3) == 0)
                     {
-                        tile.type = (ushort)mod.TileType("PuriumOre");
-                        NetMessage.SendTileRange(Main.myPlayer, i + x, j + y, 1, 1);
+                        tile.TileType = (ushort)Mod.Find<ModTile>("PuriumOre").Type;
+                        NetMessage.SendTileSquare(Main.myPlayer, i + x, j + y, 1, 1);
                     }
                 }
             }

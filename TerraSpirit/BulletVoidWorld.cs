@@ -36,10 +36,10 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletVoidWorld");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletVoidWorld").Value;
             Rectangle frame = new Rectangle(0, (size + 2) * (timer / 10), size, size);
             Vector2 drawPos = position - Main.screenPosition - new Vector2(size / 2, size / 2);
-            spriteBatch.Draw(texture, drawPos, frame, Color.White);
+            Main.spriteBatch.Draw(texture, drawPos, frame, Color.White);
         }
     }
 }

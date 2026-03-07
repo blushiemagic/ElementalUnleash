@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,7 +22,7 @@ namespace Bluemagic
         public override bool ConsumeItem(Item item, Player player)
         {
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
-            if (item.thrown && Main.rand.NextFloat() < modPlayer.thrownCost)
+            if (item.CountsAsClass(DamageClass.Throwing) && Main.rand.NextFloat() < modPlayer.thrownCost)
             {
                 return false;
             }
@@ -46,7 +47,7 @@ namespace Bluemagic
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if ((item.type == ItemID.Star || item.type == ItemID.SoulCake || item.type == ItemID.SugarPlum) && modPlayer.manaMagnet2)
             {
-                Main.PlaySound(7, (int)player.position.X, (int)player.position.Y, 1);
+                SoundEngine.PlaySound(SoundID.Grab, player.position);
                 player.statMana += 160;
                 if (Main.myPlayer == player.whoAmI)
                 {
@@ -61,7 +62,7 @@ namespace Bluemagic
             if ((item.type == ItemID.Heart || item.type == ItemID.CandyApple || item.type == ItemID.CandyCane) && modPlayer.lifeMagnet2)
             {
                 modPlayer.CheckBadHeal();
-                Main.PlaySound(7, (int)player.position.X, (int)player.position.Y, 1);
+                SoundEngine.PlaySound(SoundID.Grab, player.position);
                 player.statLife += 32;
                 if (Main.myPlayer == player.whoAmI)
                 {

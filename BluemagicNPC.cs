@@ -4,6 +4,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.Events;
+using Terraria.GameContent.ItemDropRules;
+using Bluemagic.Items.Misc1;
 
 namespace Bluemagic
 {
@@ -40,7 +42,8 @@ namespace Bluemagic
             }
         }
 
-        public override void NPCLoot(NPC npc)
+        // Todo: Actually integrate these into the item drop database
+        public override void OnKill(NPC npc)
         {
             if (NPC.downedPlantBoss && npc.value > 0f && npc.position.Y < Main.rockLayer * 16.0)
             {
@@ -50,17 +53,17 @@ namespace Bluemagic
                     {
                         if (Main.rand.Next(10) == 0)
                         {
-                            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SolarDrop"));
+                            Item.NewItem(npc.GetSource_Death(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("SolarDrop").Type);
                         }
                     }
                     else if (Main.rand.Next(15) == 0)
                     {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LunarDrop"));
+                        Item.NewItem(npc.GetSource_Death(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("LunarDrop").Type);
                     }
                 }
                 else if (Main.invasionType == 0 && !DD2Event.Ongoing && (Main.bloodMoon || Main.eclipse) && Main.rand.Next(20) == 0)
                 {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("HorrorDrop"));
+                    Item.NewItem(npc.GetSource_Death(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("HorrorDrop").Type);
                 }
             }
             if (((npc.type == NPCID.Pumpking && Main.pumpkinMoon) || (npc.type == NPCID.IceQueen && Main.snowMoon)) && NPC.waveNumber > 10)
@@ -86,12 +89,8 @@ namespace Bluemagic
                         stack++;
                     }
                     string type = npc.type == NPCID.Pumpking ? "ScytheBlade" : "Icicle";
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType(type), stack);
+                    Item.NewItem(npc.GetSource_Death(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>(type).Type, stack);
                 }
-            }
-            if (npc.type == NPCID.DukeFishron && !Main.expertMode)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Bubble"), Main.rand.Next(5, 8));
             }
             if (npc.type == NPCID.Bunny && npc.AnyInteractions())
             {
@@ -105,10 +104,10 @@ namespace Bluemagic
                     for (int j = top; j <= bottom; j++)
                     {
                         Tile tile = Main.tile[i, j];
-                        if (tile.active() && tile.type == mod.TileType("ElementalPurge") && !NPC.AnyNPCs(mod.NPCType("PuritySpirit")) && !NPC.AnyNPCs(mod.NPCType("ChaosSpirit")) && !NPC.AnyNPCs(mod.NPCType("ChaosSpirit2")) && !NPC.AnyNPCs(mod.NPCType("ChaosSpirit3")))
+                        if (tile.HasTile && tile.TileType == Mod.Find<ModTile>("ElementalPurge").Type && !NPC.AnyNPCs(Mod.Find<ModNPC>("PuritySpirit").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("ChaosSpirit").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("ChaosSpirit2").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("ChaosSpirit3").Type))
                         {
-                            i -= Main.tile[i, j].frameX / 18;
-                            j -= Main.tile[i, j].frameY / 18;
+                            i -= Main.tile[i, j].TileFrameX / 18;
+                            j -= Main.tile[i, j].TileFrameY / 18;
                             i = (i * 16) + 16;
                             j = (j * 16) + 24 + 60;
                             for (int k = 0; k < 255; k++)
@@ -122,7 +121,7 @@ namespace Bluemagic
                             }
                             if (flag)
                             {
-                                NPC.NewNPC(i, j, mod.NPCType("PuritySpirit"));
+                                NPC.NewNPC(npc.GetSource_FromThis(), i, j, Mod.Find<ModNPC>("PuritySpirit").Type);
                                 break;
                             }
                         }
@@ -135,6 +134,14 @@ namespace Bluemagic
             }
         }
 
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            if (npc.type == NPCID.DukeFishron)
+            {
+                npcLoot.Add(new CommonDrop(ModContent.ItemType<Bubble>(), 1, 5, 7));
+            }
+        }
+
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
             if (BluemagicWorld.elementalUnleash)
@@ -143,7 +150,7 @@ namespace Bluemagic
                 maxSpawns = (int)(maxSpawns * 1.2);
                 int x = (int)(player.position.X / 16f);
                 int y = (int)(player.position.Y / 16f);
-                if (y < Main.worldSurface * 16 && (player.ZoneDesert || x < 250 || x > Main.maxTilesX - 250 || player.ZoneHoly))
+                if (y < Main.worldSurface * 16 && (player.ZoneDesert || x < 250 || x > Main.maxTilesX - 250 || player.ZoneHallow))
                 {
                     spawnRate = (int)(spawnRate * 2f / 3f);
                     maxSpawns++;
@@ -157,7 +164,7 @@ namespace Bluemagic
             {
                 if (Main.rand.Next(4) < 3)
                 {
-                    int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, mod.DustType("EtherealFlame"), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default(Color), 3.5f);
+                    int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, Mod.Find<ModDust>("EtherealFlame").Type, npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default(Color), 3.5f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].velocity *= 1.8f;
                     Main.dust[dust].velocity.Y -= 0.5f;

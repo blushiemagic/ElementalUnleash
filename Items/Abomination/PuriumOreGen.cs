@@ -9,26 +9,26 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Purium Infuser");
-            Tooltip.SetDefault("Creates pockets of concentrated purity underground");
+            // DisplayName.SetDefault("Purium Infuser");
+            // Tooltip.SetDefault("Creates pockets of concentrated purity underground");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 30;
-            item.maxStack = 20;
-            item.rare = 10;
-            item.useStyle = 4;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.UseSound = SoundID.Item4;
-            item.consumable = true;
+            Item.width = 20;
+            Item.height = 30;
+            Item.maxStack = 20;
+            Item.rare = ItemRarityID.Red;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.UseSound = SoundID.Item4;
+            Item.consumable = true;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 BluemagicWorld.GenPurium();
             }

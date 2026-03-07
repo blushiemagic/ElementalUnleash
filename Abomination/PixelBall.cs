@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Abomination
@@ -17,7 +19,7 @@ namespace Bluemagic.Abomination
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Pixel Ball");
+            // DisplayName.SetDefault("Pixel Ball");
         }
 
         public override void CreateDust()
@@ -25,36 +27,36 @@ namespace Bluemagic.Abomination
             Color? color = GetColor();
             if (color.HasValue)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("Pixel"), 0f, 0f, 0, color.Value);
-                Main.dust[dust].velocity += projectile.velocity;
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("Pixel").Type, 0f, 0f, 0, color.Value);
+                Main.dust[dust].velocity += Projectile.velocity;
                 Main.dust[dust].scale = 0.9f;
             }
         }
 
         public override void PlaySound()
         {
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 33);
+            SoundEngine.PlaySound(SoundID.Item33, Projectile.position);
         }
 
         public override string GetName()
         {
-            if (projectile.ai[0] == 24f)
+            if (Projectile.ai[0] == 24f)
             {
                 return "Fire Sprite";
             }
-            if (projectile.ai[0] == 44f)
+            if (Projectile.ai[0] == 44f)
             {
                 return "Frost Sprite";
             }
-            if (projectile.ai[0] == mod.BuffType("EtherealFlames"))
+            if (Projectile.ai[0] == Mod.Find<ModBuff>("EtherealFlames").Type)
             {
                 return "Spirit Sprite";
             }
-            if (projectile.ai[0] == 70f)
+            if (Projectile.ai[0] == 70f)
             {
                 return "Infestation Sprite";
             }
-            if (projectile.ai[0] == 69f)
+            if (Projectile.ai[0] == 69f)
             {
                 return "Ichor Sprite";
             }

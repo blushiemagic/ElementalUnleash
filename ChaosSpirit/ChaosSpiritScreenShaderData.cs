@@ -16,8 +16,8 @@ namespace Bluemagic.ChaosSpirit
 
         private void UpdateChaosSpiritIndex()
         {
-            int chaosSpiritType = ModLoader.GetMod("Bluemagic").NPCType("ChaosSpirit");
-            int chaosSpiritType2 = ModLoader.GetMod("Bluemagic").NPCType("ChaosSpirit2");
+            int chaosSpiritType = ModLoader.GetMod("Bluemagic").Find<ModNPC>("ChaosSpirit").Type;
+            int chaosSpiritType2 = ModLoader.GetMod("Bluemagic").Find<ModNPC>("ChaosSpirit2").Type;
             if (chaosSpiritIndex >= 0 && Main.npc[chaosSpiritIndex].active && (Main.npc[chaosSpiritIndex].type == chaosSpiritType || Main.npc[chaosSpiritIndex].type == chaosSpiritType2))
             {
                 return;

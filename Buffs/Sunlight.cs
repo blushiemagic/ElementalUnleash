@@ -7,10 +7,10 @@ namespace Bluemagic.Buffs
 {
     public class Sunlight : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sunlight");
-            Description.SetDefault("Emitting light and increased night vision");
+            // DisplayName.SetDefault("Sunlight");
+            // Description.SetDefault("Emitting light and increased night vision");
             Main.buffNoSave[Type] = true;
         }
 

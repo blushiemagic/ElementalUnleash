@@ -11,36 +11,36 @@ namespace Bluemagic.Items.Abomination.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 6;
-            projectile.height = 6;
-            projectile.friendly = true;
-            projectile.alpha = 255;
-            projectile.penetrate = 4;
-            projectile.extraUpdates = 2;
-            projectile.ranged = true;
+            Projectile.width = 6;
+            Projectile.height = 6;
+            Projectile.friendly = true;
+            Projectile.alpha = 255;
+            Projectile.penetrate = 4;
+            Projectile.extraUpdates = 2;
+            Projectile.DamageType = DamageClass.Ranged;
         }
 
         public override void AI()
         {
-            if (projectile.timeLeft > 60)
+            if (Projectile.timeLeft > 60)
             {
-                projectile.timeLeft = 60;
+                Projectile.timeLeft = 60;
             }
-            if (projectile.ai[1] > 6f)
+            if (Projectile.ai[1] > 6f)
             {
-                projectile.ai[1] += 1f;
+                Projectile.ai[1] += 1f;
                 if (Main.rand.Next(2) == 0)
                 {
                     int dustType = DustType();
                     Dust dust;
                     if (dustType == 171)
                     {
-                        int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100);
+                        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
                         dust = Main.dust[dustIndex];
                         if (Main.rand.Next(3) != 0)
                         {
@@ -51,9 +51,9 @@ namespace Bluemagic.Items.Abomination.Projectiles
                         dust.scale *= 1.15f;
                         dust.velocity *= 1.2f;
                     }
-                    else if (dustType == mod.DustType("Bubble"))
+                    else if (dustType == Mod.Find<ModDust>("Bubble").Type)
                     {
-                        int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 0, default(Color), 0.75f);
+                        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 0, default(Color), 0.75f);
                         dust = Main.dust[dustIndex];
                         if (Main.rand.Next(3) != 0)
                         {
@@ -64,7 +64,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
                     }
                     else
                     {
-                        int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100);
+                        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
                         dust = Main.dust[dustIndex];
                         if (Main.rand.Next(3) != 0)
                         {
@@ -75,15 +75,15 @@ namespace Bluemagic.Items.Abomination.Projectiles
                         dust.scale *= 1.5f;
                         dust.velocity *= 1.2f;
                     }
-                    if (projectile.ai[1] == 7f)
+                    if (Projectile.ai[1] == 7f)
                     {
                         dust.scale *= 0.25f;
                     }
-                    else if (projectile.ai[1] == 8f)
+                    else if (Projectile.ai[1] == 8f)
                     {
                         dust.scale *= 0.5f;
                     }
-                    else if (projectile.ai[1] == 9f)
+                    else if (Projectile.ai[1] == 9f)
                     {
                         dust.scale *= 0.75f;
                     }
@@ -91,9 +91,9 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
             else
             {
-                projectile.ai[1] += 1f;
+                Projectile.ai[1] += 1f;
             }
-            projectile.rotation += 0.3f * projectile.direction;
+            Projectile.rotation += 0.3f * Projectile.direction;
         }
 
         public override void ModifyDamageHitbox(ref Rectangle hitbox)
@@ -104,23 +104,22 @@ namespace Bluemagic.Items.Abomination.Projectiles
             hitbox.Height += 60;
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
+            }
+        }
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (Projectile.ai[0] == 3f)
+            {
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
-        {
-            if (projectile.ai[0] == 3f)
-            {
-                damage += 20;
-            }
-        }
-
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -129,7 +128,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override void OnHitPvp(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -140,16 +139,16 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int DustType()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return 6;
             case 1:
                 return 135;
             case 2:
-                return mod.DustType("EtherealFlame");
+                return Mod.Find<ModDust>("EtherealFlame").Type;
             case 3:
-                return mod.DustType("Bubble");
+                return Mod.Find<ModDust>("Bubble").Type;
             case 4:
                 return 171;
             case 5:
@@ -161,14 +160,14 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuff()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return BuffID.OnFire;
             case 1:
                 return BuffID.Frostburn;
             case 2:
-                return mod.BuffType("EtherealFlames");
+                return Mod.Find<ModBuff>("EtherealFlames").Type;
             case 3:
                 return 0;
             case 4:
@@ -182,7 +181,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuffTime()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return 600;

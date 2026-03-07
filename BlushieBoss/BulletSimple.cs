@@ -30,49 +30,49 @@ namespace Bluemagic.BlushieBoss
         }
         public static BulletSimple NewWhite(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletWhiteTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletWhiteTexture.Value);
         }
 
         public static BulletSimple NewBoxBlue(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoxBlueTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoxBlueTexture.Value);
         }
 
         public static BulletSimple NewColor(Vector2 position, Vector2 velocity, int color)
         {
-            var bullet = new BulletSimple(position, velocity, 16f, BlushieBoss.BulletColorTextures[color]);
+            var bullet = new BulletSimple(position, velocity, 16f, BlushieBoss.BulletColorTextures[color].Value);
             bullet.Damage = 0.075f;
             return bullet;
         }
 
         public static BulletSimple NewLight(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletLightTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletLightTexture.Value);
         }
 
         public static BulletSimple NewDragon(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonTexture.Value);
         }
 
         public static BulletSimple NewDragonBreath(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonBreathTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletDragonBreathTexture.Value);
         }
 
         public static BulletSimple NewSkull(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletSkullTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletSkullTexture.Value);
         }
 
         public static BulletSimple NewBone(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoneTexture);
+            return new BulletSimple(position, velocity, 16f, BlushieBoss.BulletBoneTexture.Value);
         }
 
         public static BulletSimple NewDragonLarge(Vector2 position, Vector2 velocity)
         {
-            return new BulletSimple(position, velocity, 32f, BlushieBoss.BulletDragonLargeTexture);
+            return new BulletSimple(position, velocity, 32f, BlushieBoss.BulletDragonLargeTexture.Value);
         }
     }
 }

@@ -1,13 +1,14 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Gores
 {
     public abstract class Star : ModGore
     {
-        public override void OnSpawn(Gore gore)
+        public override void OnSpawn(Gore gore, IEntitySource source)
         {
             gore.sticky = false;
             gore.alpha = 100;

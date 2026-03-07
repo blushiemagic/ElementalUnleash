@@ -11,35 +11,35 @@ namespace Bluemagic.Items.TerraSpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Final Ritual");
-            Tooltip.SetDefault("Enrages the Spirit of Purity at 1 health"
+            // DisplayName.SetDefault("The Final Ritual");
+            /* Tooltip.SetDefault("Enrages the Spirit of Purity at 1 health"
                 + "\nCan be reused infinitely"
-                + "\nEach player starts with {0} lives");
-            ItemID.Sets.ItemNoGravity[item.type] = true;
+                + "\nEach player starts with {0} lives");*/
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.rare = 12;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = 4;
-            item.UseSound = SoundID.Item44;
-            item.expert = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = ItemRarityID.Expert;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item44;
+            Item.expert = true;
         }
 
         public override bool CanUseItem(Player player)
         {
-            return BluemagicWorld.terraCheckpointS > 0 && !NPC.AnyNPCs(mod.NPCType("TerraSpirit")) && !NPC.AnyNPCs(mod.NPCType("TerraSpirit2"));
+            return BluemagicWorld.terraCheckpointS > 0 && !NPC.AnyNPCs(Mod.Find<ModNPC>("TerraSpirit").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("TerraSpirit2").Type);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("TerraSpirit"), 0, 10f);
+                NPC.NewNPC(player.GetSource_FromThis(), (int)player.Center.X, (int)player.Center.Y, Mod.Find<ModNPC>("TerraSpirit").Type, 0, 10f);
             }
             return true;
         }
@@ -48,9 +48,9 @@ namespace Bluemagic.Items.TerraSpirit
         {
             for (int k = 0; k < lines.Count; k++)
             {
-                if (lines[k].mod == "Terraria" && lines[k].Name == "Tooltip2")
+                if (lines[k].Mod == "Terraria" && lines[k].Name == "Tooltip2")
                 {
-                    lines[k].text = string.Format(lines[k].text, BluemagicWorld.terraCheckpointS);
+                    lines[k].Text = string.Format(lines[k].Text, BluemagicWorld.terraCheckpointS);
                 }
             }
         }

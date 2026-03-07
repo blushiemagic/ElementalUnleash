@@ -12,69 +12,74 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Main.npc[(int)npc.ai[0]];
+                return Main.npc[(int)NPC.ai[0]];
             }
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Negative Blob");
+            // DisplayName.SetDefault("Negative Blob");
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 20000;
-            npc.damage = 0;
-            npc.defense = 100;
-            npc.knockBackResist = 0f;
-            npc.width = 80;
-            npc.height = 80;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 20000;
+            NPC.damage = 0;
+            NPC.defense = 100;
+            NPC.knockBackResist = 0f;
+            NPC.width = 80;
+            NPC.height = 80;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
         }
 
         public override void AI()
         {
             NPC spirit = Spirit;
-            if (!spirit.active || !(spirit.modNPC is TerraSpirit2) || spirit.ai[0] == 3f)
+            if (!spirit.active || !(spirit.ModNPC is TerraSpirit2) || spirit.ai[0] == 3f)
             {
-                npc.active = false;
+                NPC.active = false;
             }
-            if (npc.velocity == Vector2.Zero)
+            if (NPC.velocity == Vector2.Zero)
             {
-                npc.velocity = 8f * npc.ai[1].ToRotationVector2();
+                NPC.velocity = 8f * NPC.ai[1].ToRotationVector2();
             }
-            if (npc.position.X <= spirit.Center.X - TerraSpirit.arenaWidth / 2)
+            if (NPC.position.X <= spirit.Center.X - TerraSpirit.arenaWidth / 2)
             {
-                npc.velocity.X *= -1f;
+                NPC.velocity.X *= -1f;
             }
-            else if (npc.position.X + npc.width >= spirit.Center.X + TerraSpirit.arenaWidth / 2)
+            else if (NPC.position.X + NPC.width >= spirit.Center.X + TerraSpirit.arenaWidth / 2)
             {
-                npc.velocity.X *= -1f;
+                NPC.velocity.X *= -1f;
             }
-            if (npc.position.Y <= spirit.Center.Y - TerraSpirit.arenaHeight / 2)
+            if (NPC.position.Y <= spirit.Center.Y - TerraSpirit.arenaHeight / 2)
             {
-                npc.velocity.Y *= -1f;
+                NPC.velocity.Y *= -1f;
             }
-            else if (npc.position.Y + npc.height >= spirit.Center.Y + TerraSpirit.arenaHeight / 2)
+            else if (NPC.position.Y + NPC.height >= spirit.Center.Y + TerraSpirit.arenaHeight / 2)
             {
-                npc.velocity.Y *= -1f;
+                NPC.velocity.Y *= -1f;
             }
-            npc.rotation += 0.1f;
-            if (npc.timeLeft < 600)
+            NPC.rotation += 0.1f;
+            if (NPC.timeLeft < 600)
             {
-                npc.timeLeft = 600;
+                NPC.timeLeft = 600;
             }
             Player player = Main.player[Main.myPlayer];
-            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(npc.Hitbox))
+            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(NPC.Hitbox))
             {
                 player.GetModPlayer<BluemagicPlayer>().TerraKill();
             }
@@ -103,12 +108,12 @@ namespace Bluemagic.TerraSpirit
             return false;
         }
 
-        public override bool PreNPCLoot()
+        public override bool PreKill()
         {
             bool success = true;
             for (int k = 0; k < 200; k++)
             {
-                if (k != npc.whoAmI && Main.npc[k].active && (Main.npc[k].type == mod.NPCType("TerraSpirit2") || Main.npc[k].type == mod.NPCType("NegativeBlob2")) && Vector2.Distance(Main.npc[k].Center, npc.Center) < 160f)
+                if (k != NPC.whoAmI && Main.npc[k].active && (Main.npc[k].type == Mod.Find<ModNPC>("TerraSpirit2").Type || Main.npc[k].type == Mod.Find<ModNPC>("NegativeBlob2").Type) && Vector2.Distance(Main.npc[k].Center, NPC.Center) < 160f)
                 {
                     success = false;
                     break;
@@ -116,32 +121,32 @@ namespace Bluemagic.TerraSpirit
             }
             if (success)
             {
-                NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("NegativeBlob2"), 1, npc.ai[0]);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("NegativeBlob2").Type, 1, NPC.ai[0]);
             }
             else
             {
-                Vector2 normal = new Vector2(-npc.velocity.Y, npc.velocity.X);
-                if (Main.netMode == 0)
+                Vector2 normal = new Vector2(-NPC.velocity.Y, NPC.velocity.X);
+                if (Main.netMode == NetmodeID.SinglePlayer)
                 {
-                    var bullets = ((TerraSpirit2)Spirit.modNPC).bullets;
-                    bullets.Add(new BulletNegative(npc.Center, npc.velocity));
-                    bullets.Add(new BulletNegative(npc.Center, -npc.velocity));
-                    bullets.Add(new BulletNegative(npc.Center, normal));
-                    bullets.Add(new BulletNegative(npc.Center, -normal));
+                    var bullets = ((TerraSpirit2)Spirit.ModNPC).bullets;
+                    bullets.Add(new BulletNegative(NPC.Center, NPC.velocity));
+                    bullets.Add(new BulletNegative(NPC.Center, -NPC.velocity));
+                    bullets.Add(new BulletNegative(NPC.Center, normal));
+                    bullets.Add(new BulletNegative(NPC.Center, -normal));
                 }
                 else
                 {
-                    ModPacket packet = mod.GetPacket();
+                    ModPacket packet = Mod.GetPacket();
                     packet.Write((byte)MessageType.BulletNegative);
-                    packet.Write((byte)npc.ai[0]);
+                    packet.Write((byte)NPC.ai[0]);
                     packet.Write((byte)4);
-                    packet.WriteVector2(npc.Center);
-                    packet.WriteVector2(npc.velocity);
-                    packet.WriteVector2(npc.Center);
-                    packet.WriteVector2(-npc.velocity);
-                    packet.WriteVector2(npc.Center);
+                    packet.WriteVector2(NPC.Center);
+                    packet.WriteVector2(NPC.velocity);
+                    packet.WriteVector2(NPC.Center);
+                    packet.WriteVector2(-NPC.velocity);
+                    packet.WriteVector2(NPC.Center);
                     packet.WriteVector2(normal);
-                    packet.WriteVector2(npc.Center);
+                    packet.WriteVector2(NPC.Center);
                     packet.WriteVector2(-normal);
                     packet.Send();
                 }

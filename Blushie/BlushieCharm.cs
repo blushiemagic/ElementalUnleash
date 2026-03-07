@@ -10,33 +10,33 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Charm of Blushie");
-            Tooltip.SetDefault("Your hearts shall spell the doom of your enemies"
-                + "\nCan be used by any class"
-                + "\nMade in celebration of blushiemagic's love");
+            // DisplayName.SetDefault("Charm of Blushie");
+            // Tooltip.SetDefault("Your hearts shall spell the doom of your enemies"
+            //    + "\nCan be used by any class"
+            //    + "\nMade in celebration of blushiemagic's love");
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 54;
-            item.useStyle = 4;
-            item.useAnimation = 30;
-            item.useTime = 30;
-            item.channel = true;
-            item.noMelee = true;
-            item.damage = 1;
-            item.knockBack = 1f;
-            item.autoReuse = false;
-            item.useTurn = false;
-            item.rare = 12;
-            item.expert = true;
-            item.magic = true;
-            item.value = 100000000;
-            item.UseSound = SoundID.Item1;
-            item.shoot = mod.ProjectileType("BlushieCharmProj");
-            item.mana = 200;
-            item.shootSpeed = 0f;
+            Item.width = 30;
+            Item.height = 54;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+            Item.channel = true;
+            Item.noMelee = true;
+            Item.damage = 1;
+            Item.knockBack = 1f;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.rare = ItemRarityID.Expert;
+            Item.expert = true;
+            Item.DamageType = DamageClass.Magic;
+            Item.value = 100000000; // Porting note: Previously 100000000
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = Mod.Find<ModProjectile>("BlushieCharmProj").Type;
+            Item.mana = 200;
+            Item.shootSpeed = 0f;
         }
     }
 }

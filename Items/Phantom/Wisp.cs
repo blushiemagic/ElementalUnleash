@@ -8,31 +8,30 @@ namespace Bluemagic.Items.Phantom
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Chases enemies through walls");
+            // Tooltip.SetDefault("Chases enemies through walls");
         }
 
         public override void SetDefaults()
         {
-            item.damage = 1;
-            item.ranged = true;
-            item.width = 14;
-            item.height = 14;
-            item.maxStack = 999;
-            item.consumable = true;
-            item.knockBack = 1f;
-            item.value = Item.sellPrice(0, 0, 1, 0);
-            item.rare = 8;
-            item.shoot = mod.ProjectileType("Wisp");
-            item.ammo = item.type;
+            Item.damage = 1;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 14;
+            Item.height = 14;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.knockBack = 1f;
+            Item.value = Item.sellPrice(0, 0, 1, 0);
+            Item.rare = ItemRarityID.Yellow;
+            Item.shoot = Mod.Find<ModProjectile>("Wisp").Type;
+            Item.ammo = Item.type;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe(50);
             recipe.AddIngredient(ItemID.Ectoplasm);
             recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 50);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

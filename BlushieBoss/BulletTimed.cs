@@ -31,7 +31,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletTimed NewDragonBreath(Vector2 position, Vector2 velocity, int time)
         {
-            return new BulletTimed(position, velocity, time, 16f, BlushieBoss.BulletDragonBreathTexture);
+            return new BulletTimed(position, velocity, time, 16f, BlushieBoss.BulletDragonBreathTexture.Value);
         }
     }
 }

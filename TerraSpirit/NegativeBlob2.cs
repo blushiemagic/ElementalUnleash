@@ -13,7 +13,7 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Main.npc[(int)npc.ai[0]];
+                return Main.npc[(int)NPC.ai[0]];
             }
         }
 
@@ -27,76 +27,81 @@ namespace Bluemagic.TerraSpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Negative Blob");
+            // DisplayName.SetDefault("Negative Blob");
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 20000;
-            npc.damage = 0;
-            npc.defense = 100;
-            npc.knockBackResist = 0f;
-            npc.width = 80;
-            npc.height = 80;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            npc.dontTakeDamage = true;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 20000;
+            NPC.damage = 0;
+            NPC.defense = 100;
+            NPC.knockBackResist = 0f;
+            NPC.width = 80;
+            NPC.height = 80;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            NPC.dontTakeDamage = true;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
         }
 
         public override void AI()
         {
             NPC spirit = Spirit;
-            if (!spirit.active || !(spirit.modNPC is TerraSpirit2) || npc.ai[3] == -1f || spirit.ai[0] == 3f)
+            if (!spirit.active || !(spirit.ModNPC is TerraSpirit2) || NPC.ai[3] == -1f || spirit.ai[0] == 3f)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
-            npc.velocity = Vector2.Zero;
-            npc.rotation += 0.1f;
-            if (npc.timeLeft < 600)
+            NPC.velocity = Vector2.Zero;
+            NPC.rotation += 0.1f;
+            if (NPC.timeLeft < 600)
             {
-                npc.timeLeft = 600;
+                NPC.timeLeft = 600;
             }
-            if (npc.ai[1] == 0f && Main.netMode != 1)
+            if (NPC.ai[1] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int k = 0; k < 200; k++)
                 {
-                    if (k != npc.whoAmI && Main.npc[k].active && Main.npc[k].type == npc.type)
+                    if (k != NPC.whoAmI && Main.npc[k].active && Main.npc[k].type == NPC.type)
                     {
                         if (Main.npc[k].ai[1] == 0f)
                         {
-                            Main.npc[k].ai[1] = npc.whoAmI;
-                            npc.ai[1] = k;
+                            Main.npc[k].ai[1] = NPC.whoAmI;
+                            NPC.ai[1] = k;
                             Main.npc[k].netUpdate = true;
-                            npc.netUpdate = true;
+                            NPC.netUpdate = true;
                         }
                         else if (Main.npc[k].ai[2] == 0f)
                         {
-                            Main.npc[k].ai[2] = npc.whoAmI;
-                            npc.ai[1] = k;
-                            Main.npc[(int)Main.npc[k].ai[1]].ai[2] = npc.whoAmI;
-                            npc.ai[2] = Main.npc[k].ai[1];
+                            Main.npc[k].ai[2] = NPC.whoAmI;
+                            NPC.ai[1] = k;
+                            Main.npc[(int)Main.npc[k].ai[1]].ai[2] = NPC.whoAmI;
+                            NPC.ai[2] = Main.npc[k].ai[1];
                             Main.npc[k].netUpdate = true;
-                            npc.netUpdate = true;
+                            NPC.netUpdate = true;
                             Main.npc[(int)Main.npc[k].ai[1]].netUpdate = true;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("GoldBlob"), 0, npc.whoAmI, npc.ai[1], npc.ai[2]);
+                                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("GoldBlob").Type, 0, NPC.whoAmI, NPC.ai[1], NPC.ai[2]);
                             }
                         }
                     }
                 }
             }
             Player player = Main.player[Main.myPlayer];
-            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(npc.Hitbox))
+            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(NPC.Hitbox))
             {
                 player.GetModPlayer<BluemagicPlayer>().TerraKill();
             }
@@ -107,18 +112,18 @@ namespace Bluemagic.TerraSpirit
             return Color.White;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Color color = Color.White * 0.7f;
-            if (npc.ai[1] > 0f)
+            if (NPC.ai[1] > 0f)
             {
-                Utils.DrawLine(spriteBatch, npc.Center, Main.npc[(int)npc.ai[1]].Center, color, color, 4f);
+                Utils.DrawLine(spriteBatch, NPC.Center, Main.npc[(int)NPC.ai[1]].Center, color, color, 4f);
             }
-            if (npc.ai[2] > 0f)
+            if (NPC.ai[2] > 0f)
             {
-                Utils.DrawLine(spriteBatch, npc.Center, Main.npc[(int)npc.ai[2]].Center, color, color, 4f);
+                Utils.DrawLine(spriteBatch, NPC.Center, Main.npc[(int)NPC.ai[2]].Center, color, color, 4f);
             }
-            spriteBatch.Draw(mod.GetTexture("TerraSpirit/NegativeCircle"), npc.Center - Main.screenPosition, null, Color.White * 0.25f, 0f, new Vector2(120f, 120f), 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/NegativeCircle").Value, NPC.Center - Main.screenPosition, null, Color.White * 0.25f, 0f, new Vector2(120f, 120f), 1f, SpriteEffects.None, 0f);
             return true;
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -10,7 +11,7 @@ namespace Bluemagic.Tiles
 {
     public class PuriumForge : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = false;
             Main.tileFrameImportant[Type] = true;
@@ -22,17 +23,12 @@ namespace Bluemagic.Tiles
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
-            dustType = 128;
-            animationFrameHeight = 38;
-            adjTiles = new int[] { TileID.Furnaces, TileID.Hellforge, TileID.AdamantiteForge };
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Purium Forge");
+            DustType = DustID.Chlorophyte;
+            AnimationFrameHeight = 38;
+            AdjTiles = new int[] { TileID.Furnaces, TileID.Hellforge, TileID.AdamantiteForge };
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Purium Forge");
             AddMapEntry(new Color(100, 210, 100), name);
-        }
-
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            Item.NewItem(i * 16, j * 16, 48, 32, mod.ItemType("PuriumForge"));
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -47,7 +43,7 @@ namespace Bluemagic.Tiles
             frame = Main.tileFrame[TileID.AdamantiteForge];
         }
 
-        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height)
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
             offsetY = 2;
         }
@@ -55,9 +51,9 @@ namespace Bluemagic.Tiles
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 18 && tile.frameY == 18 && Main.rand.Next(40) == 0)
+            if (tile.TileFrameX == 18 && tile.TileFrameY == 18 && Main.rand.Next(40) == 0)
             {
-                int dust = Dust.NewDust(new Vector2(i * 16 - 4, j * 16 - 6), 8, 6, 6, 0f, 0f, 100, default(Color), 1f);
+                int dust = Dust.NewDust(new Vector2(i * 16 - 4, j * 16 - 6), 8, 6, DustID.Torch, 0f, 0f, 100, default(Color), 1f);
                 if (Main.rand.Next(3) != 0)
                 {
                     Main.dust[dust].noGravity = true;

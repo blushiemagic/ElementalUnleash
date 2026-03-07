@@ -9,25 +9,24 @@ namespace Bluemagic.Items.Salt
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Pink and sweet, but still filled with your rage");
+            // Tooltip.SetDefault("Pink and sweet, but still filled with your rage");
         }
 
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 14;
-            item.maxStack = 999;
-            item.rare = 8;
-            item.value = 100;
+            Item.width = 16;
+            Item.height = 14;
+            Item.maxStack = 999;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = 100;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "Salt", 4);
+            Recipe recipe = CreateRecipe(5);
+            recipe.AddIngredient(Mod, "Salt", 4);
             recipe.AddIngredient(ItemID.PixieDust);
             recipe.AddTile(TileID.CrystalBall);
-            recipe.SetResult(this, 5);
         }
     }
 }

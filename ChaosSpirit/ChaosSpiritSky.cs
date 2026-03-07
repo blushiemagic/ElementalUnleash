@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
@@ -26,8 +27,8 @@ namespace Bluemagic.ChaosSpirit
 
         public override void OnLoad()
         {
-            texture = ModLoader.GetMod("Bluemagic").GetTexture("ChaosSpirit/ChaosOrb");
-            explosionTexture = TextureManager.Load("Images/Misc/MoonExplosion/Explosion");
+            texture = ModContent.Request<Texture2D>("Bluemagic/ChaosSpirit/ChaosOrb").Value;
+            explosionTexture = ModContent.Request<Texture2D>("Terraria/Images/Misc/MoonExplosion/Explosion").Value;
         }
 
         public override void Update(GameTime gameTime)
@@ -100,9 +101,9 @@ namespace Bluemagic.ChaosSpirit
             stage2 = false;
             stage3 = false;
             finish = false;
-            int chaosSpiritType = ModLoader.GetMod("Bluemagic").NPCType("ChaosSpirit");
-            int chaosSpiritType2 = ModLoader.GetMod("Bluemagic").NPCType("ChaosSpirit2");
-            int chaosSpiritType3 = ModLoader.GetMod("Bluemagic").NPCType("ChaosSpirit3");
+            int chaosSpiritType = ModLoader.GetMod("Bluemagic").Find<ModNPC>("ChaosSpirit").Type;
+            int chaosSpiritType2 = ModLoader.GetMod("Bluemagic").Find<ModNPC>("ChaosSpirit2").Type;
+            int chaosSpiritType3 = ModLoader.GetMod("Bluemagic").Find<ModNPC>("ChaosSpirit3").Type;
             if (chaosSpiritIndex >= 0 && Main.npc[chaosSpiritIndex].active && (Main.npc[chaosSpiritIndex].type == chaosSpiritType || Main.npc[chaosSpiritIndex].type == chaosSpiritType2 || Main.npc[chaosSpiritIndex].type == chaosSpiritType3))
             {
                 if (Main.npc[chaosSpiritIndex].type == chaosSpiritType2)
@@ -149,7 +150,7 @@ namespace Bluemagic.ChaosSpirit
             {
                 if (light < 1f)
                 {
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color((byte)(150 * (1f - pressure)), 0, 0) * intensity);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color((byte)(150 * (1f - pressure)), 0, 0) * intensity);
                     float decorAlpha = intensity * (1f - pressure);
                     foreach (SkyChaosFracture fracture in fractures)
                     {
@@ -162,7 +163,7 @@ namespace Bluemagic.ChaosSpirit
                 }
                 if (light > 0f)
                 {
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * light * intensity);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * light * intensity);
                 }
             }
         }
@@ -249,7 +250,7 @@ namespace Bluemagic.ChaosSpirit
 
         internal void Draw(SpriteBatch spriteBatch, float intensity)
         {
-            spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)(x - width / 2f), 0, (int)width, Main.screenHeight), Color.White * intensity * (width / 96f));
+            Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)(x - width / 2f), 0, (int)width, Main.screenHeight), Color.White * intensity * (width / 96f));
         }
     }
 }

@@ -9,42 +9,40 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("12% increased damage and critical strike chance"
-                + "\nIncompatible with Wrath and Rage");
+            /* Tooltip.SetDefault("12% increased damage and critical strike chance"
+                + "\nIncompatible with Wrath and Rage");*/
         }
 
         public override void SetDefaults()
         {
-            item.width = 14;
-            item.height = 24;
-            item.maxStack = 30;
-            item.rare = 8;
-            item.value = 1000;
-            item.useStyle = 2;
-            item.useAnimation = 17;
-            item.useTime = 17;
-            item.useTurn = true;
-            item.UseSound = SoundID.Item3;
-            item.consumable = true;
-            item.buffType = mod.BuffType("Spite");
-            item.buffTime = 21600;
+            Item.width = 14;
+            Item.height = 24;
+            Item.maxStack = 30;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = 1000;
+            Item.useStyle = ItemUseStyleID.EatFood;
+            Item.useAnimation = 17;
+            Item.useTime = 17;
+            Item.useTurn = true;
+            Item.UseSound = SoundID.Item3;
+            Item.consumable = true;
+            Item.buffType = Mod.Find<ModBuff>("Spite").Type;
+            Item.buffTime = 21600;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.WrathPotion, 2);
             recipe.AddIngredient(null, "ScytheBlade");
             recipe.AddTile(TileID.Bottles);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.RagePotion, 2);
             recipe.AddIngredient(null, "ScytheBlade");
             recipe.AddTile(TileID.Bottles);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

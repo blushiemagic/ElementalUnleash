@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Misc1
@@ -8,16 +9,16 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Red as blood");
+            // Tooltip.SetDefault("Red as blood");
         }
 
         public override void SetDefaults()
         {
-            item.width = 8;
-            item.height = 8;
-            item.maxStack = 999;
-            item.rare = 3;
-            item.value = 1000;
+            Item.width = 8;
+            Item.height = 8;
+            Item.maxStack = 999;
+            Item.rare = ItemRarityID.Orange;
+            Item.value = 1000;
         }
     }
 }

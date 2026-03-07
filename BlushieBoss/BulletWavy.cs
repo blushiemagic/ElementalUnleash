@@ -41,12 +41,12 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletWavy NewDragonBreath(Vector2 position, Vector2 velocity, float amplitude, float period)
         {
-            return new BulletWavy(position, velocity, amplitude, period, 16f, BlushieBoss.BulletDragonBreathTexture);
+            return new BulletWavy(position, velocity, amplitude, period, 16f, BlushieBoss.BulletDragonBreathTexture.Value);
         }
 
         public static BulletWavy NewSkull(Vector2 position, Vector2 velocity, float amplitude, float period)
         {
-            return new BulletWavy(position, velocity, amplitude, period, 16f, BlushieBoss.BulletSkullTexture);
+            return new BulletWavy(position, velocity, amplitude, period, 16f, BlushieBoss.BulletSkullTexture.Value);
         }
     }
 }

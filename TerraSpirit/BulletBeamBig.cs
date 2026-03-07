@@ -58,14 +58,14 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletBeamBig");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletBeamBig").Value;
             float useAlpha = alpha;
             if (delay <= 0)
             {
                 useAlpha = 1f;
             }
             Vector2 scale = new Vector2(length / 2f, size / 2f);
-            spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White * useAlpha, rotation, new Vector2(1f, 1f), scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White * useAlpha, rotation, new Vector2(1f, 1f), scale, SpriteEffects.None, 0f);
         }
     }
 }

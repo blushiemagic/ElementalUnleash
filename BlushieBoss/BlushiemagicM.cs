@@ -11,14 +11,14 @@ namespace Bluemagic.BlushieBoss
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
-            DisplayName.SetDefault("blushiemagic (M)");
+            // DisplayName.SetDefault("blushiemagic (M)");
         }
 
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.takenDamageMultiplier = 5f;
-            this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Phyrnna - Return of the Snow Queen");
+            NPC.takenDamageMultiplier = 5f;
+            this.Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Phyrnna - Return of the Snow Queen");
         }
 
         public override void AI()
@@ -27,11 +27,11 @@ namespace Bluemagic.BlushieBoss
 
         public override bool CheckDead()
         {
-            npc.life = 1;
-            npc.active = true;
+            NPC.life = 1;
+            NPC.active = true;
             if (BlushieBoss.SpawnedStars && BlushieBoss.crystalStars.Count == 0)
             {
-                npc.life = npc.lifeMax;
+                NPC.life = NPC.lifeMax;
                 BlushieBoss.bullets.Clear();
                 BlushieBoss.Phase3Attack++;
                 BlushieBoss.SpawnedStars = false;
@@ -39,7 +39,7 @@ namespace Bluemagic.BlushieBoss
             }
             if (BlushieBoss.index[5] >= 0)
             {
-                Main.npc[BlushieBoss.index[5]].life = npc.life;
+                Main.npc[BlushieBoss.index[5]].life = NPC.life;
             }
             return false;
         }
@@ -49,86 +49,86 @@ namespace Bluemagic.BlushieBoss
             return Bluemagic.HealthBars != null ? (bool?)false : (bool?)null;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (BlushieBoss.Phase == 2 && BlushieBoss.Timer >= 480)
             {
-                Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
-                Vector2 draw = npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
+                Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/GreenOrb").Value;
+                Vector2 draw = NPC.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
                 float offset = BlushieBoss.Timer - 480;
                 if (offset > 60f)
                 {
                     offset = 60f;
                 }
-                spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), Color.White);
-                spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), Color.White);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), Color.White);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), Color.White);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer > 60 && BlushieBoss.Timer < 360)
             {
-                Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
-                Vector2 draw = npc.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
+                Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/GreenOrb").Value;
+                Vector2 draw = NPC.Center - Main.screenPosition - new Vector2(texture.Width / 2, texture.Height / 2);
                 float offset = 60f + (BlushieBoss.ArenaSize * 0.6f - 60f) * (BlushieBoss.Timer - 60f) / 300f;
-                spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), Color.White);
-                spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), Color.White);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), Color.White);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), Color.White);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 360 && BlushieBoss.Timer < 840)
             {
-                Texture2D texture = mod.GetTexture("BlushieBoss/GreenOrb");
-                Vector2 draw = npc.Center - Main.screenPosition;
+                Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/GreenOrb").Value;
+                Vector2 draw = NPC.Center - Main.screenPosition;
                 float offset = BlushieBoss.ArenaSize * 0.6f;
                 Vector2 origin;
                 if (BlushieBoss.Timer >= 600)
                 {
-                    Texture2D lines = mod.GetTexture("BlushieBoss/PowerLines");
+                    Texture2D lines = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/PowerLines").Value;
                     origin = new Vector2(lines.Width / 2, lines.Height / 2);
                     float rotate = BlushieBoss.Timer / 60f * MathHelper.TwoPi;
-                    spriteBatch.Draw(lines, draw + new Vector2(-offset, 0f), null, Color.White * 0.3f, rotate, origin, 6f, SpriteEffects.None, 0f);
-                    spriteBatch.Draw(lines, draw + new Vector2(offset, 0f), null, Color.White * 0.3f, rotate, origin, 6f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(lines, draw + new Vector2(-offset, 0f), null, Color.White * 0.3f, rotate, origin, 6f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(lines, draw + new Vector2(offset, 0f), null, Color.White * 0.3f, rotate, origin, 6f, SpriteEffects.None, 0f);
                     if (BlushieBoss.Timer >= 720)
                     {
                         rotate += MathHelper.Pi / 8f;
-                        spriteBatch.Draw(lines, draw + new Vector2(-offset, 0f), null, Color.White * 0.1f, rotate, origin, 24f, SpriteEffects.None, 0f);
-                    spriteBatch.Draw(lines, draw + new Vector2(offset, 0f), null, Color.White * 0.1f, rotate, origin, 24f, SpriteEffects.None, 0f);
+                        Main.spriteBatch.Draw(lines, draw + new Vector2(-offset, 0f), null, Color.White * 0.1f, rotate, origin, 24f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(lines, draw + new Vector2(offset, 0f), null, Color.White * 0.1f, rotate, origin, 24f, SpriteEffects.None, 0f);
                     }
                 }
                 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-                spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(-offset, 0f), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, draw + new Vector2(offset, 0f), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
                 float scale = 2f - (BlushieBoss.Timer % 30f) / 15f;
-                Texture2D circle = mod.GetTexture("BlushieBoss/PowerCircle");
+                Texture2D circle = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/PowerCircle").Value;
                 origin = new Vector2(circle.Width / 2, circle.Height / 2);
-                spriteBatch.Draw(circle, draw + new Vector2(-offset, 0f), null, Color.White * 0.3f, 0f, origin, scale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(circle, draw + new Vector2(offset, 0f), null, Color.White * 0.3f, 0f, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(circle, draw + new Vector2(-offset, 0f), null, Color.White * 0.3f, 0f, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(circle, draw + new Vector2(offset, 0f), null, Color.White * 0.3f, 0f, origin, scale, SpriteEffects.None, 0f);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 840 && BlushieBoss.Timer < 900)
             {
                 float width = BlushieBoss.Timer - 840f;
-                spriteBatch.Draw(mod.GetTexture("Pixel"), BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * BlushieBoss.ArenaSize, 2f * width), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Pixel").Value, BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * BlushieBoss.ArenaSize, 2f * width), SpriteEffects.None, 0f);
                 DrawDragonArms(spriteBatch, false);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 900 && BlushieBoss.Timer < 960)
             {
                 DrawDragonArms(spriteBatch, true);
                 float width = 960f - BlushieBoss.Timer;
-                spriteBatch.Draw(mod.GetTexture("Pixel"), BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * BlushieBoss.ArenaSize, 2f * width), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Pixel").Value, BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * BlushieBoss.ArenaSize, 2f * width), SpriteEffects.None, 0f);
                 DrawDragonArms(spriteBatch, false);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 960 && BlushieBoss.Timer < 1080)
             {
                 DrawDragonArms(spriteBatch, true);
                 float width = BlushieBoss.Timer - 960f;
-                spriteBatch.Draw(mod.GetTexture("Pixel"), BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * width, 2f * BlushieBoss.ArenaSize), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Pixel").Value, BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * width, 2f * BlushieBoss.ArenaSize), SpriteEffects.None, 0f);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 1080 && BlushieBoss.Timer < 1200)
             {
-                Texture2D lines = mod.GetTexture("BlushieBoss/PowerLines");
+                Texture2D lines = ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/PowerLines").Value;
                 Vector2 origin = new Vector2(lines.Width / 2, lines.Height / 2);
                 float rotate = BlushieBoss.Timer / 60f * MathHelper.TwoPi;
-                spriteBatch.Draw(lines, BlushieBoss.DragonPos - Main.screenPosition + new Vector2(0f, -100f), null, Color.White * 0.16f, rotate, origin, 24f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(lines, BlushieBoss.DragonPos - Main.screenPosition + new Vector2(0f, -100f), null, Color.White * 0.16f, rotate, origin, 24f, SpriteEffects.None, 0f);
                 DrawDragonArms(spriteBatch, true);
                 DrawDragonHead(spriteBatch);
                 float width = 1200f - BlushieBoss.Timer;
-                spriteBatch.Draw(mod.GetTexture("Pixel"), BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * width, 2f * BlushieBoss.ArenaSize), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Pixel").Value, BlushieBoss.Origin - Main.screenPosition, null, new Color(0, 255, 0), 0f, new Vector2(0.5f, 0.5f), new Vector2(2f * width, 2f * BlushieBoss.ArenaSize), SpriteEffects.None, 0f);
             }
             else if (BlushieBoss.Phase == 3 && BlushieBoss.Timer >= 1200)
             {
@@ -146,7 +146,7 @@ namespace Bluemagic.BlushieBoss
 
         private void DrawDragonHead(SpriteBatch spriteBatch, bool connect=true)
         {
-            DrawDragonHead(spriteBatch, npc.Center, BlushieBoss.DragonPos, connect);
+            DrawDragonHead(spriteBatch, NPC.Center, BlushieBoss.DragonPos, connect);
         }
 
         internal static void DrawDragonHead(SpriteBatch spriteBatch, Vector2 origin, Vector2 dragonPos, bool connect=true)
@@ -156,7 +156,7 @@ namespace Bluemagic.BlushieBoss
             if (connect)
             {
                 pos.Y -= 150f;
-                Texture2D neckTexture = Bluemagic.Instance.GetTexture("BlushieBoss/DragonNeck");
+                Texture2D neckTexture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/DragonNeck").Value;
                 Vector2 zero = Main.screenPosition + new Vector2(neckTexture.Width / 2, neckTexture.Height / 2);
                 if (Math.Abs(pos.X - origin.X) <= 4f)
                 {
@@ -167,7 +167,7 @@ namespace Bluemagic.BlushieBoss
                         direction.Normalize();
                         for (float k = 0f; k <= length; k += 2f)
                         {
-                            spriteBatch.Draw(neckTexture, origin + k * direction - zero, Color.White);
+                            Main.spriteBatch.Draw(neckTexture, origin + k * direction - zero, Color.White);
                         }
                     }
                 }
@@ -228,37 +228,37 @@ namespace Bluemagic.BlushieBoss
                         }
                         for (float y = yStart; y <= yEnd; y += 1f)
                         {
-                            spriteBatch.Draw(neckTexture, new Vector2(x, y), Color.White);
+                            Main.spriteBatch.Draw(neckTexture, new Vector2(x, y), Color.White);
                         }
                     }
                     /* debug
-                    spriteBatch.Draw(neckTexture, pos - zero, Color.White);
-                    spriteBatch.Draw(neckTexture, neck - zero, Color.White);
-                    spriteBatch.Draw(neckTexture, origin - zero, Color.White);
-                    spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
-                    spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
-                    spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
-                    spriteBatch.Draw(Bluemagic.Instance.GetTexture("Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(neckTexture, pos - zero, Color.White);
+                    Main.spriteBatch.Draw(neckTexture, neck - zero, Color.White);
+                    Main.spriteBatch.Draw(neckTexture, origin - zero, Color.White);
+                    Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(1f, 0.5f), new Vector2(Main.screenWidth, 8f), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/Pixel"), origin - Main.screenPosition, null, Color.White, targetAngle, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/Pixel"), midpoint - Main.screenPosition, null, Color.White, normal, new Vector2(0f, 0.5f), new Vector2(Main.screenWidth, 16f), SpriteEffects.None, 0f);
                     */
                     pos += zero;
                 }
                 pos.Y += 150f;
             }
-            Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead_Hurt") : Bluemagic.Instance.GetTexture("BlushieBoss/DragonHead");
+            Texture2D dragon = BlushieBoss.Phase3Attack > 1 && BlushieBoss.Timer < 2060 ? Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/DragonHead_Hurt").Value : Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/DragonHead").Value;
             Vector2 draw = pos - Main.screenPosition - new Vector2(dragon.Width / 2, dragon.Height);
-            spriteBatch.Draw(dragon, draw, Color.White);
+            Main.spriteBatch.Draw(dragon, draw, Color.White);
         }
 
         private void DrawDragonArms(SpriteBatch spriteBatch, bool connect)
         {
-            DrawDragonArms(spriteBatch, npc.Center, BlushieBoss.ArmLeftPos, BlushieBoss.ArmRightPos, connect);
+            DrawDragonArms(spriteBatch, NPC.Center, BlushieBoss.ArmLeftPos, BlushieBoss.ArmRightPos, connect);
         }
 
         internal static void DrawDragonArms(SpriteBatch spriteBatch, Vector2 origin, Vector2 armLeftPos, Vector2 armRightPos, bool connect)
         {
             if (connect)
             {
-                Texture2D arm = Bluemagic.Instance.GetTexture("BlushieBoss/DragonArm");
+                Texture2D arm = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/DragonArm").Value;
                 Vector2 zero = Main.screenPosition + new Vector2(arm.Width / 2, arm.Height / 2);
                 Vector2 direction = armLeftPos - origin;
                 float length = direction.Length();
@@ -267,7 +267,7 @@ namespace Bluemagic.BlushieBoss
                     direction.Normalize();
                     for (float k = 0f; k <= length; k += 2f)
                     {
-                        spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
+                        Main.spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
                     }
                 }
                 direction = armRightPos - origin;
@@ -277,35 +277,35 @@ namespace Bluemagic.BlushieBoss
                     direction.Normalize();
                     for (float k = 0f; k <= length; k += 2f)
                     {
-                        spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
+                        Main.spriteBatch.Draw(arm, origin + k * direction - zero, Color.White);
                     }
                 }
             }
-            Texture2D claw = Bluemagic.Instance.GetTexture("BlushieBoss/DragonClaw");
+            Texture2D claw = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/DragonClaw").Value;
             Vector2 textOrigin = new Vector2(claw.Width / 2, claw.Height / 2);
-            spriteBatch.Draw(claw, armLeftPos - Main.screenPosition, null, Color.White, (armLeftPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(claw, armRightPos - Main.screenPosition, null, Color.White, (armRightPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(claw, armLeftPos - Main.screenPosition, null, Color.White, (armLeftPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(claw, armRightPos - Main.screenPosition, null, Color.White, (armRightPos - origin).ToRotation(), textOrigin, 1f, SpriteEffects.None, 0f);
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (BlushieBoss.Phase == 2 && BlushieBoss.Timer < 480)
             {
-                Texture2D texture = mod.GetTexture("ChaosSpirit/DissonanceOrb");
-                Vector2 drawPos = npc.Center - Main.screenPosition;
+                Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/ChaosSpirit/DissonanceOrb").Value;
+                Vector2 drawPos = NPC.Center - Main.screenPosition;
                 Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
                 float rotation = 0.05f * BlushieBoss.Timer;
-                spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.5f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.5f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.25f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.25f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 0.25f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 0.25f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, -rotation, origin, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, drawPos, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
             }
             else if (BlushieBoss.Phase != 3 || BlushieBoss.Phase3Attack == 0)
             {
-                Texture2D shield = mod.GetTexture("Mounts/PurityShield");
-                spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
+                Texture2D shield = ModContent.Request<Texture2D>("Bluemagic/Mounts/PurityShield").Value;
+                Main.spriteBatch.Draw(shield, NPC.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
             }
             BlushieBoss.DrawBullets(spriteBatch);
         }

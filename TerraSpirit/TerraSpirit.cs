@@ -4,6 +4,8 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -23,11 +25,11 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
             set
             {
-                npc.ai[0] = value;
+                NPC.ai[0] = value;
             }
         }
 
@@ -35,44 +37,49 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return (int)npc.ai[1];
+                return (int)NPC.ai[1];
             }
             set
             {
-                npc.ai[1] = value;
+                NPC.ai[1] = value;
             }
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spirit of Purity");
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            NPCID.Sets.NeedsExpertScaling[npc.type] = false;
+            // DisplayName.SetDefault("Spirit of Purity");
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = false;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 750000;
-            npc.damage = 0;
-            npc.defense = 140;
-            npc.knockBackResist = 0f;
-            npc.width = size;
-            npc.height = size;
-            npc.npcSlots = 1337f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.chaseable = false;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            npc.alpha = 255;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 750000;
+            NPC.damage = 0;
+            NPC.defense = 140;
+            NPC.knockBackResist = 0f;
+            NPC.width = size;
+            NPC.height = size;
+            NPC.npcSlots = 1337f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.chaseable = false;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            NPC.alpha = 255;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Despicable beautiful");
+            Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Despicable beautiful");
         }
 
         private IList<Particle> particles = new List<Particle>();
@@ -92,7 +99,7 @@ namespace Bluemagic.TerraSpirit
             {
                 UpdateParticles();
             }
-            npc.timeLeft = NPC.activeTime;
+            NPC.timeLeft = NPC.activeTime;
             if (Stage % 2 > 0 && numPlayers == 0)
             {
                 Stage = -1;
@@ -132,11 +139,11 @@ namespace Bluemagic.TerraSpirit
             }
             FixLife();
             Progress++;
-            Rectangle bounds = new Rectangle((int)npc.Center.X - arenaWidth / 2, (int)npc.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
+            Rectangle bounds = new Rectangle((int)NPC.Center.X - arenaWidth / 2, (int)NPC.Center.Y - arenaHeight / 2, arenaWidth, arenaHeight);
             Player player = Main.player[Main.myPlayer];
             if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0)
             {
-                player.GetModPlayer<BluemagicPlayer>().TerraSpiritBarrier(npc);
+                player.GetModPlayer<BluemagicPlayer>().TerraSpiritBarrier(NPC);
                 for (int k = 0; k < bullets.Count; k++)
                 {
                     if (bullets[k].Update(this, bounds))
@@ -239,11 +246,11 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress >= 180)
             {
-                npc.active = false;
-                if (Main.netMode != 1)
+                NPC.active = false;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     BluemagicWorld.terraDeaths++;
-                    if (Main.netMode == 2)
+                    if (Main.netMode == NetmodeID.Server)
                     {
                         NetMessage.SendData(MessageID.WorldData);
                     }
@@ -256,8 +263,8 @@ namespace Bluemagic.TerraSpirit
             if (Progress == Main.netMode)
             {
                 bullets.Clear();
-                Vector2 center = npc.Center;
-                if (Main.netMode != 1)
+                Vector2 center = NPC.Center;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int lives = 10;
                     switch (Stage)
@@ -281,7 +288,7 @@ namespace Bluemagic.TerraSpirit
                         if (player.active & !player.dead && player.position.X > center.X - arenaWidth / 2 && player.position.X + player.width < center.X + arenaWidth / 2 && player.position.Y > center.Y - arenaHeight / 2 && player.position.Y + player.height < center.Y + arenaHeight / 2)
                         {
                             player.GetModPlayer<BluemagicPlayer>().terraLives = lives;
-                            if (Main.netMode == 2)
+                            if (Main.netMode == NetmodeID.Server)
                             {
                                 ModPacket netMessage = GetPacket(TerraSpiritMessageType.TerraPlayer);
                                 netMessage.Write((byte)lives);
@@ -295,7 +302,7 @@ namespace Bluemagic.TerraSpirit
                     }
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 bool startFight = false;
                 if (BluemagicWorld.downedTerraSpirit)
@@ -440,23 +447,23 @@ namespace Bluemagic.TerraSpirit
                 }
                 if (startFight)
                 {
-                    Main.PlaySound(15, -1, -1, 0);
+                    SoundEngine.PlaySound(SoundID.Roar);
                     Stage++;
                     Progress = -1;
                     if (Stage == 7 || Stage == 9)
                     {
                         Progress = 120;
                     }
-                    npc.netUpdate = true;
+                    NPC.netUpdate = true;
                 }
             }
         }
 
         private void Stage1()
         {
-            if (Progress == 0 && Main.netMode != 1)
+            if (Progress == 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe1"), 0, npc.whoAmI);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("TerraProbe1").Type, 0, NPC.whoAmI);
             }
         }
 
@@ -464,11 +471,11 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress == 0)
             {
-                Main.PlaySound(15, -1, -1, 0);
+                SoundEngine.PlaySound(SoundID.Roar);
             }
             if (Progress == 60)
             {
-                Vector2 center = npc.Center;
+                Vector2 center = NPC.Center;
                 const int xOffset = arenaWidth / 4;
                 const int yOffset = arenaHeight / 4;
                 bullets.Add(new BulletPortal(center, center + new Vector2(xOffset, yOffset)));
@@ -486,7 +493,7 @@ namespace Bluemagic.TerraSpirit
             }
             if (Progress == 720)
             {
-                bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
+                bullets.Add(new BulletChase(NPC.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
             }
             if (Progress >= 1200 && Progress <= 1440 && Progress % 120 == 0)
             {
@@ -494,9 +501,9 @@ namespace Bluemagic.TerraSpirit
                 bullets.Add(new BulletRingTimed(bulletPos, 6, 192f, 0.03f, 120));
                 bullets.Add(new BulletBeamBig(bulletPos, 320, MathHelper.PiOver2, 120));
             }
-            if (Progress == 1560 && Main.netMode != 1)
+            if (Progress == 1560 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe2"), 0, npc.whoAmI);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("TerraProbe2").Type, 0, NPC.whoAmI);
             }
         }
 
@@ -504,7 +511,7 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress == 0)
             {
-                Main.PlaySound(15, -1, -1, 0);
+                SoundEngine.PlaySound(SoundID.Roar);
             }
             if (Progress >= 60 && Progress <= 300 && Progress % 60 == 0)
             {
@@ -530,7 +537,7 @@ namespace Bluemagic.TerraSpirit
             }
             if (Progress == 360)
             {
-                Vector2 center = npc.Center;
+                Vector2 center = NPC.Center;
                 const int xOffset = arenaWidth / 4;
                 const int yOffset = arenaHeight / 4;
                 bullets.Add(new BulletPortal(center, center + new Vector2(xOffset, yOffset)));
@@ -554,20 +561,20 @@ namespace Bluemagic.TerraSpirit
             {
                 if (Main.expertMode)
                 {
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, 0.01f, 360, 120f, 0f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, 0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, 0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
                 }
                 else
                 {
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, MathHelper.PiOver2, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, 0.01f, 360, 120f, 0f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, 0.01f, 360, 120f, MathHelper.PiOver2, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, 0.01f, 360, 120f, 0f, 60));
                 }
-                bullets.Add(new BulletChase(npc.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
+                bullets.Add(new BulletChase(NPC.Center, 30, 360, (position, spirit) => new BulletAccel(position, spirit.GetTarget().Center - position)));
             }
             if (Progress >= 1560 && Progress <= 1860 && Progress % 4 == 0)
             {
-                Vector2 bulletPos = new Vector2(npc.Center.X, npc.Center.Y - arenaHeight / 2);
+                Vector2 bulletPos = new Vector2(NPC.Center.X, NPC.Center.Y - arenaHeight / 2);
                 bulletPos.X += 80f * (float)Math.Sin(MathHelper.TwoPi * Progress / 120);
                 bullets.Add(new BulletArray(bulletPos, 0f, 160f, new Vector2(0f, 8f), arenaHeight / 8));
             }
@@ -575,9 +582,9 @@ namespace Bluemagic.TerraSpirit
             {
                 bullets.Add(new BulletBeamBig(GetTarget().Center, 160, 0f, 60));
             }
-            if (Progress == 2040 && Main.netMode != 1)
+            if (Progress == 2040 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe3"), 0, npc.whoAmI);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("TerraProbe3").Type, 0, NPC.whoAmI);
             }
         }
 
@@ -585,28 +592,28 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress == 0)
             {
-                Main.PlaySound(15, -1, -1, 0);
+                SoundEngine.PlaySound(SoundID.Roar);
             }
             if (Progress >= 180 && Progress <= 540 && Progress % 60 == 0)
             {
-                bullets.Add(new BulletRingExpand(npc.Center, 6f));
+                bullets.Add(new BulletRingExpand(NPC.Center, 6f));
             }
             if (Progress >= 180 && Progress <= 540 && Progress % 60 == 30)
             {
-                bullets.Add(new BulletRingExpand(npc.Center, 6f).Rotation(MathHelper.Pi / 16f));
+                bullets.Add(new BulletRingExpand(NPC.Center, 6f).Rotation(MathHelper.Pi / 16f));
             }
             if (Progress == 180)
             {
                 if (Main.expertMode)
                 {
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, -0.01f, 360, 120f, 0f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, -0.01f, 360, 120f, MathHelper.Pi / 3f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, -0.01f, 360, 120f, 2f * MathHelper.Pi / 3f, 60));
                 }
                 else
                 {
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, MathHelper.PiOver2, 60));
-                    bullets.Add(new BulletBeamBigRotate(npc.Center, -0.01f, 360, 120f, 0f, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, -0.01f, 360, 120f, MathHelper.PiOver2, 60));
+                    bullets.Add(new BulletBeamBigRotate(NPC.Center, -0.01f, 360, 120f, 0f, 60));
                 }
             }
             if (Progress >= 600 && Progress <= 960 && Progress % 90 == 0)
@@ -619,15 +626,15 @@ namespace Bluemagic.TerraSpirit
             }
             if (Progress == 1080)
             {
-                bullets.Add(new BulletFlowerDoom(npc.Center, 720));
+                bullets.Add(new BulletFlowerDoom(NPC.Center, 720));
             }
             if (Progress == 1980)
             {
-                bullets.Add(new BulletBlackHole(npc.Center));
+                bullets.Add(new BulletBlackHole(NPC.Center));
             }
-            if (Progress == 2820 && Main.netMode != 1)
+            if (Progress == 2820 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe4"), 0, npc.whoAmI);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("TerraProbe4").Type, 0, NPC.whoAmI);
             }
         }
 
@@ -635,31 +642,31 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress == 0)
             {
-                Main.PlaySound(15, -1, -1, 0);
+                SoundEngine.PlaySound(SoundID.Roar);
             }
             if (Progress == 180)
             {
-                bullets.Add(new BulletChase(npc.Center, 1000, 300, (position, spirit) => null, 0.03f));
+                bullets.Add(new BulletChase(NPC.Center, 1000, 300, (position, spirit) => null, 0.03f));
             }
             if (Progress >= 180 && Progress <= 420 && Progress % 120 == 60)
             {
-                bullets.Add(new BulletRingSpinOut(npc.Center, 8f, 0.005f));
-                bullets.Add(new BulletRingSpinOut(npc.Center, 8f, -0.005f));
+                bullets.Add(new BulletRingSpinOut(NPC.Center, 8f, 0.005f));
+                bullets.Add(new BulletRingSpinOut(NPC.Center, 8f, -0.005f));
             }
             if (Progress >= 180 && Progress <= 420 && Progress % 120 == 0)
             {
-                bullets.Add(new BulletRingSpinOut(npc.Center, 8f, 0.01f).Rotation(MathHelper.Pi / 16f));
-                bullets.Add(new BulletRingSpinOut(npc.Center, 8f, -0.01f).Rotation(MathHelper.Pi / 16f));
+                bullets.Add(new BulletRingSpinOut(NPC.Center, 8f, 0.01f).Rotation(MathHelper.Pi / 16f));
+                bullets.Add(new BulletRingSpinOut(NPC.Center, 8f, -0.01f).Rotation(MathHelper.Pi / 16f));
             }
             if (Progress >= 540 && Progress <= 1020 && Progress % 60 == 0)
             {
-                bullets.Add(new BulletRingExpand(npc.Center, 4f).NumBullets(32));
-                bullets.Add(new BulletRingExpand(npc.Center, 8f).NumBullets(32).Rotation(MathHelper.Pi / 32f));
-                bullets.Add(new BulletRingExpand(npc.Center, 12f).NumBullets(Main.expertMode ? 32 : 16).Rotation((GetTarget().Center - npc.Center).ToRotation()));
+                bullets.Add(new BulletRingExpand(NPC.Center, 4f).NumBullets(32));
+                bullets.Add(new BulletRingExpand(NPC.Center, 8f).NumBullets(32).Rotation(MathHelper.Pi / 32f));
+                bullets.Add(new BulletRingExpand(NPC.Center, 12f).NumBullets(Main.expertMode ? 32 : 16).Rotation((GetTarget().Center - NPC.Center).ToRotation()));
             }
             if (Progress == 1260)
             {
-                bullets.Add(new BulletSlide(npc.Center));
+                bullets.Add(new BulletSlide(NPC.Center));
             }
             if (Progress >= 1380 && Progress <= 1860 && Progress % 120 == 60)
             {
@@ -669,18 +676,18 @@ namespace Bluemagic.TerraSpirit
                     bullets.Add(new BulletBeamBig(GetTarget().Center, rotation: 0f, delay: 60, life: 20));
                 }
             }
-            if (Progress == 2000 && Main.netMode != 2)
+            if (Progress == 2000 && Main.netMode != NetmodeID.Server)
             {
                 Main.NewText("You can feel a Void World opening up behind the fabrics of reality...");
             }
             if (Progress == 2060)
             {
-                Main.PlaySound(15, -1, -1, 0);
+                SoundEngine.PlaySound(SoundID.Roar);
             }
             if (Progress >= 2060 && Progress <= 2660)
             {
                 Vector2 arena = new Vector2(arenaWidth, arenaHeight);
-                Vector2 origin = npc.Center - arena / 2f;
+                Vector2 origin = NPC.Center - arena / 2f;
                 Vector2 target = GetTarget().Center;
                 Vector2 localTarget = target - origin;
                 if (Progress % 8 == 0)
@@ -737,9 +744,9 @@ namespace Bluemagic.TerraSpirit
                     }
                 }
             }
-            if (Progress == 2800 && Main.netMode != 1)
+            if (Progress == 2800 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("TerraProbe5"), 0, npc.whoAmI);
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("TerraProbe5").Type, 0, NPC.whoAmI);
             }
         }
 
@@ -747,12 +754,12 @@ namespace Bluemagic.TerraSpirit
         {
             if (Progress == 0)
             {
-                Main.PlaySound(29, -1, -1, 92);
+                SoundEngine.PlaySound(SoundID.Zombie92);
             }
             if (Progress >= 280)
             {
-                NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("TerraSpirit2"));
-                npc.active = false;
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("TerraSpirit2").Type);
+                NPC.active = false;
             }
         }
 
@@ -762,27 +769,27 @@ namespace Bluemagic.TerraSpirit
             {
             case 0:
             case 1:
-                npc.life = 750000;
+                NPC.life = 750000;
                 break;
             case 2:
             case 3:
-                npc.life = 700000;
+                NPC.life = 700000;
                 break;
             case 4:
             case 5:
-                npc.life = 600000;
+                NPC.life = 600000;
                 break;
             case 6:
             case 7:
-                npc.life = 450000;
+                NPC.life = 450000;
                 break;
             case 8:
             case 9:
-                npc.life = 250000;
+                NPC.life = 250000;
                 break;
             case 10:
             case 11:
-                npc.life = 1;
+                NPC.life = 1;
                 break;
             }
         }
@@ -803,48 +810,48 @@ namespace Bluemagic.TerraSpirit
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             for (int x = 0; x < size; x++)
             {
                 for (int y = 0; y < size; y++)
                 {
-                    Vector2 drawPos = npc.Center - Main.screenPosition;
+                    Vector2 drawPos = NPC.Center - Main.screenPosition;
                     drawPos.X += x * 2 - size;
                     drawPos.Y += y * 2 - size;
-                    spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityParticle").Value, drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 }
             }
-            spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityEyes").Value, NPC.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             const int blockSize = 16;
-            int centerX = (int)npc.Center.X;
-            int centerY = (int)npc.Center.Y;
-            Texture2D outlineTexture = mod.GetTexture("TerraSpirit/TerraBlockOutline");
-            Texture2D blockTexture = mod.GetTexture("TerraSpirit/TerraBlock");
+            int centerX = (int)NPC.Center.X;
+            int centerY = (int)NPC.Center.Y;
+            Texture2D outlineTexture = ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/TerraBlockOutline").Value;
+            Texture2D blockTexture = ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/TerraBlock").Value;
             for (int x = centerX - (arenaWidth + blockSize) / 2; x <= centerX + (arenaWidth + blockSize) / 2; x += blockSize)
             {
                 int y = centerY - (arenaHeight + blockSize) / 2;
                 Vector2 drawPos = new Vector2(x - blockSize / 2, y - blockSize / 2) - Main.screenPosition;
-                spriteBatch.Draw(outlineTexture, drawPos, Color.White);
-                spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
+                Main.spriteBatch.Draw(outlineTexture, drawPos, Color.White);
+                Main.spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
                 drawPos.Y += arenaHeight + blockSize;
-                spriteBatch.Draw(outlineTexture, drawPos, Color.White);
-                spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
+                Main.spriteBatch.Draw(outlineTexture, drawPos, Color.White);
+                Main.spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
             }
             for (int y = centerY - (arenaHeight + blockSize) / 2; y <= centerY + (arenaHeight + blockSize) / 2; y += blockSize)
             {
                 int x = centerX - (arenaWidth + blockSize) / 2;
                 Vector2 drawPos = new Vector2(x - blockSize / 2, y - blockSize / 2) - Main.screenPosition;
-                spriteBatch.Draw(outlineTexture, drawPos, Color.White);
-                spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
+                Main.spriteBatch.Draw(outlineTexture, drawPos, Color.White);
+                Main.spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
                 drawPos.X += arenaWidth + blockSize;
-                spriteBatch.Draw(outlineTexture, drawPos, Color.White);
-                spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
+                Main.spriteBatch.Draw(outlineTexture, drawPos, Color.White);
+                Main.spriteBatch.Draw(blockTexture, drawPos, Color.White * 0.75f);
             }
 
             foreach (Bullet bullet in bullets)
@@ -855,23 +862,23 @@ namespace Bluemagic.TerraSpirit
 
         private void Talk(string message)
         {
-            if (Main.netMode != 2)
+            if (Main.netMode != NetmodeID.Server)
             {
-                string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+                string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(NPC.type), message);
                 Main.NewText(text, 150, 250, 150);
             }
             else
             {
-                NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
-                NetMessage.BroadcastChatMessage(text, new Color(150, 250, 150));
+                NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(NPC.type), message);
+                ChatHelper.BroadcastChatMessage(text, new Color(150, 250, 150));
             }
         }
 
         private ModPacket GetPacket(TerraSpiritMessageType type)
         {
-            ModPacket packet = mod.GetPacket();
+            ModPacket packet = Mod.GetPacket();
             packet.Write((byte)MessageType.TerraSpirit);
-            packet.Write(npc.whoAmI);
+            packet.Write(NPC.whoAmI);
             packet.Write((byte)type);
             return packet;
         }

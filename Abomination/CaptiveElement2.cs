@@ -1,9 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Bluemagic;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.Localization;
+using Bluemagic.Items.Abomination;
 
 namespace Bluemagic.Abomination
 {
@@ -39,11 +43,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
             set
             {
-                npc.ai[0] = value;
+                NPC.ai[0] = value;
             }
         }
 
@@ -51,11 +55,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return npc.ai[1];
+                return NPC.ai[1];
             }
             set
             {
-                npc.ai[1] = value;
+                NPC.ai[1] = value;
             }
         }
 
@@ -63,11 +67,11 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[2];
+                return (int)NPC.ai[2];
             }
             set
             {
-                npc.ai[2] = value;
+                NPC.ai[2] = value;
             }
         }
 
@@ -75,51 +79,55 @@ namespace Bluemagic.Abomination
         {
             get
             {
-                return (int)npc.ai[3];
+                return (int)NPC.ai[3];
             }
             set
             {
-                npc.ai[3] = value;
+                NPC.ai[3] = value;
             }
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Captive Element");
-            Main.npcFrameCount[npc.type] = 5;
+            // DisplayName.SetDefault("Captive Element");
+            Main.npcFrameCount[NPC.type] = 5;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 15000;
-            npc.damage = 100;
-            npc.defense = 55;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 15000;
+            NPC.damage = 100;
+            NPC.defense = 55;
             if (NPC.downedMoonlord)
             {
-                npc.lifeMax = 30000;
-                npc.damage = 120;
-                npc.defense = 80;
+                NPC.lifeMax = 30000;
+                NPC.damage = 120;
+                NPC.defense = 80;
             }
-            npc.knockBackResist = 0f;
-            npc.width = 100;
-            npc.height = 100;
-            npc.value = Item.buyPrice(0, 20, 0, 0);
-            npc.npcSlots = 10f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit5;
-            npc.DeathSound = SoundID.NPCDeath7;
-            music = MusicID.Boss2;
-            bossBag = mod.ItemType("AbominationBag");
+            NPC.knockBackResist = 0f;
+            NPC.width = 100;
+            NPC.height = 100;
+            NPC.value = Item.buyPrice(0, 20, 0, 0);
+            NPC.npcSlots = 10f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit5;
+            NPC.DeathSound = SoundID.NPCDeath7;
+            Music = MusicID.Boss2;
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.75f);
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * balance);
+            NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -130,42 +138,42 @@ namespace Bluemagic.Abomination
 
         public override void AI()
         {
-            Player player = Main.player[npc.target];
-            if (npc.localAI[0] == 0f)
+            Player player = Main.player[NPC.target];
+            if (NPC.localAI[0] == 0f)
             {
                 if (GetDebuff() >= 0f)
                 {
-                    npc.buffImmune[GetDebuff()] = true;
+                    NPC.buffImmune[GetDebuff()] = true;
                 }
                 if (captiveType == 3)
                 {
-                    npc.buffImmune[20] = true;
-                    npc.ai[3] = 1f;
+                    NPC.buffImmune[20] = true;
+                    NPC.ai[3] = 1f;
                 }
                 if (captiveType == 0)
                 {
-                    npc.coldDamage = true;
+                    NPC.coldDamage = true;
                 }
                 if (captiveType == 1)
                 {
-                    npc.alpha = 100;
+                    NPC.alpha = 100;
                 }
                 if (captiveType == 2)
                 {
-                    npc.damage += 20;
+                    NPC.damage += 20;
                     if (Main.expertMode)
                     {
-                        npc.damage += 20;
+                        NPC.damage += 20;
                     }
                 }
-                npc.localAI[0] = 1f;
-                Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 7);
+                NPC.localAI[0] = 1f;
+                SoundEngine.PlaySound(SoundID.NPCDeath7, NPC.position);
             }
             //run away
             if ((!player.active || player.dead || player.position.Y + player.height < hellLayer * 16) && run < 2)
             {
-                npc.TargetClosest(false);
-                player = Main.player[npc.target];
+                NPC.TargetClosest(false);
+                player = Main.player[NPC.target];
                 if (!player.active || player.dead || player.position.Y + player.height < hellLayer * 16)
                 {
                     run = 1;
@@ -182,7 +190,7 @@ namespace Bluemagic.Abomination
                 {
                     for (int k = 0; k < 200; k++)
                     {
-                        if (Main.npc[k].active && Main.npc[k].type == mod.NPCType("CaptiveElement2") && Main.npc[k].ai[2] == 0f)
+                        if (Main.npc[k].active && Main.npc[k].type == Mod.Find<ModNPC>("CaptiveElement2").Type && Main.npc[k].ai[2] == 0f)
                         {
                             flag = false;
                             break;
@@ -192,26 +200,26 @@ namespace Bluemagic.Abomination
                 if (flag)
                 {
                     run = 2;
-                    npc.velocity = new Vector2(0f, 10f);
-                    npc.rotation = 0.5f * (float)Math.PI;
+                    NPC.velocity = new Vector2(0f, 10f);
+                    NPC.rotation = 0.5f * (float)Math.PI;
                     CreateDust();
-                    if (npc.timeLeft > 10)
+                    if (NPC.timeLeft > 10)
                     {
-                        npc.timeLeft = 10;
+                        NPC.timeLeft = 10;
                     }
-                    npc.netUpdate = true;
+                    NPC.netUpdate = true;
                     return;
                 }
             }
-            if (run < 2 && npc.timeLeft < 750)
+            if (run < 2 && NPC.timeLeft < 750)
             {
-                npc.timeLeft = 750;
+                NPC.timeLeft = 750;
             }
             //move
             int count = 0;
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].active && Main.npc[k].type == mod.NPCType("CaptiveElement2"))
+                if (Main.npc[k].active && Main.npc[k].type == Mod.Find<ModNPC>("CaptiveElement2").Type)
                 {
                     count++;
                 }
@@ -255,13 +263,13 @@ namespace Bluemagic.Abomination
                     minY -= 240f;
                     maxY += 240f;
                 }
-                if (npc.Center.X >= minX && npc.Center.X <= maxX && npc.Center.Y >= minY && npc.Center.Y <= maxY)
+                if (NPC.Center.X >= minX && NPC.Center.X <= maxX && NPC.Center.Y >= minY && NPC.Center.Y <= maxY)
                 {
-                    npc.velocity *= 0.98f;
+                    NPC.velocity *= 0.98f;
                 }
                 else
                 {
-                    Vector2 move = moveTo - npc.Center;
+                    Vector2 move = moveTo - NPC.Center;
                     float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                     float speed = 10f;
                     if (captiveType == 3 && (jungleAI == -5 || jungleAI == 1))
@@ -277,34 +285,34 @@ namespace Bluemagic.Abomination
                     {
                         inertia = 20f;
                     }
-                    npc.velocity = (inertia * npc.velocity + move) / (inertia + 1);
-                    magnitude = (float)Math.Sqrt(npc.velocity.X * npc.velocity.X + npc.velocity.Y + npc.velocity.Y);
+                    NPC.velocity = (inertia * NPC.velocity + move) / (inertia + 1);
+                    magnitude = (float)Math.Sqrt(NPC.velocity.X * NPC.velocity.X + NPC.velocity.Y + NPC.velocity.Y);
                     if (magnitude > speed)
                     {
-                        npc.velocity *= speed / magnitude;
+                        NPC.velocity *= speed / magnitude;
                     }
                 }
             }
             if (captiveType == 1)
             {
-                Vector2 move = player.Center - npc.Center;
+                Vector2 move = player.Center - NPC.Center;
                 float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                 if (magnitude > 3.5f)
                 {
                     move *= 3.5f / magnitude;
                 }
-                npc.velocity = move;
+                NPC.velocity = move;
             }
             //look and shoot
             if (captiveType != 4)
             {
                 LookToPlayer();
                 attackCool -= 1f;
-                if (difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0 && Main.netMode != 1)
+                if (difficulty > 1 && attackCool > 0f && attackCool <= 60f && (int)Math.Ceiling(attackCool) % 30 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Shoot();
                 }
-                if (attackCool <= 0f && Main.netMode != 1)
+                if (attackCool <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (captiveType == 3)
                     {
@@ -318,14 +326,14 @@ namespace Bluemagic.Abomination
                             jungleAI = -5;
                         }
                     }
-                    attackCool = 150f + 100f * (float)npc.life / (float)npc.lifeMax + (float)Main.rand.Next(50);
+                    attackCool = 150f + 100f * (float)NPC.life / (float)NPC.lifeMax + (float)Main.rand.Next(50);
                     attackCool *= (float)count / 5f;
                     if (captiveType != 3 || (jungleAI != -5 && jungleAI != 1))
                     {
                         Shoot();
                     }
-                    npc.TargetClosest(false);
-                    npc.netUpdate = true;
+                    NPC.TargetClosest(false);
+                    NPC.netUpdate = true;
                 }
             }
             else
@@ -337,17 +345,17 @@ namespace Bluemagic.Abomination
                     {
                         Shoot();
                     }
-                    attackCool = 80f + 40f * (float)npc.life / (float)npc.lifeMax;
+                    attackCool = 80f + 40f * (float)NPC.life / (float)NPC.lifeMax;
                     attackCool *= (float)count / 5f;
-                    npc.TargetClosest(false);
+                    NPC.TargetClosest(false);
                     LookToPlayer();
-                    float speed = 12.5f - 2.5f * (float)npc.life / (float)npc.lifeMax;
-                    npc.velocity = speed * new Vector2((float)Math.Cos(npc.rotation), (float)Math.Sin(npc.rotation));
-                    npc.netUpdate = true;
+                    float speed = 12.5f - 2.5f * (float)NPC.life / (float)NPC.lifeMax;
+                    NPC.velocity = speed * new Vector2((float)Math.Cos(NPC.rotation), (float)Math.Sin(NPC.rotation));
+                    NPC.netUpdate = true;
                 }
                 else
                 {
-                    npc.velocity *= 0.995f;
+                    NPC.velocity *= 0.995f;
                 }
             }
             CreateDust();
@@ -355,17 +363,17 @@ namespace Bluemagic.Abomination
 
         private void Shoot()
         {
-            int damage = npc.damage / 2;
+            int damage = NPC.damage / 2;
             if (Main.expertMode)
             {
-                damage = (int)(damage / Main.expertDamage);
+                damage = (int)(damage / Main.GameModeInfo.EnemyDamageMultiplier);
             }
             float speed = 5f;
             if (captiveType != 1)
             {
                 speed = difficulty > 0 ? 9f : 7f;
             }
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed * (float)Math.Cos(npc.rotation), speed * (float)Math.Sin(npc.rotation), mod.ProjectileType("PixelBall"), damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
+            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y, speed * (float)Math.Cos(NPC.rotation), speed * (float)Math.Sin(NPC.rotation), Mod.Find<ModProjectile>("PixelBall").Type, damage, 3f, Main.myPlayer, GetDebuff(), GetDebuffTime());
         }
 
         private void CreateDust()
@@ -373,24 +381,24 @@ namespace Bluemagic.Abomination
             Color? color = GetColor();
             if (color.HasValue)
             {
-                Vector2 unit = new Vector2((float)Math.Cos(npc.rotation), (float)Math.Sin(npc.rotation));
-                Vector2 center = npc.Center;
+                Vector2 unit = new Vector2((float)Math.Cos(NPC.rotation), (float)Math.Sin(NPC.rotation));
+                Vector2 center = NPC.Center;
                 for (int k = 0; k < 4; k++)
                 {
-                    int dust = Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Pixel"), 0f, 0f, 0, color.Value);
+                    int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Pixel").Type, 0f, 0f, 0, color.Value);
                     Vector2 offset = Main.dust[dust].position - center;
-                    offset.X = (offset.X - (float)npc.width / 2f) / 2f;
+                    offset.X = (offset.X - (float)NPC.width / 2f) / 2f;
                     Main.dust[dust].position = center + new Vector2(unit.X * offset.X - unit.Y * offset.Y, unit.Y * offset.X + unit.X * offset.Y);
                     Main.dust[dust].velocity += -3f * unit;
-                    Main.dust[dust].rotation = npc.rotation;
-                    Main.dust[dust].velocity += npc.velocity;
+                    Main.dust[dust].rotation = NPC.rotation;
+                    Main.dust[dust].velocity += NPC.velocity;
                 }
             }
         }
 
         private void LookToPlayer()
         {
-            Vector2 look = Main.player[npc.target].Center - npc.Center;
+            Vector2 look = Main.player[NPC.target].Center - NPC.Center;
             float angle = 0.5f * (float)Math.PI;
             if (look.X != 0f)
             {
@@ -404,21 +412,21 @@ namespace Bluemagic.Abomination
             {
                 angle += (float)Math.PI;
             }
-            npc.rotation = angle;
+            NPC.rotation = angle;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = captiveType * frameHeight;
+            NPC.frame.Y = captiveType * frameHeight;
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
                 if (difficulty > 0)
                 {
-                    int next = NPC.NewNPC((int)npc.Center.X, (int)npc.position.Y + npc.height * 3 / 4, mod.NPCType("FreedElement"));
+                    int next = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.position.Y + NPC.height * 3 / 4, Mod.Find<ModNPC>("FreedElement").Type);
                     Main.npc[next].ai[0] = captiveType;
                     Main.npc[next].netUpdate = true;
                 }
@@ -429,18 +437,18 @@ namespace Bluemagic.Abomination
                     {
                         for (int k = 0; k < 75; k++)
                         {
-                            Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("PixelHurt"), 0f, 0f, 0, color.Value);
+                            Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("PixelHurt").Type, 0f, 0f, 0, color.Value);
                         }
                     }
                 }
             }
         }
 
-        public override bool PreNPCLoot()
+        public override bool PreKill()
         {
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].active && k != npc.whoAmI && Main.npc[k].type == npc.type)
+                if (Main.npc[k].active && k != NPC.whoAmI && Main.npc[k].type == NPC.type)
                 {
                     return false;
                 }
@@ -448,25 +456,24 @@ namespace Bluemagic.Abomination
             return true;
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                int centerX = (int)(npc.position.X + (float)(npc.width / 2)) / 16;
-                int centerY = (int)(npc.position.Y + (float)(npc.height / 2)) / 16;
-                int halfLength = npc.width / 2 / 16 + 1;
+                int centerX = (int)(NPC.position.X + (float)(NPC.width / 2)) / 16;
+                int centerY = (int)(NPC.position.Y + (float)(NPC.height / 2)) / 16;
+                int halfLength = NPC.width / 2 / 16 + 1;
                 for (int x = centerX - halfLength; x <= centerX + halfLength; x++)
                 {
                     for (int y = centerY - halfLength; y <= centerY + halfLength; y++)
                     {
-                        if ((x == centerX - halfLength || x == centerX + halfLength || y == centerY - halfLength || y == centerY + halfLength) && !Main.tile[x, y].active())
+                        if ((x == centerX - halfLength || x == centerX + halfLength || y == centerY - halfLength || y == centerY + halfLength) && !Main.tile[x, y].HasTile)
                         {
-                            Main.tile[x, y].type = TileID.HellstoneBrick;
-                            Main.tile[x, y].active(true);
+                            WorldGen.PlaceTile(x, y, TileID.HellstoneBrick);
                         }
-                        Main.tile[x, y].lava(false);
-                        Main.tile[x, y].liquid = 0;
-                        if (Main.netMode == 2)
+                        Main.tile[x, y].Get<LiquidData>().LiquidType = LiquidID.Water;
+                        Main.tile[x, y].LiquidAmount = 0;
+                        if (Main.netMode == NetmodeID.Server)
                         {
                             NetMessage.SendTileSquare(-1, x, y, 1);
                         }
@@ -477,62 +484,26 @@ namespace Bluemagic.Abomination
                     }
                 }
             }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AbominationTrophy"));
-            }
-            if (NPC.downedMoonlord)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuriumOreGen"));
-            }
-            if (Main.expertMode)
-            {
-                if (NPC.downedMoonlord)
-                {
-                    npc.DropItemInstanced(npc.position, npc.Size, mod.ItemType("AbominationBag2"));
-                }
-                else
-                {
-                    npc.DropBossBags();
-                }
-            }
-            else
-            {
-                if (Main.rand.Next(7) == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AbominationMask"));
-                }
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenDrill"));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DimensionalChest"));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoltenBar"), 5);
-                if (NPC.downedMoonlord)
-                {
-                    switch (Main.rand.Next(5))
-                    {
-                    case 0:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalYoyo"));
-                        break;
-                    case 1:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalSprayer"));
-                        break;
-                    case 2:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballTome"));
-                        break;
-                    case 3:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ElementalStaff"));
-                        break;
-                    case 4:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballGlove"));
-                        break;
-                    }
-                }
-            }
             BluemagicWorld.downedAbomination = true;
-            if (Main.netMode != 1 && NPC.downedMoonlord)
+            if (Main.netMode != NetmodeID.MultiplayerClient && NPC.downedMoonlord)
             {
                 BluemagicWorld.elementalUnleash = true;
                 Bluemagic.NewText("Mods.Bluemagic.ElementalUnleash", 100, 220, 100);
             }
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.ByCondition(new MLCondition(), Mod.Find<ModItem>("AbominationBag2").Type));
+            npcLoot.Add(ItemDropRule.ByCondition(new BMLCondition(), Mod.Find<ModItem>("AbominationBag").Type));
+            npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("AbominationTrophy").Type, 10));
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), Mod.Find<ModItem>("AbominationMask").Type, 7));
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), Mod.Find<ModItem>("MoltenDrill").Type));
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), Mod.Find<ModItem>("DimensionalChest").Type));
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), Mod.Find<ModItem>("MoltenBar").Type, 1, 5, 5));
+            npcLoot.Add(ItemDropRule.ByCondition(new MLCondition(), ModContent.ItemType<PuriumOreGen>()));
+            npcLoot.Add(new LeadingConditionRule(new MLCondition()).OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<ElementalYoyo>(), ModContent.ItemType<ElementalSprayer>(), ModContent.ItemType<EyeballTome>(), ModContent.ItemType<ElementalStaff>(), ModContent.ItemType<EyeballGlove>())));
+
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -550,14 +521,14 @@ namespace Bluemagic.Abomination
             return true;
         }
 
-        public override void OnHitPlayer(Player player, int dmgDealt, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             if (Main.expertMode || Main.rand.Next(2) == 0)
             {
                 int debuff = GetDebuff();
                 if (debuff >= 0)
                 {
-                    player.AddBuff(debuff, GetDebuffTime(), true);
+                    target.AddBuff(debuff, GetDebuffTime(), true);
                 }
             }
         }
@@ -569,7 +540,7 @@ namespace Bluemagic.Abomination
                 case 0:
                     return BuffID.Frostburn;
                 case 1:
-                    return mod.BuffType("EtherealFlames");
+                    return Mod.Find<ModBuff>("EtherealFlames").Type;
                 case 3:
                     return BuffID.Venom;
                 case 4:
@@ -625,6 +596,42 @@ namespace Bluemagic.Abomination
             {
                 index = NPCHeadLoader.GetBossHeadSlot(Bluemagic.captiveElement2Head + captiveType);
             }
+        }
+    }
+
+    public class MLCondition : IItemDropRuleCondition
+    {
+        public bool CanDrop(DropAttemptInfo info)
+        {
+            return NPC.downedMoonlord;
+        }
+
+        public bool CanShowItemDropInUI()
+        {
+            return true;
+        }
+
+        public string GetConditionDescription()
+        {
+            return Language.GetOrRegister("After defeating the Moon Lord").Value;
+        }
+    }
+
+    public class BMLCondition : IItemDropRuleCondition
+    {
+        public bool CanDrop(DropAttemptInfo info)
+        {
+            return !NPC.downedMoonlord;
+        }
+
+        public bool CanShowItemDropInUI()
+        {
+            return true;
+        }
+
+        public string GetConditionDescription()
+        {
+            return Language.GetOrRegister("Before defeating the Moon Lord").Value;
         }
     }
 }

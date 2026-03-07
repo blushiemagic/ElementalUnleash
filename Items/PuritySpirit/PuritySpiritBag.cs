@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,63 +10,31 @@ namespace Bluemagic.Items.PuritySpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            // DisplayName.SetDefault("Treasure Bag");
+            // Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            ItemID.Sets.BossBag[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.consumable = true;
-            item.width = 24;
-            item.height = 24;
-            item.rare = 11;
-            item.expert = true;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.width = 24;
+            Item.height = 24;
+            Item.rare = ItemRarityID.Purple;
+            Item.expert = true;
         }
-
-        public override int BossBagNPC => mod.NPCType("PuritySpirit");
 
         public override bool CanRightClick()
         {
             return true;
         }
 
-        public override void OpenBossBag(Player player)
+        public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            player.TryGettingDevArmor();
-            player.TryGettingDevArmor();
-            int choice = Main.rand.Next(7);
-            if (choice == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("PuritySpiritMask"));
-            }
-            else if (choice == 1)
-            {
-                player.QuickSpawnItem(mod.ItemType("BunnyMask"));
-            }
-            if (choice != 1)
-            {
-                player.QuickSpawnItem(ItemID.Bunny);
-            }
-            player.QuickSpawnItem(mod.ItemType("InfinityCrystal"), 2);
-            choice = Main.rand.Next(4);
-            int type = 0;
-            switch (choice)
-            {
-            case 0:
-                type = mod.ItemType("DanceOfBlades");
-                break;
-            case 1:
-                type = mod.ItemType("CleanserBeam");
-                break;
-            case 2:
-                type = mod.ItemType("PrismaticShocker");
-                break;
-            case 3:
-                type = mod.ItemType("VoidEmblem");
-                break;
-            }
-            player.QuickSpawnItem(type);
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, [ ModContent.ItemType<PuritySpiritMask>(), ModContent.ItemType<BunnyMask>(), ItemID.Bunny, ItemID.Bunny, ItemID.Bunny, ItemID.Bunny, ItemID.Bunny]));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<InfinityCrystal>(), 1, 2, 2));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, [ ModContent.ItemType<DanceOfBlades>(), ModContent.ItemType<CleanserBeam>(), ModContent.ItemType<PrismaticShocker>(), ModContent.ItemType<VoidEmblem>()]));
         }
     }
 }

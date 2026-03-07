@@ -9,33 +9,32 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Clentaminates items");
+            // Tooltip.SetDefault("Clentaminates items");
         }
 
         public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 20;
-            item.maxStack = 99;
-            item.rare = 5;
-            item.value = 2000000;
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.autoReuse = true;
-            item.consumable = true;
-            item.createTile = mod.TileType("Clentamistation");
+            Item.width = 26;
+            Item.height = 20;
+            Item.maxStack = 99;
+            Item.rare = ItemRarityID.Pink;
+            Item.value = 2000000;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.autoReuse = true;
+            Item.consumable = true;
+            Item.createTile = Mod.Find<ModTile>("Clentamistation").Type;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.ImbuingStation);
             recipe.AddIngredient(ItemID.Clentaminator);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

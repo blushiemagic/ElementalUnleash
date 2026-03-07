@@ -11,39 +11,34 @@ namespace Bluemagic.Items.Purium.Armor
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("15% increased throwing damage, 10% increased throwing critical strike chance"
-                + "\n20% increased throwing velocity, 33% chance to not consume thrown item");
+            /* Tooltip.SetDefault("15% increased throwing damage, 10% increased throwing critical strike chance"
+                + "\n20% increased throwing velocity, 33% chance to not consume thrown item");*/
+            ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
         }
 
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.defense = 20;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 6, 0, 0);
+            Item.width = 18;
+            Item.height = 18;
+            Item.defense = 20;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 6, 0, 0);
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.thrownDamage += 0.15f;
-            player.thrownCrit += 10;
-            player.thrownVelocity += 0.2f;
-            player.thrownCost33 = true;
-        }
-
-        public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
-        {
-            drawAltHair = true;
+            player.GetDamage(DamageClass.Throwing) += 0.15f;
+            player.GetCritChance(DamageClass.Throwing) += 10;
+            player.ThrownVelocity += 0.2f;
+            player.ThrownCost33 = true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 10);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

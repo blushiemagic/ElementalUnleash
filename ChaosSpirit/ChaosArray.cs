@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Bluemagic.ChaosSpirit
@@ -12,38 +13,38 @@ namespace Bluemagic.ChaosSpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Array of Chaos");
+            // DisplayName.SetDefault("Array of Chaos");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 64;
-            projectile.height = 64;
-            projectile.hostile = true;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            cooldownSlot = 1;
+            Projectile.width = 64;
+            Projectile.height = 64;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            CooldownSlot = 1;
         }
 
         public override void AI()
         {
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (!npc.active || npc.type != mod.NPCType("ChaosSpirit"))
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (!npc.active || npc.type != Mod.Find<ModNPC>("ChaosSpirit").Type)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
-            projectile.Center = npc.Center;
-            projectile.ai[1] += 1f;
-            if (projectile.ai[1] >= 255f)
+            Projectile.Center = npc.Center;
+            Projectile.ai[1] += 1f;
+            if (Projectile.ai[1] >= 255f)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 
-        public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
             if (target.hurtCooldowns[1] <= 0)
             {
@@ -59,14 +60,14 @@ namespace Bluemagic.ChaosSpirit
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(mod.BuffType("Undead"), 300, false);
+            target.AddBuff(Mod.Find<ModBuff>("Undead").Type, 300, false);
         }
 
         public override bool? CanHitNPC(NPC target)
         {
-            if (Vector2.Distance(target.Center, projectile.Center) >= 600f)
+            if (Vector2.Distance(target.Center, Projectile.Center) >= 600f)
             {
                 return false;
             }
@@ -75,7 +76,7 @@ namespace Bluemagic.ChaosSpirit
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (projectile.ai[1] >= 90f && projectile.ai[1] < 240f)
+            if (Projectile.ai[1] >= 90f && Projectile.ai[1] < 240f)
             {
                 for (int x = -2400; x <= 2400; x += 160)
                 {
@@ -85,8 +86,8 @@ namespace Bluemagic.ChaosSpirit
                         {
                             continue;
                         }
-                        Vector2 testPos = projectile.position + new Vector2(x, y);
-                        if (Collision.CheckAABBvAABBCollision(testPos, new Vector2(projectile.width, projectile.height), new Vector2(targetHitbox.X, targetHitbox.Y), new Vector2(targetHitbox.Width, targetHitbox.Height)))
+                        Vector2 testPos = Projectile.position + new Vector2(x, y);
+                        if (Collision.CheckAABBvAABBCollision(testPos, new Vector2(Projectile.width, Projectile.height), new Vector2(targetHitbox.X, targetHitbox.Y), new Vector2(targetHitbox.Width, targetHitbox.Height)))
                         {
                             return true;
                         }
@@ -96,22 +97,22 @@ namespace Bluemagic.ChaosSpirit
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Vector2 drawCenter = projectile.Center - Main.screenPosition;
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+            Vector2 drawCenter = Projectile.Center - Main.screenPosition;
             float alpha = 1f;
-            if (projectile.ai[1] < 60f)
+            if (Projectile.ai[1] < 60f)
             {
-                alpha = 0.5f - (Math.Abs(projectile.ai[1] - 30f) / 30f);
+                alpha = 0.5f - (Math.Abs(Projectile.ai[1] - 30f) / 30f);
             }
-            else if (projectile.ai[1] < 90f)
+            else if (Projectile.ai[1] < 90f)
             {
-                alpha = (projectile.ai[1] - 60f) / 30f;
+                alpha = (Projectile.ai[1] - 60f) / 30f;
             }
-            else if (projectile.ai[1] > 240f)
+            else if (Projectile.ai[1] > 240f)
             {
-                alpha = (255f - projectile.ai[1]) / 15f;
+                alpha = (255f - Projectile.ai[1]) / 15f;
             }
             Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
             for (int x = -2400; x <= 2400; x += 160)
@@ -125,7 +126,7 @@ namespace Bluemagic.ChaosSpirit
                     int hash = (7 * x + 13 * y) / 200;
                     float hue = (hash % 24) / 24f;
                     Color color = Main.hslToRgb(hue, 1f, 0.5f) * alpha;
-                    spriteBatch.Draw(texture, drawCenter + new Vector2(x, y), null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(texture, drawCenter + new Vector2(x, y), null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
                 }
             }
             return false;

@@ -2,6 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,36 +13,41 @@ namespace Bluemagic.PuritySpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shield of Purity");
-            Main.npcFrameCount[npc.type] = 4;
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+            // DisplayName.SetDefault("Shield of Purity");
+            Main.npcFrameCount[NPC.type] = 4;
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = PuritySpirit.dpsCap;
-            npc.damage = 0;
-            npc.defense = 100;
-            npc.knockBackResist = 0f;
-            npc.width = 80;
-            npc.height = 80;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath6;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = PuritySpirit.dpsCap;
+            NPC.damage = 0;
+            NPC.defense = 100;
+            NPC.knockBackResist = 0f;
+            NPC.width = 80;
+            NPC.height = 80;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath6;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * bossLifeScale);
-            npc.defense = 102;
+            NPC.lifeMax = (int)(NPC.lifeMax / Main.GameModeInfo.EnemyMaxLifeMultiplier * balance);
+            NPC.defense = 102;
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -51,27 +58,27 @@ namespace Bluemagic.PuritySpirit
 
         public override void AI()
         {
-            NPC owner = Main.npc[(int)npc.ai[0]];
-            if (!owner.active || owner.type != mod.NPCType("PuritySpirit"))
+            NPC owner = Main.npc[(int)NPC.ai[0]];
+            if (!owner.active || owner.type != Mod.Find<ModNPC>("PuritySpirit").Type)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
-            PuritySpirit modOwner = (PuritySpirit)owner.modNPC;
-            if (npc.localAI[0] == 0f)
+            PuritySpirit modOwner = (PuritySpirit)owner.ModNPC;
+            if (NPC.localAI[0] == 0f)
             {
                 if (modOwner.targets.Contains(Main.myPlayer))
                 {
-                    Main.PlaySound(2, -1, -1, 2);
+                    SoundEngine.PlaySound(SoundID.Item2);
                 }
                 else
                 {
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 2);
+                    SoundEngine.PlaySound(SoundID.Item2, NPC.position);
                 }
-                npc.localAI[0] = 1f;
+                NPC.localAI[0] = 1f;
             }
-            Vector2 targetPos = new Vector2(npc.ai[1], npc.ai[2]);
-            Vector2 direction = targetPos - npc.Center;
+            Vector2 targetPos = new Vector2(NPC.ai[1], NPC.ai[2]);
+            Vector2 direction = targetPos - NPC.Center;
             if (direction != Vector2.Zero)
             {
                 float speed = direction.Length();
@@ -81,34 +88,34 @@ namespace Bluemagic.PuritySpirit
                 }
                 direction.Normalize();
                 direction *= speed;
-                npc.position += direction;
+                NPC.position += direction;
             }
             else
             {
-                npc.localAI[1] = 1f;
+                NPC.localAI[1] = 1f;
             }
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter += 1.0;
-            npc.frameCounter %= 120.0;
-            npc.frame.Y = frameHeight * (((int)npc.frameCounter % 20) / 5);
+            NPC.frameCounter += 1.0;
+            NPC.frameCounter %= 120.0;
+            NPC.frame.Y = frameHeight * (((int)NPC.frameCounter % 20) / 5);
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
-                int gore = Gore.NewGore(npc.position + new Vector2(10f, 0f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
+                int gore = Gore.NewGore(NPC.GetSource_Death(), NPC.position + new Vector2(10f, 0f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
                 Main.gore[gore].velocity *= 0.3f;
-                gore = Gore.NewGore(npc.position + new Vector2(50f, 10f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
+                gore = Gore.NewGore(NPC.GetSource_Death(), NPC.position + new Vector2(50f, 10f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
                 Main.gore[gore].velocity *= 0.3f;
-                gore = Gore.NewGore(npc.position + new Vector2(0f, 60f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
+                gore = Gore.NewGore(NPC.GetSource_Death(), NPC.position + new Vector2(0f, 60f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
                 Main.gore[gore].velocity *= 0.3f;
-                gore = Gore.NewGore(npc.position + new Vector2(40f, 50f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
+                gore = Gore.NewGore(NPC.GetSource_Death(), NPC.position + new Vector2(40f, 50f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
                 Main.gore[gore].velocity *= 0.3f;
-                gore = Gore.NewGore(npc.position + new Vector2(30f, 30f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
+                gore = Gore.NewGore(NPC.GetSource_Death(), NPC.position + new Vector2(30f, 30f), Vector2.Zero, Main.rand.Next(435, 438), 2f);
                 Main.gore[gore].velocity *= 0.3f;
             }
         }
@@ -125,8 +132,8 @@ namespace Bluemagic.PuritySpirit
 
         private bool? CanBeHitByPlayer(Player player)
         {
-            NPC owner = Main.npc[(int)npc.ai[0]];
-            PuritySpirit modOwner = owner.modNPC == null ? null : owner.modNPC as PuritySpirit;
+            NPC owner = Main.npc[(int)NPC.ai[0]];
+            PuritySpirit modOwner = owner.ModNPC == null ? null : owner.ModNPC as PuritySpirit;
             if (modOwner != null && !modOwner.targets.Contains(player.whoAmI))
             {
                 return false;
@@ -134,48 +141,48 @@ namespace Bluemagic.PuritySpirit
             return null;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Vector2 end1 = npc.Center;
-            Vector2 end2 = Main.npc[(int)npc.ai[0]].Center;
+            Vector2 end1 = NPC.Center;
+            Vector2 end2 = Main.npc[(int)NPC.ai[0]].Center;
             Texture2D texture;
             if (end1 != end2)
             {
                 float length = Vector2.Distance(end1, end2);
                 Vector2 direction = end2 - end1;
                 direction.Normalize();
-                float start = (float)npc.frameCounter % 8f;
+                float start = (float)NPC.frameCounter % 8f;
                 start *= 2f;
-                if (npc.localAI[1] == 0f)
+                if (NPC.localAI[1] == 0f)
                 {
                     start *= 2f;
                     start %= 16f;
                 }
-                texture = mod.GetTexture("PuritySpirit/PurityShieldChain");
+                texture = ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityShieldChain").Value;
                 for (float k = start; k <= length; k += 16f)
                 {
-                    spriteBatch.Draw(texture, end1 + k * direction - Main.screenPosition, null, Color.White, 0f, new Vector2(16f, 16f), 1f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(texture, end1 + k * direction - Main.screenPosition, null, Color.White, 0f, new Vector2(16f, 16f), 1f, SpriteEffects.None, 0f);
                 }
             }
-            texture = Main.npcTexture[npc.type];
-            Vector2 drawPos = npc.Center - Main.screenPosition;
-            Vector2 drawOrigin = new Vector2(texture.Width / 2, texture.Height / 2 / Main.npcFrameCount[npc.type]);
-            spriteBatch.Draw(texture, drawPos, npc.frame, Color.White, 0f, drawOrigin, 1f, SpriteEffects.None, 0f);
+            texture = TextureAssets.Npc[NPC.type].Value;
+            Vector2 drawPos = NPC.Center - Main.screenPosition;
+            Vector2 drawOrigin = new Vector2(texture.Width / 2, texture.Height / 2 / Main.npcFrameCount[NPC.type]);
+            Main.spriteBatch.Draw(texture, drawPos, NPC.frame, Color.White, 0f, drawOrigin, 1f, SpriteEffects.None, 0f);
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("PuritySpirit/PurityShieldGlow");
-            Vector2 drawPos = npc.position - Main.screenPosition;
+            Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityShieldGlow").Value;
+            Vector2 drawPos = NPC.position - Main.screenPosition;
             Rectangle frame = new Rectangle(0, 0, texture.Width, texture.Height / 25);
-            frame.Y = (int)npc.frameCounter % 60;
+            frame.Y = (int)NPC.frameCounter % 60;
             if (frame.Y > 24)
             {
                 frame.Y = 24;
             }
-            frame.Y *= npc.height;
-            spriteBatch.Draw(texture, drawPos, frame, Color.White * 0.7f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            frame.Y *= NPC.height;
+            Main.spriteBatch.Draw(texture, drawPos, frame, Color.White * 0.7f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 }

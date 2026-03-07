@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,54 +13,54 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cleanser Beam");
-            ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+            // DisplayName.SetDefault("Cleanser Beam");
+            ProjectileID.Sets.NeedsUUID[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
-            projectile.aiStyle = 84;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.alpha = 255;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.hide = true;
+            Projectile.width = 4;
+            Projectile.height = 4;
+            Projectile.aiStyle = ProjAIStyleID.ThickLaser;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.alpha = 255;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.hide = true;
         }
 
         public override bool PreAI()
         {
-            int uuid = Projectile.GetByUUID(projectile.owner, projectile.ai[1]);
+            int uuid = Projectile.GetByUUID(Projectile.owner, Projectile.ai[1]);
             if (uuid < 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return false;
             }
             Projectile cannon = Main.projectile[uuid];
-            if (cannon.active && cannon.type == mod.ProjectileType("CleanserBeam"))
+            if (cannon.active && cannon.type == Mod.Find<ModProjectile>("CleanserBeam").Type)
             {
                 Vector2 direction = Vector2.Normalize(cannon.velocity);
-                projectile.Center = cannon.Center + 16f * direction + new Vector2(0f, -cannon.gfxOffY);
-                projectile.velocity = direction;
+                Projectile.Center = cannon.Center + 16f * direction + new Vector2(0f, -cannon.gfxOffY);
+                Projectile.velocity = direction;
             }
             else
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return false;
             }
-            if (projectile.velocity.HasNaNs() || projectile.velocity == Vector2.Zero)
+            if (Projectile.velocity.HasNaNs() || Projectile.velocity == Vector2.Zero)
             {
-                projectile.velocity = -Vector2.UnitY;
+                Projectile.velocity = -Vector2.UnitY;
             }
-            float rotation = projectile.velocity.ToRotation();
-            projectile.rotation = rotation - MathHelper.PiOver2;
-            projectile.velocity = rotation.ToRotationVector2();
+            float rotation = Projectile.velocity.ToRotation();
+            Projectile.rotation = rotation - MathHelper.PiOver2;
+            Projectile.velocity = rotation.ToRotationVector2();
 
-            int startTileX = (int)projectile.Center.X / 16;
-            int startTileY = (int)projectile.Center.Y / 16;
-            Vector2 endPoint = projectile.Center + projectile.velocity * 16f * 150f;
+            int startTileX = (int)Projectile.Center.X / 16;
+            int startTileY = (int)Projectile.Center.Y / 16;
+            Vector2 endPoint = Projectile.Center + Projectile.velocity * 16f * 150f;
             int endTileX = (int)endPoint.X / 16;
             int endTileY = (int)endPoint.Y / 16;
             Tuple<int, int> collideTile;
@@ -76,10 +77,10 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
             {
                 length = new Vector2(collideTile.Item1 - startTileX, collideTile.Item2 - startTileY).Length() * 16f;
             }
-            projectile.localAI[1] = MathHelper.Lerp(projectile.localAI[1], length, 0.5f);
+            Projectile.localAI[1] = MathHelper.Lerp(Projectile.localAI[1], length, 0.5f);
 
-            projectile.localAI[0] += 1f;
-            projectile.localAI[0] %= 40f;
+            Projectile.localAI[0] += 1f;
+            Projectile.localAI[0] %= 40f;
 
             return false;
         }
@@ -92,31 +93,31 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float point = 0f;
-            Vector2 endPoint = projectile.Center + projectile.velocity * projectile.localAI[1];
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, endPoint, 4f, ref point);
+            Vector2 endPoint = Projectile.Center + Projectile.velocity * Projectile.localAI[1];
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, endPoint, 4f, ref point);
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            damage += target.defense / 2;
+            modifiers.FinalDamage.Flat += target.defense / 2;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            projectile.penetrate++;
+            Projectile.penetrate++;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 unit = projectile.velocity * projectile.localAI[1];
+            Vector2 unit = Projectile.velocity * Projectile.localAI[1];
             float length = unit.Length();
             unit.Normalize();
-            byte colorStrength = (byte)(100f + 100f * Math.Sin(projectile.localAI[0] / 40f * MathHelper.TwoPi));
+            byte colorStrength = (byte)(100f + 100f * Math.Sin(Projectile.localAI[0] / 40f * MathHelper.TwoPi));
             Color color = new Color(colorStrength, 255, colorStrength) * 0.8f;
             for (float k = 0; k <= length; k += 4f)
             {
-                Vector2 drawPos = projectile.Center + unit * k - Main.screenPosition;
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, new Vector2(2, 2), 1f, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.Center + unit * k - Main.screenPosition;
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, Projectile.rotation, new Vector2(2, 2), 1f, SpriteEffects.None, 0f);
             }
             return false;
         }

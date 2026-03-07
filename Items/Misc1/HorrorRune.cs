@@ -9,25 +9,25 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Toggles the horrors from above");
+            // Tooltip.SetDefault("Toggles the horrors from above");
         }
 
         public override void SetDefaults()
         {
-            item.width = 12;
-            item.height = 20;
-            item.maxStack = 20;
-            item.rare = 4;
-            item.useStyle = 4;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.UseSound = SoundID.Item44;
-            item.consumable = true;
+            Item.width = 12;
+            Item.height = 20;
+            Item.maxStack = 20;
+            Item.rare = ItemRarityID.LightRed;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.UseSound = SoundID.Item44;
+            Item.consumable = true;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (Main.dayTime)
                 {
@@ -37,7 +37,7 @@ namespace Bluemagic.Items.Misc1
                 {
                     Main.bloodMoon = !Main.bloodMoon;
                 }
-                if (Main.netMode == 2)
+                if (Main.netMode == NetmodeID.Server)
                 {
                     NetMessage.SendData(MessageID.WorldData);
                 }
@@ -47,11 +47,10 @@ namespace Bluemagic.Items.Misc1
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "HorrorDrop", 12);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

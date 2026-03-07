@@ -14,7 +14,7 @@ namespace Bluemagic.BlushieBoss
         public int Timer;
 
         public BulletRotateKylie(float angle, float rotSpeed)
-            : base(BlushieBoss.PosK, 16f, BlushieBoss.BulletBlueTexture)
+            : base(BlushieBoss.PosK, 16f, BlushieBoss.BulletBlueTexture.Value)
         {
             this.Radius = 0f;
             this.Angle = angle;

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,27 +11,27 @@ namespace Bluemagic.Items.Purium.Weapons
     {
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 40;
-            item.scale = 1.3f;
-            item.useStyle = 1;
-            item.useAnimation = 26;
-            item.useTime = 38;
-            item.damage = 943;
-            item.knockBack = 7f;
-            item.autoReuse = true;
-            item.useTurn = false;
-            item.rare = 11;
-            item.melee = true;
-            item.value = Item.sellPrice(0, 12, 0, 0);
-            item.UseSound = SoundID.Item1;
-            item.shoot = mod.ProjectileType("PuriumBoom");
-            item.shootSpeed = 8f;
+            Item.width = 40;
+            Item.height = 40;
+            Item.scale = 1.3f;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useAnimation = 26;
+            Item.useTime = 38;
+            Item.damage = 943;
+            Item.knockBack = 7f;
+            Item.autoReuse = true;
+            Item.useTurn = false;
+            Item.rare = ItemRarityID.Purple;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = Mod.Find<ModProjectile>("PuriumBoom").Type;
+            Item.shootSpeed = 8f;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float speed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+            float speed = (float)Math.Sqrt(velocity.X * velocity.X + velocity.Y * velocity.Y);
             float time = 0f;
             if (speed != 0f)
             {
@@ -43,17 +44,16 @@ namespace Bluemagic.Items.Purium.Weapons
                 float distanceY = gotoY - position.Y;
                 time = (float)Math.Sqrt(distanceX * distanceX + distanceY * distanceY) / speed;
             }
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockback, player.whoAmI, time, 0f);
+            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, time, 0f);
             return false;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 12);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

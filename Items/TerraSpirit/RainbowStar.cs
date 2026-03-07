@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.TerraSpirit
@@ -10,18 +11,18 @@ namespace Bluemagic.Items.TerraSpirit
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Activates [c/FF0000:G][c/FF7700:O][c/FFFF00:D][c/00FF00:M][c/0000FF:O][c/7700FF:D][c/FF00FF:E]");
+            // Tooltip.SetDefault("Activates [c/FF0000:G][c/FF7700:O][c/FFFF00:D][c/00FF00:M][c/0000FF:O][c/7700FF:D][c/FF00FF:E]");
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 26;
-            item.value = Item.buyPrice(10, 0, 0, 0);
-            item.rare = 12;
-            item.accessory = true;
-            item.defense = 1337;
-            item.lifeRegen = 400;
+            Item.width = 30;
+            Item.height = 26;
+            Item.value = Item.buyPrice(10, 0, 0, 0);
+            Item.rare = ItemRarityID.Expert;
+            Item.accessory = true;
+            Item.defense = 1337;
+            Item.lifeRegen = 400;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -29,7 +30,7 @@ namespace Bluemagic.Items.TerraSpirit
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if (modPlayer.noGodmode)
             {
-                player.statDefense -= item.defense;
+                player.statDefense -= Item.defense;
                 modPlayer.triedGodmode = true;
             }
             else

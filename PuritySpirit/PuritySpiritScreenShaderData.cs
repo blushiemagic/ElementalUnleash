@@ -16,7 +16,7 @@ namespace Bluemagic.PuritySpirit
 
         private void UpdatePuritySpiritIndex()
         {
-            int puritySpiritType = ModLoader.GetMod("Bluemagic").NPCType("PuritySpirit");
+            int puritySpiritType = ModLoader.GetMod("Bluemagic").Find<ModNPC>("PuritySpirit").Type;
             if (puritySpiritIndex >= 0 && Main.npc[puritySpiritIndex].active && Main.npc[puritySpiritIndex].type == puritySpiritType)
             {
                 return;

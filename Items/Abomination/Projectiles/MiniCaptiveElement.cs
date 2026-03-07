@@ -8,38 +8,78 @@ using Bluemagic.Projectiles;
 
 namespace Bluemagic.Items.Abomination.Projectiles
 {
-    public class MiniCaptiveElement : Minion
+
+    public class ElementSystem : ModSystem
     {
-        private static int[] elementToType = new int[6];
-        private int element;
+        public static int[] elementToType = new int[6];
+    }
 
-        public MiniCaptiveElement() : this(1) { }
 
-        public MiniCaptiveElement(int element)
+    public class MiniCaptiveElement0 : MiniCaptiveElement
+    {
+        public override int element => 0;
+        public override void Load()
         {
-            this.element = element;
+            base.Load();
+            ElementSystem.elementToType[0] = Projectile.type;
         }
+    }
+    public class MiniCaptiveElement1 : MiniCaptiveElement
+    {
+        public override int element => 1;
+        public override void Load()
+        {
+            base.Load();
+            ElementSystem.elementToType[1] = Projectile.type;
+        }
+    }
+    public class MiniCaptiveElement2 : MiniCaptiveElement
+    {
+        public override int element => 2;
+        public override void Load()
+        {
+            base.Load();
+            ElementSystem.elementToType[2] = Projectile.type;
+        }
+    }
+    public class MiniCaptiveElement3 : MiniCaptiveElement
+    {
+        public override int element => 3;
+        public override void Load()
+        {
+            base.Load();
+            ElementSystem.elementToType[3] = Projectile.type;
+        }
+    }
+    public class MiniCaptiveElement4 : MiniCaptiveElement
+    {
+        public override int element => 4;
+        public override void Load()
+        {
+            base.Load();
+            ElementSystem.elementToType[4] = Projectile.type;
+        }
+    }
+    public class MiniCaptiveElement5 : MiniCaptiveElement
+    {
+        public override int element => 5;
+        public override void Load()
+        {
+            base.Load();
+            ElementSystem.elementToType[5] = Projectile.type;
+        }
+    }
 
-        public override bool CloneNewInstances
+    public abstract class MiniCaptiveElement : Minion
+    {
+        public virtual int element => -1;
+
+        protected override bool CloneNewInstances
         {
             get
             {
                 return true;
             }
-        }
-
-        public override bool Autoload(ref string name)
-        {
-            if (mod.Properties.Autoload)
-            {
-                for (int k = 0; k <= 5; k++)
-                {
-                    ModProjectile next = new MiniCaptiveElement(k);
-                    mod.AddProjectile(name + k, next);
-                    elementToType[k] = next.projectile.type;
-                }
-            }
-            return false;
         }
 
         public override string Texture
@@ -60,33 +100,33 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mini Captive Element");
-            Main.projFrames[projectile.type] = 6;
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-            ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+            // DisplayName.SetDefault("Mini Captive Element");
+            Main.projFrames[Projectile.type] = 6;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.penetrate = -1;
-            projectile.timeLeft *= 5;
-            projectile.minion = true;
-            projectile.minionSlots = 0.333f;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.friendly = true;
-            projectile.usesIDStaticNPCImmunity = true;
-            projectile.idStaticNPCHitCooldown = 10;
+            Projectile.netImportant = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft *= 5;
+            Projectile.minion = true;
+            Projectile.minionSlots = 0.333f;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.friendly = true;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 10;
         }
 
         public override void CheckActive()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if (player.dead)
             {
@@ -94,23 +134,23 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
             if (modPlayer.elementMinion)
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
         }
 
         public override void Behavior()
         {
-            if (projectile.localAI[0] == 0f && Main.myPlayer == projectile.owner && element == 0)
+            if (Projectile.localAI[0] == 0f && Main.myPlayer == Projectile.owner && element == 0)
             {
                 for (int k = 1; k <= 5; k++)
                 {
-                    Projectile.NewProjectile(projectile.Center, projectile.velocity, elementToType[k], projectile.damage, projectile.knockBack, projectile.owner);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.velocity, ElementSystem.elementToType[k], Projectile.damage, Projectile.knockBack, Projectile.owner);
                 }
-                projectile.localAI[0] = 1f;
+                Projectile.localAI[0] = 1f;
             }
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
-            projectile.frame = element;
+            Projectile.frame = element;
             if (Main.rand.Next(4) == 0)
             {
                 CreateDust();
@@ -118,40 +158,40 @@ namespace Bluemagic.Items.Abomination.Projectiles
             for (int k = 0; k < 1000; k++)
             {
                 Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.active && other.owner == projectile.owner && elementToType.Contains(other.type) && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
+                if (k != Projectile.whoAmI && other.active && other.owner == Projectile.owner && ElementSystem.elementToType.Contains(other.type) && Math.Abs(Projectile.position.X - other.position.X) + Math.Abs(Projectile.position.Y - other.position.Y) < Projectile.width)
                 {
                     const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
+                    if (Projectile.position.X < other.position.X)
                     {
-                        projectile.velocity.X -= pushAway;
+                        Projectile.velocity.X -= pushAway;
                     }
                     else
                     {
-                        projectile.velocity.X += pushAway;
+                        Projectile.velocity.X += pushAway;
                     }
-                    if (projectile.position.Y < other.position.Y)
+                    if (Projectile.position.Y < other.position.Y)
                     {
-                        projectile.velocity.Y -= pushAway;
+                        Projectile.velocity.Y -= pushAway;
                     }
                     else
                     {
-                        projectile.velocity.Y += pushAway;
+                        Projectile.velocity.Y += pushAway;
                     }
                 }
             }
 
-            if (projectile.ai[0] == 2f && Charging)
+            if (Projectile.ai[0] == 2f && Charging)
             {
-                projectile.ai[1] += 1f;
-                projectile.extraUpdates = 1;
-                projectile.rotation = projectile.velocity.ToRotation() + MathHelper.Pi;
-                if (projectile.ai[1] > 40f)
+                Projectile.ai[1] += 1f;
+                Projectile.extraUpdates = 1;
+                Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Pi;
+                if (Projectile.ai[1] > 40f)
                 {
-                    projectile.ai[1] = 1f;
-                    projectile.ai[0] = 0f;
-                    projectile.extraUpdates = 0;
-                    projectile.numUpdates = 0;
-                    projectile.netUpdate = true;
+                    Projectile.ai[1] = 1f;
+                    Projectile.ai[0] = 0f;
+                    Projectile.extraUpdates = 0;
+                    Projectile.numUpdates = 0;
+                    Projectile.netUpdate = true;
                 }
                 else
                 {
@@ -159,24 +199,24 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 }
             }
 
-            if (projectile.ai[0] != 1f)
+            if (Projectile.ai[0] != 1f)
             {
-                projectile.tileCollide = true;
+                Projectile.tileCollide = true;
             }
-            if (projectile.tileCollide && WorldGen.SolidTile(Framing.GetTileSafely((int)projectile.Center.X / 16, (int)projectile.Center.Y / 16)))
+            if (Projectile.tileCollide && WorldGen.SolidTile(Framing.GetTileSafely((int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16)))
             {
-                projectile.tileCollide = false;
+                Projectile.tileCollide = false;
             }
 
             float targetDist = 700f;
-            Vector2 targetPos = projectile.position;
+            Vector2 targetPos = Projectile.position;
             bool hasTarget = false;
-            NPC ownerTarget = projectile.OwnerMinionAttackTargetNPC;
-            if (ownerTarget != null && ownerTarget.CanBeChasedBy(projectile))
+            NPC ownerTarget = Projectile.OwnerMinionAttackTargetNPC;
+            if (ownerTarget != null && ownerTarget.CanBeChasedBy(Projectile))
             {
-                if (Collision.CanHitLine(projectile.position, projectile.width, projectile.height, ownerTarget.position, ownerTarget.width, ownerTarget.height))
+                if (Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, ownerTarget.position, ownerTarget.width, ownerTarget.height))
                 {
-                    targetDist = Vector2.Distance(ownerTarget.Center, projectile.Center);
+                    targetDist = Vector2.Distance(ownerTarget.Center, Projectile.Center);
                     targetPos = ownerTarget.Center;
                     hasTarget = true;
                 }
@@ -186,10 +226,10 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 for (int k = 0; k < 200; k++)
                 {
                     NPC npc = Main.npc[k];
-                    if (npc.CanBeChasedBy(projectile))
+                    if (npc.CanBeChasedBy(Projectile))
                     {
-                        float distance = Vector2.Distance(npc.Center, projectile.Center);
-                        if (((distance < Vector2.Distance(projectile.Center, targetPos) && distance < targetDist) || !hasTarget) && Collision.CanHitLine(projectile.position, projectile.width, projectile.height, npc.position, npc.width, npc.height))
+                        float distance = Vector2.Distance(npc.Center, Projectile.Center);
+                        if (((distance < Vector2.Distance(Projectile.Center, targetPos) && distance < targetDist) || !hasTarget) && Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height))
                         {
                             targetDist = distance;
                             targetPos = npc.Center;
@@ -199,16 +239,16 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 }
             }
             float leashLength = hasTarget ? 1200f : 800f;
-            if (Vector2.Distance(player.Center, projectile.Center) > leashLength)
+            if (Vector2.Distance(player.Center, Projectile.Center) > leashLength)
             {
-                projectile.ai[0] = 1f;
-                projectile.tileCollide = false;
-                projectile.netUpdate = true;
+                Projectile.ai[0] = 1f;
+                Projectile.tileCollide = false;
+                Projectile.netUpdate = true;
             }
 
-            if (hasTarget && projectile.ai[0] == 0f)
+            if (hasTarget && Projectile.ai[0] == 0f)
             {
-                Vector2 offset = targetPos - projectile.Center;
+                Vector2 offset = targetPos - Projectile.Center;
                 offset.Normalize();
                 if (targetDist > 200f)
                 {
@@ -218,85 +258,85 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 {
                     offset *= -4f;
                 }
-                projectile.velocity = (projectile.velocity * 40f + offset) / 41f;
+                Projectile.velocity = (Projectile.velocity * 40f + offset) / 41f;
             }
             else
             {
-                float speed = projectile.ai[0] == 1f ? 15f : 6f;
-                Vector2 offset = player.Center - projectile.Center + new Vector2(0f, -60f);
+                float speed = Projectile.ai[0] == 1f ? 15f : 6f;
+                Vector2 offset = player.Center - Projectile.Center + new Vector2(0f, -60f);
                 float distance = offset.Length();
                 if (distance > 200f && speed < 8f)
                 {
                     speed = 8f;
                 }
-                if (distance < 150f && projectile.ai[0] == 1f && !Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
+                if (distance < 150f && Projectile.ai[0] == 1f && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
                 {
-                    projectile.ai[0] = 0f;
-                    projectile.netUpdate = true;
+                    Projectile.ai[0] = 0f;
+                    Projectile.netUpdate = true;
                 }
                 if (distance > 2000f)
                 {
-                    projectile.position = player.Center - new Vector2(projectile.width / 2, projectile.height / 2);
-                    projectile.netUpdate = true;
+                    Projectile.position = player.Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
+                    Projectile.netUpdate = true;
                 }
                 if (distance > 70f)
                 {
                     offset.Normalize();
                     offset *= speed;
-                    projectile.velocity = (projectile.velocity * 40f + offset) / 41f;
+                    Projectile.velocity = (Projectile.velocity * 40f + offset) / 41f;
                 }
-                else if (projectile.velocity.X == 0f && projectile.velocity.Y == 0f)
+                else if (Projectile.velocity.X == 0f && Projectile.velocity.Y == 0f)
                 {
-                    projectile.velocity = new Vector2(-0.15f, -0.05f);
+                    Projectile.velocity = new Vector2(-0.15f, -0.05f);
                 }
             }
 
             if (Charging || !hasTarget)
             {
-                projectile.rotation = projectile.velocity.ToRotation() + MathHelper.Pi;
+                Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Pi;
             }
             else
             {
-                projectile.rotation = (targetPos - projectile.Center).ToRotation() + MathHelper.Pi;
+                Projectile.rotation = (targetPos - Projectile.Center).ToRotation() + MathHelper.Pi;
             }
-            if (projectile.ai[1] > 0f)
+            if (Projectile.ai[1] > 0f)
             {
-                projectile.ai[1] += (float)Main.rand.Next(1, 4);
+                Projectile.ai[1] += (float)Main.rand.Next(1, 4);
             }
-            if (projectile.ai[1] > 90f && !Charging)
+            if (Projectile.ai[1] > 90f && !Charging)
             {
-                projectile.ai[1] = 0f;
-                projectile.netUpdate = true;
+                Projectile.ai[1] = 0f;
+                Projectile.netUpdate = true;
             }
-            if (projectile.ai[1] > 40f && Charging)
+            if (Projectile.ai[1] > 40f && Charging)
             {
-                projectile.ai[1] = 0f;
-                projectile.netUpdate = true;
+                Projectile.ai[1] = 0f;
+                Projectile.netUpdate = true;
             }
 
-            if (projectile.ai[0] == 0f && projectile.ai[1] == 0f && hasTarget)
+            if (Projectile.ai[0] == 0f && Projectile.ai[1] == 0f && hasTarget)
             {
-                projectile.ai[1] += 1f;
+                Projectile.ai[1] += 1f;
                 if (!Charging)
                 {
-                    if (Main.myPlayer == projectile.owner && Collision.CanHitLine(projectile.position, projectile.width, projectile.height, targetPos, 0, 0))
+                    if (Main.myPlayer == Projectile.owner && Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, targetPos, 0, 0))
                     {
-                        Vector2 offset = targetPos - projectile.Center;
+                        Vector2 offset = targetPos - Projectile.Center;
                         offset.Normalize();
                         offset *= 8f;
-                        Projectile.NewProjectile(projectile.Center, offset, mod.ProjectileType("MiniPixelBall"), projectile.damage, 0f, Main.myPlayer, element, 0f);
-                        projectile.netUpdate = true;
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, offset, Mod.Find<ModProjectile>("MiniPixelBall").Type, Projectile.damage, 0f, Main.myPlayer, element, 0f);
+                        Projectile.netUpdate = true;
                     }
                 }
                 else if (targetDist < 500f)
                 {
-                    if (Main.myPlayer == projectile.owner)
+                    if (Main.myPlayer == Projectile.owner)
                     {
-                        projectile.ai[0] = 2f;
-                        Vector2 offset = targetPos - projectile.Center;
+                        Projectile.ai[0] = 2f;
+                        Vector2 offset = targetPos - Projectile.Center;
                         offset.Normalize();
-                        projectile.velocity = offset * 8f;
-                        projectile.netUpdate = true;
+                        Projectile.velocity = offset * 8f;
+                        Projectile.netUpdate = true;
                     }
                 }
             }
@@ -307,17 +347,17 @@ namespace Bluemagic.Items.Abomination.Projectiles
             Color? color = GetColor();
             if (color.HasValue)
             {
-                Vector2 unit = -new Vector2((float)Math.Cos(projectile.rotation), (float)Math.Sin(projectile.rotation));
-                Vector2 center = projectile.Center;
+                Vector2 unit = -new Vector2((float)Math.Cos(Projectile.rotation), (float)Math.Sin(Projectile.rotation));
+                Vector2 center = Projectile.Center;
                 for (int k = 0; k < 4; k++)
                 {
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("Pixel"), 0f, 0f, 0, color.Value);
+                    int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("Pixel").Type, 0f, 0f, 0, color.Value);
                     Vector2 offset = Main.dust[dust].position - center;
-                    offset.X = (offset.X - (float)projectile.width / 2f) / 2f;
+                    offset.X = (offset.X - (float)Projectile.width / 2f) / 2f;
                     Main.dust[dust].position = center + new Vector2(unit.X * offset.X - unit.Y * offset.Y, unit.Y * offset.X + unit.X * offset.Y);
                     Main.dust[dust].velocity += -3f * unit;
-                    Main.dust[dust].rotation = projectile.rotation - MathHelper.Pi;
-                    Main.dust[dust].velocity += projectile.velocity;
+                    Main.dust[dust].rotation = Projectile.rotation - MathHelper.Pi;
+                    Main.dust[dust].velocity += Projectile.velocity;
                     Main.dust[dust].scale = 0.9f;
                 }
             }
@@ -344,7 +384,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
         {
             fallThrough = true;
             return true;
@@ -352,26 +392,26 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public override bool MinionContactDamage()
         {
-            return Charging && projectile.ai[0] == 2f;
+            return Charging && Projectile.ai[0] == 2f;
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -380,7 +420,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override void OnHitPvp(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -398,7 +438,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             case 1:
                 return BuffID.Frostburn;
             case 2:
-                return mod.BuffType("EtherealFlames");
+                return Mod.Find<ModBuff>("EtherealFlames").Type;
             case 3:
                 return 0;
             case 4:

@@ -10,53 +10,58 @@ namespace Bluemagic.TerraSpirit
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Charged Negative Blob");
+            // DisplayName.SetDefault("Charged Negative Blob");
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 20000;
-            npc.damage = 0;
-            npc.defense = 100;
-            npc.knockBackResist = 0f;
-            npc.width = 80;
-            npc.height = 80;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 20000;
+            NPC.damage = 0;
+            NPC.defense = 100;
+            NPC.knockBackResist = 0f;
+            NPC.width = 80;
+            NPC.height = 80;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
         }
 
         public override void AI()
         {
-            NPC npc1 = Main.npc[(int)npc.ai[0]];
-            NPC npc2 = Main.npc[(int)npc.ai[1]];
-            NPC npc3 = Main.npc[(int)npc.ai[2]];
-            int checkType = mod.NPCType("NegativeBlob2");
+            NPC npc1 = Main.npc[(int)NPC.ai[0]];
+            NPC npc2 = Main.npc[(int)NPC.ai[1]];
+            NPC npc3 = Main.npc[(int)NPC.ai[2]];
+            int checkType = Mod.Find<ModNPC>("NegativeBlob2").Type;
             if (!npc1.active || !npc2.active || !npc3.active || npc1.type != checkType || npc2.type != checkType || npc3.type != checkType)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
-            npc.rotation += 0.1f;
-            if (npc.timeLeft < 600)
+            NPC.rotation += 0.1f;
+            if (NPC.timeLeft < 600)
             {
-                npc.timeLeft = 600;
+                NPC.timeLeft = 600;
             }
             Vector2 start;
             Vector2 end;
-            if (npc.ai[3] == 0f)
+            if (NPC.ai[3] == 0f)
             {
                 start = npc1.position;
                 end = npc2.position;
             }
-            else if (npc.ai[3] == 1f)
+            else if (NPC.ai[3] == 1f)
             {
                 start = npc2.position;
                 end = npc3.position;
@@ -66,18 +71,18 @@ namespace Bluemagic.TerraSpirit
                 start = npc3.position;
                 end = npc1.position;
             }
-            Vector2 offset = npc.position - start;
+            Vector2 offset = NPC.position - start;
             Vector2 unit = end - start;
             unit.Normalize();
-            npc.position += unit * 8f;
-            if (Vector2.Distance(npc.position, start) >= Vector2.Distance(end, start))
+            NPC.position += unit * 8f;
+            if (Vector2.Distance(NPC.position, start) >= Vector2.Distance(end, start))
             {
-                npc.position = end;
-                npc.ai[3] += 1f;
-                npc.ai[3] %= 3f;
+                NPC.position = end;
+                NPC.ai[3] += 1f;
+                NPC.ai[3] %= 3f;
             }
             Player player = Main.player[Main.myPlayer];
-            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(npc.Hitbox))
+            if (player.active && !player.dead && player.GetModPlayer<BluemagicPlayer>().terraLives > 0 && player.Hitbox.Intersects(NPC.Hitbox))
             {
                 player.GetModPlayer<BluemagicPlayer>().TerraKill();
             }
@@ -106,40 +111,40 @@ namespace Bluemagic.TerraSpirit
             return false;
         }
 
-        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-            npc.localAI[0] = player.whoAmI;
-            if (Main.netMode == 1)
+            NPC.localAI[0] = player.whoAmI;
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 ModPacket packet = Bluemagic.Instance.GetPacket();
                 packet.Write((byte)MessageType.GoldBlob);
-                packet.Write((byte)npc.localAI[0]);
+                packet.Write((byte)NPC.localAI[0]);
                 packet.Send();
             }
         }
 
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            npc.localAI[0] = Main.player[projectile.owner].whoAmI;
-            if (Main.netMode == 1)
+            NPC.localAI[0] = Main.player[projectile.owner].whoAmI;
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 ModPacket packet = Bluemagic.Instance.GetPacket();
                 packet.Write((byte)MessageType.GoldBlob);
-                packet.Write((byte)npc.whoAmI);
-                packet.Write((byte)npc.localAI[0]);
+                packet.Write((byte)NPC.whoAmI);
+                packet.Write((byte)NPC.localAI[0]);
                 packet.Send();
             }
         }
 
-        public override bool PreNPCLoot()
+        public override bool PreKill()
         {
-            Main.npc[(int)npc.ai[0]].ai[3] = -1f;
-            Main.npc[(int)npc.ai[1]].ai[3] = -1f;
-            Main.npc[(int)npc.ai[2]].ai[3] = -1f;
-            Main.npc[(int)npc.ai[0]].netUpdate = true;
-            Main.npc[(int)npc.ai[1]].netUpdate = true;
-            Main.npc[(int)npc.ai[2]].netUpdate = true;
-            NPC.NewNPC((int)npc.Bottom.X, (int)npc.Bottom.Y, mod.NPCType("GoldBlob2"), 0, npc.localAI[0]);
+            Main.npc[(int)NPC.ai[0]].ai[3] = -1f;
+            Main.npc[(int)NPC.ai[1]].ai[3] = -1f;
+            Main.npc[(int)NPC.ai[2]].ai[3] = -1f;
+            Main.npc[(int)NPC.ai[0]].netUpdate = true;
+            Main.npc[(int)NPC.ai[1]].netUpdate = true;
+            Main.npc[(int)NPC.ai[2]].netUpdate = true;
+            NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Bottom.X, (int)NPC.Bottom.Y, Mod.Find<ModNPC>("GoldBlob2").Type, 0, NPC.localAI[0]);
             return false;
         }
     }

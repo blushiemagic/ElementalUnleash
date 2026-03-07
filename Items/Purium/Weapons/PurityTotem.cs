@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,28 +10,28 @@ namespace Bluemagic.Items.Purium.Weapons
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Summons a purity wisp to fight for you.");
+            // Tooltip.SetDefault("Summons a purity wisp to fight for you.");
         }
 
         public override void SetDefaults()
         {
-            item.damage = 442;
-            item.summon = true;
-            item.mana = 10;
-            item.width = 26;
-            item.height = 28;
-            item.useTime = 36;
-            item.useAnimation = 36;
-            item.useStyle = 1;
-            item.noMelee = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 12, 0, 0);
-            item.rare = 11;
-            item.UseSound = SoundID.Item44;
-            item.shoot = mod.ProjectileType("PurityWisp");
-            item.shootSpeed = 10f;
-            item.buffType = mod.BuffType("PurityWisp");
-            item.buffTime = 3600;
+            Item.damage = 442;
+            Item.DamageType = DamageClass.Summon;
+            Item.mana = 10;
+            Item.width = 26;
+            Item.height = 28;
+            Item.useTime = 36;
+            Item.useAnimation = 36;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.UseSound = SoundID.Item44;
+            Item.shoot = Mod.Find<ModProjectile>("PurityWisp").Type;
+            Item.shootSpeed = 10f;
+            Item.buffType = Mod.Find<ModBuff>("PurityWisp").Type;
+            Item.buffTime = 3600;
         }
         
         public override bool AltFunctionUse(Player player)
@@ -38,27 +39,26 @@ namespace Bluemagic.Items.Purium.Weapons
             return true;
         }
         
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             return player.altFunctionUse != 2;
         }
         
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             if(player.altFunctionUse == 2)
             {
-                player.MinionNPCTargetAim();
+                player.MinionNPCTargetAim(false);
             }
             return base.UseItem(player);
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 12);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

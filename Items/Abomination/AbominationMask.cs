@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Abomination
@@ -8,17 +9,16 @@ namespace Bluemagic.Items.Abomination
     [AutoloadEquip(EquipType.Head)]
     public class AbominationMask : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            ArmorIDs.Head.Sets.DrawHead[Item.headSlot] = false;
+        }
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 20;
-            item.rare = 1;
-            item.vanity = true;
-        }
-
-        public override bool DrawHead()
-        {
-            return false;
+            Item.width = 28;
+            Item.height = 20;
+            Item.rare = ItemRarityID.Blue;
+            Item.vanity = true;
         }
     }
 }

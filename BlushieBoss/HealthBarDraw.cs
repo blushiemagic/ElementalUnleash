@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI.Chat;
 
 namespace Bluemagic.BlushieBoss
 {
-    public static class HealthBarDraw
+    // There is no Boss Health Bar in Lake Laogai
+    /*public static class HealthBarDraw
     {
         public static void DrawHealthBarDefault(SpriteBatch spriteBatch, float Alpha)
         {
@@ -64,12 +66,12 @@ namespace Bluemagic.BlushieBoss
 
             string text = string.Concat(displayName, ": ", life, "/", lifeMax);
             DynamicSpriteFontExtensionMethods.DrawString(
-                spriteBatch,
-                Main.fontMouseText,
+                Main.spriteBatch,
+                FontAssets.MouseText.Value,
                 text,
                 new Vector2(XLeft + BarLength / 2, yTop + midYOffset + barM.Height / 2),
                 frameColour, 0f,
-                ChatManager.GetStringSize(Main.fontMouseText, text, Vector2.One, BarLength) / 2,
+                ChatManager.GetStringSize(FontAssets.MouseText.Value, text, Vector2.One, BarLength) / 2,
                 1.1f, SpriteEffects.None, 0f);
         }
 
@@ -115,7 +117,7 @@ namespace Bluemagic.BlushieBoss
                     float fillXStretch = 1f / (decoOffset - 1) * (realLength - decoWidth);
 
                     // Draw stretched bar
-                    spriteBatch.Draw(
+                    Main.spriteBatch.Draw(
                         fill,
                         new Vector2(XLeft + fillXOffset,
                             yTop + fillYOffset),
@@ -132,7 +134,7 @@ namespace Bluemagic.BlushieBoss
                 try
                 {
                     // Draw the decoartion side of the bar
-                    spriteBatch.Draw(
+                    Main.spriteBatch.Draw(
                         fill,
                         new Vector2(XLeft + fillXOffset + realLength - decoWidth - fillBarLength,
                             yTop + fillYOffset),
@@ -152,7 +154,7 @@ namespace Bluemagic.BlushieBoss
 
         private static void drawHealthBarFrame(SpriteBatch spriteBatch, Color frameColour, Texture2D barL, Texture2D barM, Texture2D barR, int barLength, int XLeft, int midYOffset, int yTop, Vector2 FrameTopLeft)
         {
-            spriteBatch.Draw(
+            Main.spriteBatch.Draw(
                 barM,
                 new Vector2(XLeft, yTop + midYOffset),
                 null,
@@ -163,16 +165,16 @@ namespace Bluemagic.BlushieBoss
                 SpriteEffects.None,
                 0f);
             //Draw side frames
-            spriteBatch.Draw(
+            Main.spriteBatch.Draw(
                 barL,
                 FrameTopLeft,
                 frameColour
                 );
-            spriteBatch.Draw(
+            Main.spriteBatch.Draw(
                 barR,
                 new Vector2(XLeft + barLength, yTop),
                 frameColour
                 );
         }
-    }
+    }*/
 }

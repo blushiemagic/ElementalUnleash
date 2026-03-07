@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,140 +15,141 @@ namespace Bluemagic.NPCs.Night
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 2;
+            Main.npcFrameCount[NPC.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = 1;
-            npc.width = 36;
-            npc.height = 24;
-            npc.lifeMax = 600;
-            npc.damage = 80;
-            npc.defense = 50;
-            npc.knockBackResist = 0.6f;
-            npc.buffImmune[BuffID.Poisoned] = true;
-            npc.value = Item.buyPrice(0, 0, 8, 0);
-            npc.npcSlots = 1;
-            npc.color = new Color(0, 0, 0, 50);
-            npc.alpha = 120;
-            animationType = 16;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            banner = npc.type;
-            bannerItem = mod.ItemType("NightSlimeBanner");
+            NPC.aiStyle = NPCAIStyleID.Slime;
+            NPC.width = 36;
+            NPC.height = 24;
+            NPC.lifeMax = 600;
+            NPC.damage = 80;
+            NPC.defense = 50;
+            NPC.knockBackResist = 0.6f;
+            NPC.buffImmune[BuffID.Poisoned] = true;
+            NPC.value = Item.buyPrice(0, 0, 8, 0);
+            NPC.npcSlots = 1;
+            NPC.color = new Color(0, 0, 0, 50);
+            NPC.alpha = 120;
+            AnimationType = NPCID.MotherSlime;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            Banner = NPC.type;
+            BannerItem = Mod.Find<ModItem>("NightSlimeBanner").Type;
         }
 
         public override void AI()
         {
-            Player player = Main.player[npc.target];
-            if (npc.type == mod.NPCType("NightSlime") && Main.rand.Next(20) == 0)
+            Player player = Main.player[NPC.target];
+            if (NPC.type == Mod.Find<ModNPC>("NightSlime").Type && Main.rand.Next(20) == 0)
             {
-                Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, Color.White, 1.5f);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type, 0f, 0f, 0, Color.White, 1.5f);
             }
-            npc.ai[0] += 2f;
-            if (npc.localAI[0] > 0f)
+            NPC.ai[0] += 2f;
+            if (NPC.localAI[0] > 0f)
             {
-                npc.localAI[0] -= 1f;
+                NPC.localAI[0] -= 1f;
             }
-            Vector2 center = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
+            Vector2 center = new Vector2(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
             float shootToX = player.position.X + (float)player.width * 0.5f - center.X;
             float shootToY = player.position.Y - center.Y;
             float distance = (float)System.Math.Sqrt((double)(shootToX * shootToX + shootToY * shootToY));
-            if (distance < 480f && Collision.CanHit(npc.position, npc.width, npc.height, player.position, player.width, player.height))
+            if (distance < 480f && Collision.CanHit(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height))
             {
-                if (npc.velocity.Y == 0f)
+                if (NPC.velocity.Y == 0f)
                 {
-                    npc.velocity.X *= 0.9f;
+                    NPC.velocity.X *= 0.9f;
                 }
-                if (Main.netMode != 1 && npc.localAI[0] == 0f)
+                if (Main.netMode != NetmodeID.MultiplayerClient && NPC.localAI[0] == 0f)
                 {
-                    int projType = mod.ProjectileType("StarGel");
+                    int projType = Mod.Find<ModProjectile>("StarGel").Type;
                     int damage = 35;
-                    if (npc.type == mod.NPCType("DirtySlime"))
+                    // Porting note: There is no Dirty Slime
+                    /*if (NPC.type == Mod.Find<ModNPC>("DirtySlime").Type)
                     {
-                        projType = mod.ProjectileType("DirtGel");
+                        projType = Mod.Find<ModProjectile>("DirtGel").Type;
                         damage = 45;
-                    }
+                    }*/
                     distance = 3f / distance;
                     shootToX *= distance;
                     shootToY *= distance;
-                    npc.localAI[0] = 120f;
-                    Projectile.NewProjectile(center.X, center.Y, shootToX, shootToY, projType, damage, 0f, Main.myPlayer, 0f, 0f);
+                    NPC.localAI[0] = 120f;
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), center.X, center.Y, shootToX, shootToY, projType, damage, 0f, Main.myPlayer, 0f, 0f);
                 }
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             int chance = 10;
             int time = 240;
-            if (npc.type == mod.NPCType("DirtySlime"))
+            // Porting note: There is no Dirty Slime
+            /*
+            if (NPC.type == Mod.Find<ModNPC>("DirtySlime").Type)
             {
                 chance = 9;
                 time = 300;
             }
+            */
             if (Main.rand.Next(chance) == 0)
             {
-                target.AddBuff(mod.BuffType("Liquified"), time, true);
+                target.AddBuff(Mod.Find<ModBuff>("Liquified").Type, time, true);
             }
         }
 
         public override void FindFrame(int frameHeight)
         {
-            if (npc.type == mod.NPCType("NightSlime"))
+            if (NPC.type == Mod.Find<ModNPC>("NightSlime").Type)
             {
-                Texture2D sparkleTexture = mod.GetTexture("NPCs/Night/NightSlimeSparkle");
+                Texture2D sparkleTexture = ModContent.Request<Texture2D>("Bluemagic/NPCs/Night/NightSlimeSparkle").Value;
                 frameHeight = sparkleTexture.Height / 3;
                 sparkleFrame = (sparkleRand.Next(2) * frameHeight + sparkleFrame) % (3 * frameHeight);
             }
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
-            Color color = npc.color;
-            if (npc.type == mod.NPCType("DirtySlime"))
+            Color color = NPC.color;
+            // Porting note: There is no Dirty Slime
+            /*
+            if (NPC.type == Mod.Find<ModNPC>("DirtySlime").Type)
             {
                 color = new Color(178, 152, 71);
             }
-            if (npc.life <= 0)
+            */
+            if (NPC.life <= 0)
             {
                 for (int k = 0; k < 50; k++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, 4, (float)(2 * hitDirection), -2f, npc.alpha, color, 1f);
-                    if (k % 5 == 0 && npc.type == mod.NPCType("NightSlime"))
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust, (float)(2 * hit.HitDirection), -2f, NPC.alpha, color, 1f);
+                    if (k % 5 == 0 && NPC.type == Mod.Find<ModNPC>("NightSlime").Type)
                     {
-                        Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, Color.White, 1.5f);
+                        Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type, 0f, 0f, 0, Color.White, 1.5f);
                     }
                 }
             }
             else
             {
                 int count = 0;
-                while (count < damage / npc.lifeMax * 100)
+                while (count < hit.Damage / NPC.lifeMax * 100)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, 4, (float)hitDirection, -1f, npc.alpha, color, 1f);
-                    if (count % 5 == 0 && npc.type == mod.NPCType("NightSlime"))
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust, (float)hit.HitDirection, -1f, NPC.alpha, color, 1f);
+                    if (count % 5 == 0 && NPC.type == Mod.Find<ModNPC>("NightSlime").Type)
                     {
-                        int dust = Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, Color.White, 1.5f);
-                        Main.dust[dust].velocity.X += hitDirection * 3;
+                        int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type, 0f, 0f, 0, Color.White, 1.5f);
+                        Main.dust[dust].velocity.X += hit.HitDirection * 3;
                     }
                     count++;
                 }
             }
         }
 
-        public override void NPCLoot()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Gel, Main.rand.Next(4, 7));
-            if (Main.rand.Next(Main.expertMode ? 4200 : 6000) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.SlimeStaff);
-            }
-            if (Main.rand.Next(Main.expertMode ? 3 : 2) != 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SuspiciousGel"));
-            }
+            npcLoot.Add(ItemDropRule.Common(ItemID.Gel, 1, 4, 6));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(Mod.Find<ModItem>("SuspiciousGel").Type, 3, 2));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ItemID.SlimeStaff, 6000, 4200));
         }
 
         public override float SpawnChance(NPCSpawnInfo info)
@@ -156,23 +158,26 @@ namespace Bluemagic.NPCs.Night
             {
                 return 0f;
             }
-            if (npc.type == mod.NPCType("NightSlime"))
+            if (NPC.type == Mod.Find<ModNPC>("NightSlime").Type)
             {
-                return info.spawnTileY <= Main.worldSurface && !Main.dayTime ? 1f / 6f : 0f;
+                return info.SpawnTileY <= Main.worldSurface && !Main.dayTime ? 1f / 6f : 0f;
             }
-            if (npc.type == mod.NPCType("DirtySlime"))
+            // Porting note: There is no Dirty Slime
+            /*
+            if (NPC.type == Mod.Find<ModNPC>("DirtySlime").Type)
             {
-                return info.spawnTileY > Main.worldSurface && info.spawnTileY < Main.maxTilesY - 190 ? 1f / 6f : 0f;
+                return info.SpawnTileY > Main.worldSurface && info.SpawnTileY < Main.maxTilesY - 190 ? 1f / 6f : 0f;
             }
+            */
             return 0f;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            if (npc.type == mod.NPCType("NightSlime"))
+            if (NPC.type == Mod.Find<ModNPC>("NightSlime").Type)
             {
-                Texture2D sparkleTexture = mod.GetTexture("NPCs/Night/NightSlimeSparkle");
-                spriteBatch.Draw(sparkleTexture, npc.position - Main.screenPosition, new Rectangle(0, sparkleFrame, sparkleTexture.Width, sparkleTexture.Height / 3), Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
+                Texture2D sparkleTexture = ModContent.Request<Texture2D>("Bluemagic/NPCs/Night/NightSlimeSparkle").Value;
+                Main.spriteBatch.Draw(sparkleTexture, NPC.position - Main.screenPosition, new Rectangle(0, sparkleFrame, sparkleTexture.Width, sparkleTexture.Height / 3), Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
             }
         }
     }

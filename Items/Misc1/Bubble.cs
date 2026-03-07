@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Misc1
@@ -8,11 +9,11 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 99;
-            item.rare = 8;
-            item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 99;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
         }
     }
 }

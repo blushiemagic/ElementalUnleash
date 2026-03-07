@@ -9,30 +9,30 @@ namespace Bluemagic.Items.Misc1
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shroomsand Block");
+            // DisplayName.SetDefault("Shroomsand Block");
         }
 
         public override void SetDefaults()
         {
-            item.width = 12;
-            item.height = 12;
-            item.maxStack = 999;
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.autoReuse = true;
-            item.consumable = true;
-            item.createTile = mod.TileType("Shroomsand");
-            item.ammo = AmmoID.Sand;
-            item.notAmmo = true;
+            Item.width = 12;
+            Item.height = 12;
+            Item.maxStack = 999;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.autoReuse = true;
+            Item.consumable = true;
+            Item.createTile = Mod.Find<ModTile>("Shroomsand").Type;
+            Item.ammo = AmmoID.Sand;
+            Item.notAmmo = true;
         }
 
-        public override void PickAmmo(Item weapon, Player player, ref int type, ref float speed, ref int damage, ref float knockback)
+        public override void PickAmmo(Item weapon, Player player, ref int type, ref float speed, ref StatModifier damage, ref float knockback)
         {
             if (type == ProjectileID.SandBallGun)
             {
-                type = mod.ProjectileType("ShroomsandGunBall");
+                type = Mod.Find<ModProjectile>("ShroomsandGunBall").Type;
             }
         }
     }

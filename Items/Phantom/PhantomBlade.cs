@@ -9,54 +9,51 @@ namespace Bluemagic.Items.Phantom
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Projects a phantom blade when swung");
+            // Tooltip.SetDefault("Projects a phantom blade when swung");
         }
 
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 40;
-            item.useStyle = 1;
-            item.useAnimation = 32;
-            item.useTime = 32;
-            item.damage = 102;
-            item.knockBack = 6f;
-            item.autoReuse = true;
-            item.useTurn = false;
-            item.rare = 8;
-            item.melee = true;
-            item.value = Item.sellPrice(0, 10, 0, 0);
-            item.UseSound = SoundID.Item1;
-            item.shoot = mod.ProjectileType("PhantomBlade");
-            item.shootSpeed = 0f;
+            Item.width = 40;
+            Item.height = 40;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useAnimation = 32;
+            Item.useTime = 32;
+            Item.damage = 102;
+            Item.knockBack = 6f;
+            Item.autoReuse = true;
+            Item.useTurn = false;
+            Item.rare = ItemRarityID.Yellow;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = Item.sellPrice(0, 10, 0, 0);
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = Mod.Find<ModProjectile>("PhantomBlade").Type;
+            Item.shootSpeed = 0f;
         }
 
         public override void AddRecipes()
         {
             if (Bluemagic.Sushi != null)
             {
-                ModRecipe recipe;
+                Recipe recipe;
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "SpectreGun");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PhantomSphere");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "PaladinStaff");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
             }
         }
     }

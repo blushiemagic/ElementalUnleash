@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.PuritySpirit
@@ -13,70 +14,70 @@ namespace Bluemagic.PuritySpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Crystal of Cleansing");
+            // DisplayName.SetDefault("Crystal of Cleansing");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(projectile.localAI[0]);
-            writer.Write(projectile.localAI[1]);
+            writer.Write(Projectile.localAI[0]);
+            writer.Write(Projectile.localAI[1]);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            projectile.localAI[0] = reader.ReadSingle();
-            projectile.localAI[1] = reader.ReadSingle();
+            Projectile.localAI[0] = reader.ReadSingle();
+            Projectile.localAI[1] = reader.ReadSingle();
         }
 
         public override void AI()
         {
-            if (projectile.velocity.X != 0f)
+            if (Projectile.velocity.X != 0f)
             {
-                projectile.localAI[0] = projectile.velocity.X;
-                projectile.velocity.X = 0f;
+                Projectile.localAI[0] = Projectile.velocity.X;
+                Projectile.velocity.X = 0f;
             }
-            if (projectile.velocity.Y != 0f)
+            if (Projectile.velocity.Y != 0f)
             {
-                projectile.localAI[1] = projectile.velocity.Y;
-                projectile.velocity.Y = 0f;
+                Projectile.localAI[1] = Projectile.velocity.Y;
+                Projectile.velocity.Y = 0f;
             }
-            NPC center = Main.npc[(int)projectile.ai[0]];
-            if (!center.active || center.type != mod.NPCType("PuritySpirit"))
+            NPC center = Main.npc[(int)Projectile.ai[0]];
+            if (!center.active || center.type != Mod.Find<ModNPC>("PuritySpirit").Type)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             if (timer < 120)
             {
-                projectile.alpha = (120 - timer) * 255 / 120;
+                Projectile.alpha = (120 - timer) * 255 / 120;
                 timer++;
             }
             else
             {
-                projectile.alpha = 0;
-                projectile.hostile = true;
+                Projectile.alpha = 0;
+                Projectile.hostile = true;
             }
-            projectile.timeLeft = 2;
-            projectile.ai[1] += 2f * (float)Math.PI / 600f * projectile.localAI[1];
-            projectile.ai[1] %= 2f * (float)Math.PI;
-            projectile.rotation -= 2f * (float)Math.PI / 120f * projectile.localAI[1];
-            projectile.Center = center.Center + projectile.localAI[0] * new Vector2((float)Math.Cos(projectile.ai[1]), (float)Math.Sin(projectile.ai[1]));
+            Projectile.timeLeft = 2;
+            Projectile.ai[1] += 2f * (float)Math.PI / 600f * Projectile.localAI[1];
+            Projectile.ai[1] %= 2f * (float)Math.PI;
+            Projectile.rotation -= 2f * (float)Math.PI / 120f * Projectile.localAI[1];
+            Projectile.Center = center.Center + Projectile.localAI[0] * new Vector2((float)Math.Cos(Projectile.ai[1]), (float)Math.Sin(Projectile.ai[1]));
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             for (int k = 0; k < Player.MaxBuffs; k++)
             {
-                if (target.buffType[k] > 0 && target.buffTime[k] > 0 && BuffLoader.CanBeCleared(target.buffType[k]) && Main.rand.Next(2) == 0)
+                if (target.buffType[k] > 0 && target.buffTime[k] > 0 && !BuffID.Sets.NurseCannotRemoveDebuff[target.buffType[k]] && Main.rand.Next(2) == 0)
                 {
                     target.DelBuff(k);
                     k--;
@@ -86,23 +87,23 @@ namespace Bluemagic.PuritySpirit
 
         public override Color? GetAlpha(Color lightColor)
         {
-            return Color.White * ((255 - projectile.alpha) / 255f);
+            return Color.White * ((255 - Projectile.alpha) / 255f);
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
             //Vector2 drawPos = projectile.position - Main.screenPosition;
-            //spriteBatch.Draw(mod.GetTexture("Projectiles/PuritySpirit/PureCrystalShield"), drawPos, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            if (!projectile.hostile)
+            //spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Projectiles/PuritySpirit/PureCrystalShield"), drawPos, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            if (!Projectile.hostile)
             {
                 return;
             }
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
             Vector2 drawCenter = new Vector2(24f, 24f);
             for (int k = 2; k <= 24; k += 2)
             {
                 float scale = 2f * k / 48f;
-                spriteBatch.Draw(mod.GetTexture("PuritySpirit/PureCrystalRing"), drawPos, null, Color.White * ShieldTransparency(k), 0f, drawCenter, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PureCrystalRing").Value, drawPos, null, Color.White * ShieldTransparency(k), 0f, drawCenter, scale, SpriteEffects.None, 0f);
             }
         }
 

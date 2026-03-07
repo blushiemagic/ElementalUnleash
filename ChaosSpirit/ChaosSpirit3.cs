@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bluemagic.Items.ChaosSpirit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.Chat;
 using Terraria.GameContent.Events;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -17,36 +21,35 @@ namespace Bluemagic.ChaosSpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spirit of Chaos");
-            Main.npcFrameCount[npc.type] = 5;
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+            // DisplayName.SetDefault("Spirit of Chaos");
+            Main.npcFrameCount[NPC.type] = 5;
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 400000;
-            npc.damage = 0;
-            npc.defense = 0;
-            npc.knockBackResist = 0f;
-            npc.takenDamageMultiplier = 2f;
-            npc.width = size;
-            npc.height = size;
-            npc.value = Item.buyPrice(1, 0, 0, 0);
-            npc.npcSlots = 100f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 400000;
+            NPC.damage = 0;
+            NPC.defense = 0;
+            NPC.knockBackResist = 0f;
+            NPC.takenDamageMultiplier = 2f;
+            NPC.width = size;
+            NPC.height = size;
+            NPC.value = Item.buyPrice(1, 0, 0, 0);
+            NPC.npcSlots = 100f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
-            music = MusicID.Title;
-            bossBag = mod.ItemType("ChaosSpiritBag");
+            Music = MusicID.Title;
         }
 
         internal List<int> targets = new List<int>();
@@ -56,11 +59,11 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
             set
             {
-                npc.ai[0] = value;
+                NPC.ai[0] = value;
             }
         }
 
@@ -68,11 +71,11 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.ai[1];
+                return (int)NPC.ai[1];
             }
             set
             {
-                npc.ai[1] = value;
+                NPC.ai[1] = value;
             }
         }
 
@@ -80,17 +83,17 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.ai[2];
+                return (int)NPC.ai[2];
             }
             set
             {
-                npc.ai[2] = value;
+                NPC.ai[2] = value;
             }
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * 1.2f * bossLifeScale);
+            NPC.lifeMax = (int)(NPC.lifeMax / Main.GameModeInfo.EnemyMaxLifeMultiplier * 1.2f * balance);
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -107,9 +110,9 @@ namespace Bluemagic.ChaosSpirit
             {
                 timer = 0;
                 stage = -1;
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
-            int debuffType = mod.BuffType("ChaosPressure4");
+            int debuffType = Mod.Find<ModBuff>("ChaosPressure4").Type;
             foreach (int target in targets)
             {
                 Main.player[target].AddBuff(debuffType, 2, false);
@@ -138,12 +141,12 @@ namespace Bluemagic.ChaosSpirit
             {
                 CreateSuppressionSphere();
             }
-            npc.timeLeft = NPC.activeTime;
+            NPC.timeLeft = NPC.activeTime;
         }
 
         public void FindPlayers()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int originalCount = targets.Count;
                 targets.Clear();
@@ -154,7 +157,7 @@ namespace Bluemagic.ChaosSpirit
                         targets.Add(k);
                     }
                 }
-                if (Main.netMode == 2 && (syncTargets || targets.Count != originalCount))
+                if (Main.netMode == NetmodeID.Server && (syncTargets || targets.Count != originalCount))
                 {
                     ModPacket netMessage = GetPacket(ChaosSpiritMessageType.TargetList);
                     netMessage.Write(targets.Count);
@@ -173,7 +176,7 @@ namespace Bluemagic.ChaosSpirit
             timer++;
             if (timer >= 360)
             {
-                npc.active = false;
+                NPC.active = false;
             }
         }
 
@@ -232,28 +235,28 @@ namespace Bluemagic.ChaosSpirit
                 countdown = 0;
                 stage++;
                 Talk("Mods.Bluemagic.ChaosPressureStart");
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
         }
 
         private void EndAttack()
         {
-            if (Main.netMode != 1 && countdown == 0)
+            if (Main.netMode != NetmodeID.MultiplayerClient && countdown == 0)
             {
                 int radius = Main.rand.Next(240, 320);
                 float angle = Main.rand.NextFloat() * MathHelper.TwoPi;
                 Vector2 offset = radius * angle.ToRotationVector2();
-                Projectile.NewProjectile(npc.Center + offset, Vector2.Zero, mod.ProjectileType("HolySphere2"), 0, 0f, Main.myPlayer, npc.whoAmI);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + offset, Vector2.Zero, Mod.Find<ModProjectile>("HolySphere2").Type, 0, 0f, Main.myPlayer, NPC.whoAmI);
             }
             countdown++;
             if (countdown == 140f)
             {
-                PlaySound(29, 104);
+                PlaySound(SoundID.Zombie104);
             }
             if (countdown >= 180f)
             {
                 countdown = 0;
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
         }
 
@@ -271,19 +274,19 @@ namespace Bluemagic.ChaosSpirit
             timer++;
             if (timer >= 60 || (stage < 2 && timer >= 30))
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 direction;
                     if (Main.rand.Next(stage == 2 ? 6 : 3) == 0)
                     {
-                        direction = Main.player[RandomTarget()].Center - npc.Center;
+                        direction = Main.player[RandomTarget()].Center - NPC.Center;
                         direction.Normalize();
                     }
                     else
                     {
                         direction = (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2();
                     }
-                    Projectile.NewProjectile(npc.Center, 4f * direction, mod.ProjectileType("SuppressionSphere"), 0, 0f, Main.myPlayer, npc.whoAmI);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 4f * direction, Mod.Find<ModProjectile>("SuppressionSphere").Type, 0, 0f, Main.myPlayer, NPC.whoAmI);
                 }
                 timer = 0;
             }
@@ -295,12 +298,12 @@ namespace Bluemagic.ChaosSpirit
             {
                 return true;
             }
-            npc.active = true;
-            npc.life = 1;
-            npc.dontTakeDamage = true;
+            NPC.active = true;
+            NPC.life = 1;
+            NPC.dontTakeDamage = true;
             stage = 10;
             timer = 0;
-            npc.netUpdate = true;
+            NPC.netUpdate = true;
             return false;
         }
 
@@ -310,23 +313,23 @@ namespace Bluemagic.ChaosSpirit
             {
                 if (!Main.dedServ)
                 {
-                    MoonlordDeathDrama.RequestLight(1f, npc.Center);
+                    MoonlordDeathDrama.RequestLight(1f, NPC.Center);
                 }
-                PlaySound(29, 92);
+                PlaySound(SoundID.Zombie92);
             }
             if (!Main.dedServ)
             {
                 float x = Main.rand.Next(-Main.screenWidth / 2, Main.screenWidth / 2);
                 float y = Main.rand.Next(-Main.screenHeight / 2, Main.screenHeight / 2);
-                MoonlordDeathDrama.AddExplosion(npc.Center + new Vector2(x, y));
+                MoonlordDeathDrama.AddExplosion(NPC.Center + new Vector2(x, y));
             }
             timer++;
             if (timer >= 300)
             {
-                npc.dontTakeDamage = false;
-                npc.HitSound = null;
-                npc.takenDamageMultiplier = 1f;
-                npc.StrikeNPCNoInteraction(9999, 0f, 0);
+                NPC.dontTakeDamage = false;
+                NPC.HitSound = null;
+                NPC.takenDamageMultiplier = 1f;
+                NPC.SimpleStrikeNPC(9999, 0, false, 0);
             }
         }
 
@@ -349,41 +352,18 @@ namespace Bluemagic.ChaosSpirit
             return null;
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
-            int choice = Main.rand.Next(10);
-            int item = 0;
-            switch (choice)
-            {
-                case 0:
-                    item = mod.ItemType("ChaosTrophy");
-                    break;
-                case 1:
-                    item = mod.ItemType("CataclysmTrophy");
-                    break;
-            }
-            if (item > 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, item);
-            }
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            else
-            {
-                choice = Main.rand.Next(7);
-                if (choice == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ChaosSpiritMask"));
-                }
-                else if (choice == 1)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CataclysmMask"));
-                }
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ChaosCrystal"));
-            }
             BluemagicWorld.downedChaosSpirit = true;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.BossBag(Mod.Find<ModItem>("ChaosSpiritBag").Type));
+            npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("ChaosCrystal").Type));
+            npcLoot.Add(new LeadingConditionRule(new Conditions.NotExpert()).OnSuccess(ItemDropRule.OneFromOptions(7, ModContent.ItemType<ChaosSpiritMask>(), ModContent.ItemType<CataclysmMask>())));
+            npcLoot.Add(ItemDropRule.OneFromOptions(10, ModContent.ItemType<CataclysmTrophy>(), ModContent.ItemType<ChaosTrophy>()));
+
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -394,12 +374,12 @@ namespace Bluemagic.ChaosSpirit
 
         public override void FindFrame(int frameSize)
         {
-            npc.frameCounter += 1.0;
-            if (npc.frameCounter >= 6.0)
+            NPC.frameCounter += 1.0;
+            if (NPC.frameCounter >= 6.0)
             {
-                npc.frameCounter = 0.0;
-                npc.frame.Y += frameSize;
-                npc.frame.Y %= 5 * frameSize;
+                NPC.frameCounter = 0.0;
+                NPC.frame.Y += frameSize;
+                NPC.frame.Y %= 5 * frameSize;
             }
         }
 
@@ -410,63 +390,63 @@ namespace Bluemagic.ChaosSpirit
 
         private void Talk(string key, byte r = 255, byte g = 255, byte b = 255)
         {
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Main.NewText(Language.GetTextValue(key), r, g, b);
             }
             else
             {
                 NetworkText text = NetworkText.FromKey(key);
-                NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+                ChatHelper.BroadcastChatMessage(text, new Color(r, g, b));
             }
         }
 
         private void Talk(string key, object arg, byte r = 255, byte g = 255, byte b = 255)
         {
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Main.NewText(Language.GetTextValue(key, arg), r, g, b);
             }
             else
             {
                 NetworkText text = NetworkText.FromKey(key, arg);
-                NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+                ChatHelper.BroadcastChatMessage(text, new Color(r, g, b));
             }
         }
 
         private void TalkLiteral(string literal, byte r = 255, byte g = 255, byte b = 255)
         {
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Main.NewText(literal, r, g, b);
             }
             else
             {
                 NetworkText text = NetworkText.FromLiteral(literal);
-                NetMessage.BroadcastChatMessage(text, new Color(r, g, b));
+                ChatHelper.BroadcastChatMessage(text, new Color(r, g, b));
             }
         }
 
-        private void PlaySound(int type, int style)
+        private void PlaySound(SoundStyle s)
         {
-            if (Main.netMode != 2)
+            if (Main.netMode != NetmodeID.Server)
             {
                 if (targets.Contains(Main.myPlayer))
                 {
-                    Main.PlaySound(type, -1, -1, style);
+                    SoundEngine.PlaySound(s);
                 }
                 else
                 {
-                    Main.PlaySound(type, (int)npc.position.X, (int)npc.position.Y, style);
+                    SoundEngine.PlaySound(s, NPC.position);
                 }
             }
         }
 
         private ModPacket GetPacket(ChaosSpiritMessageType type)
         {
-            ModPacket packet = mod.GetPacket();
+            ModPacket packet = Mod.GetPacket();
             packet.Write((byte)MessageType.ChaosSpirit);
-            packet.Write(npc.whoAmI);
+            packet.Write(NPC.whoAmI);
             packet.Write((byte)type);
             return packet;
         }
@@ -490,20 +470,23 @@ namespace Bluemagic.ChaosSpirit
             }
             else if (type == ChaosSpiritMessageType.DeActivate)
             {
-                npc.active = false;
+                NPC.active = false;
             }
             else if (type == ChaosSpiritMessageType.PlaySound)
             {
+                /*
+                 * Porting note: GRAAAAA
                 int soundType = reader.ReadInt32();
                 int style = reader.ReadInt32();
                 if (targets.Contains(Main.myPlayer))
                 {
-                    Main.PlaySound(soundType, -1, -1, style);
+                    SoundEngine.PlaySound(soundType, -1, -1, style);
                 }
                 else
                 {
-                    Main.PlaySound(soundType, (int)npc.position.X, (int)npc.position.Y, style);
+                    SoundEngine.PlaySound(soundType, (int)NPC.position.X, (int)NPC.position.Y, style);
                 }
+                */
             }
             else if (type == ChaosSpiritMessageType.Damage)
             {

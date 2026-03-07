@@ -9,30 +9,30 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Can mine Lihzahrd Bricks");
+            // Tooltip.SetDefault("Can mine Lihzahrd Bricks");
         }
 
         public override void SetDefaults()
         {
-            item.damage = 40;
-            item.melee = true;
-            item.width = 20;
-            item.height = 12;
-            item.useTime = 7;
-            item.useAnimation = 25;
-            item.channel = true;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.pick = 210;
-            item.tileBoost++;
-            item.useStyle = 5;
-            item.knockBack = 6;
-            item.value = Item.buyPrice(0, 22, 50, 0);
-            item.rare = 9;
-            item.UseSound = SoundID.Item23;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("MoltenDrill");
-            item.shootSpeed = 40f;
+            Item.damage = 40;
+            Item.DamageType = DamageClass.MeleeNoSpeed;
+            Item.width = 20;
+            Item.height = 12;
+            Item.useTime = 7;
+            Item.useAnimation = 25;
+            Item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.pick = 210;
+            Item.tileBoost++;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 6;
+            Item.value = Item.buyPrice(0, 22, 50, 0);
+            Item.rare = ItemRarityID.Cyan;
+            Item.UseSound = SoundID.Item23;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("MoltenDrill").Type;
+            Item.shootSpeed = 40f;
         }
     }
 }

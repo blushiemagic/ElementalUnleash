@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Bluemagic.PuritySpirit
@@ -15,54 +16,54 @@ namespace Bluemagic.PuritySpirit
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.alpha = 127;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.alpha = 127;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            projectile.localAI[0] += 1f;
-            projectile.localAI[0] %= 120f;
-            if (projectile.ai[1] > 0f && projectile.height != (int)projectile.ai[1])
+            Projectile.localAI[0] += 1f;
+            Projectile.localAI[0] %= 120f;
+            if (Projectile.ai[1] > 0f && Projectile.height != (int)Projectile.ai[1])
             {
-                Vector2 center = projectile.Center;
-                projectile.height = (int)projectile.ai[1];
-                projectile.Center = center;
+                Vector2 center = Projectile.Center;
+                Projectile.height = (int)Projectile.ai[1];
+                Projectile.Center = center;
             }
-            if (projectile.ai[1] < 0f && projectile.width != (int)-projectile.ai[1])
+            if (Projectile.ai[1] < 0f && Projectile.width != (int)-Projectile.ai[1])
             {
-                Vector2 center = projectile.Center;
-                projectile.width = (int)-projectile.ai[1];
-                projectile.Center = center;
+                Vector2 center = Projectile.Center;
+                Projectile.width = (int)-Projectile.ai[1];
+                Projectile.Center = center;
             }
-            NPC npc = Main.npc[(int)projectile.ai[0]];
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
             int arenaWidth = PuritySpirit.arenaWidth;
             int arenaHeight = PuritySpirit.arenaHeight;
-            if (projectile.Center.X >= npc.Center.X + arenaWidth / 2)
+            if (Projectile.Center.X >= npc.Center.X + arenaWidth / 2)
             {
-                projectile.velocity.X = -speed;
+                Projectile.velocity.X = -speed;
             }
-            else if (projectile.Center.X <= npc.Center.X - arenaWidth / 2)
+            else if (Projectile.Center.X <= npc.Center.X - arenaWidth / 2)
             {
-                projectile.velocity.X = speed;
+                Projectile.velocity.X = speed;
             }
-            if (projectile.Center.Y >= npc.Center.Y + arenaHeight / 2)
+            if (Projectile.Center.Y >= npc.Center.Y + arenaHeight / 2)
             {
-                projectile.velocity.Y = -speed;
+                Projectile.velocity.Y = -speed;
             }
-            else if (projectile.Center.Y <= npc.Center.Y - arenaHeight / 2)
+            else if (Projectile.Center.Y <= npc.Center.Y - arenaHeight / 2)
             {
-                projectile.velocity.Y = speed;
+                Projectile.velocity.Y = speed;
             }
             for (int k = 0; k < 255; k++)
             {
                 Player player = Main.player[k];
-                if (player.active && !player.dead && player.Hitbox.Intersects(projectile.Hitbox))
+                if (player.active && !player.dead && player.Hitbox.Intersects(Projectile.Hitbox))
                 {
                     BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
                     if (modPlayer.purityDebuffCooldown <= 0)
@@ -72,27 +73,27 @@ namespace Bluemagic.PuritySpirit
                     }
                 }
             }
-            projectile.timeLeft = 2;
-            if (!npc.active || npc.type != mod.NPCType("PuritySpirit"))
+            Projectile.timeLeft = 2;
+            if (!npc.active || npc.type != Mod.Find<ModNPC>("PuritySpirit").Type)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             Color color;
-            if (projectile.localAI[0] < 60f)
+            if (Projectile.localAI[0] < 60f)
             {
-                color = Color.Lerp(color1, color2, projectile.localAI[0] / 60f);
+                color = Color.Lerp(color1, color2, Projectile.localAI[0] / 60f);
             }
             else
             {
-                color = Color.Lerp(color2, color1, (projectile.localAI[0] - 60f) / 30f);
+                color = Color.Lerp(color2, color1, (Projectile.localAI[0] - 60f) / 30f);
             }
             color *= 0.85f;
-            Vector2 drawPos = projectile.position - Main.screenPosition;
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, 0f, Vector2.Zero, projectile.Size, SpriteEffects.None, 0f);
+            Vector2 drawPos = Projectile.position - Main.screenPosition;
+            Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, 0f, Vector2.Zero, Projectile.Size, SpriteEffects.None, 0f);
             return false;
         }
     }

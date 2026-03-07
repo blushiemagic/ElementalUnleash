@@ -9,29 +9,29 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Sends pulses of flames across the screen"
-                + "\n'Great for impersonating... someone?'");
-            ItemID.Sets.ItemNoGravity[item.type] = true;
+            /* Tooltip.SetDefault("Sends pulses of flames across the screen"
+                + "\n'Great for impersonating... someone?'");*/
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.autoReuse = true;
-            item.rare = 13;
-            item.UseSound = SoundID.Item81;
-            item.noMelee = true;
-            item.useStyle = 4;
-            item.damage = 1200;
-            item.useAnimation = 30;
-            item.useTime = 30;
-            item.width = 30;
-            item.height = 30;
-            item.shoot = mod.ProjectileType("FirePulse");
-            item.shootSpeed = 0f;
-            item.knockBack = 5f;
-            item.magic = true;
-            item.mana = 4;
-            item.value = Item.sellPrice(2, 0, 0, 0);
+            Item.autoReuse = true;
+            Item.rare = ItemRarityID.Expert;
+            Item.UseSound = SoundID.Item81;
+            Item.noMelee = true;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.damage = 1200;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+            Item.width = 30;
+            Item.height = 30;
+            Item.shoot = Mod.Find<ModProjectile>("FirePulse").Type;
+            Item.shootSpeed = 0f;
+            Item.knockBack = 5f;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 4;
+            Item.value = Item.sellPrice(2, 0, 0, 0);
         }
     }
 }

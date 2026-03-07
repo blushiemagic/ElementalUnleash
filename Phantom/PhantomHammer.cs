@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Phantom
@@ -9,29 +11,29 @@ namespace Bluemagic.Phantom
     {
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 38;
-            projectile.alpha = 70;
-            projectile.timeLeft = 600;
-            projectile.maxPenetrate = -1;
-            projectile.hostile = true;
-            projectile.thrown = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 38;
+            Projectile.height = 38;
+            Projectile.alpha = 70;
+            Projectile.timeLeft = 600;
+            Projectile.maxPenetrate = -1;
+            Projectile.hostile = true;
+            Projectile.DamageType = DamageClass.Throwing;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            projectile.rotation += 0.5f;
-            projectile.ai[1] += 1f;
-            NPC npc = Main.npc[(int)projectile.ai[0]];
-            if (projectile.ai[1] <= 100f)
+            Projectile.rotation += 0.5f;
+            Projectile.ai[1] += 1f;
+            NPC npc = Main.npc[(int)Projectile.ai[0]];
+            if (Projectile.ai[1] <= 100f)
             {
-                projectile.Center = npc.Center;
+                Projectile.Center = npc.Center;
             }
-            else if (projectile.ai[1] == 101f)
+            else if (Projectile.ai[1] == 101f)
             {
-                Vector2 move = Main.player[npc.target].Center - projectile.Center;
+                Vector2 move = Main.player[npc.target].Center - Projectile.Center;
                 float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                 if (Main.expertMode)
                 {
@@ -44,8 +46,8 @@ namespace Bluemagic.Phantom
                 {
                     move *= 7f / magnitude;
                 }
-                projectile.velocity = move;
-                Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 1);
+                Projectile.velocity = move;
+                SoundEngine.PlaySound(SoundID.Item1, Projectile.position);
             }
         }
 

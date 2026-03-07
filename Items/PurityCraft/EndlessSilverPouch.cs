@@ -9,27 +9,26 @@ namespace Bluemagic.Items.PurityCraft
     {
         public override void SetDefaults()
         {
-            item.shootSpeed = 4f;
-            item.shoot = ProjectileID.Bullet;
-            item.damage = 9;
-            item.width = 26;
-            item.height = 26;
-            item.ranged = true;
-            item.ammo = AmmoID.Bullet;
-            item.knockBack = 3f;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 20, 0, 0);
+            Item.shootSpeed = 4f;
+            Item.shoot = ProjectileID.Bullet;
+            Item.damage = 9;
+            Item.width = 26;
+            Item.height = 26;
+            Item.DamageType = DamageClass.Ranged;
+            Item.ammo = AmmoID.Bullet;
+            Item.knockBack = 3f;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 20, 0, 0);
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.EndlessMusketPouch);
             recipe.AddIngredient(null, "InfinityCrystal");
             recipe.AddIngredient(ItemID.SilverBullet, 3996);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

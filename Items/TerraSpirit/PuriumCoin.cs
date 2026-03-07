@@ -10,15 +10,15 @@ namespace Bluemagic.Items.TerraSpirit
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Can be crafted to and from 100 platinum coins");
+            // Tooltip.SetDefault("Can be crafted to and from 100 platinum coins");
         }
 
         public override void SetDefaults()
         {
-            item.width = 14;
-            item.height = 14;
-            item.maxStack = 999;
-            item.value = 500000000;
+            Item.width = 14;
+            Item.height = 14;
+            Item.maxStack = 999;
+            Item.value = 500000000;
             /*item.ammo = AmmoID.Coin;
             item.notAmmo = true;
             item.damage = 200;
@@ -37,15 +37,13 @@ namespace Bluemagic.Items.TerraSpirit
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.PlatinumCoin, 100);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.PlatinumCoin, 100);
             recipe.AddIngredient(this);
-            recipe.SetResult(ItemID.PlatinumCoin, 100);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

@@ -9,28 +9,28 @@ namespace Bluemagic.Phantom
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phantom Sphere");
+            // DisplayName.SetDefault("Phantom Sphere");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 192;
-            projectile.height = 192;
-            projectile.alpha = 70;
-            projectile.hostile = true;
-            projectile.timeLeft = 1200;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.maxPenetrate = -1;
+            Projectile.width = 192;
+            Projectile.height = 192;
+            Projectile.alpha = 70;
+            Projectile.hostile = true;
+            Projectile.timeLeft = 1200;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.maxPenetrate = -1;
         }
 
         public override void AI()
         {
-            projectile.ai[1] += 1f;
-            if (projectile.ai[1] == 120f)
+            Projectile.ai[1] += 1f;
+            if (Projectile.ai[1] == 120f)
             {
-                Player player = Main.player[Main.npc[(int)projectile.ai[0]].target];
-                Vector2 offset = player.Center - projectile.Center;
+                Player player = Main.player[Main.npc[(int)Projectile.ai[0]].target];
+                Vector2 offset = player.Center - Projectile.Center;
                 if (Main.expertMode)
                 {
                     Vector2 prediction = player.velocity;
@@ -43,7 +43,7 @@ namespace Bluemagic.Phantom
                     offset.Normalize();
                     offset *= 6f;
                 }
-                projectile.velocity = offset;
+                Projectile.velocity = offset;
             }
         }
 

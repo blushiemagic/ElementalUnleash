@@ -12,31 +12,31 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Use this item to die"
+            /* Tooltip.SetDefault("Use this item to die"
                 + "\nStarts the fight at phase 3"
                 + "\nCan be reused infinitely"
                 + "\nEach player starts at {0}% max health"
                 + "\nWARNING: Use this in the middle of a large open area (eg. the sky)"
-                + "\nIt is highly recommended that you use the Purity Shield [i:" + mod.ItemType("PurityShield") + "] mount"
+                + "\nIt is highly recommended that you use the Purity Shield [i:" + Mod.Find<ModItem>("PurityShield").Type + "] mount"
                 + "\nRight-click to focus the camera on the entire boss arena"
                 + "\nRight-click mid-fight to toggle the camera focus"
-                + "\nYour hitbox becomes a single pixel");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
-            ItemID.Sets.ItemNoGravity[item.type] = true;
+                + "\nYour hitbox becomes a single pixel");*/
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 4));
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 28;
-            item.maxStack = 1;
-            item.rare = 12;
-            item.value = Item.sellPrice(2, 0, 0, 0);
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = 4;
-            item.UseSound = SoundID.Item44;
-            item.noUseGraphic = true;
+            Item.width = 28;
+            Item.height = 28;
+            Item.maxStack = 1;
+            Item.rare = ItemRarityID.Expert;
+            Item.value = Item.sellPrice(2, 0, 0, 0);
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item44;
+            Item.noUseGraphic = true;
         }
 
         public override bool AltFunctionUse(Player player)
@@ -53,7 +53,7 @@ namespace Bluemagic.Blushie
             return !BlushieBoss.BlushieBoss.Active || player.altFunctionUse == 2;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             if (BlushieBoss.BlushieBoss.Active)
             {
@@ -63,9 +63,9 @@ namespace Bluemagic.Blushie
                 }
                 return true;
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                NPC.NewNPC((int)player.Center.X, (int)player.Center.Y + 24, mod.NPCType("BlushiemagicM"));
+                NPC.NewNPC(player.GetSource_FromThis(), (int)player.Center.X, (int)player.Center.Y + 24, Mod.Find<ModNPC>("BlushiemagicM").Type);
                 BlushieBoss.BlushieBoss.InitializeCheckpoint();
                 BlushieBoss.BlushieBoss.CameraFocus = player.altFunctionUse == 2;
             }
@@ -76,9 +76,9 @@ namespace Bluemagic.Blushie
         {
             for (int k = 0; k < lines.Count; k++)
             {
-                if (lines[k].mod == "Terraria" && lines[k].Name == "Tooltip3")
+                if (lines[k].Mod == "Terraria" && lines[k].Name == "Tooltip3")
                 {
-                    lines[k].text = string.Format(lines[k].text, (int)(BluemagicWorld.blushieCheckpoint * 100f));
+                    lines[k].Text = string.Format(lines[k].Text, (int)(BluemagicWorld.blushieCheckpoint * 100f));
                 }
             }
         }

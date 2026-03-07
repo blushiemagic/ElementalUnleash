@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -25,17 +26,17 @@ namespace Bluemagic.BlushieBoss
                     if (BlushieBoss.Phase == 3 && BlushieBoss.Timer < 300)
                     {
                         alpha = BlushieBoss.Timer / 300f;
-                        spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
+                        Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
                     }
                     Color color1 = new Color(0, 127, 255);
                     Color color2 = new Color(200, 0, 0);
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight / 3), color1 * alpha);
-                    spriteBatch.Draw(Bluemagic.Instance.GetTexture("BlushieBoss/SkyGradient"), new Rectangle(0, Main.screenHeight / 3, Main.screenWidth, Main.screenHeight / 3), Color.White * alpha);
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, Main.screenHeight * 2 / 3, Main.screenWidth, Main.screenHeight / 3), color2 * alpha);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight / 3), color1 * alpha);
+                    Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/BlushieBoss/SkyGradient").Value, new Rectangle(0, Main.screenHeight / 3, Main.screenWidth, Main.screenHeight / 3), Color.White * alpha);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, Main.screenHeight * 2 / 3, Main.screenWidth, Main.screenHeight / 3), color2 * alpha);
                 }
                 else
                 {
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
                 }
             }
         }

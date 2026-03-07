@@ -1,9 +1,16 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Utilities;
 using Terraria.UI.Gamepad;
+using Terraria.Utilities;
 
 namespace Bluemagic.NPCs
 {
@@ -20,78 +27,72 @@ namespace Bluemagic.NPCs
             }
         }
 
-        public override string[] AltTextures
+        public static Asset<Texture2D> AltTexture = null;
+
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            get
-            {
-                return new string[] { Texture + "_Alt_1" };
-            }
+            var something = NPC.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Main.spriteBatch.Draw(BirthdayParty.PartyIsUp ? AltTexture.Value : TextureAssets.Npc[Type].Value, NPC.Center - screenPos + new Vector2(0, NPC.gfxOffY) - new Vector2(0f, 6f), NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2, NPC.scale, something, 0);
+            return false;
         }
 
-        public override bool Autoload(ref string name)
+        /*public override bool IsLoadingEnabled(Mod mod)
         {
             name = "Hardmode Guide";
-            return base.Autoload(ref name);
-        }
+            return base.IsLoadingEnabled(ref name);
+        }*/
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hardmode Guide");
-            Main.npcFrameCount[npc.type] = 25;
-            NPCID.Sets.ExtraFramesCount[npc.type] = 9;
-            NPCID.Sets.AttackFrameCount[npc.type] = 4;
-            NPCID.Sets.DangerDetectRange[npc.type] = 700;
-            NPCID.Sets.AttackType[npc.type] = 0;
-            NPCID.Sets.AttackTime[npc.type] = 90;
-            NPCID.Sets.AttackAverageChance[npc.type] = 30;
-            NPCID.Sets.HatOffsetY[npc.type] = 4;
+            // DisplayName.SetDefault("Hardmode Guide");
+            Main.npcFrameCount[NPC.type] = 25;
+            NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
+            NPCID.Sets.AttackFrameCount[NPC.type] = 4;
+            NPCID.Sets.DangerDetectRange[NPC.type] = 700;
+            NPCID.Sets.AttackType[NPC.type] = 0;
+            NPCID.Sets.AttackTime[NPC.type] = 90;
+            NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+            NPCID.Sets.HatOffsetY[NPC.type] = 4; 
+            if (!Main.dedServ)
+            {
+                AltTexture = ModContent.Request<Texture2D>(Texture + "_Alt_1", AssetRequestMode.AsyncLoad);
+            }
         }
 
         public override void SetDefaults()
         {
-            npc.townNPC = true;
-            npc.friendly = true;
-            npc.width = 18;
-            npc.height = 40;
-            npc.aiStyle = 7;
-            npc.damage = 10;
-            npc.defense = 15;
-            npc.lifeMax = 250;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.knockBackResist = 0.5f;
-            animationType = NPCID.Guide;
+            NPC.townNPC = true;
+            NPC.friendly = true;
+            NPC.width = 18;
+            NPC.height = 40;
+            NPC.aiStyle = NPCAIStyleID.Passive;
+            NPC.damage = 10;
+            NPC.defense = 15;
+            NPC.lifeMax = 250;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.knockBackResist = 0.5f;
+            AnimationType = NPCID.Guide;
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
-            int num = npc.life > 0 ? 1 : 5;
+            int num = NPC.life > 0 ? 1 : 5;
             for (int k = 0; k < num; k++)
             {
-                Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"));
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type);
             }
         }
 
-        public override bool CanTownNPCSpawn(int numTownNPCs, int money)
+        public override bool CanTownNPCSpawn(int numTownNPCs)
         {
             return Main.hardMode;
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            switch (WorldGen.genRand.Next(5))
-            {
-                case 0:
-                    return "Blocky";
-                case 1:
-                    return "Polygon";
-                case 2:
-                    return "Steve";
-                case 3:
-                    return "Alex";
-                default:
-                    return "Nathan";
-            }
+            return [ "Blocky", "Polygon", "Steve", "Alex", "Nathan" ];
         }
 
         public override string GetChat()
@@ -118,18 +119,18 @@ namespace Bluemagic.NPCs
             button2 = Lang.inter[25].Value;
         }
 
-        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
+        public override void OnChatButtonClicked(bool firstButton, ref string shopName)
         {
             if (firstButton)
             {
-                Main.PlaySound(12, -1, -1, 1);
+                SoundEngine.PlaySound(SoundID.MenuTick);
                 Main.npcChatText = NextHelpText();
             }
             else
             {
                 Main.playerInventory = true;
                 Main.npcChatText = "";
-                Main.PlaySound(12, -1, -1, 1);
+                SoundEngine.PlaySound(SoundID.MenuTick);
                 Main.InGuideCraftMenu = true;
                 UILinkPointNavigator.GoToDefaultPage(0);
             }
@@ -149,7 +150,7 @@ namespace Bluemagic.NPCs
 
         public override void TownNPCAttackProj(ref int projType, ref int attackDelay)
         {
-            projType = mod.ProjectileType("SparklingBall");
+            projType = Mod.Find<ModProjectile>("SparklingBall").Type;
             attackDelay = 1;
         }
 
@@ -221,11 +222,11 @@ namespace Bluemagic.NPCs
                         goto case -1;
                     }
                     string anvil = "a Mythril or Orichalcum Anvil";
-                    if (WorldGen.oreTier2 == 108)
+                    if (WorldGen.SavedOreTiers.Mythril == 108)
                     {
                         anvil = "a Mythril Anvil";
                     }
-                    if (WorldGen.oreTier2 == 222)
+                    if (WorldGen.SavedOreTiers.Mythril == 222)
                     {
                         anvil = "an Orichalcum Anvil";
                     }
@@ -236,11 +237,11 @@ namespace Bluemagic.NPCs
                         goto case -1;
                     }
                     string forge = "an Adamantite or Titanium Forge";
-                    if (WorldGen.oreTier3 == 111)
+                    if (WorldGen.SavedOreTiers.Adamantite == 111)
                     {
                         forge = "an Adamantite Forge";
                     }
-                    if (WorldGen.oreTier3 == 223)
+                    if (WorldGen.SavedOreTiers.Adamantite == 223)
                     {
                         forge = "a Titanium Forge";
                     }
@@ -340,7 +341,7 @@ namespace Bluemagic.NPCs
                     {
                         goto case -1;
                     }
-                    return "You can use the autohammer sold by " + NPC.firstNPCName(160) + " to craft shroomite bars. These are materials for some powerful ranged armor.";
+                    return "You can use the autohammer sold by " + Main.npc[NPC.FindFirstNPC(160)].GivenName + " to craft shroomite bars. These are materials for some powerful ranged armor.";
                 case 22:
                     if (!NPC.downedPlantBoss || BluemagicWorld.downedPhantom)
                     {
@@ -411,7 +412,7 @@ namespace Bluemagic.NPCs
                     int count = 0;
                     for (int k = 0; k < 200; k++)
                     {
-                        if (Main.npc[k].active && Main.npc[k].townNPC && Main.npc[k].type != 142)
+                        if (Main.npc[k].active && Main.npc[k].townNPC && Main.npc[k].type != NPCID.SantaClaus)
                         {
                             count++;
                         }

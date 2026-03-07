@@ -16,7 +16,7 @@ namespace Bluemagic.TerraSpirit
 
         private void UpdateTerraSpiritIndex()
         {
-            int terraSpiritType = ModLoader.GetMod("Bluemagic").NPCType("TerraSpirit");
+            int terraSpiritType = ModLoader.GetMod("Bluemagic").Find<ModNPC>("TerraSpirit").Type;
             if (terraSpiritIndex >= 0 && Main.npc[terraSpiritIndex].active && Main.npc[terraSpiritIndex].type == terraSpiritType)
             {
                 return;

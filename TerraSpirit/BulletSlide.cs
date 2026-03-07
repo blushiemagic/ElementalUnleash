@@ -100,7 +100,7 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             float alpha = 1f;
             if (progress < 0)
             {
@@ -125,7 +125,7 @@ namespace Bluemagic.TerraSpirit
                 {
                     float yPos = Top + y * space;
                     Vector2 drawPos = drawOrigin + new Vector2(xPos, yPos);
-                    spriteBatch.Draw(texture, drawPos, color);
+                    Main.spriteBatch.Draw(texture, drawPos, color);
                 }
             }
         }

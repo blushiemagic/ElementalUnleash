@@ -11,16 +11,16 @@ namespace Bluemagic.Items.PuritySpirit
     {
         public override void SetStaticDefaults()
         {
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 4));
         }
 
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 28;
-            item.maxStack = 99;
-            item.rare = 11;
-            item.value = Item.sellPrice(1, 0, 0, 0);
+            Item.width = 28;
+            Item.height = 28;
+            Item.maxStack = 99;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(1, 0, 0, 0);
         }
 
         public override Color? GetAlpha(Color lightColor)

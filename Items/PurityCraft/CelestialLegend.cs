@@ -10,18 +10,18 @@ namespace Bluemagic.Items.PurityCraft
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Turns the holder into a werewolf at night and a merfolk when entering water"
-                + "\nIncreases to all stats");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(30, 2));
+            /* Tooltip.SetDefault("Turns the holder into a werewolf at night and a merfolk when entering water"
+                + "\nIncreases to all stats");*/
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(30, 2));
         }
 
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 24;
-            item.accessory = true;
-            item.rare = 11;
-            item.value = Item.sellPrice(0, 30, 0, 0);
+            Item.width = 16;
+            Item.height = 24;
+            Item.accessory = true;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.sellPrice(0, 30, 0, 0);
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -35,28 +35,27 @@ namespace Bluemagic.Items.PurityCraft
             }
             player.lifeRegen += 6;
             player.statDefense += 12;
-            player.meleeSpeed += 0.2f;
-            player.meleeDamage += 0.15f;
-            player.meleeCrit += 10;
-            player.rangedDamage += 0.15f;
-            player.rangedCrit += 10;
-            player.magicDamage += 0.15f;
-            player.magicCrit += 10;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.2f;
+            player.GetDamage(DamageClass.Melee) += 0.15f;
+            player.GetCritChance(DamageClass.Melee) += 10;
+            player.GetDamage(DamageClass.Ranged) += 0.15f;
+            player.GetCritChance(DamageClass.Ranged) += 10;
+            player.GetDamage(DamageClass.Magic) += 0.15f;
+            player.GetCritChance(DamageClass.Magic) += 10;
             player.pickSpeed -= 0.25f;
-            player.minionDamage += 0.15f;
-            player.minionKB += 0.75f;
-            player.thrownDamage += 0.15f;
-            player.thrownCrit += 10;
+            player.GetDamage(DamageClass.Summon) += 0.15f;
+            player.GetKnockback(DamageClass.Summon).Base += 0.75f;
+            player.GetDamage(DamageClass.Throwing) += 0.15f;
+            player.GetCritChance(DamageClass.Throwing) += 10;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.CelestialShell);
             recipe.AddIngredient(null, "InfinityCrystal", 4);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

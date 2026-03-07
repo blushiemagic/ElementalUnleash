@@ -35,7 +35,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletTarget NewGoldLarge(Vector2 position, Vector2 target, int time)
         {
-            return new BulletTarget(position, target, time, 32f, BlushieBoss.BulletGoldLargeTexture);
+            return new BulletTarget(position, target, time, 32f, BlushieBoss.BulletGoldLargeTexture.Value);
         }
     }
 }

@@ -64,12 +64,12 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             Vector2 direction = rotation.ToRotationVector2();
             for (int k = (int)(-3000 / interval); k <= (int)(3000 / (int)interval); k++)
             {
                 Vector2 pos = position + k * interval * direction;
-                spriteBatch.Draw(texture, pos - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White);
+                Main.spriteBatch.Draw(texture, pos - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White);
             }
         }
     }

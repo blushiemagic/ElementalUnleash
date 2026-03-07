@@ -12,7 +12,7 @@ namespace Bluemagic.Items
             Vector2 direction = velocity;
             direction.Normalize();
             position += direction * item.width;
-            int proj = Projectile.NewProjectile(position, velocity, projType, damage, knockback, player.whoAmI, 0f, 0f);
+            int proj = Projectile.NewProjectile(source, position, velocity, projType, damage, knockback, player.whoAmI, 0f, 0f);
             Main.projectile[proj].maxUpdates += (int)Math.Sqrt(Main.projectile[proj].maxUpdates);
             if (projType == ProjDef.byName["Bluemagic:PuriumBullet"].type)
             {

@@ -10,33 +10,32 @@ namespace Bluemagic.Items.Purium.Weapons
     {
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 40;
-            item.scale = 1.1f;
-            item.useStyle = 5;
-            item.useAnimation = 25;
-            item.useTime = 25;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.damage = 79;
-            item.knockBack = 5f;
-            item.autoReuse = false;
-            item.useTurn = false;
-            item.rare = 11;
-            item.melee = true;
-            item.value = Item.sellPrice(0, 12, 0, 0);
-            item.UseSound = SoundID.Item9;
-            item.shoot = mod.ProjectileType("PuriumSpear");
-            item.shootSpeed = 5f;
+            Item.width = 40;
+            Item.height = 40;
+            Item.scale = 1.1f;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 25;
+            Item.useTime = 25;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.damage = 79;
+            Item.knockBack = 5f;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.rare = ItemRarityID.Purple;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.UseSound = SoundID.Item9;
+            Item.shoot = Mod.Find<ModProjectile>("PuriumSpear").Type;
+            Item.shootSpeed = 5f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 12);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

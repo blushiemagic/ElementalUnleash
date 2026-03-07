@@ -10,13 +10,13 @@ namespace Bluemagic.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.knockBack = 6f;
-            projectile.width = 10;
-            projectile.height = 10;
-            projectile.friendly = true;
-            projectile.hostile = true;
-            projectile.penetrate = -1;
-            tileType = mod.TileType("Shroomsand");
+            Projectile.knockBack = 6f;
+            Projectile.width = 10;
+            Projectile.height = 10;
+            Projectile.friendly = true;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            tileType = Mod.Find<ModTile>("Shroomsand").Type;
             dustType = 17;
         }
     }

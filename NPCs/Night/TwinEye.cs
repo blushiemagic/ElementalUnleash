@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -11,257 +12,257 @@ namespace Bluemagic.NPCs.Night
     {
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[NPC.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 30;
-            npc.height = 32;
-            npc.lifeMax = 600;
-            npc.damage = 90;
-            npc.defense = 50;
-            npc.knockBackResist = 0.75f;
-            npc.noGravity = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = Item.buyPrice(0, 0, 8, 0);
-            npc.netAlways = true;
-            banner = npc.type;
-            bannerItem = mod.ItemType("TwinEyeBanner");
+            NPC.aiStyle = -1;
+            NPC.width = 30;
+            NPC.height = 32;
+            NPC.lifeMax = 600;
+            NPC.damage = 90;
+            NPC.defense = 50;
+            NPC.knockBackResist = 0.75f;
+            NPC.noGravity = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.value = Item.buyPrice(0, 0, 8, 0);
+            NPC.netAlways = true;
+            Banner = NPC.type;
+            BannerItem = Mod.Find<ModItem>("TwinEyeBanner").Type;
         }
 
         public override void AI()
         {
-            if (npc.ai[0] == 0f)
+            if (NPC.ai[0] == 0f)
             {
-                if (Main.netMode == 1)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     return;
                 }
-                npc.ai[0] = 1 + Main.rand.Next(2);
-                npc.netUpdate = true;
+                NPC.ai[0] = 1 + Main.rand.Next(2);
+                NPC.netUpdate = true;
             }
-            if (npc.ai[0] == 1f)
+            if (NPC.ai[0] == 1f)
             {
-                npc.GivenName = Language.GetTextValue("Mods.Bluemagic.NPCName.Retineye");
+                NPC.GivenName = Language.GetTextValue("Mods.Bluemagic.NPCName.Retineye");
             }
             else
             {
-                npc.GivenName = Language.GetTextValue("Mods.Bluemagic.NPCName.Spazmateye");
+                NPC.GivenName = Language.GetTextValue("Mods.Bluemagic.NPCName.Spazmateye");
             }
 
-            if (npc.collideX)
+            if (NPC.collideX)
             {
-                npc.velocity.X = npc.oldVelocity.X * -0.5f;
-                if (npc.direction == -1 && npc.velocity.X > 0f && npc.velocity.X < 2f)
+                NPC.velocity.X = NPC.oldVelocity.X * -0.5f;
+                if (NPC.direction == -1 && NPC.velocity.X > 0f && NPC.velocity.X < 2f)
                 {
-                    npc.velocity.X = 2f;
+                    NPC.velocity.X = 2f;
                 }
-                if (npc.direction == 1 && npc.velocity.X < 0f && npc.velocity.X > -2f)
+                if (NPC.direction == 1 && NPC.velocity.X < 0f && NPC.velocity.X > -2f)
                 {
-                    npc.velocity.X = -2f;
+                    NPC.velocity.X = -2f;
                 }
             }
-            if (npc.collideY)
+            if (NPC.collideY)
             {
-                npc.velocity.Y = npc.oldVelocity.Y * -0.5f;
-                if (npc.velocity.Y > 0f && npc.velocity.Y < 1f)
+                NPC.velocity.Y = NPC.oldVelocity.Y * -0.5f;
+                if (NPC.velocity.Y > 0f && NPC.velocity.Y < 1f)
                 {
-                    npc.velocity.Y = 1f;
+                    NPC.velocity.Y = 1f;
                 }
-                if (npc.velocity.Y < 0f && npc.velocity.Y > -1f)
+                if (NPC.velocity.Y < 0f && NPC.velocity.Y > -1f)
                 {
-                    npc.velocity.Y = -1f;
+                    NPC.velocity.Y = -1f;
                 }
             }
-            if (Main.dayTime && (double)npc.position.Y <= Main.worldSurface * 16.0)
+            if (Main.dayTime && (double)NPC.position.Y <= Main.worldSurface * 16.0)
             {
-                if (npc.timeLeft > 10)
+                if (NPC.timeLeft > 10)
                 {
-                    npc.timeLeft = 10;
+                    NPC.timeLeft = 10;
                 }
-                npc.directionY = -1;
-                if (npc.velocity.Y > 0f)
+                NPC.directionY = -1;
+                if (NPC.velocity.Y > 0f)
                 {
-                    npc.directionY = 1;
+                    NPC.directionY = 1;
                 }
-                npc.direction = -1;
-                if (npc.velocity.X > 0f)
+                NPC.direction = -1;
+                if (NPC.velocity.X > 0f)
                 {
-                    npc.direction = 1;
+                    NPC.direction = 1;
                 }
             }
             else
             {
-                npc.TargetClosest(true);
+                NPC.TargetClosest(true);
             }
 
-            if (npc.ai[0] == 2f)
+            if (NPC.ai[0] == 2f)
             {
-                if (npc.direction == -1 && npc.velocity.X > -6f)
+                if (NPC.direction == -1 && NPC.velocity.X > -6f)
                 {
-                    npc.velocity.X -= 0.1f;
-                    if (npc.velocity.X > 6f)
+                    NPC.velocity.X -= 0.1f;
+                    if (NPC.velocity.X > 6f)
                     {
-                        npc.velocity.X -= 0.1f;
+                        NPC.velocity.X -= 0.1f;
                     }
-                    else if (npc.velocity.X > 0f)
+                    else if (NPC.velocity.X > 0f)
                     {
-                        npc.velocity.X += 0.05f;
+                        NPC.velocity.X += 0.05f;
                     }
-                    if (npc.velocity.X < -6f)
+                    if (NPC.velocity.X < -6f)
                     {
-                        npc.velocity.X = -6f;
+                        NPC.velocity.X = -6f;
                     }
                 }
-                else if (npc.direction == 1 && npc.velocity.X < 6f)
+                else if (NPC.direction == 1 && NPC.velocity.X < 6f)
                 {
-                    npc.velocity.X += 0.1f;
-                    if (npc.velocity.X < -6f)
+                    NPC.velocity.X += 0.1f;
+                    if (NPC.velocity.X < -6f)
                     {
-                        npc.velocity.X += 0.1f;
+                        NPC.velocity.X += 0.1f;
                     }
-                    else if (npc.velocity.X < 0f)
+                    else if (NPC.velocity.X < 0f)
                     {
-                        npc.velocity.X -= 0.05f;
+                        NPC.velocity.X -= 0.05f;
                     }
-                    if (npc.velocity.X > 6f)
+                    if (NPC.velocity.X > 6f)
                     {
-                        npc.velocity.X = 6f;
+                        NPC.velocity.X = 6f;
                     }
                 }
-                if (npc.directionY == -1 && npc.velocity.Y > -4f)
+                if (NPC.directionY == -1 && NPC.velocity.Y > -4f)
                 {
-                    npc.velocity.Y -= 0.1f;
-                    if (npc.velocity.Y > 4f)
+                    NPC.velocity.Y -= 0.1f;
+                    if (NPC.velocity.Y > 4f)
                     {
-                        npc.velocity.Y = npc.velocity.Y - 0.1f;
+                        NPC.velocity.Y = NPC.velocity.Y - 0.1f;
                     }
-                    else if (npc.velocity.Y > 0f)
+                    else if (NPC.velocity.Y > 0f)
                     {
-                        npc.velocity.Y += 0.05f;
+                        NPC.velocity.Y += 0.05f;
                     }
-                    if (npc.velocity.Y < -4f)
+                    if (NPC.velocity.Y < -4f)
                     {
-                        npc.velocity.Y = -4f;
+                        NPC.velocity.Y = -4f;
                     }
                 }
-                else if (npc.directionY == 1 && npc.velocity.Y < 4f)
+                else if (NPC.directionY == 1 && NPC.velocity.Y < 4f)
                 {
-                    npc.velocity.Y += 0.1f;
-                    if (npc.velocity.Y < -4f)
+                    NPC.velocity.Y += 0.1f;
+                    if (NPC.velocity.Y < -4f)
                     {
-                        npc.velocity.Y += 0.1f;
+                        NPC.velocity.Y += 0.1f;
                     }
-                    else if (npc.velocity.Y < 0f)
+                    else if (NPC.velocity.Y < 0f)
                     {
-                        npc.velocity.Y -= 0.05f;
+                        NPC.velocity.Y -= 0.05f;
                     }
-                    if (npc.velocity.Y > 4f)
+                    if (NPC.velocity.Y > 4f)
                     {
-                        npc.velocity.Y = 4f;
+                        NPC.velocity.Y = 4f;
                     }
                 }
             }
             else
             {
-                if (npc.direction == -1 && npc.velocity.X > -4f)
+                if (NPC.direction == -1 && NPC.velocity.X > -4f)
                 {
-                    npc.velocity.X -= 0.1f;
-                    if (npc.velocity.X > 4f)
+                    NPC.velocity.X -= 0.1f;
+                    if (NPC.velocity.X > 4f)
                     {
-                        npc.velocity.X -= 0.1f;
+                        NPC.velocity.X -= 0.1f;
                     }
-                    else if (npc.velocity.X > 0f)
+                    else if (NPC.velocity.X > 0f)
                     {
-                        npc.velocity.X += 0.05f;
+                        NPC.velocity.X += 0.05f;
                     }
-                    if (npc.velocity.X < -4f)
+                    if (NPC.velocity.X < -4f)
                     {
-                        npc.velocity.X = -4f;
+                        NPC.velocity.X = -4f;
                     }
                 }
-                else if (npc.direction == 1 && npc.velocity.X < 4f)
+                else if (NPC.direction == 1 && NPC.velocity.X < 4f)
                 {
-                    npc.velocity.X += 0.1f;
-                    if (npc.velocity.X < -4f)
+                    NPC.velocity.X += 0.1f;
+                    if (NPC.velocity.X < -4f)
                     {
-                        npc.velocity.X += 0.1f;
+                        NPC.velocity.X += 0.1f;
                     }
-                    else if (npc.velocity.X < 0f)
+                    else if (NPC.velocity.X < 0f)
                     {
-                        npc.velocity.X -= 0.05f;
+                        NPC.velocity.X -= 0.05f;
                     }
-                    if (npc.velocity.X > 4f)
+                    if (NPC.velocity.X > 4f)
                     {
-                        npc.velocity.X = 4f;
+                        NPC.velocity.X = 4f;
                     }
                 }
-                if (npc.directionY == -1 && (double)npc.velocity.Y > -1.5)
+                if (NPC.directionY == -1 && (double)NPC.velocity.Y > -1.5)
                 {
-                    npc.velocity.Y -= 0.04f;
-                    if ((double)npc.velocity.Y > 1.5)
+                    NPC.velocity.Y -= 0.04f;
+                    if ((double)NPC.velocity.Y > 1.5)
                     {
-                        npc.velocity.Y -= 0.05f;
+                        NPC.velocity.Y -= 0.05f;
                     }
-                    else if (npc.velocity.Y > 0f)
+                    else if (NPC.velocity.Y > 0f)
                     {
-                        npc.velocity.Y += 0.03f;
+                        NPC.velocity.Y += 0.03f;
                     }
-                    if ((double)npc.velocity.Y < -1.5)
+                    if ((double)NPC.velocity.Y < -1.5)
                     {
-                        npc.velocity.Y = -1.5f;
+                        NPC.velocity.Y = -1.5f;
                     }
                 }
-                else if (npc.directionY == 1 && (double)npc.velocity.Y < 1.5)
+                else if (NPC.directionY == 1 && (double)NPC.velocity.Y < 1.5)
                 {
-                    npc.velocity.Y += 0.04f;
-                    if ((double)npc.velocity.Y < -1.5)
+                    NPC.velocity.Y += 0.04f;
+                    if ((double)NPC.velocity.Y < -1.5)
                     {
-                        npc.velocity.Y += 0.05f;
+                        NPC.velocity.Y += 0.05f;
                     }
-                    else if (npc.velocity.Y < 0f)
+                    else if (NPC.velocity.Y < 0f)
                     {
-                        npc.velocity.Y -= 0.03f;
+                        NPC.velocity.Y -= 0.03f;
                     }
-                    if ((double)npc.velocity.Y > 1.5)
+                    if ((double)NPC.velocity.Y > 1.5)
                     {
-                        npc.velocity.Y = 1.5f;
+                        NPC.velocity.Y = 1.5f;
                     }
                 }
             }
 
             if (Main.rand.Next(40) == 0)
             {
-                int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y + (float)npc.height * 0.25f), npc.width, (int)((float)npc.height * 0.5f), 5, npc.velocity.X, 2f, 0, default(Color), 1f);
+                int dust = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y + (float)NPC.height * 0.25f), NPC.width, (int)((float)NPC.height * 0.5f), DustID.Blood, NPC.velocity.X, 2f, 0, default(Color), 1f);
                 Main.dust[dust].velocity.X *= 0.5f;
                 Main.dust[dust].velocity.Y *= 0.1f;
             }
-            if (npc.wet)
+            if (NPC.wet)
             {
-                if (npc.velocity.Y > 0f)
+                if (NPC.velocity.Y > 0f)
                 {
-                    npc.velocity.Y *= 0.95f;
+                    NPC.velocity.Y *= 0.95f;
                 }
-                npc.velocity.Y -= 0.5f;
-                if (npc.velocity.Y < -4f)
+                NPC.velocity.Y -= 0.5f;
+                if (NPC.velocity.Y < -4f)
                 {
-                    npc.velocity.Y = -4f;
+                    NPC.velocity.Y = -4f;
                 }
-                npc.TargetClosest(true);
+                NPC.TargetClosest(true);
             }
 
-            npc.ai[1] += 1f;
-            if (npc.ai[1] >= 180f / npc.ai[0])
+            NPC.ai[1] += 1f;
+            if (NPC.ai[1] >= 180f / NPC.ai[0])
             {
-                Player player = Main.player[npc.target];
+                Player player = Main.player[NPC.target];
                 if (player.active && !player.dead)
                 {
-                    Vector2 distanceTo = player.Center - npc.Center;
+                    Vector2 distanceTo = player.Center - NPC.Center;
                     float angleTo = (float)Math.Atan2(distanceTo.Y, distanceTo.X);
-                    if (npc.spriteDirection == -1)
+                    if (NPC.spriteDirection == -1)
                     {
                         angleTo += (float)Math.PI;
                         angleTo %= 2f * (float)Math.PI;
@@ -276,19 +277,19 @@ namespace Bluemagic.NPCs.Night
                     {
                         toleration = 0.1f;
                     }
-                    if (Math.Abs(angleTo - npc.rotation) < toleration && Collision.CanHit(npc.position, npc.width, npc.height, player.position, player.width, player.height))
+                    if (Math.Abs(angleTo - NPC.rotation) < toleration && Collision.CanHit(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height))
                     {
-                        Vector2 unit = new Vector2((float)Math.Cos(npc.rotation), (float)Math.Sin(npc.rotation));
-                        unit *= (float)npc.spriteDirection;
+                        Vector2 unit = new Vector2((float)Math.Cos(NPC.rotation), (float)Math.Sin(NPC.rotation));
+                        unit *= (float)NPC.spriteDirection;
                         float speed = 9f;
                         int type = 83;
-                        if (npc.ai[0] == 2f)
+                        if (NPC.ai[0] == 2f)
                         {
                             speed = 6f;
                             type = 96;
                         }
-                        Projectile.NewProjectile(npc.Center.X + unit.X, npc.Center.Y + unit.Y, speed * unit.X, speed * unit.Y, type, 40, 0f, Main.myPlayer, 0f, 0f);
-                        npc.ai[1] = 0f;
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X + unit.X, NPC.Center.Y + unit.Y, speed * unit.X, speed * unit.Y, type, 40, 0f, Main.myPlayer, 0f, 0f);
+                        NPC.ai[1] = 0f;
                     }
                 }
             }
@@ -296,67 +297,58 @@ namespace Bluemagic.NPCs.Night
 
         public override void FindFrame(int frameHeight)
         {
-            if (npc.velocity.X > 0f)
+            if (NPC.velocity.X > 0f)
             {
-                npc.spriteDirection = 1;
-                npc.rotation = (float)Math.Atan2(npc.velocity.Y, npc.velocity.X);
+                NPC.spriteDirection = 1;
+                NPC.rotation = (float)Math.Atan2(NPC.velocity.Y, NPC.velocity.X);
             }
-            if (npc.velocity.X < 0f)
+            if (NPC.velocity.X < 0f)
             {
-                npc.spriteDirection = -1;
-                npc.rotation = (float)Math.Atan2(npc.velocity.Y, npc.velocity.X) + MathHelper.Pi;
+                NPC.spriteDirection = -1;
+                NPC.rotation = (float)Math.Atan2(NPC.velocity.Y, NPC.velocity.X) + MathHelper.Pi;
             }
-            npc.frameCounter += 1.0;
-            npc.frameCounter %= 16.0;
-            if (npc.frameCounter < 8.0)
+            NPC.frameCounter += 1.0;
+            NPC.frameCounter %= 16.0;
+            if (NPC.frameCounter < 8.0)
             {
-                npc.frame.Y = 0;
+                NPC.frame.Y = 0;
             }
             else
             {
-                npc.frame.Y = frameHeight;
+                NPC.frame.Y = frameHeight;
             }
-            if (npc.ai[0] == 2f)
+            if (NPC.ai[0] == 2f)
             {
-                npc.frame.Y += frameHeight * 2;
+                NPC.frame.Y += frameHeight * 2;
             }
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
                 for (int x = 0; x < 50; x++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)(2 * hit.HitDirection), -2f, 0, default(Color), 1f);
                 }
-                int type = mod.GetGoreSlot(npc.ai[0] == 1f ? "Gores/Retineye" : "Gores/Spazmateye");
-                Gore.NewGore(npc.position, npc.velocity, type, 1f);
-                Gore.NewGore(new Vector2(npc.position.X, npc.position.Y + 14f), npc.velocity, type, 1f);
+                int type = Mod.Find<ModGore>(NPC.ai[0] == 1f ? "Retineye" : "Spazmateye").Type;
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, type, 1f);
+                Gore.NewGore(NPC.GetSource_Death(), new Vector2(NPC.position.X, NPC.position.Y + 14f), NPC.velocity, type, 1f);
             }
             else
             {
-                for (int x = 0; x < (double)damage / (double)npc.lifeMax * 100.0; x++)
+                for (int x = 0; x < (double)hit.Damage / (double)NPC.lifeMax * 100.0; x++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, 5, (float)hitDirection, -1f, 0, default(Color), 1f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood, (float)hit.HitDirection, -1f, 0, default(Color), 1f);
                 }
             }
         }
 
-        public override void NPCLoot()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            if (Main.rand.Next(2) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Lens);
-            }
-            if (Main.rand.Next(50) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.BlackLens);
-            }
-            if (Main.rand.Next(Main.expertMode ? 80 : 100) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.MechanicalEye);
-            }
+            npcLoot.Add(ItemDropRule.Common(ItemID.Lens, 2));
+            npcLoot.Add(ItemDropRule.Common(ItemID.BlackLens, 50));
+            npcLoot.Add(ItemDropRule.NormalvsExpert(ItemID.MechanicalEye, 100, 80));
         }
 
         public override float SpawnChance(NPCSpawnInfo info)
@@ -365,7 +357,7 @@ namespace Bluemagic.NPCs.Night
             {
                 return 0f;
             }
-            return info.spawnTileY <= Main.worldSurface && !Main.dayTime ? 1f / 6f : 0f;
+            return info.SpawnTileY <= Main.worldSurface && !Main.dayTime ? 1f / 6f : 0f;
         }
     }
 }

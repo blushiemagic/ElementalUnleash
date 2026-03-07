@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,29 +11,29 @@ namespace Bluemagic.Items.PuritySpirit
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Dissolve your foes in a dazzling display."
-                + "\n<right> to turn off the lights.");
+            /* Tooltip.SetDefault("Dissolve your foes in a dazzling display."
+                + "\n<right> to turn off the lights.");*/
         }
 
         public override void SetDefaults()
         {
-            item.damage = 409;
-            item.magic = true;
-            item.width = 48;
-            item.height = 48;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.UseSound = SoundID.Item44;
-            item.noMelee = true;
-            item.useStyle = 1;
-            item.knockBack = 3.5f;
-            item.value = Item.sellPrice(0, 50, 0, 0);
-            item.rare = 11;
-            item.expert = true;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("PrismaticShocker");
-            item.shootSpeed = 0f;
-            item.mana = 26;
+            Item.damage = 409;
+            Item.DamageType = DamageClass.Magic;
+            Item.width = 48;
+            Item.height = 48;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.UseSound = SoundID.Item44;
+            Item.noMelee = true;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 3.5f;
+            Item.value = Item.sellPrice(0, 50, 0, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.expert = true;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("PrismaticShocker").Type;
+            Item.shootSpeed = 0f;
+            Item.mana = 26;
         }
 
         public override bool AltFunctionUse(Player player)
@@ -40,7 +41,7 @@ namespace Bluemagic.Items.PuritySpirit
             for (int k = 0; k < 1000; k++)
             {
                 Projectile proj = Main.projectile[k];
-                if (proj.active && proj.owner == player.whoAmI && proj.type == mod.ProjectileType("PrismaticShocker"))
+                if (proj.active && proj.owner == player.whoAmI && proj.type == Mod.Find<ModProjectile>("PrismaticShocker").Type)
                 {
                     proj.Kill();
                 }
@@ -48,13 +49,13 @@ namespace Bluemagic.Items.PuritySpirit
             return false;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             int count = 0;
             for (int k = 0; k < 1000; k++)
             {
                 Projectile proj = Main.projectile[k];
-                if (proj.active && proj.owner == player.whoAmI && proj.type == mod.ProjectileType("PrismaticShocker"))
+                if (proj.active && proj.owner == player.whoAmI && proj.type == Mod.Find<ModProjectile>("PrismaticShocker").Type)
                 {
                     if (count < 4)
                     {
@@ -74,28 +75,25 @@ namespace Bluemagic.Items.PuritySpirit
         {
             if (Bluemagic.Sushi != null)
             {
-                ModRecipe recipe;
+                Recipe recipe;
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "DanceOfBlades");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "CleanserBeam");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
 
-                recipe = new ModRecipe(mod);
+                recipe = CreateRecipe();
                 recipe.AddIngredient(null, "VoidEmblem");
-                recipe.AddIngredient(Bluemagic.Sushi.ItemType("SwapToken"));
+                recipe.AddIngredient(Bluemagic.Sushi.Find<ModItem>("SwapToken").Type);
                 recipe.AddTile(TileID.TinkerersWorkbench);
-                recipe.SetResult(this);
-                recipe.AddRecipe();
+                recipe.Register();
             }
         }
     }

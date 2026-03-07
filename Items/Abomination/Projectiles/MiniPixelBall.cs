@@ -10,62 +10,62 @@ namespace Bluemagic.Items.Abomination.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mini Captive Element");
-            ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.MinionShot[projectile.type] = true;
+            // DisplayName.SetDefault("Mini Captive Element");
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+            ProjectileID.Sets.MinionShot[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.alpha = 255;
-            projectile.timeLeft = 600;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.extraUpdates = 1;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 10;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 600;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.extraUpdates = 1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 10;
         }
 
         public override void AI()
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                projectile.alpha = 0;
+                Projectile.alpha = 0;
             }
-            if (projectile.ai[0] == 1f)
+            if (Projectile.ai[0] == 1f)
             {
-                projectile.coldDamage = true;
+                Projectile.coldDamage = true;
             }
             Color? color = GetColor();
             if (color.HasValue)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("Pixel"), 0f, 0f, 0, color.Value);
-                Main.dust[dust].velocity += projectile.velocity;
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("Pixel").Type, 0f, 0f, 0, color.Value);
+                Main.dust[dust].velocity += Projectile.velocity;
                 Main.dust[dust].scale = 0.8f;
             }
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -74,7 +74,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override void OnHitPvp(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -85,7 +85,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public Color? GetColor()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return new Color(250, 10, 0);
@@ -106,14 +106,14 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuff()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return BuffID.OnFire;
             case 1:
                 return BuffID.Frostburn;
             case 2:
-                return mod.BuffType("EtherealFlames");
+                return Mod.Find<ModBuff>("EtherealFlames").Type;
             case 3:
                 return 0;
             case 4:
@@ -127,7 +127,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuffTime()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return 600;

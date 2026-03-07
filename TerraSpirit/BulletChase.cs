@@ -17,7 +17,7 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Bluemagic.Instance.GetTexture("TerraSpirit/BulletChase");
+                return Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletChase").Value;
             }
         }
 

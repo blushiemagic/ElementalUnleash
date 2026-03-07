@@ -1,61 +1,46 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Items.Banners
 {
-    public class Banner : ModItem
+    public abstract class Banner : ModItem
     {
-        private string name;
-        private int placeStyle;
+        public virtual int placeStyle => -1;
 
-        public Banner()
-        {
-            this.name = "";
-            this.placeStyle = -1;
-        }
-
-        public Banner(string name, int placeStyle)
-        {
-            this.name = name;
-            this.placeStyle = placeStyle;
-        }
-
-        public override bool Autoload(ref string name)
-        {
-            AddBanner("NightSlime", 0);
-            AddBanner("TwinEye", 1);
-            return false;
-        }
-
-        public override bool CloneNewInstances => true;
+        protected override bool CloneNewInstances => true;
 
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("{$CommonItemTooltip.BannerBonus}{$Mods.Bluemagic.NPCName." + this.name + "}");
+            // Tooltip.SetDefault("{$CommonItemTooltip.BannerBonus}{$Mods.Bluemagic.NPCName." + Name + "}");
         }
 
         public override void SetDefaults()
         {
-            item.width = 10;
-            item.height = 24;
-            item.maxStack = 99;
-            item.rare = 1;
-            item.value = Item.sellPrice(0, 0, 10, 0);
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.autoReuse = true;
-            item.consumable = true;
-            item.createTile = mod.TileType("Banner");
-            item.placeStyle = this.placeStyle;
+            Item.width = 10;
+            Item.height = 24;
+            Item.maxStack = 99;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = Item.sellPrice(0, 0, 10, 0);
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.autoReuse = true;
+            Item.consumable = true;
+            Item.createTile = Mod.Find<ModTile>("Banner").Type;
+            Item.placeStyle = this.placeStyle;
         }
+    }
 
-        private void AddBanner(string name, int placeStyle)
-        {
-            mod.AddItem(name + "Banner", new Banner(name, placeStyle));
-        }
+    public class NightSlimeBanner : Banner
+    {
+        public override int placeStyle => 0;
+    }
+    public class TwinEyeBanner : Banner
+    {
+        public override int placeStyle => 1;
     }
 }

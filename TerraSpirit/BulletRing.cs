@@ -17,7 +17,7 @@ namespace Bluemagic.TerraSpirit
         {
             get
             {
-                return Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+                return Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             }
         }
 
@@ -60,7 +60,7 @@ namespace Bluemagic.TerraSpirit
         {
             for (int k = 0; k < numBullets; k++)
             {
-                spriteBatch.Draw(Texture, GetPos(k) - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White);
+                Main.spriteBatch.Draw(Texture, GetPos(k) - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White);
             }
         }
 

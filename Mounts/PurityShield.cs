@@ -1,65 +1,66 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Mounts
 {
-    public class PurityShield : ModMountData
+    public class PurityShield : ModMount
     {
         public const float speed = 10f;
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            mountData.spawnDust = 226;
-            mountData.spawnDustNoGravity = true;
-            mountData.buff = mod.BuffType("PurityShieldMount");
-            mountData.heightBoost = 0;
-            mountData.flightTimeMax = Int32.MaxValue;
-            mountData.fatigueMax = Int32.MaxValue;
-            mountData.fallDamage = 0f;
-            mountData.usesHover = true;
-            mountData.runSpeed = speed;
-            mountData.dashSpeed = speed;
-            mountData.acceleration = speed;
-            mountData.swimSpeed = speed;
-            mountData.jumpHeight = 8;
-            mountData.jumpSpeed = 8f;
-            mountData.blockExtraJumps = true;
-            mountData.totalFrames = 1;
-            int[] array = new int[mountData.totalFrames];
+            MountData.spawnDust = 226;
+            MountData.spawnDustNoGravity = true;
+            MountData.buff = Mod.Find<ModBuff>("PurityShieldMount").Type;
+            MountData.heightBoost = 0;
+            MountData.flightTimeMax = Int32.MaxValue;
+            MountData.fatigueMax = Int32.MaxValue;
+            MountData.fallDamage = 0f;
+            MountData.usesHover = true;
+            MountData.runSpeed = speed;
+            MountData.dashSpeed = speed;
+            MountData.acceleration = speed;
+            MountData.swimSpeed = speed;
+            MountData.jumpHeight = 8;
+            MountData.jumpSpeed = 8f;
+            MountData.blockExtraJumps = true;
+            MountData.totalFrames = 1;
+            int[] array = new int[MountData.totalFrames];
             for (int l = 0; l < array.Length; l++)
             {
                 array[l] = 0;
             }
-            mountData.playerYOffsets = new int[] { 0 };
-            mountData.xOffset = 16;
-            mountData.bodyFrame = 5;
-            mountData.yOffset = 16;
-            mountData.playerHeadOffset = 18;
-            mountData.standingFrameCount = 0;
-            mountData.standingFrameDelay = 0;
-            mountData.standingFrameStart = 0;
-            mountData.runningFrameCount = 0;
-            mountData.runningFrameDelay = 0;
-            mountData.runningFrameStart = 0;
-            mountData.flyingFrameCount = 0;
-            mountData.flyingFrameDelay = 0;
-            mountData.flyingFrameStart = 0;
-            mountData.inAirFrameCount = 0;
-            mountData.inAirFrameDelay = 0;
-            mountData.inAirFrameStart = 0;
-            mountData.idleFrameCount = 0;
-            mountData.idleFrameDelay = 0;
-            mountData.idleFrameStart = 0;
-            mountData.idleFrameLoop = true;
-            mountData.swimFrameCount = 0;
-            mountData.swimFrameDelay = 0;
-            mountData.swimFrameStart = 0;
-            if (Main.netMode != 2)
+            MountData.playerYOffsets = new int[] { 0 };
+            MountData.xOffset = 16;
+            MountData.bodyFrame = 5;
+            MountData.yOffset = 16;
+            MountData.playerHeadOffset = 18;
+            MountData.standingFrameCount = 0;
+            MountData.standingFrameDelay = 0;
+            MountData.standingFrameStart = 0;
+            MountData.runningFrameCount = 0;
+            MountData.runningFrameDelay = 0;
+            MountData.runningFrameStart = 0;
+            MountData.flyingFrameCount = 0;
+            MountData.flyingFrameDelay = 0;
+            MountData.flyingFrameStart = 0;
+            MountData.inAirFrameCount = 0;
+            MountData.inAirFrameDelay = 0;
+            MountData.inAirFrameStart = 0;
+            MountData.idleFrameCount = 0;
+            MountData.idleFrameDelay = 0;
+            MountData.idleFrameStart = 0;
+            MountData.idleFrameLoop = true;
+            MountData.swimFrameCount = 0;
+            MountData.swimFrameDelay = 0;
+            MountData.swimFrameStart = 0;
+            if (Main.netMode != NetmodeID.Server)
             {
-                mountData.textureWidth = mountData.backTexture.Width;
-                mountData.textureHeight = mountData.backTexture.Height;
+                MountData.textureWidth = MountData.backTexture.Width();
+                MountData.textureHeight = MountData.backTexture.Height();
             }
         }
     }

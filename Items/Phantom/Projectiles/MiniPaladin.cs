@@ -11,30 +11,30 @@ namespace Bluemagic.Items.Phantom.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 11;
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-            ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+            Main.projFrames[Projectile.type] = 11;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.minion = true;
-            projectile.minionSlots = 1;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 18000;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = false;
+            Projectile.netImportant = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.minion = true;
+            Projectile.minionSlots = 1;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 18000;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = false;
         }
 
         public override void CheckActive()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
             if (player.dead)
             {
@@ -42,69 +42,69 @@ namespace Bluemagic.Items.Phantom.Projectiles
             }
             if (modPlayer.paladinMinion)
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
         }
 
         public override void Behavior()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             BluemagicPlayer modPlayer = player.GetModPlayer<BluemagicPlayer>();
-            if (projectile.ai[1] > 0)
+            if (Projectile.ai[1] > 0)
             {
-                projectile.ai[1]--;
+                Projectile.ai[1]--;
             }
             bool moveLeft = false;
             bool moveRight = false;
-            int targetFollowDist = 40 * (projectile.minionPos + 1) * player.direction;
-            if (player.position.X + (float)(player.width / 2) < projectile.position.X + (float)(projectile.width / 2) + (float)targetFollowDist - 10f)
+            int targetFollowDist = 40 * (Projectile.minionPos + 1) * player.direction;
+            if (player.position.X + (float)(player.width / 2) < Projectile.position.X + (float)(Projectile.width / 2) + (float)targetFollowDist - 10f)
             {
                 moveLeft = true;
             }
-            else if (player.position.X + (float)(player.width / 2) > projectile.position.X + (float)(projectile.width / 2) + (float)targetFollowDist + 10f)
+            else if (player.position.X + (float)(player.width / 2) > Projectile.position.X + (float)(Projectile.width / 2) + (float)targetFollowDist + 10f)
             {
                 moveRight = true;
             }
             if (!Throwing())
             {
-                int flyDistance = 500 + 40 * projectile.minionPos;
+                int flyDistance = 500 + 40 * Projectile.minionPos;
                 if (player.rocketDelay2 > 0)
                 {
-                    projectile.ai[0] = 1f;
-                    projectile.netUpdate = true;
+                    Projectile.ai[0] = 1f;
+                    Projectile.netUpdate = true;
                 }
-                Vector2 projCenter = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
+                Vector2 projCenter = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
                 float xDist = player.position.X + (float)(player.width / 2) - projCenter.X;
                 float yDist = player.position.Y + (float)(player.height / 2) - projCenter.Y;
                 float distance = (float)System.Math.Sqrt((double)(xDist * xDist + yDist * yDist));
                 if (distance > 2000f)
                 {
-                    projectile.position.X = player.position.X + (float)(player.width / 2) - (float)(projectile.width / 2);
-                    projectile.position.Y = player.position.Y + (float)(player.height / 2) - (float)(projectile.height / 2);
+                    Projectile.position.X = player.position.X + (float)(player.width / 2) - (float)(Projectile.width / 2);
+                    Projectile.position.Y = player.position.Y + (float)(player.height / 2) - (float)(Projectile.height / 2);
                 }
                 else if (distance > (float)flyDistance || System.Math.Abs(yDist) > 300f)
                 {
-                    if (yDist > 0f && projectile.velocity.Y < 0f)
+                    if (yDist > 0f && Projectile.velocity.Y < 0f)
                     {
-                        projectile.velocity.Y = 0f;
+                        Projectile.velocity.Y = 0f;
                     }
-                    if (yDist < 0f && projectile.velocity.Y > 0f)
+                    if (yDist < 0f && Projectile.velocity.Y > 0f)
                     {
-                        projectile.velocity.Y = 0f;
+                        Projectile.velocity.Y = 0f;
                     }
-                    projectile.ai[0] = 1f;
-                    projectile.netUpdate = true;
+                    Projectile.ai[0] = 1f;
+                    Projectile.netUpdate = true;
                 }
             }
             if (Throwing())
             {
                 UpdateFrame();
-                projectile.velocity.X = 0f;
+                Projectile.velocity.X = 0f;
             }
-            else if (projectile.ai[0] != 0f)
+            else if (Projectile.ai[0] != 0f)
             {
-                projectile.tileCollide = false;
-                Vector2 projCenter = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
+                Projectile.tileCollide = false;
+                Vector2 projCenter = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
                 float moveDistX = player.position.X + (float)(player.width / 2) - projCenter.X - (float)(40 * player.direction);
                 float viewRange = 600f;
                 bool aggro = false;
@@ -124,24 +124,24 @@ namespace Bluemagic.Items.Phantom.Projectiles
                 }
                 if (!aggro)
                 {
-                    moveDistX -= (float)(40 * projectile.minionPos * player.direction);
+                    moveDistX -= (float)(40 * Projectile.minionPos * player.direction);
                 }
                 float moveDistY = player.position.Y + (float)(player.height / 2) - projCenter.Y;
                 float moveDist = (float)System.Math.Sqrt((double)(moveDistX * moveDistX + moveDistY * moveDistY));
                 float maxSpeed = 10f;
-                if (moveDist < 200f && player.velocity.Y == 0f && projectile.position.Y + (float)projectile.height <= player.position.Y + (float)player.height && !Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
+                if (moveDist < 200f && player.velocity.Y == 0f && Projectile.position.Y + (float)Projectile.height <= player.position.Y + (float)player.height && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
                 {
-                    projectile.ai[0] = 0f;
-                    if (projectile.velocity.Y < -6f)
+                    Projectile.ai[0] = 0f;
+                    if (Projectile.velocity.Y < -6f)
                     {
-                        projectile.velocity.Y = -6f;
+                        Projectile.velocity.Y = -6f;
                     }
-                    projectile.netUpdate = true;
+                    Projectile.netUpdate = true;
                 }
                 if (moveDist < 60f)
                 {
-                    moveDistX = projectile.velocity.X;
-                    moveDistY = projectile.velocity.Y;
+                    moveDistX = Projectile.velocity.X;
+                    moveDistY = Projectile.velocity.Y;
                 }
                 else
                 {
@@ -150,68 +150,68 @@ namespace Bluemagic.Items.Phantom.Projectiles
                     moveDistY *= moveDist;
                 }
                 float acceleration = 0.2f;
-                if (projectile.velocity.X < moveDistX)
+                if (Projectile.velocity.X < moveDistX)
                 {
-                    projectile.velocity.X += acceleration;
-                    if (projectile.velocity.X < 0f)
+                    Projectile.velocity.X += acceleration;
+                    if (Projectile.velocity.X < 0f)
                     {
-                        projectile.velocity.X += acceleration * 1.5f;
+                        Projectile.velocity.X += acceleration * 1.5f;
                     }
                 }
-                if (projectile.velocity.X > moveDistX)
+                if (Projectile.velocity.X > moveDistX)
                 {
-                    projectile.velocity.X -= acceleration;
-                    if (projectile.velocity.X > 0f)
+                    Projectile.velocity.X -= acceleration;
+                    if (Projectile.velocity.X > 0f)
                     {
-                        projectile.velocity.X -= acceleration * 1.5f;
+                        Projectile.velocity.X -= acceleration * 1.5f;
                     }
                 }
-                if (projectile.velocity.Y < moveDistY)
+                if (Projectile.velocity.Y < moveDistY)
                 {
-                    projectile.velocity.Y += acceleration;
-                    if (projectile.velocity.Y < 0f)
+                    Projectile.velocity.Y += acceleration;
+                    if (Projectile.velocity.Y < 0f)
                     {
-                        projectile.velocity.Y += acceleration * 1.5f;
+                        Projectile.velocity.Y += acceleration * 1.5f;
                     }
                 }
-                if (projectile.velocity.Y > moveDistY)
+                if (Projectile.velocity.Y > moveDistY)
                 {
-                    projectile.velocity.Y -= acceleration;
-                    if (projectile.velocity.Y > 0f)
+                    Projectile.velocity.Y -= acceleration;
+                    if (Projectile.velocity.Y > 0f)
                     {
-                        projectile.velocity.Y -= acceleration * 1.5f;
+                        Projectile.velocity.Y -= acceleration * 1.5f;
                     }
                 }
-                if ((double)projectile.velocity.X > 0.5)
+                if ((double)Projectile.velocity.X > 0.5)
                 {
-                    projectile.spriteDirection = -1;
+                    Projectile.spriteDirection = -1;
                 }
-                else if ((double)projectile.velocity.X < -0.5)
+                else if ((double)Projectile.velocity.X < -0.5)
                 {
-                    projectile.spriteDirection = 1;
+                    Projectile.spriteDirection = 1;
                 }
                 UpdateFrame();
                 if (Main.rand.Next(3) == 0)
                 {
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, mod.DustType("SpectreDust"));
+                    int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, Mod.Find<ModDust>("SpectreDust").Type);
                     Main.dust[dust].velocity /= 2f;
                 }
             }
             else
             {
-                float separation = (float)(40 * projectile.minionPos);
+                float separation = (float)(40 * Projectile.minionPos);
                 if (true)
                 {
-                    float moveToX = projectile.position.X;
-                    float moveToY = projectile.position.Y;
+                    float moveToX = Projectile.position.X;
+                    float moveToY = Projectile.position.Y;
                     float moveDist = 100000f;
                     int attacking = -1;
-                    if (projectile.OwnerMinionAttackTargetNPC != null && projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy(this))
+                    if (Projectile.OwnerMinionAttackTargetNPC != null && Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy(this))
                     {
-                        NPC npc = projectile.OwnerMinionAttackTargetNPC;
+                        NPC npc = Projectile.OwnerMinionAttackTargetNPC;
                         moveToX = npc.Center.X;
                         moveToY = npc.Center.Y;
-                        moveDist = Vector2.Distance(npc.Center, projectile.Center);
+                        moveDist = Vector2.Distance(npc.Center, Projectile.Center);
                         attacking = npc.whoAmI;
                     }
                     else
@@ -223,7 +223,7 @@ namespace Bluemagic.Items.Phantom.Projectiles
                             {
                                 float monsterX = Main.npc[k].position.X + (float)(Main.npc[k].width / 2);
                                 float monsterY = Main.npc[k].position.Y + (float)(Main.npc[k].height / 2);
-                                float monsterDist = System.Math.Abs(projectile.position.X + (float)(projectile.width / 2) - monsterX) + System.Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - monsterY);
+                                float monsterDist = System.Math.Abs(Projectile.position.X + (float)(Projectile.width / 2) - monsterX) + System.Math.Abs(Projectile.position.Y + (float)(Projectile.height / 2) - monsterY);
                                 if (monsterDist < moveDist)
                                 {
                                     if (attacking == -1 && monsterDist <= closestDist)
@@ -232,7 +232,7 @@ namespace Bluemagic.Items.Phantom.Projectiles
                                         moveToX = monsterX;
                                         moveToY = monsterY;
                                     }
-                                    if (Collision.CanHit(projectile.position, projectile.width, projectile.height, Main.npc[k].position, Main.npc[k].width, Main.npc[k].height))
+                                    if (Collision.CanHit(Projectile.position, Projectile.width, Projectile.height, Main.npc[k].position, Main.npc[k].width, Main.npc[k].height))
                                     {
                                         moveDist = monsterDist;
                                         moveToX = monsterX;
@@ -249,35 +249,35 @@ namespace Bluemagic.Items.Phantom.Projectiles
                     }
                     if (attacking >= 0 && moveDist < 1000f)
                     {
-                        projectile.friendly = true;
-                        if (projectile.ai[1] == 0 && projectile.owner == Main.myPlayer)
+                        Projectile.friendly = true;
+                        if (Projectile.ai[1] == 0 && Projectile.owner == Main.myPlayer)
                         {
-                            Vector2 throwSpeed = new Vector2(moveToX, moveToY) - projectile.Center;
+                            Vector2 throwSpeed = new Vector2(moveToX, moveToY) - Projectile.Center;
                             if (throwSpeed != Vector2.Zero)
                             {
                                 throwSpeed.Normalize();
                                 throwSpeed *= 10f;
                             }
-                            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, throwSpeed.X, throwSpeed.Y, mod.ProjectileType("MiniHammer"), projectile.damage, projectile.knockBack, projectile.owner);
-                            if (moveToX < projectile.Center.X)
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X, Projectile.Center.Y, throwSpeed.X, throwSpeed.Y, Mod.Find<ModProjectile>("MiniHammer").Type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                            if (moveToX < Projectile.Center.X)
                             {
-                                projectile.direction = -1;
+                                Projectile.direction = -1;
                             }
-                            else if (moveToX > projectile.Center.X)
+                            else if (moveToX > Projectile.Center.X)
                             {
-                                projectile.direction = 1;
+                                Projectile.direction = 1;
                             }
-                            projectile.ai[1] = 100;
-                            projectile.netUpdate = true;
+                            Projectile.ai[1] = 100;
+                            Projectile.netUpdate = true;
                         }
                     }
                     else
                     {
-                        projectile.friendly = false;
+                        Projectile.friendly = false;
                     }
                 }
-                projectile.rotation = 0f;
-                projectile.tileCollide = true;
+                Projectile.rotation = 0f;
+                Projectile.tileCollide = true;
                 float increment = 0.2f;
                 float maxSpeed = 3f;
                 if (maxSpeed < System.Math.Abs(player.velocity.X) + System.Math.Abs(player.velocity.Y))
@@ -286,25 +286,25 @@ namespace Bluemagic.Items.Phantom.Projectiles
                 }
                 if (moveLeft)
                 {
-                    projectile.velocity.X -= increment;
+                    Projectile.velocity.X -= increment;
                 }
                 else if (moveRight)
                 {
-                    projectile.velocity.X += increment;
+                    Projectile.velocity.X += increment;
                 }
                 else
                 {
-                    projectile.velocity.X *= 0.8f;
-                    if (projectile.velocity.X >= -increment && projectile.velocity.X <= increment)
+                    Projectile.velocity.X *= 0.8f;
+                    if (Projectile.velocity.X >= -increment && Projectile.velocity.X <= increment)
                     {
-                        projectile.velocity.X = 0f;
+                        Projectile.velocity.X = 0f;
                     }
                 }
                 bool willCollide = false;
                 if (moveLeft || moveRight)
                 {
-                    int checkX = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-                    int checkY = (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16;
+                    int checkX = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+                    int checkY = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16;
                     if (moveLeft)
                     {
                         checkX--;
@@ -313,20 +313,20 @@ namespace Bluemagic.Items.Phantom.Projectiles
                     {
                         checkX++;
                     }
-                    checkX += (int)projectile.velocity.X;
+                    checkX += (int)Projectile.velocity.X;
                     if (WorldGen.SolidTile(checkX, checkY))
                     {
                         willCollide = true;
                     }
                 }
-                bool playerBelow = player.position.Y + (float)player.height - 8f > projectile.position.Y + (float)projectile.height;
-                Collision.StepUp(ref projectile.position, ref projectile.velocity, projectile.width, projectile.height, ref projectile.stepSpeed, ref projectile.gfxOffY, 1, false);
-                if (projectile.velocity.Y == 0f)
+                bool playerBelow = player.position.Y + (float)player.height - 8f > Projectile.position.Y + (float)Projectile.height;
+                Collision.StepUp(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref Projectile.stepSpeed, ref Projectile.gfxOffY, 1, false);
+                if (Projectile.velocity.Y == 0f)
                 {
-                    if (!playerBelow && (projectile.velocity.X != 0f))
+                    if (!playerBelow && (Projectile.velocity.X != 0f))
                     {
-                        int checkX = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-                        int checkY = (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16 + 1;
+                        int checkX = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+                        int checkY = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16 + 1;
                         if (moveLeft)
                         {
                             checkX--;
@@ -339,9 +339,9 @@ namespace Bluemagic.Items.Phantom.Projectiles
                     }
                     if (willCollide)
                     {
-                        int checkX = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-                        int checkY = (int)(projectile.position.Y + (float)projectile.height) / 16 + 1;
-                        if (WorldGen.SolidTile(checkX, checkY) || Main.tile[checkX, checkY].halfBrick() || Main.tile[checkX, checkY].slope() > 0)
+                        int checkX = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+                        int checkY = (int)(Projectile.position.Y + (float)Projectile.height) / 16 + 1;
+                        if (WorldGen.SolidTile(checkX, checkY) || Main.tile[checkX, checkY].IsHalfBlock || Main.tile[checkX, checkY].Slope > 0)
                         {
                             try
                             {
@@ -354,125 +354,125 @@ namespace Bluemagic.Items.Phantom.Projectiles
                                 {
                                     checkX++;
                                 }
-                                checkX += (int)projectile.velocity.X;
+                                checkX += (int)Projectile.velocity.X;
                                 if (!WorldGen.SolidTile(checkX, checkY - 1) && !WorldGen.SolidTile(checkX, checkY - 2))
                                 {
-                                    projectile.velocity.Y = -5.1f;
+                                    Projectile.velocity.Y = -5.1f;
                                 }
                                 else
                                 {
-                                    projectile.velocity.Y = -7.1f;
+                                    Projectile.velocity.Y = -7.1f;
                                 }
                             }
                             catch
                             {
-                                projectile.velocity.Y = -7.1f;
+                                Projectile.velocity.Y = -7.1f;
                             }
                         }
                     }
-                    else if (!projectile.friendly && player.position.Y + player.height + 80f < projectile.position.Y)
+                    else if (!Projectile.friendly && player.position.Y + player.height + 80f < Projectile.position.Y)
                     {
-                        projectile.velocity.Y = -7f;
+                        Projectile.velocity.Y = -7f;
                     }
                 }
-                if (projectile.velocity.X > maxSpeed)
+                if (Projectile.velocity.X > maxSpeed)
                 {
-                    projectile.velocity.X = maxSpeed;
+                    Projectile.velocity.X = maxSpeed;
                 }
-                if (projectile.velocity.X < -maxSpeed)
+                if (Projectile.velocity.X < -maxSpeed)
                 {
-                    projectile.velocity.X = -maxSpeed;
+                    Projectile.velocity.X = -maxSpeed;
                 }
-                if (projectile.velocity.X < 0f)
+                if (Projectile.velocity.X < 0f)
                 {
-                    projectile.direction = -1;
+                    Projectile.direction = -1;
                 }
-                if (projectile.velocity.X > 0f)
+                if (Projectile.velocity.X > 0f)
                 {
-                    projectile.direction = 1;
+                    Projectile.direction = 1;
                 }
-                if (projectile.velocity.X != 0f || Throwing())
+                if (Projectile.velocity.X != 0f || Throwing())
                 {
-                    projectile.spriteDirection = -projectile.direction;
+                    Projectile.spriteDirection = -Projectile.direction;
                 }
                 UpdateFrame();
-                if (projectile.wet)
+                if (Projectile.wet)
                 {
-                    projectile.velocity *= 0.9f;
-                    projectile.velocity.Y += 0.2f;
+                    Projectile.velocity *= 0.9f;
+                    Projectile.velocity.Y += 0.2f;
                 }
                 else
                 {
-                    projectile.velocity.Y += 0.4f;
+                    Projectile.velocity.Y += 0.4f;
                 }
-                if (projectile.velocity.Y > 10f)
+                if (Projectile.velocity.Y > 10f)
                 {
-                    projectile.velocity.Y = 10f;
+                    Projectile.velocity.Y = 10f;
                 }
             }
         }
 
         private bool Throwing()
         {
-            return projectile.ai[1] > 85;
+            return Projectile.ai[1] > 85;
         }
 
         private void UpdateFrame()
         {
-            projectile.alpha = 0;
-            if (projectile.ai[0] != 0)
+            Projectile.alpha = 0;
+            if (Projectile.ai[0] != 0)
             {
-                projectile.alpha = 70;
-                projectile.frame = 10;
-                projectile.rotation = -0.1f * projectile.spriteDirection;
+                Projectile.alpha = 70;
+                Projectile.frame = 10;
+                Projectile.rotation = -0.1f * Projectile.spriteDirection;
             }
             else if (Throwing())
             {
-                if (projectile.ai[1] > 93)
+                if (Projectile.ai[1] > 93)
                 {
-                    projectile.frame = 8;
+                    Projectile.frame = 8;
                 }
                 else
                 {
-                    projectile.frame = 9;
+                    Projectile.frame = 9;
                 }
             }
-            else if (projectile.velocity.Y != 0)
+            else if (Projectile.velocity.Y != 0)
             {
-                projectile.frame = 1;
+                Projectile.frame = 1;
             }
-            else if (projectile.velocity.X != 0)
+            else if (Projectile.velocity.X != 0)
             {
-                projectile.frameCounter++;
-                projectile.frameCounter %= 18;
-                if (projectile.frameCounter < 3)
+                Projectile.frameCounter++;
+                Projectile.frameCounter %= 18;
+                if (Projectile.frameCounter < 3)
                 {
-                    projectile.frame = 2;
+                    Projectile.frame = 2;
                 }
-                else if (projectile.frameCounter < 6)
+                else if (Projectile.frameCounter < 6)
                 {
-                    projectile.frame = 3;
+                    Projectile.frame = 3;
                 }
-                else if (projectile.frameCounter < 9)
+                else if (Projectile.frameCounter < 9)
                 {
-                    projectile.frame = 4;
+                    Projectile.frame = 4;
                 }
-                else if (projectile.frameCounter < 12)
+                else if (Projectile.frameCounter < 12)
                 {
-                    projectile.frame = 5;
+                    Projectile.frame = 5;
                 }
-                else if (projectile.frameCounter < 15)
+                else if (Projectile.frameCounter < 15)
                 {
-                    projectile.frame = 6;
+                    Projectile.frame = 6;
                 }
                 else
                 {
-                    projectile.frame = 7;
+                    Projectile.frame = 7;
                 }
             }
             else
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
         }
 

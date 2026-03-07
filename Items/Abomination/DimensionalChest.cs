@@ -9,398 +9,335 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Steals loot from other dimensions");
+            // Tooltip.SetDefault("Steals loot from other dimensions");
         }
 
         public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 22;
-            item.maxStack = 99;
-            item.rare = 8;
+            Item.width = 26;
+            Item.height = 22;
+            Item.maxStack = 99;
+            Item.rare = ItemRarityID.Yellow;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe;
+            Recipe recipe;
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Spear);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.Spear);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.WoodenBoomerang);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.WoodenBoomerang);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Blowpipe);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.Blowpipe);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Aglet);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.Aglet);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.ClimbingClaws);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.ClimbingClaws);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Umbrella);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.Umbrella);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Radar);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.Radar);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.CordageGuide);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.CordageGuide);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.WandofSparking);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WoodKey"));
-            recipe.SetResult(ItemID.WandofSparking);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WoodKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.BandofRegeneration);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.BandofRegeneration);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.MagicMirror);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.MagicMirror);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.CloudinaBottle);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.CloudinaBottle);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.HermesBoots);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.HermesBoots);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.EnchantedBoomerang);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.EnchantedBoomerang);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.ShoeSpikes);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.ShoeSpikes);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FlareGun);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.FlareGun);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Extractinator);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("StoneKey"));
-            recipe.SetResult(ItemID.Extractinator);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("StoneKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.IceBoomerang);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.IceBoomerang);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.IceBlade);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.IceBlade);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.IceSkates);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.IceSkates);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.SnowballCannon);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.SnowballCannon);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.BlizzardinaBottle);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.BlizzardinaBottle);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FlurryBoots);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.FlurryBoots);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.IceMachine);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.IceMachine);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.IceMirror);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.IceMirror);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Fish);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("IceKey"));
-            recipe.SetResult(ItemID.Fish);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("IceKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Trident);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WaterKey"));
-            recipe.SetResult(ItemID.Trident);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WaterKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.BreathingReed);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WaterKey"));
-            recipe.SetResult(ItemID.BreathingReed);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WaterKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Flipper);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WaterKey"));
-            recipe.SetResult(ItemID.Flipper);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WaterKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.WaterWalkingBoots);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("WaterKey"));
-            recipe.SetResult(ItemID.WaterWalkingBoots);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("WaterKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.ShinyRedBalloon);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("SkywareKey"));
-            recipe.SetResult(ItemID.ShinyRedBalloon);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("SkywareKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Starfury);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("SkywareKey"));
-            recipe.SetResult(ItemID.Starfury);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("SkywareKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.LuckyHorseshoe);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("SkywareKey"));
-            recipe.SetResult(ItemID.LuckyHorseshoe);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("SkywareKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.SkyMill);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("SkywareKey"));
-            recipe.SetResult(ItemID.SkyMill);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("SkywareKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.AnkletoftheWind);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.AnkletoftheWind);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FeralClaws);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.FeralClaws);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.StaffofRegrowth);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.StaffofRegrowth);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Boomstick);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.Boomstick);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Seaweed);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.Seaweed);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FiberglassFishingPole);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.FiberglassFishingPole);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FlowerBoots);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.FlowerBoots);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.LivingMahoganyWand);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.LivingMahoganyWand);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.LivingMahoganyLeafWand);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.LivingMahoganyLeafWand);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.HoneyDispenser);
             recipe.AddIngredient(this);
-            recipe.AddIngredient(mod.ItemType("MahoganyKey"));
-            recipe.SetResult(ItemID.HoneyDispenser);
-            recipe.AddRecipe();
+            recipe.AddIngredient(Mod.Find<ModItem>("MahoganyKey").Type);
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.MagicMissile);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.MagicMissile);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Muramasa);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.Muramasa);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.CobaltShield);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.CobaltShield);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.AquaScepter);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.AquaScepter);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.BlueMoon);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.BlueMoon);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Handgun);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.Handgun);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.ShadowKey);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.ShadowKey);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.BoneWelder);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.BoneWelder);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Valor);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.GoldenKey);
-            recipe.SetResult(ItemID.Valor);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.DarkLance);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.ShadowKey);
-            recipe.SetResult(ItemID.DarkLance);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Flamelash);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.ShadowKey);
-            recipe.SetResult(ItemID.Flamelash);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.FlowerofFire);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.ShadowKey);
-            recipe.SetResult(ItemID.FlowerofFire);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.Sunfury);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.ShadowKey);
-            recipe.SetResult(ItemID.Sunfury);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.HellwingBow);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.ShadowKey);
-            recipe.SetResult(ItemID.HellwingBow);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.ScourgeoftheCorruptor);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.CorruptionKey);
-            recipe.SetResult(ItemID.ScourgeoftheCorruptor);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.VampireKnives);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.CrimsonKey);
-            recipe.SetResult(ItemID.VampireKnives);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.PiranhaGun);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.JungleKey);
-            recipe.SetResult(ItemID.PiranhaGun);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.RainbowGun);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.HallowedKey);
-            recipe.SetResult(ItemID.RainbowGun);
-            recipe.AddRecipe();
+            recipe.Register();
 
-            recipe = new ModRecipe(mod);
+            recipe = Recipe.Create(ItemID.StaffoftheFrostHydra);
             recipe.AddIngredient(this);
             recipe.AddIngredient(ItemID.FrozenKey);
-            recipe.SetResult(ItemID.StaffoftheFrostHydra);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

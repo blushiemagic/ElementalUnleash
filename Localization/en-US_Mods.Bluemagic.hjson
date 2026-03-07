@@ -1,0 +1,1388 @@
+NPCName: {
+	Retineye: Retineye
+	Spazmateye: Spazmateye
+}
+
+PhantomSummon: You feel something cold leeching your life...
+ElementalUnleash: The elements have been unleashed!
+PuriumOreGen: Your world has been blessed with Purium!
+NPCTalk: <{0}> {1}
+LivesLeft: "{0} has {1} lives left!"
+LifeLeft: "{0} has 1 life left!"
+ChaosDpsCap: A heavy pressure protects the chaos from rapid damage.
+ChaosPressureStart: The air grows heavy with chaotic pressure
+ChaosPressureLight: A protective sphere of light has appeared!
+CataclysmCountdown: "{0} seconds until the end"
+TerraSpiritExpert: The Spirit of Purity is losing control!
+ExtraLives: Everyone has been granted 3 extra lives!
+
+NPCs: {
+	Abomination: {
+		DisplayName: The Abomination
+		SpawnInfo: Use a [i:Bluemagic/FoulOrb] in the Underworld (Plantera must be defeated)
+		SpawnInfoRematch: Use a [i:Bluemagic/FoulOrb] in the Underworld (Moon Lord must be defeated). [c/FF0000:Starts the Elemental Unleash!]
+		Rematch: The Abomination (Rematch)
+	}
+
+	AbominationRun.DisplayName: The Abomination
+	CaptiveElement2.DisplayName: Captive Element
+	CaptiveElement.DisplayName: Captive Element
+	Blushiemagic.DisplayName: blushiemagic
+	BlushiemagicA.DisplayName: blushiemagic (A)
+	BlushiemagicJ.DisplayName: blushiemagic (J)
+	BlushiemagicK.DisplayName: blushiemagic (K)
+	BlushiemagicL.DisplayName: blushiemagic (L)
+	BlushiemagicM.DisplayName: blushiemagic (M)
+
+	ChaosSpirit: {
+		DisplayName: Spirit of Chaos
+		SpawnInfo: Use a [i:Bluemagic/RitualOfEndings] anytime, anywhere (has infinite reuses)
+	}
+
+	ChaosSpirit2.DisplayName: Spirit of Chaos
+	ChaosSpirit3.DisplayName: Spirit of Chaos
+	ChaosSpiritArm.DisplayName: Spirit of Chaos - Arm
+
+	HardmodeGuide: {
+		DisplayName: Hardmode Guide
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I hate not having a home.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: I dislike how crowded I am.
+			HateCrowded: I hate how crowded I am.
+			LikeNPC_Princess: I like {NPCName}.
+			Princess_LovesNPC: I like {NPCName}.
+		}
+	}
+
+	Phantom: {
+		DisplayName: The Phantom
+		SpawnInfo: Use a [i:Bluemagic/PaladinEmblem] in the Dungeon (Plantera must be defeated)
+	}
+
+	PhantomHand.DisplayName: The Phantom
+	PurityShield.DisplayName: Shield of Purity
+
+	PuritySpirit: {
+		DisplayName: Spirit of Purity
+		SpawnInfo: Kill a Bunny while the Bunny is standing in front of a placed [i:Bluemagic/ElementalPurge]
+		SpawnInfo2: Use a [i:Bluemagic/RitualOfBunnies] anytime, anywhere, after all previous bosses have been defeated (has infinite reuses)
+		SpawnInfo3: Defeat the previous phase or use a [i:Bluemagic/Checkpoint1]
+		SpawnInfo4: Defeat the previous phase or use a [i:Bluemagic/Checkpoint2]
+		SpawnInfo5: Defeat the previous phase or use a [i:Bluemagic/Checkpoint3]
+		SpawnInfo6: Overcome all phases and defeat the boss once and for all!
+		Terra1: ????? (Phase 1)
+		Terra2: ????? (Phase 2)
+		Terra3: ????? (Phase 3)
+		Terra4: ????? (Phase 4)
+		Terra5: ?????
+	}
+
+	GoldBlob.DisplayName: Charged Negative Blob
+	GoldBlob2.DisplayName: Charged Negative Blob
+	NegativeBlob.DisplayName: Negative Blob
+	NegativeBlob2.DisplayName: Negative Blob
+	TerraProbe1.DisplayName: Purity Probe
+	TerraProbe2.DisplayName: Purity Probe
+	TerraProbe3.DisplayName: Purity Probe
+	TerraProbe4.DisplayName: Purity Probe
+	TerraProbe5.DisplayName: Purity Probe
+	TerraSpirit.DisplayName: Spirit of Purity
+	TerraSpirit2.DisplayName: Spirit of Purity
+	FreedElement.DisplayName: Freed Element
+	NightSlime.DisplayName: Night Slime
+	TwinEye.DisplayName: Twin Eye
+	PhantomOrb.DisplayName: Phantom Orb
+	PhantomSoul.DisplayName: Phantom Soul
+}
+
+Projectiles: {
+	ElementBall.DisplayName: Elemental Ball
+	ElementLaser.DisplayName: Elemental Laser
+	PixelBall.DisplayName: Pixel Ball
+	BlushieCharmProj.DisplayName: Charm of Blushie
+	DarkLightningProj.DisplayName: Dark Lightning
+	FirePulse.DisplayName: Frosty Laser Beam
+	FrostFairyLaser.DisplayName: Frosty Laser Beam
+	FrostFairyWingsProj.DisplayName: Wings of the Frost Fairy
+	SkyDragonBullet.DisplayName: Sky Dragon
+	ChaosArray.DisplayName: Array of Chaos
+	ElementalYoyoBeam.DisplayName: Elemental Yoyo
+	ElementalYoyo.DisplayName: Elemental Yoyo
+	ElementShield.DisplayName: Six-Color Shield
+	MiniCaptiveElement0.DisplayName: Mini Captive Element
+	MiniCaptiveElement1.DisplayName: Mini Captive Element
+	MiniCaptiveElement2.DisplayName: Mini Captive Element
+	MiniCaptiveElement3.DisplayName: Mini Captive Element
+	MiniCaptiveElement4.DisplayName: Mini Captive Element
+	MiniCaptiveElement5.DisplayName: Mini Captive Element
+	MiniPixelBall.DisplayName: Mini Captive Element
+	PhantomHammerFriendly.DisplayName: Phantom Hammer
+	PhantomHammer.DisplayName: Phantom Hammer
+	BladeRain.DisplayName: Dance of Blades
+	CleanserLaser.DisplayName: Cleanser Beam
+	DanceOfBlades.DisplayName: Dance of Blades
+	PurityBolt.DisplayName: Purity Wisp
+	PuriumArrowTrail.DisplayName: Purium Arrow
+	PuriumArrow.DisplayName: Purium Arrow
+	PuriumBoom.DisplayName: Purium Breaker
+	PuriumSlice.DisplayName: Purium Slicer
+	PuriumSpear.DisplayName: Purium Lightbeam
+	PhantomBladeHostile.DisplayName: Phantom Blade
+	PhantomBlade.DisplayName: Phantom Blade
+	PhantomSphereHostile.DisplayName: Phantom Sphere
+	PhantomSphere.DisplayName: Phantom Sphere
+	WispHostile.DisplayName: Wisp
+	Wisp.DisplayName: Wisp
+	PinkSaltBlockBall.DisplayName: Pink Salt Ball
+	SaltBlockBall.DisplayName: Salt Ball
+	ShroomsandGunBall.DisplayName: Shroomsand Ball
+	SparklingBall.DisplayName: Sparkling Ball
+	NullLaser.DisplayName: Nullification Laser
+	PureCrystal.DisplayName: Crystal of Cleansing
+	PurityBeam.DisplayName: Purifying Column
+	PuritySnake.DisplayName: Void Trail
+	PuritySphere.DisplayName: Purity Eye
+	VoidWorld.DisplayName: Void World
+	RadiantRainbowRay.DisplayName: Radiant Rainbow Ray
+	SkyDragonArm.DisplayName: Sky Dragon Arm
+	SkyDragonHead.DisplayName: Sky Dragon Head
+	CataclysmicRay.DisplayName: Cataclysmic Ray
+	ChaosBit.DisplayName: Chaos Bit
+	ChaosPearl.DisplayName: Chaos Pearl
+	ChaosRay.DisplayName: Chaos Ray
+	CrossFracture.DisplayName: Cross Fracture
+	DissolutionChain.DisplayName: Dissolution Chain
+	DissonanceOrb.DisplayName: Dissonance Orb
+	HolySphere.DisplayName: Holy Sphere
+	HolySphere2.DisplayName: Holy Sphere2
+	SuppressionSphere.DisplayName: Suppression Sphere
+	ElementalSpray.DisplayName: Elemental Spray
+	EyeballGlove.DisplayName: Eyeball Glove
+	EyeballTome.DisplayName: Eyeball Tome
+	MoltenDrill.DisplayName: Molten Drill
+	MiniHammer.DisplayName: Mini Hammer
+	MiniPaladin.DisplayName: Mini Paladin
+	CrystalShard.DisplayName: Crystal Shard
+	CrystalStar.DisplayName: Crystal Star
+	CleanserBeam.DisplayName: Cleanser Beam
+	PrismaticShocker.DisplayName: Prismatic Shocker
+	VoidEmissary.DisplayName: Void Emissary
+	VoidLaser.DisplayName: Void Laser
+	VoidPortal.DisplayName: Void Portal
+	PuriumChainsaw.DisplayName: Purium Chainsaw
+	PuriumDrill.DisplayName: Purium Drill
+	PuriumJackhammer.DisplayName: Purium Jackhammer
+	PurityWisp.DisplayName: Purity Wisp
+	PuriumBullet.DisplayName: Purium Bullet
+	PuriumLightbeam.DisplayName: Purium Lightbeam
+	PuriumStaff.DisplayName: Purium Staff
+	StarGel.DisplayName: Star Gel
+	ShroomsandBall.DisplayName: Shroomsand Ball
+	NegativeWall.DisplayName: Negative Wall
+}
+
+Items: {
+	BlushieCharm: {
+		DisplayName: Charm of Blushie
+		Tooltip:
+			'''
+			Your hearts shall spell the doom of your enemies
+			Can be used by any class
+			Made in celebration of blushiemagic's love
+			'''
+	}
+
+	BlushieCheckpoint: {
+		Tooltip:
+			'''
+			Use this item to die
+			Starts the fight at phase 3
+			Can be reused infinitely
+			Each player starts at {0}% max health
+			WARNING: Use this in the middle of a large open area (eg. the sky)
+			It is highly recommended that you use the Purity Shield [i:5640] mount
+			Right-click to focus the camera on the entire boss arena
+			Right-click mid-fight to toggle the camera focus
+			Your hitbox becomes a single pixel
+			'''
+		DisplayName: Blushie Checkpoint
+	}
+
+	BlushieCrystal: {
+		Tooltip:
+			'''
+			Use this item to die
+			Can be reused infinitely
+			WARNING: Use this in the middle of a large open area (eg. the sky)
+			It is highly recommended that you use the Purity Shield [i:5640] mount
+			Right-click to focus the camera on the entire boss arena
+			Right-click mid-fight to toggle the camera focus
+			Your hitbox becomes a single pixel
+			'''
+		DisplayName: Blushie Crystal
+	}
+
+	DarkLightningPack: {
+		Tooltip:
+			'''
+			Zaps enemies across the entire screen
+			'Great for impersonating tModLoader devs!'
+			'''
+		DisplayName: Dark Lightning Pack
+	}
+
+	FirePulsar: {
+		Tooltip:
+			'''
+			Sends pulses of flames across the screen
+			'Great for impersonating... someone?'
+			'''
+		DisplayName: Fire Pulsar
+	}
+
+	FrostFairyWings: {
+		DisplayName: Wings of the Frost Fairy
+		Tooltip:
+			'''
+			Summons Wings of the Frost Fairy to follow behind you
+			Each player can only summon one set of wings
+			'Great for impersonating tModLoader devs!'
+			'''
+	}
+
+	RadiantRainbowRondure: {
+		Tooltip:
+			'''
+			Fires a ray of fabulous rainbow!
+			'Great for impersonating tModLoader devs...?'
+			'''
+		DisplayName: Radiant Rainbow Rondure
+	}
+
+	SkyDragonHeart: {
+		DisplayName: Sky Dragon's Heart
+		Tooltip:
+			'''
+			Summons the Sky Dragon to fight for you
+			Each player can only summon one dragon
+			'Great for impersonating... someone?'
+			'''
+	}
+
+	WorldReaver: {
+		DisplayName: Terra Reaver
+		Tooltip:
+			'''
+			Cleaves the world to erase your enemies
+			Has a 60 second cooldown
+			'Great for impersonating... someone?'
+			'''
+	}
+
+	AbominationBag: {
+		DisplayName: Treasure Bag
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	AbominationBag2: {
+		DisplayName: Treasure Bag
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	DimensionalChest: {
+		Tooltip: Steals loot from other dimensions
+		DisplayName: Dimensional Chest
+	}
+
+	ElementalEye: {
+		Tooltip:
+			'''
+			Permanently increases the number of accessory slots to 7
+			Can only be used if the Demon Heart has been used
+			'''
+		DisplayName: Elemental Eye
+	}
+
+	ElementalSprayer: {
+		Tooltip:
+			'''
+			Uses gel for ammo, 75% chance to consume gel
+			Yo I heard you like debuffs, so I...
+			'''
+		DisplayName: Elemental Sprayer
+	}
+
+	ElementalStaff: {
+		Tooltip:
+			'''
+			Summons mini captive elements to fight for you.
+			Uses 2 minion slots in total
+			Yo I heard you like debuffs, so I...
+			'''
+		DisplayName: Elemental Staff
+	}
+
+	ElementalYoyo: {
+		Tooltip: Yo I heard you like debuffs, so I...
+		DisplayName: Elemental Yoyo
+	}
+
+	ElementResidue: {
+		DisplayName: Residual Elements
+		Tooltip: ""
+	}
+
+	EyeballGlove: {
+		Tooltip:
+			'''
+			Does not require ammo
+			Yo I heard you like debuffs, so I...
+			'''
+		DisplayName: Eyeball Glove
+	}
+
+	EyeballTome: {
+		Tooltip:
+			'''
+			Move while using for the best results.
+			Yo I heard you like debuffs, so I...
+			'''
+		DisplayName: Eyeball Tome
+	}
+
+	FoulOrb: {
+		Tooltip: The underworld would like this.
+		DisplayName: Foul Orb
+	}
+
+	MoltenBar: {
+		Tooltip:
+			'''
+			'Pulsing with heat energy'
+			The first item bluemagic123 ever made
+			'''
+		DisplayName: Molten Bar
+	}
+
+	MoltenDrill: {
+		Tooltip: Can mine Lihzahrd Bricks
+		DisplayName: Molten Drill
+	}
+
+	PuriumOreGen: {
+		DisplayName: Purium Infuser
+		Tooltip: Creates pockets of concentrated purity underground
+	}
+
+	PuriumOre: {
+		Tooltip: "'Flowing with power'"
+		DisplayName: Purium Ore
+	}
+
+	SixColorShield: {
+		DisplayName: Six-Color Shield
+		Tooltip: Creates elemental energy to protect you when damaged.
+	}
+
+	NightSlimeBanner: {
+		Tooltip: "{$CommonItemTooltip.BannerBonus}{$Mods.Bluemagic.NPCName.NightSlimeBanner}"
+		DisplayName: Night Slime Banner
+	}
+
+	TwinEyeBanner: {
+		Tooltip: "{$CommonItemTooltip.BannerBonus}{$Mods.Bluemagic.NPCName.TwinEyeBanner}"
+		DisplayName: Twin Eye Banner
+	}
+
+	CataclysmCrystal: {
+		Tooltip: Grants one cataclysm point
+		DisplayName: Cataclysm Crystal
+	}
+
+	ChaosCrystal: {
+		Tooltip: Grants one chaos point
+		DisplayName: Chaos Crystal
+	}
+
+	ChaosSpiritBag: {
+		DisplayName: Treasure Bag
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	ChaosSpiritMask: {
+		DisplayName: Spirit of Chaos Mask
+		Tooltip: ""
+	}
+
+	ChaoticSoul: {
+		Tooltip: "'The essence of everything, mashed into chaos'"
+		DisplayName: Chaotic Soul
+	}
+
+	RitualOfEndings: {
+		Tooltip:
+			'''
+			Brings the wrath of the End unto the world
+			Can be reused infinitely
+			'''
+		DisplayName: Ritual Of Endings
+	}
+
+	BlueDroplet: {
+		Tooltip:
+			'''
+			Used by the Clentamistation
+			Imbues the Hallow
+			'''
+		DisplayName: Blue Droplet
+	}
+
+	BubbleshieldPotion: {
+		Tooltip:
+			'''
+			Increases defense by 12 and reduces damage taken by 12%
+			Incompatible with Ironskin and Endurance
+			'''
+		DisplayName: Bubbleshield Potion
+	}
+
+	Bubble: {
+		DisplayName: Bubble
+		Tooltip: ""
+	}
+
+	Clentamistation: {
+		Tooltip: Clentaminates items
+		DisplayName: Clentamistation
+	}
+
+	DarkBlueDroplet: {
+		Tooltip:
+			'''
+			Used by the Clentamistation
+			Imbues Glowing Mushrooms
+			'''
+		DisplayName: Dark Blue Droplet
+	}
+
+	DarkBlueIce: {
+		DisplayName: Dark Blue Ice Block
+		Tooltip: ""
+	}
+
+	DayInvert: {
+		DisplayName: Celestial Rune
+		Tooltip: Manipulates the sun and moon
+	}
+
+	FlaskOfEtherealFlames: {
+		Tooltip: Melee attacks inflict ethereal flames
+		DisplayName: Flask Of Ethereal Flames
+	}
+
+	FlaskOfFrostburn: {
+		Tooltip: Melee attacks inflict frostburn
+		DisplayName: Flask Of Frostburn
+	}
+
+	GreenDroplet: {
+		Tooltip:
+			'''
+			Used by the Clentamistation
+			Imbues the Purity
+			'''
+		DisplayName: Green Droplet
+	}
+
+	HorrorDrop: {
+		Tooltip: Red as blood
+		DisplayName: Horror Drop
+	}
+
+	HorrorRune: {
+		Tooltip: Toggles the horrors from above
+		DisplayName: Horror Rune
+	}
+
+	IceKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Ice Key
+	}
+
+	LunarDrop: {
+		Tooltip: Glowing with moonlight
+		DisplayName: Lunar Drop
+	}
+
+	LunarwalkPotion: {
+		Tooltip:
+			'''
+			30% increased movement speed and allows the control of gravity
+			Incompatible with Swiftness
+			'''
+		DisplayName: Lunarwalk Potion
+	}
+
+	MahoganyKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Mahogany Key
+	}
+
+	PurpleDroplet: {
+		Tooltip:
+			'''
+			Used by the Clentamistation
+			Imbues the Corruption
+			'''
+		DisplayName: Purple Droplet
+	}
+
+	RedDroplet: {
+		Tooltip:
+			'''
+			Used by the Clentamistation
+			Imbues the Crimson
+			'''
+		DisplayName: Red Droplet
+	}
+
+	Shroomsand: {
+		DisplayName: Shroomsand Block
+		Tooltip: ""
+	}
+
+	Shroomstone: {
+		DisplayName: Shroomstone Block
+		Tooltip: ""
+	}
+
+	SkywareKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Skyware Key
+	}
+
+	SolarDrop: {
+		Tooltip: Burning with sunlight
+		DisplayName: Solar Drop
+	}
+
+	SpitePotion: {
+		Tooltip:
+			'''
+			12% increased damage and critical strike chance
+			Incompatible with Wrath and Rage
+			'''
+		DisplayName: Spite Potion
+	}
+
+	StoneKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Stone Key
+	}
+
+	SunlightPotion: {
+		Tooltip:
+			'''
+			Emits a strong aura of light and increases night vision
+			Incompatible with Shine
+			'''
+		DisplayName: Sunlight Potion
+	}
+
+	WaterKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Water Key
+	}
+
+	WoodKey: {
+		Tooltip: A key to a different dimension
+		DisplayName: Wood Key
+	}
+
+	SlimePotion: {
+		Tooltip: Transforms you into a Slime
+		DisplayName: Slime Potion
+	}
+
+	DungeonShield: {
+		DisplayName: Holy Knight's Shield
+		Tooltip:
+			'''
+			Grants immunity to knockback
+			Absorbs 25% of damage done to players on your team when above 25% life
+			You and players on your team take 7% reduced damage
+			'''
+	}
+
+	PaladinEmblem: {
+		Tooltip: The dungeon is growing cold...
+		DisplayName: Paladin Emblem
+	}
+
+	PaladinStaff: {
+		Tooltip: Summons a mini paladin to fight for you.
+		DisplayName: Paladin Staff
+	}
+
+	PhantomBag: {
+		DisplayName: Treasure Bag
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	PhantomBlade: {
+		Tooltip: Projects a phantom blade when swung
+		DisplayName: Phantom Blade
+	}
+
+	PhantomShield: {
+		DisplayName: Phantom's Shield
+		Tooltip:
+			'''
+			Reduces damage taken by 7%
+			Players on your team receive this bonus as well
+			'''
+	}
+
+	PhantomSphere: {
+		Tooltip: Summons a phantom sphere around you
+		DisplayName: Phantom Sphere
+	}
+
+	SpectreGun: {
+		Tooltip: Uses wisps as ammo
+		DisplayName: Spectre Gun
+	}
+
+	Wisp: {
+		Tooltip: Chases enemies through walls
+		DisplayName: Wisp
+	}
+
+	AvengerSeal: {
+		Tooltip: 30% increased damage
+		DisplayName: Avenger Seal
+	}
+
+	CelestialLegend: {
+		Tooltip:
+			'''
+			Turns the holder into a werewolf at night and a merfolk when entering water
+			Increases to all stats
+			'''
+		DisplayName: Celestial Legend
+	}
+
+	CelestialSeal: {
+		Tooltip:
+			'''
+			30% increased magic damage
+			Greatly increases pickup range and effectiveness of stars
+			'''
+		DisplayName: Celestial Seal
+	}
+
+	CrystalDestroyerScope: {
+		Tooltip:
+			'''
+			Increases view range for guns (<right> to zoom out)
+			25% increased ranged damage and critical strike chance
+			'''
+		DisplayName: Crystal Destroyer Scope
+	}
+
+	CrystalVeil: {
+		Tooltip: Causes crystals to fall and greatly increases length of invincibility after taking damage
+		DisplayName: Crystal Veil
+	}
+
+	DestroyerSeal: {
+		Tooltip:
+			'''
+			25% increased damage
+			20% increased critical strike chance
+			'''
+		DisplayName: Destroyer Seal
+	}
+
+	FlamingCrystalGauntlet: {
+		Tooltip:
+			'''
+			Increases melee knockback and inflicts fire damage on attack
+			25% increased melee damage and speed
+			'''
+		DisplayName: Flaming Crystal Gauntlet
+	}
+
+	InfinityScarab: {
+		Tooltip:
+			'''
+			Greatly increases your max number of minions
+			Greatly increases the damage and knockback of your minions
+			'''
+		DisplayName: Infinity Scarab
+	}
+
+	MoonlightCharm: {
+		Tooltip:
+			'''
+			Provides huge life regeneration and greatly reduces the cooldown of healing potions
+			Increases pickup range and effectiveness of hearts
+			'''
+		DisplayName: Moonlight Charm
+	}
+
+	PurityShield: {
+		Tooltip:
+			'''
+			Mount - Encases you inside a shield of purity
+			Infinite flight and +10% purity shield fill rate
+			Hold the jump key to move more slowly
+			'''
+		DisplayName: Purity Shield
+	}
+
+	RangerSeal: {
+		Tooltip: 30% increased ranged damage
+		DisplayName: Ranger Seal
+	}
+
+	SorcerorSeal: {
+		Tooltip: 30% increased magic damage
+		DisplayName: Sorceror Seal
+	}
+
+	SummonerSeal: {
+		Tooltip: 30% increased summon damage
+		DisplayName: Summoner Seal
+	}
+
+	WarriorSeal: {
+		Tooltip: 30% increased melee damage
+		DisplayName: Warrior Seal
+	}
+
+	CleanserBeam: {
+		Tooltip:
+			'''
+			Cleanse your foes, one line at a time.
+			Wipes out everything within the beam.
+			No enemy armor can survive the destruction!
+			'''
+		DisplayName: Cleanser Beam
+	}
+
+	DanceOfBlades: {
+		Tooltip:
+			'''
+			Dance the dance of death.
+			Purifies the screen of enemies.
+			'''
+		DisplayName: Dance Of Blades
+	}
+
+	PrismaticShocker: {
+		Tooltip:
+			'''
+			Dissolve your foes in a dazzling display.
+			<right> to turn off the lights.
+			'''
+		DisplayName: Prismatic Shocker
+	}
+
+	PuritySpiritBag: {
+		DisplayName: Treasure Bag
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	PuritySpiritTrophy: {
+		DisplayName: Spirit of Purity Trophy
+		Tooltip: ""
+	}
+
+	VoidEmblem: {
+		DisplayName: Emblem of the Void
+		Tooltip:
+			'''
+			Summons a void emissary to fight alongside you.
+			Does not interfere with your piercing projectiles
+			'''
+	}
+
+	PuriumBreastplate: {
+		Tooltip:
+			'''
+			10% increased damage and critical strike chance
+			Increases your max number of minions by 1
+			'''
+		DisplayName: Purium Breastplate
+	}
+
+	PuriumHat: {
+		Tooltip:
+			'''
+			15% increased throwing damage, 10% increased throwing critical strike chance
+			20% increased throwing velocity, 33% chance to not consume thrown item
+			'''
+		DisplayName: Purium Hat
+	}
+
+	PuriumHeadgear: {
+		Tooltip:
+			'''
+			15% increased magic damage, 10% increased magic critical strike chance
+			+80 maximum mana and 15% reduced mana usage
+			'''
+		DisplayName: Purium Headgear
+	}
+
+	PuriumHelmet: {
+		Tooltip:
+			'''
+			15% increased melee damage, 10% increased melee critical strike chance
+			16% increased melee speed, 4% increased movement speed
+			'''
+		DisplayName: Purium Helmet
+	}
+
+	PuriumLeggings: {
+		Tooltip: 12% increased movement speed
+		DisplayName: Purium Leggings
+	}
+
+	PuriumMask: {
+		Tooltip:
+			'''
+			50% increased minion damage
+			Increases maximum number of minions by 4
+			'''
+		DisplayName: Purium Mask
+	}
+
+	PuriumVisor: {
+		Tooltip:
+			'''
+			15% increased ranged damage, 10% increased ranged critical strike chance
+			25% chance to not consume ammo
+			'''
+		DisplayName: Purium Visor
+	}
+
+	PuriumAnvil: {
+		Tooltip: Used to craft items from elemental bars
+		DisplayName: Purium Anvil
+	}
+
+	PuriumBar: {
+		Tooltip: "'Flowing with power'"
+		DisplayName: Purium Bar
+	}
+
+	PuriumForge: {
+		Tooltip: Used to smelt elemental ores
+		DisplayName: Purium Forge
+	}
+
+	PuriumDrill: {
+		Tooltip: Can mine Frostbyte
+		DisplayName: Purium Drill
+	}
+
+	PuriumPickaxe: {
+		Tooltip: Can mine Frostbyte
+		DisplayName: Purium Pickaxe
+	}
+
+	PurityTotem: {
+		Tooltip: Summons a purity wisp to fight for you.
+		DisplayName: Purity Totem
+	}
+
+	PuriumArrow: {
+		Tooltip:
+			'''
+			Leaves a trail in its path
+			The trail does not interfere with your piercing projectiles
+			'''
+		DisplayName: Purium Arrow
+	}
+
+	PuriumBullet: {
+		Tooltip: Bounces at high speeds
+		DisplayName: Purium Bullet
+	}
+
+	PuriumRepeater: {
+		Tooltip: 50% chance not to consume ammo
+		DisplayName: Purium Repeater
+	}
+
+	PuriumShotbow: {
+		Tooltip: 50% chance not to consume ammo
+		DisplayName: Purium Shotbow
+	}
+
+	PuriumStaff: {
+		Tooltip: Casts a controllable sphere of purity
+		DisplayName: Purium Staff
+	}
+
+	PinkSalt: {
+		Tooltip: Pink and sweet, but still filled with your rage
+		DisplayName: Pink Salt
+	}
+
+	PinkSaltedSalt: {
+		Tooltip: Probably not healthy to eat
+		DisplayName: Pink Salted Salt
+	}
+
+	PureSalt: {
+		Tooltip:
+			'''
+			The purest form of your rage
+			Increases your damage by 0.001% per Pure Salt in your inventory
+			'''
+		DisplayName: Pure Salt
+	}
+
+	Salt: {
+		Tooltip: Extracted from your tears of rage
+		DisplayName: Salt
+	}
+
+	SaltedSalt: {
+		Tooltip: Probably not healthy to eat
+		DisplayName: Salted Salt
+	}
+
+	Checkpoint1: {
+		DisplayName: The First Ritual
+		Tooltip:
+			'''
+			Enrages the Spirit of Purity at 80% health
+			Can be reused infinitely
+			Each player starts with {0} lives
+			'''
+	}
+
+	Checkpoint2: {
+		DisplayName: The Second Ritual
+		Tooltip:
+			'''
+			Enrages the Spirit of Purity at 60% health
+			Can be reused infinitely
+			Each player starts with {0} lives
+			'''
+	}
+
+	Checkpoint3: {
+		DisplayName: The Third Ritual
+		Tooltip:
+			'''
+			Enrages the Spirit of Purity at 33% health
+			Can be reused infinitely
+			Each player starts with {0} lives
+			'''
+	}
+
+	CheckpointS: {
+		DisplayName: The Final Ritual
+		Tooltip:
+			'''
+			Enrages the Spirit of Purity at 1 health
+			Can be reused infinitely
+			Each player starts with {0} lives
+			'''
+	}
+
+	PuriumCoin: {
+		Tooltip: Can be crafted to and from 100 platinum coins
+		DisplayName: Purium Coin
+	}
+
+	RainbowStar: {
+		Tooltip: Activates [c/FF0000:G][c/FF7700:O][c/FFFF00:D][c/00FF00:M][c/0000FF:O][c/7700FF:D][c/FF00FF:E]
+		DisplayName: Rainbow Star
+	}
+
+	RitualOfBunnies: {
+		Tooltip:
+			'''
+			Enrages the Spirit of Purity
+			Can be reused infinitely
+			Each player starts with 10 lives
+			Spirit of Chaos must be defeated first
+			WARNING: Use this in the middle of a large open area (eg. the sky)
+			It is highly recommended that you use the Purity Shield [i:5640] mount
+			'''
+		DisplayName: Ritual Of Bunnies
+	}
+
+	AbominationMask: {
+		DisplayName: Abomination Mask
+		Tooltip: ""
+	}
+
+	AbominationTrophy: {
+		DisplayName: Abomination Trophy
+		Tooltip: ""
+	}
+
+	CataclysmMask: {
+		DisplayName: Cataclysm Mask
+		Tooltip: ""
+	}
+
+	CataclysmTrophy: {
+		DisplayName: Cataclysm Trophy
+		Tooltip: ""
+	}
+
+	ChaosTrophy: {
+		DisplayName: Chaos Trophy
+		Tooltip: ""
+	}
+
+	Icicle: {
+		DisplayName: Icicle
+		Tooltip: ""
+	}
+
+	MushroomBrick: {
+		DisplayName: Mushroom Brick
+		Tooltip: ""
+	}
+
+	MushroomBrickWall: {
+		DisplayName: Mushroom Brick Wall
+		Tooltip: ""
+	}
+
+	ScytheBlade: {
+		DisplayName: Scythe Blade
+		Tooltip: ""
+	}
+
+	SuspiciousGel: {
+		DisplayName: Suspicious Gel
+		Tooltip: ""
+	}
+
+	PhantomHammer: {
+		DisplayName: Phantom Hammer
+		Tooltip: ""
+	}
+
+	PhantomMask: {
+		DisplayName: Phantom Mask
+		Tooltip: ""
+	}
+
+	PhantomPlate: {
+		DisplayName: Phantom Plate
+		Tooltip: ""
+	}
+
+	PhantomTrophy: {
+		DisplayName: Phantom Trophy
+		Tooltip: ""
+	}
+
+	EndlessFlamingQuiver: {
+		DisplayName: Endless Flaming Quiver
+		Tooltip: ""
+	}
+
+	EndlessSilverPouch: {
+		DisplayName: Endless Silver Pouch
+		Tooltip: ""
+	}
+
+	BunnyMask: {
+		DisplayName: Bunny Mask
+		Tooltip: ""
+	}
+
+	BunnyTrophy: {
+		DisplayName: Bunny Trophy
+		Tooltip: ""
+	}
+
+	ElementalPurge: {
+		DisplayName: Elemental Purge
+		Tooltip: ""
+	}
+
+	InfinityCrystal: {
+		DisplayName: Infinity Crystal
+		Tooltip: ""
+	}
+
+	PuritySpiritMask: {
+		DisplayName: Purity Spirit Mask
+		Tooltip: ""
+	}
+
+	TreeTrophy: {
+		DisplayName: Tree Trophy
+		Tooltip: ""
+	}
+
+	VoidMonolith: {
+		DisplayName: Void Monolith
+		Tooltip: ""
+	}
+
+	PuriumAxe: {
+		DisplayName: Purium Axe
+		Tooltip: ""
+	}
+
+	PuriumChainsaw: {
+		DisplayName: Purium Chainsaw
+		Tooltip: ""
+	}
+
+	PuriumHammer: {
+		DisplayName: Purium Hammer
+		Tooltip: ""
+	}
+
+	PuriumJackhammer: {
+		DisplayName: Purium Jackhammer
+		Tooltip: ""
+	}
+
+	PuriumBreaker: {
+		DisplayName: Purium Breaker
+		Tooltip: ""
+	}
+
+	PuriumLightbeam: {
+		DisplayName: Purium Lightbeam
+		Tooltip: ""
+	}
+
+	PuriumSlicer: {
+		DisplayName: Purium Slicer
+		Tooltip: ""
+	}
+
+	PinkSaltBlock: {
+		DisplayName: Pink Salt Block
+		Tooltip: ""
+	}
+
+	PinkSaltBrick: {
+		DisplayName: Pink Salt Brick
+		Tooltip: ""
+	}
+
+	SaltBlock: {
+		DisplayName: Salt Block
+		Tooltip: ""
+	}
+
+	SaltBrick: {
+		DisplayName: Salt Brick
+		Tooltip: ""
+	}
+
+	SaltLamp: {
+		DisplayName: Salt Lamp
+		Tooltip: ""
+	}
+}
+
+Buffs: {
+	Bubbleshield: {
+		DisplayName: Bubbleshield
+		Description: Increases defense by 12 and reduces damage taken by 12%
+	}
+
+	ChaosPressure1: {
+		DisplayName: Chaos Pressure
+		Description: Slowly losing life, reduces purity shield fill rate
+	}
+
+	ChaosPressure2: {
+		DisplayName: Chaos Pressure
+		Description: Slowly losing life, reduces purity shield fill rate
+	}
+
+	ChaosPressure3: {
+		DisplayName: Chaos Pressure
+		Description: Slowly losing life, reduces purity shield fill rate
+	}
+
+	ChaosPressure4: {
+		DisplayName: Chaos Pressure
+		Description: Slowly losing life, reduces purity shield fill rate
+	}
+
+	Suppression1: {
+		DisplayName: Suppression
+		Description: 25% reduced damage
+	}
+
+	Suppression2: {
+		DisplayName: Suppression
+		Description: 50% reduced damage
+	}
+
+	Suppression3: {
+		DisplayName: Suppression
+		Description: 75% reduced damage
+	}
+
+	Suppression4: {
+		DisplayName: Suppression
+		Description: 100% reduced damage
+	}
+
+	EtherealFlames: {
+		DisplayName: Ethereal Flames
+		Description: Losing life
+	}
+
+	EtherealFlamesEnchant: {
+		DisplayName: Weapon Imbue: Ethereal Flames
+		Description: Melee attacks inflict ethereal flames
+	}
+
+	FrostburnEnchant: {
+		DisplayName: Weapon Imbue: Frostburn
+		Description: Melee attacks inflict frostburn
+	}
+
+	Lunarwalk: {
+		DisplayName: Lunarwalk
+		Description: 30% increased movement speed - Press UP to reverse gravity
+	}
+
+	NoMount: {
+		DisplayName: Cursed Mount
+		Description: You cannot use your mount
+	}
+
+	PhantomShield: {
+		DisplayName: Phantom Shield
+		Description: 7% reduced damage taken
+	}
+
+	PinkSalty: {
+		DisplayName: Pink Salty
+		Description: Greatly increased life regeneration but decreased defense
+	}
+
+	HeroOne: {
+		DisplayName: Hero
+		Description: You are a hero of Terraria!
+	}
+
+	HeroThree: {
+		DisplayName: Hero
+		Description: You are a hero of Terraria! (3 Lives)
+	}
+
+	HeroTwo: {
+		DisplayName: Hero
+		Description: You are a hero of Terraria! (2 Lives)
+	}
+
+	Nullified: {
+		DisplayName: Nullified
+		Description: Your abilities are nullified
+	}
+
+	Undead: {
+		DisplayName: Undead
+		Description: Recovering harms you
+	}
+
+	Undead2: {
+		DisplayName: Undead Sickness
+		Description: You are being harmed by recovery
+	}
+
+	SaltLamp: {
+		DisplayName: Salt Lamp
+		Description: Increase defense by 4
+	}
+
+	Salty: {
+		DisplayName: Salty
+		Description: Greatly increased speed but decreased defense
+	}
+
+	Spite: {
+		DisplayName: Spite
+		Description: 12% increased damage and critical strike chance
+	}
+
+	FrostFairyWings: {
+		DisplayName: Wings of the Frost Fairy
+		Description: The Wings of the Frost Fairy will fight for you.
+	}
+
+	MiniCaptiveElement: {
+		DisplayName: Mini Captive Elements
+		Description: The mini captive elements will fight for you.
+	}
+
+	MiniPaladin: {
+		DisplayName: Mini Paladin
+		Description: A mini paladin will fight for you.
+	}
+
+	PurityShieldMount: {
+		DisplayName: Purity Shield
+		Description: The Spirit of Purity lends you power
+	}
+
+	PurityWisp: {
+		DisplayName: Purity Wisp
+		Description: The purity wisp will fight for you
+	}
+
+	SkyDragon: {
+		DisplayName: Sky Dragon
+		Description: The Sky Dragon will absolutely obliterate everything for you.
+	}
+
+	VoidEmissary: {
+		DisplayName: Void Emissary
+		Description: The void emissary will fight alongside you
+	}
+
+	Sunlight: {
+		DisplayName: Sunlight
+		Description: Emitting light and increased night vision
+	}
+
+	Liquified: {
+		DisplayName: Liquified
+		Description: You feel slimy
+	}
+
+	SlimePotion: {
+		DisplayName: Liquified
+		Description: You are a Slime!
+	}
+}
+
+Tiles: {
+	Banner.MapEntry: Banner
+	BossTrophy.MapEntry: Boss Trophy
+	Clentamistation.MapEntry: Clentamistation
+	ElementalBar.MapEntry: Elemental Bar
+	ElementalPurge.MapEntry: Elemental Purge
+	MoltenBar.MapEntry: Molten Bar
+	PuriumAnvil.MapEntry: Purium Anvil
+	PuriumForge.MapEntry: Purium Forge
+	PuriumOre.MapEntry: Purium Ore
+}

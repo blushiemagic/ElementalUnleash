@@ -10,32 +10,32 @@ namespace Bluemagic.Items.TerraSpirit
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Enrages the Spirit of Purity"
+            /* Tooltip.SetDefault("Enrages the Spirit of Purity"
                 + "\nCan be reused infinitely"
                 + "\nEach player starts with 10 lives"
                 + "\nSpirit of Chaos must be defeated first"
                 + "\nWARNING: Use this in the middle of a large open area (eg. the sky)"
-                + "\nIt is highly recommended that you use the Purity Shield [i:" + mod.ItemType("PurityShield") + "] mount");
+                + "\nIt is highly recommended that you use the Purity Shield [i:" + Mod.Find<ModItem>("PurityShield").Type + "] mount");*/
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.value = Item.sellPrice(0, 50, 0, 0);
-            item.rare = 12;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = 4;
-            item.UseSound = SoundID.Item44;
+            Item.width = 20;
+            Item.height = 20;
+            Item.value = Item.sellPrice(0, 50, 0, 0);
+            Item.rare = ItemRarityID.Expert;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item44;
         }
 
         public override bool CanUseItem(Player player)
         {
-            return !NPC.AnyNPCs(mod.NPCType("TerraSpirit"));
+            return !NPC.AnyNPCs(Mod.Find<ModNPC>("TerraSpirit").Type);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             string message = null;
             if (!NPC.downedBoss1)
@@ -62,6 +62,10 @@ namespace Bluemagic.Items.TerraSpirit
             {
                 message = "The Wall of Flesh must first be defeated";
             }
+            else if (!NPC.downedQueenSlime)
+            {
+                message = "Queen Slime must first be defeated";
+            }
             else if (!NPC.downedMechBoss1)
             {
                 message = "The Destroyer must first be defeated";
@@ -85,6 +89,10 @@ namespace Bluemagic.Items.TerraSpirit
             else if (!NPC.downedFishron)
             {
                 message = "Duke Fishron must first be defeated";
+            }
+            else if (!NPC.downedEmpressOfLight)
+            {
+                message = "The Empress of Light must first be defeated";
             }
             else if (!BluemagicWorld.downedPhantom)
             {
@@ -118,20 +126,19 @@ namespace Bluemagic.Items.TerraSpirit
             {
                 Main.NewText(message);
             }
-            if (Main.netMode != 1 && message == null)
+            if (Main.netMode != NetmodeID.MultiplayerClient && message == null)
             {
-                NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("TerraSpirit"));
+                NPC.NewNPC(player.GetSource_FromThis(), (int)player.Center.X, (int)player.Center.Y, Mod.Find<ModNPC>("TerraSpirit").Type);
             }
             return true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "InfinityCrystal");
             recipe.AddIngredient(ItemID.Bunny);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

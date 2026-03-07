@@ -8,10 +8,10 @@ namespace Bluemagic.Buffs.PuritySpirit
 {
     public class Undead2 : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Undead Sickness");
-            Description.SetDefault("You are being harmed by recovery");
+            // DisplayName.SetDefault("Undead Sickness");
+            // Description.SetDefault("You are being harmed by recovery");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

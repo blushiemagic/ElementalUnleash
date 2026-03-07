@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,27 +12,27 @@ namespace Bluemagic.Items.Abomination.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 6;
-            ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 12;
+            Main.projFrames[Projectile.type] = 6;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 28;
-            projectile.height = 28;
-            projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.magic = true;
-            projectile.MaxUpdates = 4;
+            Projectile.width = 28;
+            Projectile.height = 28;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.MaxUpdates = 4;
         }
 
         public override void AI()
         {
-            projectile.frame = (int)projectile.ai[0];
-            projectile.ai[1] += 0.25f;
-            if (projectile.ai[1] >= 120f && projectile.velocity == Vector2.Zero)
+            Projectile.frame = (int)Projectile.ai[0];
+            Projectile.ai[1] += 0.25f;
+            if (Projectile.ai[1] >= 120f && Projectile.velocity == Vector2.Zero)
             {
                 float distance = 800f;
                 NPC npc = null;
@@ -40,7 +41,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
                     NPC check = Main.npc[k];
                     if (check.active && check.CanBeChasedBy(this))
                     {
-                        float checkDist = Vector2.Distance(projectile.Center, check.Center);
+                        float checkDist = Vector2.Distance(Projectile.Center, check.Center);
                         if (checkDist < distance)
                         {
                             npc = check;
@@ -50,34 +51,34 @@ namespace Bluemagic.Items.Abomination.Projectiles
                 }
                 if (npc != null)
                 {
-                    Vector2 offset = npc.Center - projectile.Center;
+                    Vector2 offset = npc.Center - Projectile.Center;
                     if (distance > 0f)
                     {
                         offset.Normalize();
                         offset *= 8f;
-                        projectile.velocity = offset;
+                        Projectile.velocity = offset;
                     }
                 }
             }
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
-            if (projectile.ai[0] == 3f)
+            if (Projectile.ai[0] == 3f)
             {
-                damage += 20;
+                modifiers.FinalDamage.Flat += 20;
             }
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -86,7 +87,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
             }
         }
 
-        public override void OnHitPvp(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             int debuff = GetDebuff();
             if (debuff > 0)
@@ -97,14 +98,14 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuff()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return BuffID.OnFire;
             case 1:
                 return BuffID.Frostburn;
             case 2:
-                return mod.BuffType("EtherealFlames");
+                return Mod.Find<ModBuff>("EtherealFlames").Type;
             case 3:
                 return 0;
             case 4:
@@ -118,7 +119,7 @@ namespace Bluemagic.Items.Abomination.Projectiles
 
         public int GetDebuffTime()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
             case 0:
                 return 600;
@@ -142,16 +143,16 @@ namespace Bluemagic.Items.Abomination.Projectiles
             return new Color(127 + lightColor.R / 2, 127 + lightColor.G / 2, 127 + lightColor.B / 2, lightColor.A);
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = texture.Height / Main.projFrames[projectile.type];
-            Rectangle frame = new Rectangle(0, frameHeight * projectile.frame, texture.Width, frameHeight);
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            Rectangle frame = new Rectangle(0, frameHeight * Projectile.frame, texture.Width, frameHeight);
             Color color = GetAlpha(lightColor).Value;
-            for (int k = projectile.oldPos.Length - 1; k >= 0; k -= 2)
+            for (int k = Projectile.oldPos.Length - 1; k >= 0; k -= 2)
             {
-                float alpha = (float)(projectile.oldPos.Length - k + 1) / (float)(projectile.oldPos.Length + 2);
-                spriteBatch.Draw(texture, projectile.oldPos[k] - Main.screenPosition, frame, color * alpha, projectile.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                float alpha = (float)(Projectile.oldPos.Length - k + 1) / (float)(Projectile.oldPos.Length + 2);
+                Main.spriteBatch.Draw(texture, Projectile.oldPos[k] - Main.screenPosition, frame, color * alpha, Projectile.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
             return true;
         }

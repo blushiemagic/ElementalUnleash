@@ -9,33 +9,33 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sky Dragon's Heart");
-            Tooltip.SetDefault("Summons the Sky Dragon to fight for you"
+            // DisplayName.SetDefault("Sky Dragon's Heart");
+            /* Tooltip.SetDefault("Summons the Sky Dragon to fight for you"
                 + "\nEach player can only summon one dragon"
-                + "\n'Great for impersonating... someone?'");
-            ItemID.Sets.ItemNoGravity[item.type] = true;
-            ItemID.Sets.StaffMinionSlotsRequired[item.type] = 2;
+                + "\n'Great for impersonating... someone?'");*/
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
+            ItemID.Sets.StaffMinionSlotsRequired[Item.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            item.damage = 812;
-            item.summon = true;
-            item.mana = 20;
-            item.width = 34;
-            item.height = 48;
-            item.useTime = 36;
-            item.useAnimation = 36;
-            item.useStyle = 4;
-            item.noMelee = true;
-            item.knockBack = 4f;
-            item.value = Item.sellPrice(2, 0, 0, 0);
-            item.rare = 13;
-            item.UseSound = SoundID.Item44;
-            item.shoot = mod.ProjectileType("SkyDragonHead");
-            item.shootSpeed = 0f;
-            item.buffType = mod.BuffType("SkyDragon");
-            item.buffTime = 3600;
+            Item.damage = 812;
+            Item.DamageType = DamageClass.Summon;
+            Item.mana = 20;
+            Item.width = 34;
+            Item.height = 48;
+            Item.useTime = 36;
+            Item.useAnimation = 36;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.noMelee = true;
+            Item.knockBack = 4f;
+            Item.value = Item.sellPrice(2, 0, 0, 0);
+            Item.rare = ItemRarityID.Expert;
+            Item.UseSound = SoundID.Item44;
+            Item.shoot = Mod.Find<ModProjectile>("SkyDragonHead").Type;
+            Item.shootSpeed = 0f;
+            Item.buffType = Mod.Find<ModBuff>("SkyDragon").Type;
+            Item.buffTime = 3600;
         }
     }
 }

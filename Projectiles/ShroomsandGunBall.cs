@@ -18,19 +18,19 @@ namespace Bluemagic.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shroomsand Ball");
-            ProjectileID.Sets.ForcePlateDetection[projectile.type] = true;
+            // DisplayName.SetDefault("Shroomsand Ball");
+            ProjectileID.Sets.ForcePlateDetection[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.knockBack = 6f;
-            projectile.width = 10;
-            projectile.height = 10;
+            Projectile.knockBack = 6f;
+            Projectile.width = 10;
+            Projectile.height = 10;
             //projectile.aiStyle = 10;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.extraUpdates = 1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.extraUpdates = 1;
             falling = false;
         }
     }

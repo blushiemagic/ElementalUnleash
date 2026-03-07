@@ -13,7 +13,7 @@ namespace Bluemagic.BlushieBoss
         public float AngleOffset;
 
         public BulletRotateLuna(float direction, float angleOffset)
-            : base(BlushieBoss.PosL, 32f, BlushieBoss.BulletGoldLargeTexture)
+            : base(BlushieBoss.PosL, 32f, BlushieBoss.BulletGoldLargeTexture.Value)
         {
             this.Radius = 0f;
             this.Direction = direction;

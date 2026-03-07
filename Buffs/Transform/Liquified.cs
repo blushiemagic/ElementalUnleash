@@ -8,13 +8,13 @@ namespace Bluemagic.Buffs.Transform
 {
     public class Liquified : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Liquified");
-            Description.SetDefault("You feel slimy");
+            // DisplayName.SetDefault("Liquified");
+            // Description.SetDefault("You feel slimy");
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            longerExpertDebuff = true;
+            BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

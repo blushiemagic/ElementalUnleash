@@ -12,7 +12,7 @@ namespace Bluemagic.TerraSpirit
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.lifeMax *= 2;
+            NPC.lifeMax *= 2;
         }
 
         public override void Behavior()
@@ -20,8 +20,8 @@ namespace Bluemagic.TerraSpirit
             Timer++;
             if (Timer % 30 == 0)
             {
-                TerraSpirit spirit = (TerraSpirit)Spirit.modNPC;
-                var bullet = new BulletRingExpand(npc.Center, 8f);
+                TerraSpirit spirit = (TerraSpirit)Spirit.ModNPC;
+                var bullet = new BulletRingExpand(NPC.Center, 8f);
                 if (Timer == 30)
                 {
                     bullet.Rotation(MathHelper.Pi / 16f);
@@ -34,15 +34,15 @@ namespace Bluemagic.TerraSpirit
             }
         }
 
-        public override bool PreNPCLoot()
+        public override bool PreKill()
         {
             BluemagicWorld.terraCheckpoint1 = FindHighestLife(BluemagicWorld.terraCheckpoint1);
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Checkpoint1"));
-            if (Main.netMode == 2)
+            Item.NewItem(NPC.GetSource_Death(), (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("Checkpoint1").Type);
+            if (Main.netMode == NetmodeID.Server)
             {
                 NetMessage.SendData(MessageID.WorldData);
             }
-            return base.PreNPCLoot();
+            return base.PreKill();
         }
     }
 }

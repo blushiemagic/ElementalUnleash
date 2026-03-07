@@ -9,35 +9,34 @@ namespace Bluemagic.Items.Night
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Transforms you into a Slime");
+            // Tooltip.SetDefault("Transforms you into a Slime");
         }
 
         public override void SetDefaults()
         {
-            item.width = 14;
-            item.height = 24;
-            item.maxStack = 30;
-            item.rare = 3;
-            item.value = 1000;
-            item.useStyle = 2;
-            item.useAnimation = 17;
-            item.useTime = 17;
-            item.useTurn = true;
-            item.UseSound = SoundID.Item3;
-            item.consumable = true;
-            item.buffType = mod.BuffType("SlimePotion");
-            item.buffTime = 7200;
+            Item.width = 14;
+            Item.height = 24;
+            Item.maxStack = 30;
+            Item.rare = ItemRarityID.Orange;
+            Item.value = 1000;
+            Item.useStyle = ItemUseStyleID.EatFood;
+            Item.useAnimation = 17;
+            Item.useTime = 17;
+            Item.useTurn = true;
+            Item.UseSound = SoundID.Item3;
+            Item.consumable = true;
+            Item.buffType = Mod.Find<ModBuff>("SlimePotion").Type;
+            Item.buffTime = 7200;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.BottledWater);
             recipe.AddIngredient(null, "SuspiciousGel");
             recipe.AddIngredient(ItemID.Blinkroot);
             recipe.AddTile(TileID.Bottles);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

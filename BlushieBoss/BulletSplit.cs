@@ -48,7 +48,7 @@ namespace Bluemagic.BlushieBoss
         
         public static BulletSplit NewDragonDiamond(Vector2 position, float speed, float threshold)
         {
-            return new BulletSplit(position, speed, threshold, 16f, BlushieBoss.BulletDragonDiamondTexture);
+            return new BulletSplit(position, speed, threshold, 16f, BlushieBoss.BulletDragonDiamondTexture.Value);
         }
     }
 }

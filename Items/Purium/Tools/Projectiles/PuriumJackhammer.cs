@@ -10,34 +10,34 @@ namespace Bluemagic.Items.Purium.Tools.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 18;
-            projectile.scale = 1.2f;
-            projectile.aiStyle = 20;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.hide = true;
-            projectile.ownerHitCheck = true;
-            projectile.melee = true;
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.scale = 1.2f;
+            Projectile.aiStyle = ProjAIStyleID.Drill;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.hide = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void AI()
         {
-            projectile.frameCounter++;
-            if (projectile.frameCounter >= 4)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 4)
             {
-                projectile.frameCounter = 0;
-                projectile.frame++;
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
             }
-            if (projectile.frame > 3)
+            if (Projectile.frame > 3)
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
         }
     }

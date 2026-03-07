@@ -9,36 +9,36 @@ namespace Bluemagic.Items.Phantom.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phantom Hammer");
+            // DisplayName.SetDefault("Phantom Hammer");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 38;
-            projectile.alpha = 70;
-            projectile.timeLeft = 300;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.thrown = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 38;
+            Projectile.height = 38;
+            Projectile.alpha = 70;
+            Projectile.timeLeft = 300;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Throwing;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            projectile.rotation += 0.5f;
-            if (projectile.velocity.Y < 0f)
+            Projectile.rotation += 0.5f;
+            if (Projectile.velocity.Y < 0f)
             {
-                projectile.velocity.Y += 0.15f;
+                Projectile.velocity.Y += 0.15f;
             }
             else
             {
-                projectile.velocity.Y += 0.5f;
+                Projectile.velocity.Y += 0.5f;
             }
-            if (projectile.velocity.Y > 32f)
+            if (Projectile.velocity.Y > 32f)
             {
-                projectile.velocity.Y = 32f;
+                Projectile.velocity.Y = 32f;
             }
         }
 

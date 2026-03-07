@@ -9,31 +9,30 @@ namespace Bluemagic.Items.Purium.Tools
     {
         public override void SetDefaults()
         {
-            item.damage = 130;
-            item.melee = true;
-            item.width = 20;
-            item.height = 12;
-            item.scale = 1.25f;
-            item.useTime = 7;
-            item.useAnimation = 23;
-            item.hammer = 110;
-            item.tileBoost += 4;
-            item.useStyle = 1;
-            item.knockBack = 8;
-            item.value = Item.sellPrice(0, 8, 0, 0);
-            item.rare = 11;
-            item.UseSound = SoundID.Item1;
-            item.autoReuse = true;
-            item.useTurn = true;
+            Item.damage = 130;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 20;
+            Item.height = 12;
+            Item.scale = 1.25f;
+            Item.useTime = 7;
+            Item.useAnimation = 23;
+            Item.hammer = 110;
+            Item.tileBoost += 4;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 8;
+            Item.value = Item.sellPrice(0, 8, 0, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = true;
+            Item.useTurn = true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(null, "PuriumBar", 10);
             recipe.AddTile(null, "PuriumAnvil");
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

@@ -8,10 +8,10 @@ namespace Bluemagic.Buffs.Transform
 {
     public class SlimePotion : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Liquified");
-            Description.SetDefault("You are a Slime!");
+            // DisplayName.SetDefault("Liquified");
+            // Description.SetDefault("You are a Slime!");
             Main.buffNoSave[Type] = true;
         }
 

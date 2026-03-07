@@ -9,33 +9,33 @@ namespace Bluemagic.Blushie
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Wings of the Frost Fairy");
-            Tooltip.SetDefault("Summons Wings of the Frost Fairy to follow behind you"
+            // DisplayName.SetDefault("Wings of the Frost Fairy");
+            /* Tooltip.SetDefault("Summons Wings of the Frost Fairy to follow behind you"
                 + "\nEach player can only summon one set of wings"
-                + "\n'Great for impersonating tModLoader devs!'");
-            ItemID.Sets.ItemNoGravity[item.type] = true;
+                + "\n'Great for impersonating tModLoader devs!'");*/
+            ItemID.Sets.ItemNoGravity[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.damage = 900;
-            item.summon = true;
-            item.mana = 20;
-            item.width = 28;
-            item.height = 28;
-            item.useTime = 36;
-            item.useAnimation = 36;
-            item.useStyle = 100;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 4f;
-            item.value = Item.sellPrice(2, 0, 0, 0);
-            item.rare = 13;
-            item.UseSound = SoundID.Item44;
-            item.shoot = mod.ProjectileType("FrostFairyWingsProj");
-            item.shootSpeed = 0f;
-            item.buffType = mod.BuffType("FrostFairyWings");
-            item.buffTime = 3600;
+            Item.damage = 900;
+            Item.DamageType = DamageClass.Summon;
+            Item.mana = 20;
+            Item.width = 28;
+            Item.height = 28;
+            Item.useTime = 36;
+            Item.useAnimation = 36;
+            Item.useStyle = 100;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 4f;
+            Item.value = Item.sellPrice(2, 0, 0, 0);
+            Item.rare = ItemRarityID.Expert;
+            Item.UseSound = SoundID.Item44;
+            Item.shoot = Mod.Find<ModProjectile>("FrostFairyWingsProj").Type;
+            Item.shootSpeed = 0f;
+            Item.buffType = Mod.Find<ModBuff>("FrostFairyWings").Type;
+            Item.buffTime = 3600;
         }
     }
 }

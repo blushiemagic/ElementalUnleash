@@ -11,7 +11,7 @@ namespace Bluemagic.BlushieBoss
         private bool Finished;
 
         public BulletPull(Vector2 position)
-            : base(position, 16f, BlushieBoss.BulletBlackTexture)
+            : base(position, 16f, BlushieBoss.BulletBlackTexture.Value)
         {
             this.Finished = false;
         }

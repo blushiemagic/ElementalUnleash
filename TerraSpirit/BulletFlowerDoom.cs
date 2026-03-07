@@ -108,7 +108,7 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             Vector2 drawOrigin = origin - Main.screenPosition - new Vector2(size / 2, size / 2);
             Color color = Color.White;
             if (timer < 0)
@@ -131,7 +131,7 @@ namespace Bluemagic.TerraSpirit
                         float angle = rotation + MathHelper.PiOver2 * k;
                         Vector2 offset = interval / 2 * angle.ToRotationVector2();
                         Vector2 drawPos = drawCenter + offset;
-                        spriteBatch.Draw(texture, drawPos, color);
+                        Main.spriteBatch.Draw(texture, drawPos, color);
                     }
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -58,7 +59,7 @@ namespace Bluemagic
                 instance.UpdateInstance();
                 if (instance.timer >= 300)
                 {
-                    Main.PlaySound(SoundID.Item107);
+                    SoundEngine.PlaySound(SoundID.Item107);
                     Overlays.Scene.Deactivate("Bluemagic:WorldReaver");
                     Filters.Scene.Deactivate("Bluemagic:WorldReaver");
                     Filters.Scene["Bluemagic:WorldReaver"].Opacity = 0f;
@@ -76,7 +77,7 @@ namespace Bluemagic
             }
             if (timer == 60)
             {
-                Main.PlaySound(SoundID.Item14);
+                SoundEngine.PlaySound(SoundID.Item14);
                 Damage(6666, false);
             }
             if (timer == 120 || timer == 180 || timer == 240)
@@ -91,7 +92,7 @@ namespace Bluemagic
                     float length = minLength + (float)rand.NextDouble() * (maxLength - minLength);
                     cracks.Add(new LineSegment(new Vector2(x, y), angle, length));
                 }
-                Main.PlaySound(SoundID.Item27);
+                SoundEngine.PlaySound(SoundID.Item27);
                 Damage(33333, true);
             }
             if (timer == 300)
@@ -115,14 +116,14 @@ namespace Bluemagic
                 if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5)
                 {
                     int npcDamage = damage + Main.npc[k].defense / 2;
-                    double damageDealt = Main.npc[k].StrikeNPC(npcDamage, 0f, 0, crit);
+                    double damageDealt = Main.npc[k].SimpleStrikeNPC(npcDamage, 0, false, 0);
                     if (Main.player[owner].accDreamCatcher)
                     {
                         Main.player[owner].addDPS((int)damageDealt);
                     }
-                    if (Main.netMode != 0)
+                    if (Main.netMode != NetmodeID.SinglePlayer)
                     {
-                        NetMessage.SendData(28, -1, -1, null, k, npcDamage, 0f, 0f, crit ? 1 : 0, 0, 0);
+                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, k, npcDamage, 0f, 0f, crit ? 1 : 0, 0, 0);
                     }
                 }
             }
@@ -139,7 +140,7 @@ namespace Bluemagic
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("Pixel");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/Pixel").Value;
             int timer = WorldReaverData.instance.Timer;
             float mainAngle = (float)Math.Atan(-2);
             if (timer < 60)
@@ -154,17 +155,17 @@ namespace Bluemagic
                         break;
                     }
                     float length = (float)Math.Sqrt(1.25f * limit * limit);
-                    spriteBatch.Draw(texture, top, null, Color.White, mainAngle, new Vector2(1f, 0.5f), new Vector2(length, k), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(texture, top, null, Color.White, mainAngle, new Vector2(1f, 0.5f), new Vector2(length, k), SpriteEffects.None, 0f);
                 }
             }
             else
             {
-                spriteBatch.Draw(texture, new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), null, Color.White, mainAngle, new Vector2(0.5f, 0.5f), new Vector2(Main.screenWidth, 32f), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), null, Color.White, mainAngle, new Vector2(0.5f, 0.5f), new Vector2(Main.screenWidth, 32f), SpriteEffects.None, 0f);
             }
             foreach (LineSegment crack in WorldReaverData.instance.Cracks)
             {
-                spriteBatch.Draw(texture, crack.Center, null, Color.White * 0.5f, crack.Angle, new Vector2(0.5f, 0.5f), new Vector2(crack.Length, 8f), SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, crack.Center, null, Color.White * 0.5f, crack.Angle, new Vector2(0.5f, 0.5f), new Vector2(crack.Length + 8f, 4f), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, crack.Center, null, Color.White * 0.5f, crack.Angle, new Vector2(0.5f, 0.5f), new Vector2(crack.Length, 8f), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, crack.Center, null, Color.White * 0.5f, crack.Angle, new Vector2(0.5f, 0.5f), new Vector2(crack.Length + 8f, 4f), SpriteEffects.None, 0f);
             }
             if (timer > 270)
             {
@@ -173,7 +174,7 @@ namespace Bluemagic
                 {
                     alpha = 1f;
                 }
-                spriteBatch.Draw(texture, Vector2.Zero, null, Color.White * alpha, 0f, Vector2.Zero, new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, Vector2.Zero, null, Color.White * alpha, 0f, Vector2.Zero, new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);
             }
         }
 

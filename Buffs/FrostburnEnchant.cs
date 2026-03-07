@@ -6,10 +6,10 @@ namespace Bluemagic.Buffs
 {
     public class FrostburnEnchant : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Weapon Imbue: Frostburn");
-            Description.SetDefault("Melee attacks inflict frostburn");
+            // DisplayName.SetDefault("Weapon Imbue: Frostburn");
+            // Description.SetDefault("Melee attacks inflict frostburn");
             Main.meleeBuff[Type] = true;
             Main.persistentBuff[Type] = true;
         }

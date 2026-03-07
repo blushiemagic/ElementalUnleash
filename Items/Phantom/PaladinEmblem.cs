@@ -10,20 +10,20 @@ namespace Bluemagic.Items.Phantom
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("The dungeon is growing cold...");
+            // Tooltip.SetDefault("The dungeon is growing cold...");
         }
 
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 14;
-            item.maxStack = 20;
-            item.rare = 8;
-            item.useStyle = 4;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.UseSound = SoundID.Item44;
-            item.consumable = true;
+            Item.width = 22;
+            Item.height = 14;
+            Item.maxStack = 20;
+            Item.rare = ItemRarityID.Yellow;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.UseSound = SoundID.Item44;
+            Item.consumable = true;
         }
 
         public override bool CanUseItem(Player player)
@@ -34,7 +34,7 @@ namespace Bluemagic.Items.Phantom
             }
             for (int x = 0; x < 200; x++)
             {
-                if (Main.npc[x].active && (Main.npc[x].type == mod.NPCType("PhantomSoul") || Main.npc[x].type == mod.NPCType("Phantom")))
+                if (Main.npc[x].active && (Main.npc[x].type == Mod.Find<ModNPC>("PhantomSoul").Type || Main.npc[x].type == Mod.Find<ModNPC>("Phantom").Type))
                 {
                     return false;
                 }
@@ -42,12 +42,12 @@ namespace Bluemagic.Items.Phantom
             return true;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                int npc = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("PhantomSoul"), 0, 0f, 0f, 0f, 0f, player.whoAmI);
-                if (Main.netMode == 2)
+                int npc = NPC.NewNPC(player.GetSource_FromThis(), (int)player.Center.X, (int)player.Center.Y, Mod.Find<ModNPC>("PhantomSoul").Type, 0, 0f, 0f, 0f, 0f, player.whoAmI);
+                if (Main.netMode == NetmodeID.Server)
                 {
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npc);
                 }
@@ -58,12 +58,11 @@ namespace Bluemagic.Items.Phantom
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.HallowedBar, 5);
             recipe.AddIngredient(ItemID.SpectreBar, 5);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

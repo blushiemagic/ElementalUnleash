@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,53 +10,32 @@ namespace Bluemagic.Items.Phantom
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            // DisplayName.SetDefault("Treasure Bag");
+            // Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            ItemID.Sets.BossBag[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.consumable = true;
-            item.width = 24;
-            item.height = 24;
-            item.rare = 8;
-            item.expert = true;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.width = 24;
+            Item.height = 24;
+            Item.rare = ItemRarityID.Yellow;
+            Item.expert = true;
         }
-
-        public override int BossBagNPC => mod.NPCType("Phantom");
 
         public override bool CanRightClick()
         {
             return true;
         }
 
-        public override void OpenBossBag(Player player)
+        public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            player.TryGettingDevArmor();
-            if (Main.rand.Next(7) == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("PhantomMask"));
-            }
-            player.QuickSpawnItem(mod.ItemType("PhantomPlate"), Main.rand.Next(8, 13));
-            int reward = 0;
-            switch (Main.rand.Next(4))
-            {
-            case 0:
-                reward = mod.ItemType("PhantomBlade");
-                break;
-            case 1:
-                reward = mod.ItemType("SpectreGun");
-                break;
-            case 2:
-                reward = mod.ItemType("PhantomSphere");
-                break;
-            case 3:
-                reward = mod.ItemType("PaladinStaff");
-                break;
-            }
-            player.QuickSpawnItem(reward);
-            player.QuickSpawnItem(mod.ItemType("PhantomShield"));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<PhantomMask>(), 7));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<PhantomPlate>(), 1, 8, 12));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, [ModContent.ItemType<PhantomBlade>(), ModContent.ItemType<SpectreGun>(), ModContent.ItemType<PhantomSphere>(), ModContent.ItemType<PaladinStaff>()]));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<PhantomShield>()));
         }
     }
 }

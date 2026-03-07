@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,34 +17,39 @@ namespace Bluemagic.ChaosSpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spirit of Chaos - Arm");
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+            // DisplayName.SetDefault("Spirit of Chaos - Arm");
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers()
+            {
+                Hide = true
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 400000;
-            npc.damage = 200;
-            npc.defense = 0;
-            npc.knockBackResist = 0f;
-            npc.dontTakeDamage = false;
-            npc.immortal = true;
-            npc.width = size;
-            npc.height = size;
-            npc.npcSlots = 10f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            npc.alpha = 255;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 400000;
+            NPC.damage = 200;
+            NPC.defense = 0;
+            NPC.knockBackResist = 0f;
+            NPC.dontTakeDamage = false;
+            NPC.immortal = true;
+            NPC.width = size;
+            NPC.height = size;
+            NPC.npcSlots = 10f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            NPC.alpha = 255;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
-            music = MusicID.LunarBoss;
+            Music = MusicID.LunarBoss;
         }
 
         private List<ChaosOrb> orbs = new List<ChaosOrb>();
@@ -52,7 +58,7 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
         }
 
@@ -60,7 +66,7 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.ai[1];
+                return (int)NPC.ai[1];
             }
         }
 
@@ -68,12 +74,12 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return new Vector2(npc.ai[2], npc.ai[3]);
+                return new Vector2(NPC.ai[2], NPC.ai[3]);
             }
             set
             {
-                npc.ai[2] = value.X;
-                npc.ai[3] = value.Y;
+                NPC.ai[2] = value.X;
+                NPC.ai[3] = value.Y;
             }
         }
 
@@ -81,11 +87,11 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.localAI[1];
+                return (int)NPC.localAI[1];
             }
             set
             {
-                npc.localAI[1] = value;
+                NPC.localAI[1] = value;
             }
         }
 
@@ -93,11 +99,11 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.localAI[2];
+                return (int)NPC.localAI[2];
             }
             set
             {
-                npc.localAI[2] = value;
+                NPC.localAI[2] = value;
             }
         }
 
@@ -105,32 +111,32 @@ namespace Bluemagic.ChaosSpirit
         {
             get
             {
-                return (int)npc.localAI[3];
+                return (int)NPC.localAI[3];
             }
             set
             {
-                npc.localAI[3] = value;
+                NPC.localAI[3] = value;
             }
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax / Main.expertLife * 1.2f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.75f);
+            NPC.lifeMax = (int)(NPC.lifeMax / Main.GameModeInfo.EnemyMaxLifeMultiplier * 1.2f * balance);
+            NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(npc.localAI[1]);
-            writer.Write(npc.localAI[2]);
-            writer.Write(npc.localAI[3]);
+            writer.Write(NPC.localAI[1]);
+            writer.Write(NPC.localAI[2]);
+            writer.Write(NPC.localAI[3]);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            npc.localAI[1] = reader.ReadSingle();
-            npc.localAI[2] = reader.ReadSingle();
-            npc.localAI[3] = reader.ReadSingle();
+            NPC.localAI[1] = reader.ReadSingle();
+            NPC.localAI[2] = reader.ReadSingle();
+            NPC.localAI[3] = reader.ReadSingle();
         }
 
         public override void AI()
@@ -139,20 +145,20 @@ namespace Bluemagic.ChaosSpirit
             {
                 UpdateChaosOrbs();
             }
-            if (npc.localAI[0] == 0f)
+            if (NPC.localAI[0] == 0f)
             {
-                npc.GivenName = GetName();
-                npc.localAI[0] = 1f;
+                NPC.GivenName = GetName();
+                NPC.localAI[0] = 1f;
             }
-            npc.timeLeft = NPC.activeTime;
-            npc.life = npc.lifeMax;
+            NPC.timeLeft = NPC.activeTime;
+            NPC.life = NPC.lifeMax;
             NPC center = Main.npc[spiritIndex];
-            if (!center.active || center.type != mod.NPCType("ChaosSpirit2"))
+            if (!center.active || center.type != Mod.Find<ModNPC>("ChaosSpirit2").Type)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
-            ChaosSpirit2 spirit = center.modNPC as ChaosSpirit2;
+            ChaosSpirit2 spirit = center.ModNPC as ChaosSpirit2;
             if (spirit == null)
             {
                 return;
@@ -166,7 +172,7 @@ namespace Bluemagic.ChaosSpirit
                 move *= 2f;
             }
             offset += move;
-            npc.Center = center.Center + offset;
+            NPC.Center = center.Center + offset;
             DoAttack();
         }
 
@@ -184,7 +190,7 @@ namespace Bluemagic.ChaosSpirit
                 velocity.X = size / 2 - x;
                 velocity.Y = size / 2 - y;
                 velocity /= 50f;
-                Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, GetOrbColor(), 1f);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type, 0f, 0f, 0, GetOrbColor(), 1f);
             }
             else
             {
@@ -195,9 +201,9 @@ namespace Bluemagic.ChaosSpirit
             {
                 orbs.Add(new ChaosOrb(new Vector2(x, y), velocity, GetOrbColor()));
             }
-            Vector2 offset = Main.npc[spiritIndex].Center - npc.Center;
+            Vector2 offset = Main.npc[spiritIndex].Center - NPC.Center;
             offset *= Main.rand.NextFloat();
-            offset += new Vector2(npc.width / 2 + Main.rand.Next(-8, 9), npc.height / 2 + Main.rand.Next(-8, 9));
+            offset += new Vector2(NPC.width / 2 + Main.rand.Next(-8, 9), NPC.height / 2 + Main.rand.Next(-8, 9));
             orbs.Add(new ChaosOrb(offset, Vector2.Zero, GetArmOrbColor()));
             while (orbs[0].strength <= 0f)
             {
@@ -293,7 +299,7 @@ namespace Bluemagic.ChaosSpirit
 
         private void ChaosBitAttack()
         {
-            if (Main.netMode != 1 && attackTimer % 30 == 0 && attackTimer < 90)
+            if (Main.netMode != NetmodeID.MultiplayerClient && attackTimer % 30 == 0 && attackTimer < 90)
             {
                 const int numBits = 10;
                 int damage = 100;
@@ -308,7 +314,7 @@ namespace Bluemagic.ChaosSpirit
                     {
                         rotation += ((k + 0.5f) / numBits) * MathHelper.TwoPi;
                     }
-                    Projectile.NewProjectile(npc.Center, 8f * rotation.ToRotationVector2(), mod.ProjectileType("ChaosBit"), damage, 0f, Main.myPlayer, colorType);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 8f * rotation.ToRotationVector2(), Mod.Find<ModProjectile>("ChaosBit").Type, damage, 0f, Main.myPlayer, colorType);
                 }
             }
             attackTimer++;
@@ -321,11 +327,11 @@ namespace Bluemagic.ChaosSpirit
 
         private void ChaosPearlAttack()
         {
-            if (Main.netMode != 1 && attackTimer % 30 == 0 && attackTimer < 90)
+            if (Main.netMode != NetmodeID.MultiplayerClient && attackTimer % 30 == 0 && attackTimer < 90)
             {
-                ChaosSpirit2 spirit = Main.npc[spiritIndex].modNPC as ChaosSpirit2;
+                ChaosSpirit2 spirit = Main.npc[spiritIndex].ModNPC as ChaosSpirit2;
                 Player player = Main.player[spirit.RandomTarget()];
-                Vector2 difference = player.Center - npc.Center;
+                Vector2 difference = player.Center - NPC.Center;
                 if (difference != Vector2.Zero)
                 {
                     difference.Normalize();
@@ -334,7 +340,7 @@ namespace Bluemagic.ChaosSpirit
                     {
                         damage = (int)(damage * 1.5f / 2f);
                     }
-                    Projectile.NewProjectile(npc.Center, 8f * difference, mod.ProjectileType("ChaosPearl"), damage, 0f, Main.myPlayer, colorType, player.whoAmI);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 8f * difference, Mod.Find<ModProjectile>("ChaosPearl").Type, damage, 0f, Main.myPlayer, colorType, player.whoAmI);
                 }
             }
             attackTimer++;
@@ -348,9 +354,9 @@ namespace Bluemagic.ChaosSpirit
         private void LaserAttack()
         {
             attackTimer++;
-            if (attackTimer == 300 && Main.netMode != 1)
+            if (attackTimer == 300 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                ChaosSpirit2 spirit = Main.npc[spiritIndex].modNPC as ChaosSpirit2;
+                ChaosSpirit2 spirit = Main.npc[spiritIndex].ModNPC as ChaosSpirit2;
                 float rotation = spirit.armRotation + (colorType / 6f) * MathHelper.TwoPi;
                 float startRot = rotation - MathHelper.Pi / 3f;
                 float endRot = rotation + MathHelper.Pi / 3f;
@@ -365,13 +371,13 @@ namespace Bluemagic.ChaosSpirit
                 {
                     damage = (int)(damage * 1.5f / 2f);
                 }
-                int proj = Projectile.NewProjectile(npc.Center, Vector2.Zero, mod.ProjectileType("ChaosRay"), damage, 0f, Main.myPlayer, npc.whoAmI, startRot);
+                int proj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, Mod.Find<ModProjectile>("ChaosRay").Type, damage, 0f, Main.myPlayer, NPC.whoAmI, startRot);
                 Main.projectile[proj].localAI[0] = endRot;
-                NetMessage.SendData(27, -1, -1, null, proj);
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj);
             }
             if (attackTimer == 300)
             {
-                Main.PlaySound(29, (int)npc.position.X, (int)npc.position.Y, 104);
+                SoundEngine.PlaySound(SoundID.Zombie104, NPC.position);
             }
             if (attackTimer > 540)
             {
@@ -382,15 +388,15 @@ namespace Bluemagic.ChaosSpirit
 
         public override bool CheckDead()
         {
-            npc.active = true;
-            npc.life = npc.lifeMax;
+            NPC.active = true;
+            NPC.life = NPC.lifeMax;
             return false;
         }
 
-        public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
         {
             BluemagicPlayer modPlayer = target.GetModPlayer<BluemagicPlayer>();
-            modPlayer.constantDamage = npc.damage;
+            modPlayer.constantDamage = NPC.damage;
             modPlayer.percentDamage = 1f / 3f;
             if (Main.expertMode)
             {
@@ -399,9 +405,9 @@ namespace Bluemagic.ChaosSpirit
             modPlayer.chaosDefense = true;
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
-            target.AddBuff(mod.BuffType("Undead"), 300, false);
+            target.AddBuff(Mod.Find<ModBuff>("Undead").Type, 300, false);
         }
 
         public override bool? CanBeHitByItem(Player player, Item item)
@@ -409,9 +415,9 @@ namespace Bluemagic.ChaosSpirit
             return CanBeHitByPlayer(player);
         }
 
-        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-            OnHit(player, damage);
+            OnHit(player, damageDone);
         }
 
         public override bool? CanBeHitByProjectile(Projectile projectile)
@@ -419,14 +425,14 @@ namespace Bluemagic.ChaosSpirit
             return CanBeHitByPlayer(Main.player[projectile.owner]);
         }
 
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            OnHit(Main.player[projectile.owner], damage);
+            OnHit(Main.player[projectile.owner], damageDone);
         }
 
         private bool? CanBeHitByPlayer(Player player)
         {
-            ChaosSpirit2 spirit = Main.npc[spiritIndex].modNPC as ChaosSpirit2;
+            ChaosSpirit2 spirit = Main.npc[spiritIndex].ModNPC as ChaosSpirit2;
             if (spirit != null && !spirit.targets.Contains(player.whoAmI))
             {
                 return false;
@@ -438,7 +444,7 @@ namespace Bluemagic.ChaosSpirit
         {
             if (player.active)
             {
-                Vector2 direction = npc.Center - player.Center;
+                Vector2 direction = NPC.Center - player.Center;
                 if (direction != Vector2.Zero)
                 {
                     float magnitude = damage / 200f;
@@ -450,25 +456,25 @@ namespace Bluemagic.ChaosSpirit
                     direction.Normalize();
                     direction *= magnitude;
                     offset += direction;
-                    if (Main.netMode != 0)
+                    if (Main.netMode != NetmodeID.SinglePlayer)
                     {
-                        ModPacket packet = mod.GetPacket();
+                        ModPacket packet = Mod.GetPacket();
                         packet.Write((byte)MessageType.PushChaosArm);
-                        packet.Write(npc.whoAmI);
+                        packet.Write(NPC.whoAmI);
                         packet.Write(direction.X);
                         packet.Write(direction.Y);
                         packet.Send();
                     }
                 }
             }
-            npc.life = npc.lifeMax;
+            NPC.life = NPC.lifeMax;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             foreach (ChaosOrb orb in orbs)
             {
-                orb.Draw(spriteBatch, npc.position, mod);
+                orb.Draw(spriteBatch, NPC.position, Mod);
             }
             return false;
         }

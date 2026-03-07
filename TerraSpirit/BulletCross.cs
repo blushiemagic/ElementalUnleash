@@ -63,15 +63,15 @@ namespace Bluemagic.TerraSpirit
             if (delay > 0)
             {
                 float glowAlpha = 1f - (float)delay / (float)maxDelay;
-                spriteBatch.Draw(Bluemagic.Instance.GetTexture("TerraSpirit/BulletCross"), position - Main.screenPosition, null, Color.White, rotation, new Vector2(size / 2, size / 2), 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(Bluemagic.Instance.GetTexture("TerraSpirit/BulletCrossGlow"), position - Main.screenPosition, null, Color.White * glowAlpha, rotation, new Vector2(size / 2, size / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletCross").Value, position - Main.screenPosition, null, Color.White, rotation, new Vector2(size / 2, size / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletCrossGlow").Value, position - Main.screenPosition, null, Color.White * glowAlpha, rotation, new Vector2(size / 2, size / 2), 1f, SpriteEffects.None, 0f);
             }
             else
             {
-                Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletBeam");
+                Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletBeam").Value;
                 Vector2 scale = new Vector2((float)length / (float)size, 1f);
-                spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White, rotation, new Vector2(size / 2, size / 2), scale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White, rotation + MathHelper.PiOver2, new Vector2(size / 2, size / 2), scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White, rotation, new Vector2(size / 2, size / 2), scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, position - Main.screenPosition, null, Color.White, rotation + MathHelper.PiOver2, new Vector2(size / 2, size / 2), scale, SpriteEffects.None, 0f);
             }
         }
     }

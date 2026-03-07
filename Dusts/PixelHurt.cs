@@ -7,11 +7,8 @@ namespace Bluemagic.Dusts
 {
     public class PixelHurt : ModDust
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Bluemagic/Dusts/Pixel";
-            return mod.Properties.Autoload;
-        }
+
+        public override string Texture => "Bluemagic/Dusts/Pixel";
 
         public override void OnSpawn(Dust dust)
         {

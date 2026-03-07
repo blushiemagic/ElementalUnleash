@@ -14,9 +14,9 @@ namespace Bluemagic.TerraSpirit
             if (Timer >= 90)
             {
                 Timer = 0;
-                TerraSpirit spirit = (TerraSpirit)Spirit.modNPC;
+                TerraSpirit spirit = (TerraSpirit)Spirit.ModNPC;
                 Player target = spirit.GetTarget();
-                spirit.bullets.Add(new BulletExplode(npc.Center, target.Center));
+                spirit.bullets.Add(new BulletExplode(NPC.Center, target.Center));
             }
         }
     }
@@ -52,11 +52,11 @@ namespace Bluemagic.TerraSpirit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             for (int k = oldPos.Length - 1; k >= 0; k -= 2)
             {
                 float alpha = 1f - (float)(k + 1) / (float)(oldPos.Length + 2);
-                spriteBatch.Draw(texture, oldPos[k] - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White * alpha);
+                Main.spriteBatch.Draw(texture, oldPos[k] - Main.screenPosition - new Vector2(size / 2, size / 2), Color.White * alpha);
             }
             base.Draw(spriteBatch);
         }

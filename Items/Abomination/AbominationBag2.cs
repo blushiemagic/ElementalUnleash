@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,57 +10,35 @@ namespace Bluemagic.Items.Abomination
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            // DisplayName.SetDefault("Treasure Bag");
+            // Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            ItemID.Sets.BossBag[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.consumable = true;
-            item.width = 24;
-            item.height = 24;
-            item.rare = 11;
-            item.expert = true;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.width = 24;
+            Item.height = 24;
+            Item.rare = ItemRarityID.Purple;
+            Item.expert = true;
         }
-
-        public override int BossBagNPC => mod.NPCType("Abomination");
 
         public override bool CanRightClick()
         {
             return true;
         }
 
-        public override void OpenBossBag(Player player)
+        public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            player.TryGettingDevArmor();
-            if (Main.rand.Next(7) == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("AbominationMask"));
-            }
-            player.QuickSpawnItem(mod.ItemType("MoltenDrill"));
-            player.QuickSpawnItem(mod.ItemType("DimensionalChest"));
-            player.QuickSpawnItem(mod.ItemType("MoltenBar"), 5);
-            player.QuickSpawnItem(mod.ItemType("SixColorShield"));
-            player.QuickSpawnItem(mod.ItemType("ElementalEye"));
-            switch (Main.rand.Next(5))
-            {
-            case 0:
-                player.QuickSpawnItem(mod.ItemType("ElementalYoyo"));
-                break;
-            case 1:
-                player.QuickSpawnItem(mod.ItemType("ElementalSprayer"));
-                break;
-            case 2:
-                player.QuickSpawnItem(mod.ItemType("EyeballTome"));
-                break;
-            case 3:
-                player.QuickSpawnItem(mod.ItemType("ElementalStaff"));
-                break;
-            case 4:
-                player.QuickSpawnItem(mod.ItemType("EyeballGlove"));
-                break;
-            }
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<AbominationMask>(), 7));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("MoltenDrill").Type));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("DimensionalChest").Type));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("MoltenBar").Type, 1, 5, 5));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SixColorShield>()));
+            itemLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("ElementalEye").Type));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, new int[] { Mod.Find<ModItem>("ElementalYoyo").Type, Mod.Find<ModItem>("ElementalSprayer").Type, Mod.Find<ModItem>("EyeballTome").Type, Mod.Find<ModItem>("ElementalStaff").Type, Mod.Find<ModItem>("EyeballGlove").Type }));
         }
     }
 }

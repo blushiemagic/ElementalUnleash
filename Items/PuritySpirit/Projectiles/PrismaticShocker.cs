@@ -10,53 +10,53 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.magic = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = DamageClass.Magic;
         }
 
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
-            if (!player.active || player.dead || player.inventory[player.selectedItem].type != mod.ItemType("PrismaticShocker"))
+            Player player = Main.player[Projectile.owner];
+            if (!player.active || player.dead || player.inventory[player.selectedItem].type != Mod.Find<ModItem>("PrismaticShocker").Type)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
-            if (projectile.ai[0] == 0f)
+            if (Projectile.ai[0] == 0f)
             {
-                Vector2 offset = projectile.Center - player.Center;
-                projectile.ai[0] = offset.Length();
-                projectile.ai[1] = offset.ToRotation();
+                Vector2 offset = Projectile.Center - player.Center;
+                Projectile.ai[0] = offset.Length();
+                Projectile.ai[1] = offset.ToRotation();
             }
-            projectile.ai[1] += 0.02f;
-            projectile.ai[1] %= MathHelper.TwoPi;
-            if (projectile.ai[0] == 0f)
+            Projectile.ai[1] += 0.02f;
+            Projectile.ai[1] %= MathHelper.TwoPi;
+            if (Projectile.ai[0] == 0f)
             {
-                projectile.Center = player.Center;
+                Projectile.Center = player.Center;
             }
             else
             {
-                projectile.Center = player.Center + projectile.ai[0] * projectile.ai[1].ToRotationVector2();
+                Projectile.Center = player.Center + Projectile.ai[0] * Projectile.ai[1].ToRotationVector2();
             }
-            projectile.rotation -= 0.05f;
-            projectile.localAI[0] += 0.2f;
-            projectile.localAI[0] %= 4f;
+            Projectile.rotation -= 0.05f;
+            Projectile.localAI[0] += 0.2f;
+            Projectile.localAI[0] %= 4f;
             Color light = GetAlpha(Color.White).Value;
-            Lighting.AddLight(projectile.Center, light.R / 255f, light.G / 255f, light.B / 255f);
-            projectile.timeLeft = 2;
+            Lighting.AddLight(Projectile.Center, light.R / 255f, light.G / 255f, light.B / 255f);
+            Projectile.timeLeft = 2;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            for (int k = projectile.whoAmI + 1; k < 1000; k++)
+            for (int k = Projectile.whoAmI + 1; k < 1000; k++)
             {
                 Projectile proj = Main.projectile[k];
-                if (proj.active && proj.owner == projectile.owner && proj.type == projectile.type)
+                if (proj.active && proj.owner == Projectile.owner && proj.type == Projectile.type)
                 {
                     if (BeamCheck(proj, targetHitbox))
                     {
@@ -67,15 +67,15 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
             return null;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.immune[projectile.owner] = 4;
+            target.immune[Projectile.owner] = 4;
         }
 
         private bool BeamCheck(Projectile proj, Rectangle targetHitbox)
         {
             float point = 0f;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, proj.Center, 6f, ref point);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, proj.Center, 6f, ref point);
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -94,14 +94,14 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
             return new Color(r, g, b);
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            for (int k = projectile.whoAmI + 1; k < 1000; k++)
+            for (int k = Projectile.whoAmI + 1; k < 1000; k++)
             {
                 Projectile proj = Main.projectile[k];
-                if (proj.active && proj.owner == projectile.owner && proj.type == projectile.type)
+                if (proj.active && proj.owner == Projectile.owner && proj.type == Projectile.type)
                 {
-                    DrawBeamTo(spriteBatch, proj, lightColor);
+                    DrawBeamTo(Main.spriteBatch, proj, lightColor);
                 }
             }
             return true;
@@ -109,16 +109,16 @@ namespace Bluemagic.Items.PuritySpirit.Projectiles
 
         private void DrawBeamTo(SpriteBatch spriteBatch, Projectile proj, Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("Items/PuritySpirit/Projectiles/PrismaticShockerBeam");
-            Vector2 unit = proj.Center - projectile.Center;
+            Texture2D texture = ModContent.Request<Texture2D>("Bluemagic/Items/PuritySpirit/Projectiles/PrismaticShockerBeam").Value;
+            Vector2 unit = proj.Center - Projectile.Center;
             float length = unit.Length();
             unit.Normalize();
             float rotation = unit.ToRotation();
-            Color color = BeamColor() * 0.6f;
-            for (float k = projectile.localAI[0]; k <= length; k += 8f)
+            Color color = BeamColor() * 0.6f;   
+            for (float k = Projectile.localAI[0]; k <= length; k += 8f)
             {
-                Vector2 drawPos = projectile.Center + unit * k - Main.screenPosition;
-                spriteBatch.Draw(texture, drawPos, null, color, rotation, new Vector2(4, 4), 1f, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.Center + unit * k - Main.screenPosition;
+                Main.spriteBatch.Draw(texture, drawPos, null, color, rotation, new Vector2(4, 4), 1f, SpriteEffects.None, 0f);
             }
         }
     }

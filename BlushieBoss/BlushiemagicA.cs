@@ -2,6 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bluemagic.BlushieBoss
@@ -11,14 +13,14 @@ namespace Bluemagic.BlushieBoss
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
-            DisplayName.SetDefault("blushiemagic (A)");
-            Main.npcFrameCount[npc.type] = 2;
+            // DisplayName.SetDefault("blushiemagic (A)");
+            Main.npcFrameCount[NPC.type] = 2;
         }
 
         public override void SetDefaults()
         {
             base.SetDefaults();
-            this.music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Phyrnna - Return of the Snow Queen");
+            this.Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Phyrnna - Return of the Snow Queen");
         }
 
         public override void AI()
@@ -34,7 +36,7 @@ namespace Bluemagic.BlushieBoss
                         x *= -1f;
                     }
                     x -= 2f;
-                    int dust = Dust.NewDust(npc.Center + new Vector2(x, y), 0, 0, 6, 0f, 0f, 0, default(Color), 4f);
+                    int dust = Dust.NewDust(NPC.Center + new Vector2(x, y), 0, 0, DustID.Torch, 0f, 0f, 0, default(Color), 4f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].velocity.Y = 0.5f - 8f * Main.rand.NextFloat();
                     Main.dust[dust].velocity.X += 0.1f * x;
@@ -46,22 +48,23 @@ namespace Bluemagic.BlushieBoss
         {
             if (BlushieBoss.HealthA > 0)
             {
-                npc.life = BlushieBoss.HealthA;
+                NPC.life = BlushieBoss.HealthA;
             }
             else
             {
-                npc.active = false;
-                if (Main.netMode != 1)
+                NPC.active = false;
+                // Todo: Port to item drop database
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (BlushieBoss.BlushieC)
                     {
                         BlushieBoss.ChrisTalk("You are incredibly powerful! It was a pleasure to be able to spar with you.");
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FirePulsar"));
+                        Item.NewItem(new EntitySource_Death(NPC), (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("FirePulsar").Type);
                     }
                     else
                     {
                         BlushieBoss.AnnaTalk("Wow, you're really strong! It was very fun playing with you~");
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RadiantRainbowRondure"));
+                        Item.NewItem(new EntitySource_Death(NPC), (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("RadiantRainbowRondure").Type);
                     }
                 }
             }
@@ -70,26 +73,26 @@ namespace Bluemagic.BlushieBoss
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = BlushieBoss.BlushieC ? frameHeight : 0;
+            NPC.frame.Y = BlushieBoss.BlushieC ? frameHeight : 0;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             return true;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            if (BlushieBoss.ShieldA >= 300 && BlushieBoss.ShieldBuff(npc))
+            if (BlushieBoss.ShieldA >= 300 && BlushieBoss.ShieldBuff(NPC))
             {
-                Texture2D shield = mod.GetTexture(BlushieBoss.BlushieC ? "BlushieBoss/ShieldC" : "BlushieBoss/ShieldA");
-                spriteBatch.Draw(shield, npc.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
+                Texture2D shield = ModContent.Request<Texture2D>(BlushieBoss.BlushieC ? "Bluemagic/BlushieBoss/ShieldC" : "Bluemagic/BlushieBoss/ShieldA").Value;
+                Main.spriteBatch.Draw(shield, NPC.Center - Main.screenPosition - new Vector2(shield.Width / 2, shield.Height / 2), null, Color.White * 0.5f);
             }
         }
 
         public override double CalculateDamage(Player player, double damage)
         {
-            if (BlushieBoss.ShieldA >= 300 && BlushieBoss.ShieldBuff(npc))
+            if (BlushieBoss.ShieldA >= 300 && BlushieBoss.ShieldBuff(NPC))
             {
                 BlushieBoss.ShieldA = 0;
                 return 0;
@@ -106,7 +109,7 @@ namespace Bluemagic.BlushieBoss
             {
                 damage = 1;
             }
-            if (Main.netMode != 2 && npc.localAI[0] == 0f && damage < 50000)
+            if (Main.netMode != NetmodeID.Server && NPC.localAI[0] == 0f && damage < 50000)
             {
                 if (BlushieBoss.BlushieC)
                 {
@@ -116,14 +119,14 @@ namespace Bluemagic.BlushieBoss
                 {
                     Main.NewText("<blushiemagic (A)> I play with my own rules! If you want to damage me, try having lots of health at the start of the fight and high life regen!", 255, 128, 128);
                 }
-                npc.localAI[0] = 1f;
+                NPC.localAI[0] = 1f;
             }
             return damage;
         }
 
         public override void SetHealth(double damage)
         {
-            BlushieBoss.HealthA = npc.life - (int)damage;
+            BlushieBoss.HealthA = NPC.life - (int)damage;
         }
     }
 }

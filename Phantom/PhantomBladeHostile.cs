@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Bluemagic.Phantom
@@ -10,75 +11,75 @@ namespace Bluemagic.Phantom
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phantom Blade");
+            // DisplayName.SetDefault("Phantom Blade");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 400;
-            projectile.height = 24;
-            projectile.alpha = 70;
-            projectile.hostile = true;
-            projectile.melee = true;
-            projectile.maxPenetrate = -1;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 400;
+            Projectile.height = 24;
+            Projectile.alpha = 70;
+            Projectile.hostile = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.maxPenetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            if (projectile.ai[1] == 0f)
+            if (Projectile.ai[1] == 0f)
             {
-                projectile.rotation = -MathHelper.Pi * 0.75f;
+                Projectile.rotation = -MathHelper.Pi * 0.75f;
             }
-            NPC center = Main.npc[(int)projectile.ai[0]];
-            projectile.position = center.Center;
-            projectile.rotation += (float)Math.PI * 1.5f / 60f;
-            projectile.position.X += (float)Math.Cos(projectile.rotation);
-            projectile.position.Y += (float)Math.Sin(projectile.rotation);
+            NPC center = Main.npc[(int)Projectile.ai[0]];
+            Projectile.position = center.Center;
+            Projectile.rotation += (float)Math.PI * 1.5f / 60f;
+            Projectile.position.X += (float)Math.Cos(Projectile.rotation);
+            Projectile.position.Y += (float)Math.Sin(Projectile.rotation);
 
-            projectile.ai[1] += 1f;
-            if (projectile.ai[1] > 60f)
+            Projectile.ai[1] += 1f;
+            if (Projectile.ai[1] > 60f)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
 
-            int y = Main.rand.Next(projectile.height) - projectile.height / 2;
-            int x = Main.rand.Next(projectile.width);
-            float rotatedX = x * (float)Math.Cos(projectile.rotation) - y * (float)Math.Sin(projectile.rotation);
-            float rotatedY = x * (float)Math.Sin(projectile.rotation) + y * (float)Math.Cos(projectile.rotation);
-            Dust.NewDust(projectile.position + new Vector2(rotatedX, rotatedY), 0, 0, mod.DustType("Phantom"));
+            int y = Main.rand.Next(Projectile.height) - Projectile.height / 2;
+            int x = Main.rand.Next(Projectile.width);
+            float rotatedX = x * (float)Math.Cos(Projectile.rotation) - y * (float)Math.Sin(Projectile.rotation);
+            float rotatedY = x * (float)Math.Sin(Projectile.rotation) + y * (float)Math.Cos(Projectile.rotation);
+            Dust.NewDust(Projectile.position + new Vector2(rotatedX, rotatedY), 0, 0, Mod.Find<ModDust>("Phantom").Type);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float point = 0f;
-            Vector2 endPoint = projectile.position + projectile.width * projectile.rotation.ToRotationVector2();
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.position, endPoint, projectile.height, ref point);
+            Vector2 endPoint = Projectile.position + Projectile.width * Projectile.rotation.ToRotationVector2();
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.position, endPoint, Projectile.height, ref point);
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (Main.rand.Next(2) == 0)
             {
-                target.AddBuff(mod.BuffType("EtherealFlames"), 300, true);
+                target.AddBuff(Mod.Find<ModBuff>("EtherealFlames").Type, 300, true);
             }
         }
 
         public override Color? GetAlpha(Color color)
         {
-            return Color.White * ((255 - projectile.alpha) / 255f);
+            return Color.White * ((255 - Projectile.alpha) / 255f);
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Vector2 drawPos = projectile.position - Main.screenPosition;
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+            Vector2 drawPos = Projectile.position - Main.screenPosition;
             Color color = GetAlpha(lightColor).Value;
-            float rotation = projectile.rotation;
+            float rotation = Projectile.rotation;
             Vector2 origin = new Vector2(0f, texture.Height / 2);
             SpriteEffects effects = SpriteEffects.None;
-            spriteBatch.Draw(texture, drawPos, null, color, rotation, origin, 1f, effects, 0f);
+            Main.spriteBatch.Draw(texture, drawPos, null, color, rotation, origin, 1f, effects, 0f);
             return false;
         }
     }

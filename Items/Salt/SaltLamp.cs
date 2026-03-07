@@ -9,29 +9,27 @@ namespace Bluemagic.Items.Salt
     {
         public override void SetDefaults()
         {
-            item.width = 6;
-            item.height = 14;
-            item.maxStack = 99;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.rare = 8;
-            item.value = 1000;
-            item.createTile = mod.TileType("SaltLamp");
+            Item.width = 6;
+            Item.height = 14;
+            Item.maxStack = 99;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.consumable = true;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = 1000;
+            Item.createTile = Mod.Find<ModTile>("SaltLamp").Type;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "PinkSalt", 10);
-            recipe.AddIngredient(ItemID.IronBar, 2);
-            recipe.anyIronBar = true;
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "PinkSalt", 10);
+            recipe.AddRecipeGroup(RecipeGroupID.IronBar, 2);
             recipe.AddTile(TileID.CrystalBall);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

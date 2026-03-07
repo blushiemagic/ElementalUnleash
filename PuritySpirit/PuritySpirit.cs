@@ -4,10 +4,15 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.Chat;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using System.Reflection;
+using Terraria.GameContent.ItemDropRules;
+using Bluemagic.Items.PuritySpirit;
 
 namespace Bluemagic.PuritySpirit
 {
@@ -21,42 +26,41 @@ namespace Bluemagic.PuritySpirit
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spirit of Purity");
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+            // DisplayName.SetDefault("Spirit of Purity");
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 400000;
-            npc.damage = 0;
-            npc.defense = 100;
-            npc.knockBackResist = 0f;
-            npc.dontTakeDamage = true;
-            npc.width = size;
-            npc.height = size;
-            npc.value = Item.buyPrice(0, 50, 0, 0);
-            npc.npcSlots = 50f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = null;
-            npc.alpha = 255;
-            for (int k = 0; k < npc.buffImmune.Length; k++)
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 400000;
+            NPC.damage = 0;
+            NPC.defense = 100;
+            NPC.knockBackResist = 0f;
+            NPC.dontTakeDamage = true;
+            NPC.width = size;
+            NPC.height = size;
+            NPC.value = Item.buyPrice(0, 50, 0, 0);
+            NPC.npcSlots = 50f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            NPC.alpha = 255;
+            for (int k = 0; k < NPC.buffImmune.Length; k++)
             {
-                npc.buffImmune[k] = true;
+                NPC.buffImmune[k] = true;
             }
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/The sound of anxiety");
-            bossBag = mod.ItemType("PuritySpiritBag");
+            Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/The sound of anxiety");
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.6f * bossLifeScale);
-            npc.defense = 102;
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.6f * balance);
+            NPC.defense = 102;
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -69,7 +73,7 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                double strength = (double)npc.life / (double)npc.lifeMax;
+                double strength = (double)NPC.life / (double)NPC.lifeMax;
                 int difficulty = (int)(4.0 * (1.0 - strength));
                 if (Main.expertMode)
                 {
@@ -83,7 +87,7 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                double strength = (double)npc.life / (double)npc.lifeMax;
+                double strength = (double)NPC.life / (double)NPC.lifeMax;
                 double difficulty = 4.0 * (1.0 - strength);
                 return (float)(difficulty % 1.0);
             }
@@ -101,11 +105,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return (int)npc.ai[0];
+                return (int)NPC.ai[0];
             }
             set
             {
-                npc.ai[0] = value;
+                NPC.ai[0] = value;
             }
         }
 
@@ -113,11 +117,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return npc.ai[1];
+                return NPC.ai[1];
             }
             set
             {
-                npc.ai[1] = value;
+                NPC.ai[1] = value;
             }
         }
 
@@ -125,11 +129,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return (int)npc.ai[2];
+                return (int)NPC.ai[2];
             }
             private set
             {
-                npc.ai[2] = value;
+                NPC.ai[2] = value;
             }
         }
 
@@ -137,11 +141,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return (int)npc.ai[3];
+                return (int)NPC.ai[3];
             }
             private set
             {
-                npc.ai[3] = value;
+                NPC.ai[3] = value;
             }
         }
 
@@ -149,11 +153,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return (int)npc.localAI[0];
+                return (int)NPC.localAI[0];
             }
             set
             {
-                npc.localAI[0] = value;
+                NPC.localAI[0] = value;
             }
         }
 
@@ -161,11 +165,11 @@ namespace Bluemagic.PuritySpirit
         {
             get
             {
-                return (int)npc.localAI[1];
+                return (int)NPC.localAI[1];
             }
             set
             {
-                npc.localAI[1] = value;
+                NPC.localAI[1] = value;
             }
         }
 
@@ -195,7 +199,7 @@ namespace Bluemagic.PuritySpirit
                 portalFrame %= 6 * Main.projFrames[ProjectileID.PortalGunGate];
             }
             FindPlayers();
-            npc.timeLeft = NPC.activeTime;
+            NPC.timeLeft = NPC.activeTime;
             if (stage > 0 && targets.Count == 0)
             {
                 attackProgress = 0;
@@ -206,13 +210,13 @@ namespace Bluemagic.PuritySpirit
             {
                 damageTotal = 0;
             }
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 return;
             }
             if (stage == 2 && difficulty > 0)
             {
-                Projectile.NewProjectile(npc.Center.X - arenaWidth / 2, npc.Center.Y, NegativeWall.speed, 0f, mod.ProjectileType("NegativeWall"), 0, 0f, Main.myPlayer, npc.whoAmI, arenaHeight);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X - arenaWidth / 2, NPC.Center.Y, NegativeWall.speed, 0f, Mod.Find<ModProjectile>("NegativeWall").Type, 0, 0f, Main.myPlayer, NPC.whoAmI, arenaHeight);
                 stage++;
             }
             if (stage == 3 && difficulty > 1)
@@ -222,7 +226,7 @@ namespace Bluemagic.PuritySpirit
             }
             if (stage == 4 && difficulty > 2)
             {
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y - arenaHeight / 2, 0f, NegativeWall.speed, mod.ProjectileType("NegativeWall"), 0, 0f, Main.myPlayer, npc.whoAmI, -arenaWidth);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y - arenaHeight / 2, 0f, NegativeWall.speed, Mod.Find<ModProjectile>("NegativeWall").Type, 0, 0f, Main.myPlayer, NPC.whoAmI, -arenaWidth);
                 stage++;
             }
             if (stage == 5 && difficulty > 3)
@@ -331,7 +335,7 @@ namespace Bluemagic.PuritySpirit
 
         public void FindPlayers()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int originalCount = targets.Count;
                 targets.Clear();
@@ -342,7 +346,7 @@ namespace Bluemagic.PuritySpirit
                         targets.Add(k);
                     }
                 }
-                if (Main.netMode == 2 && targets.Count != originalCount)
+                if (Main.netMode == NetmodeID.Server && targets.Count != originalCount)
                 {
                     ModPacket netMessage = GetPacket(PuritySpiritMessageType.TargetList);
                     netMessage.Write(targets.Count);
@@ -364,7 +368,7 @@ namespace Bluemagic.PuritySpirit
             }
             if (attackProgress >= 360)
             {
-                npc.active = false;
+                NPC.active = false;
             }
         }
 
@@ -372,14 +376,14 @@ namespace Bluemagic.PuritySpirit
         {
             if (attackProgress == 1)
             {
-                Vector2 center = npc.Center;
+                Vector2 center = NPC.Center;
                 for (int k = 0; k < 255; k++)
                 {
                     Player player = Main.player[k];
                     if (player.active && player.position.X > center.X - arenaWidth / 2 && player.position.X + player.width < center.X + arenaWidth / 2 && player.position.Y > center.Y - arenaHeight / 2 && player.position.Y + player.height < center.Y + arenaHeight / 2)
                     {
                         player.GetModPlayer<BluemagicPlayer>().heroLives = 3;
-                        if (Main.netMode == 2)
+                        if (Main.netMode == NetmodeID.Server)
                         {
                             ModPacket netMessage = GetPacket(PuritySpiritMessageType.HeroPlayer);
                             netMessage.Send(k);
@@ -409,8 +413,8 @@ namespace Bluemagic.PuritySpirit
                 Talk("Show me the power that has saved Terraria!");
                 attackProgress = 0;
                 stage++;
-                npc.dontTakeDamage = false;
-                if (Main.netMode == 2)
+                NPC.dontTakeDamage = false;
+                if (Main.netMode == NetmodeID.Server)
                 {
                     ModPacket netMessage = GetPacket(PuritySpiritMessageType.DontTakeDamage);
                     netMessage.Write(false);
@@ -421,11 +425,11 @@ namespace Bluemagic.PuritySpirit
 
         private void SetupCrystals(int radius, bool clockwise)
         {
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 return;
             }
-            Vector2 center = npc.Center;
+            Vector2 center = NPC.Center;
             for (int k = 0; k < 10; k++)
             {
                 float angle = 2f * (float)Math.PI / 10f * k;
@@ -433,9 +437,9 @@ namespace Bluemagic.PuritySpirit
                 int damage = 120;
                 if (Main.expertMode)
                 {
-                    damage = (int)(150 / Main.expertDamage);
+                    damage = (int)(150 / Main.GameModeInfo.EnemyDamageMultiplier);
                 }
-                Projectile.NewProjectile(pos.X, pos.Y, radius, clockwise ? 1 : -1, mod.ProjectileType("PureCrystal"), damage, 0f, Main.myPlayer, npc.whoAmI, angle);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), pos.X, pos.Y, radius, clockwise ? 1 : -1, Mod.Find<ModProjectile>("PureCrystal").Type, damage, 0f, Main.myPlayer, NPC.whoAmI, angle);
             }
         }
 
@@ -443,11 +447,11 @@ namespace Bluemagic.PuritySpirit
         {
             if (attackProgress == 0)
             {
-                PlaySound(15, 0);
-                if (Main.netMode != 1)
+                PlaySound(SoundID.Roar);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int damage = Main.expertMode ? 720 : 600;
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("VoidWorld"), damage, 0f, Main.myPlayer, npc.whoAmI, Main.rand.Next());
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("VoidWorld").Type, damage, 0f, Main.myPlayer, NPC.whoAmI, Main.rand.Next());
                 }
             }
             attackProgress++;
@@ -485,7 +489,7 @@ namespace Bluemagic.PuritySpirit
                     choice -= attackWeights[attack];
                 }
                 attackWeights[attack] -= 80;
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
             switch (attack)
             {
@@ -516,24 +520,24 @@ namespace Bluemagic.PuritySpirit
         {
             if (attackProgress == 0)
             {
-                float y = npc.Center.Y;
+                float y = NPC.Center.Y;
                 int damage = Main.expertMode ? 360 : 300;
                 for (int k = 0; k < targets.Count; k++)
                 {
                     float x = Main.player[targets[k]].Center.X;
-                    Projectile.NewProjectile(x, y, 0f, 0f, mod.ProjectileType("PurityBeam"), damage, 0f, Main.myPlayer, arenaHeight);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), x, y, 0f, 0f, Mod.Find<ModProjectile>("PurityBeam").Type, damage, 0f, Main.myPlayer, arenaHeight);
                     for (int j = -1; j <= 1; j += 2)
                     {
                         float spawnX = x + j * Main.rand.Next(200, 401);
-                        if (spawnX > npc.Center.X + arenaWidth / 2)
+                        if (spawnX > NPC.Center.X + arenaWidth / 2)
                         {
                             spawnX -= arenaWidth;
                         }
-                        else if (spawnX < npc.Center.X - arenaWidth / 2)
+                        else if (spawnX < NPC.Center.X - arenaWidth / 2)
                         {
                             spawnX += arenaWidth;
                         }
-                        Projectile.NewProjectile(spawnX, y, 0f, 0f, mod.ProjectileType("PurityBeam"), damage, 0f, Main.myPlayer, arenaHeight);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnX, y, 0f, 0f, Mod.Find<ModProjectile>("PurityBeam").Type, damage, 0f, Main.myPlayer, arenaHeight);
                     }
                 }
                 int numExtra = 2 * (difficulty + 1) - 2 * (targets.Count - 1);
@@ -547,7 +551,7 @@ namespace Bluemagic.PuritySpirit
                 }
                 for (int k = 0; k < numExtra; k++)
                 {
-                    Projectile.NewProjectile(npc.Center.X + Main.rand.Next(-arenaWidth / 2 + 50, arenaWidth / 2 - 50 + 1), y, 0f, 0f, mod.ProjectileType("PurityBeam"), damage, 0f, Main.myPlayer, arenaHeight);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X + Main.rand.Next(-arenaWidth / 2 + 50, arenaWidth / 2 - 50 + 1), y, 0f, 0f, Mod.Find<ModProjectile>("PurityBeam").Type, damage, 0f, Main.myPlayer, arenaHeight);
                 }
                 attackProgress = (int)(PurityBeam.charge + 60f);
             }
@@ -563,7 +567,7 @@ namespace Bluemagic.PuritySpirit
             if (attackProgress == 0)
             {
                 int damage = Main.expertMode ? 60 : 80;
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("PuritySnake"), damage, 0f, Main.myPlayer, npc.whoAmI, timeMultiplier);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("PuritySnake").Type, damage, 0f, Main.myPlayer, NPC.whoAmI, timeMultiplier);
                 attackProgress = 240;
             }
             attackProgress--;
@@ -583,15 +587,15 @@ namespace Bluemagic.PuritySpirit
                 int damage = Main.expertMode ? 70 : 100;
                 for (int k = 0; k < numAttacks; k++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (int)totalTime, timer, mod.ProjectileType("NullLaser"), damage, 0f, Main.myPlayer, npc.whoAmI, (int)(60f + k * timer));
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center.X, NPC.Center.Y, (int)totalTime, timer, Mod.Find<ModProjectile>("NullLaser").Type, damage, 0f, Main.myPlayer, NPC.whoAmI, (int)(60f + k * timer));
                 }
                 attackProgress = (int)totalTime;
             }
             if (attackProgress % 20 == 0)
             {
-                PlaySound(2, 15);
+                PlaySound(SoundID.Roar);
             }
-            Dust.NewDust(npc.position, npc.width, npc.height, mod.DustType("Sparkle"), 0f, 0f, 0, new Color(0, 180, 0), 1.5f);
+            Dust.NewDust(NPC.position, NPC.width, NPC.height, Mod.Find<ModDust>("Sparkle").Type, 0f, 0f, 0, new Color(0, 180, 0), 1.5f);
             attackProgress--;
             if (attackProgress < 0)
             {
@@ -621,14 +625,14 @@ namespace Bluemagic.PuritySpirit
                     else
                     {
                         target = 255;
-                        center = npc.Center + new Vector2(Main.rand.Next(-arenaWidth / 2 + (int)radius, arenaWidth / 2 - (int)radius + 1), Main.rand.Next(-arenaWidth / 2 + (int)radius, arenaWidth / 2 - (int)radius + 1));
+                        center = NPC.Center + new Vector2(Main.rand.Next(-arenaWidth / 2 + (int)radius, arenaWidth / 2 - (int)radius + 1), Main.rand.Next(-arenaWidth / 2 + (int)radius, arenaWidth / 2 - (int)radius + 1));
                     }
                     float angle = (float)(Main.rand.NextDouble() * 2 * Math.PI / numSpheres);
                     for (int k = 0; k < numSpheres; k++)
                     {
                         Vector2 pos = center + radius * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                         angle += 2f * (float)Math.PI / numSpheres;
-                        Projectile.NewProjectile(pos.X, pos.Y, target == 0f ? -1f : target, rotationSpeed, mod.ProjectileType("PuritySphere"), damage, (int)time, Main.myPlayer, center.X, center.Y);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), pos.X, pos.Y, target == 0f ? -1f : target, rotationSpeed, Mod.Find<ModProjectile>("PuritySphere").Type, damage, (int)time, Main.myPlayer, center.X, center.Y);
                     }
                 }
                 attackProgress = 60 + (int)time + PuritySphere.strikeTime;
@@ -645,7 +649,7 @@ namespace Bluemagic.PuritySpirit
             int count = 0;
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].active && Main.npc[k].type == mod.NPCType("PurityShield") && Main.npc[k].ai[0] == npc.whoAmI)
+                if (Main.npc[k].active && Main.npc[k].type == Mod.Find<ModNPC>("PurityShield").Type && Main.npc[k].ai[0] == NPC.whoAmI)
                 {
                     count++;
                 }
@@ -659,28 +663,28 @@ namespace Bluemagic.PuritySpirit
             shieldTimer++;
             if (shieldTimer >= 300 + 300 * timeMult)
             {
-                float targetX = npc.Center.X + (Main.rand.Next(2) * 2 - 1) * arenaWidth / 4;
-                float targetY = npc.Center.Y + (Main.rand.Next(2) * 2 - 1) * arenaHeight / 4;
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y + 40, mod.NPCType("PurityShield"), 0, npc.whoAmI, targetX, targetY);
+                float targetX = NPC.Center.X + (Main.rand.Next(2) * 2 - 1) * arenaWidth / 4;
+                float targetY = NPC.Center.Y + (Main.rand.Next(2) * 2 - 1) * arenaHeight / 4;
+                NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("PurityShield").Type, 0, NPC.whoAmI, targetX, targetY);
                 shieldTimer = 0;
             }
         }
 
         public override bool CheckDead()
         {
-            if (Main.netMode == 1 && stage < 13)
+            if (Main.netMode == NetmodeID.MultiplayerClient && stage < 13)
             {
-                npc.active = true;
-                npc.life = 1;
-                npc.dontTakeDamage = true;
+                NPC.active = true;
+                NPC.life = 1;
+                NPC.dontTakeDamage = true;
                 return false;
             }
             if (stage < 10)
             {
-                npc.active = true;
-                npc.life = 1;
-                npc.dontTakeDamage = true;
-                if (Main.netMode == 2)
+                NPC.active = true;
+                NPC.life = 1;
+                NPC.dontTakeDamage = true;
+                if (Main.netMode == NetmodeID.Server)
                 {
                     ModPacket netMessage = GetPacket(PuritySpiritMessageType.DontTakeDamage);
                     netMessage.Write(true);
@@ -723,54 +727,23 @@ namespace Bluemagic.PuritySpirit
             }
             if (attackProgress >= 180)
             {
-                npc.dontTakeDamage = false;
-                npc.HitSound = null;
-                npc.StrikeNPCNoInteraction(9999, 0f, 0);
+                NPC.dontTakeDamage = false;
+                NPC.HitSound = null;
+                NPC.SimpleStrikeNPC(9999, 0, false, 0);
             }
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
-            int choice = Main.rand.Next(10);
-            int item = 0;
-            switch (choice)
-            {
-                case 0:
-                    item = mod.ItemType("PuritySpiritTrophy");
-                    break;
-                case 1:
-                    item = mod.ItemType("BunnyTrophy");
-                    break;
-                case 2:
-                    item = mod.ItemType("TreeTrophy");
-                    break;
-            }
-            if (item > 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, item);
-            }
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            else
-            {
-                choice = Main.rand.Next(7);
-                if (choice == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PuritySpiritMask"));
-                }
-                else if (choice == 1)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BunnyMask"));
-                }
-                if (choice != 1)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Bunny);
-                }
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfinityCrystal"));
-            }
             BluemagicWorld.downedPuritySpirit = true;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<PuritySpiritBag>()));
+            npcLoot.Add(ItemDropRule.OneFromOptions(10, ModContent.ItemType<PuritySpiritTrophy>(), ModContent.ItemType<TreeTrophy>(), ModContent.ItemType<BunnyTrophy>()));
+            npcLoot.Add(ItemDropRule.OneFromOptions(7, ModContent.ItemType<PuritySpiritMask>(), ModContent.ItemType<BunnyMask>(), ItemID.Bunny, ItemID.Bunny, ItemID.Bunny, ItemID.Bunny, ItemID.Bunny));
+            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), ModContent.ItemType<InfinityCrystal>()));
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -784,14 +757,14 @@ namespace Bluemagic.PuritySpirit
             return CanBeHitByPlayer(player);
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
         {
-            ModifyHit(ref damage);
+            ModifyHit(ref modifiers);
         }
 
-        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-            OnHit(damage);
+            OnHit(damageDone);
         }
 
         public override bool? CanBeHitByProjectile(Projectile projectile)
@@ -799,14 +772,14 @@ namespace Bluemagic.PuritySpirit
             return CanBeHitByPlayer(Main.player[projectile.owner]);
         }
 
-        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            ModifyHit(ref damage);
+            ModifyHit(ref modifiers);
         }
 
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            OnHit(damage);
+            OnHit(damageDone);
         }
 
         private bool? CanBeHitByPlayer(Player player)
@@ -817,7 +790,7 @@ namespace Bluemagic.PuritySpirit
             }
             for (int k = 0; k < 200; k++)
             {
-                if (Main.npc[k].active && Main.npc[k].type == mod.NPCType("PurityShield") && Main.npc[k].ai[0] == npc.whoAmI)
+                if (Main.npc[k].active && Main.npc[k].type == Mod.Find<ModNPC>("PurityShield").Type && Main.npc[k].ai[0] == NPC.whoAmI)
                 {
                     return false;
                 }
@@ -825,22 +798,19 @@ namespace Bluemagic.PuritySpirit
             return null;
         }
 
-        private void ModifyHit(ref int damage)
+        private void ModifyHit(ref NPC.HitModifiers damage)
         {
-            if (damage > npc.lifeMax / 8)
-            {
-                damage = npc.lifeMax / 8;
-            }
+            damage.SetMaxDamage(NPC.lifeMax / 8);
         }
 
         private void OnHit(int damage)
         {
             damageTotal += damage * 60;
-            if (Main.netMode != 0)
+            if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 ModPacket netMessage = GetPacket(PuritySpiritMessageType.Damage);
                 netMessage.Write(damage * 60);
-                if (Main.netMode == 1)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     netMessage.Write(Main.myPlayer);
                 }
@@ -863,95 +833,95 @@ namespace Bluemagic.PuritySpirit
             return true;
         }*/
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             for (int x = 0; x < size; x++)
             {
                 for (int y = 0; y < size; y++)
                 {
-                    Vector2 drawPos = npc.position - Main.screenPosition;
+                    Vector2 drawPos = NPC.position - Main.screenPosition;
                     drawPos.X += x * 2 - size / 2;
                     drawPos.Y += y * 2 - size / 2;
-                    spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityParticle"), drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityParticle").Value, drawPos, null, Color.White * aura[x, y], 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 }
             }
-            spriteBatch.Draw(mod.GetTexture("PuritySpirit/PurityEyes"), npc.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/PuritySpirit/PurityEyes").Value, NPC.position - Main.screenPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             /*if (damageTotal >= dpsCap * 60)
             {
-                spriteBatch.Draw(mod.GetTexture("Mounts/PurityShield"), npc.Center - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(32, 32), 2.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("Bluemagic/Mounts/PurityShield"), npc.Center - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(32, 32), 2.5f, SpriteEffects.None, 0f);
             }*/
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             int portalWidth = 48;
             int portalDepth = 18;
             Color color = new Color(64, 255, 64);
-            int centerX = (int)npc.Center.X;
-            int centerY = (int)npc.Center.Y;
+            int centerX = (int)NPC.Center.X;
+            int centerY = (int)NPC.Center.Y;
             Main.instance.LoadProjectile(ProjectileID.PortalGunGate);
             for (int x = centerX - arenaWidth / 2; x < centerX + arenaWidth / 2; x += portalWidth)
             {
                 int frameNum = (portalFrame / 6 + x / portalWidth) % Main.projFrames[ProjectileID.PortalGunGate];
                 Rectangle frame = new Rectangle(0, frameNum * (portalWidth + 2), portalDepth, portalWidth);
                 Vector2 drawPos = new Vector2(x + portalWidth / 2, centerY - arenaHeight / 2) - Main.screenPosition;
-                spriteBatch.Draw(Main.projectileTexture[ProjectileID.PortalGunGate], drawPos, frame, color, (float)-Math.PI / 2f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[ProjectileID.PortalGunGate].Value, drawPos, frame, color, (float)-Math.PI / 2f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
                 drawPos.Y += arenaHeight;
-                spriteBatch.Draw(Main.projectileTexture[ProjectileID.PortalGunGate], drawPos, frame, color, (float)Math.PI / 2f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[ProjectileID.PortalGunGate].Value, drawPos, frame, color, (float)Math.PI / 2f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
             }
             for (int y = centerY - arenaHeight / 2; y < centerY + arenaHeight / 2; y += portalWidth)
             {
                 int frameNum = (portalFrame / 6 + y / portalWidth) % Main.projFrames[ProjectileID.PortalGunGate];
                 Rectangle frame = new Rectangle(0, frameNum * (portalWidth + 2), portalDepth, portalWidth);
                 Vector2 drawPos = new Vector2(centerX - arenaWidth / 2, y + portalWidth / 2) - Main.screenPosition;
-                spriteBatch.Draw(Main.projectileTexture[ProjectileID.PortalGunGate], drawPos, frame, color, (float)Math.PI, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[ProjectileID.PortalGunGate].Value, drawPos, frame, color, (float)Math.PI, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
                 drawPos.X += arenaWidth;
-                spriteBatch.Draw(Main.projectileTexture[ProjectileID.PortalGunGate], drawPos, frame, color, 0f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[ProjectileID.PortalGunGate].Value, drawPos, frame, color, 0f, new Vector2(portalDepth / 2, portalWidth / 2), 1f, SpriteEffects.None, 0f);
             }
         }
 
         private void Talk(string message)
         {
-            if (Main.netMode != 2)
+            if (Main.netMode != NetmodeID.Server)
             {
-                string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
+                string text = Language.GetTextValue("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(NPC.type), message);
                 Main.NewText(text, 150, 250, 150);
             }
             else
             {
-                NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(npc.type), message);
-                NetMessage.BroadcastChatMessage(text, new Color(150, 250, 150));
+                NetworkText text = NetworkText.FromKey("Mods.Bluemagic.NPCTalk", Lang.GetNPCNameValue(NPC.type), message);
+                ChatHelper.BroadcastChatMessage(text, new Color(150, 250, 150));
             }
         }
 
-        private void PlaySound(int type, int style)
+        private void PlaySound(SoundStyle s)
         {
-            if (Main.netMode != 2)
+            if (Main.netMode != NetmodeID.Server)
             {
                 if (targets.Contains(Main.myPlayer))
                 {
-                    Main.PlaySound(type, -1, -1, style);
+                    SoundEngine.PlaySound(s);
                 }
                 else
                 {
-                    Main.PlaySound(type, (int)npc.position.X, (int)npc.position.Y, style);
+                    SoundEngine.PlaySound(s, NPC.position);
                 }
             }
             else
             {
-                ModPacket netMessage = GetPacket(PuritySpiritMessageType.PlaySound);
+                /*ModPacket netMessage = GetPacket(PuritySpiritMessageType.PlaySound);
                 netMessage.Write(type);
                 netMessage.Write(style);
-                netMessage.Send();
+                netMessage.Send();*/
             }
         }
 
         private ModPacket GetPacket(PuritySpiritMessageType type)
         {
-            ModPacket packet = mod.GetPacket();
+            ModPacket packet = Mod.GetPacket();
             packet.Write((byte)MessageType.PuritySpirit);
-            packet.Write(npc.whoAmI);
+            packet.Write(NPC.whoAmI);
             packet.Write((byte)type);
             return packet;
         }
@@ -975,26 +945,26 @@ namespace Bluemagic.PuritySpirit
             }
             else if (type == PuritySpiritMessageType.DontTakeDamage)
             {
-                npc.dontTakeDamage = reader.ReadBoolean();
+                NPC.dontTakeDamage = reader.ReadBoolean();
             }
             else if (type == PuritySpiritMessageType.PlaySound)
             {
-                int soundType = reader.ReadInt32();
+               /* int soundType = reader.ReadInt32();
                 int style = reader.ReadInt32();
                 if (targets.Contains(Main.myPlayer))
                 {
-                    Main.PlaySound(soundType, -1, -1, style);
+                    SoundEngine.PlaySound(soundType, -1, -1, style);
                 }
                 else
                 {
-                    Main.PlaySound(soundType, (int)npc.position.X, (int)npc.position.Y, style);
-                }
+                    SoundEngine.PlaySound(soundType, (int)NPC.position.X, (int)NPC.position.Y, style);
+                }*/
             }
             else if (type == PuritySpiritMessageType.Damage)
             {
                 int damage = reader.ReadInt32();
                 damageTotal += damage;
-                if (Main.netMode == 2)
+                if (Main.netMode == NetmodeID.Server)
                 {
                     ModPacket netMessage = GetPacket(PuritySpiritMessageType.Damage);
                     int ignore = reader.ReadInt32();

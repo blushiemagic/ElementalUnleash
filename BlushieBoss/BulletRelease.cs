@@ -41,7 +41,7 @@ namespace Bluemagic.BlushieBoss
 
         public static BulletRelease NewWhite(Bullet follow, float radius, float angle, float rotSpeed, float releaseSpeed)
         {
-            return new BulletRelease(follow, radius, angle, rotSpeed, releaseSpeed, 16f, BlushieBoss.BulletWhiteTexture);
+            return new BulletRelease(follow, radius, angle, rotSpeed, releaseSpeed, 16f, BlushieBoss.BulletWhiteTexture.Value);
         }
     }
 }

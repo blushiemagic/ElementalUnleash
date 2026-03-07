@@ -7,10 +7,10 @@ namespace Bluemagic.Buffs
 {
     public class Lunarwalk : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lunarwalk");
-            Description.SetDefault("30% increased movement speed - Press UP to reverse gravity");
+            // DisplayName.SetDefault("Lunarwalk");
+            // Description.SetDefault("30% increased movement speed - Press UP to reverse gravity");
             Main.buffNoSave[Type] = true;
         }
 

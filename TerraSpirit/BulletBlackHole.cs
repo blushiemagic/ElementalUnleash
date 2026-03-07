@@ -155,15 +155,15 @@ namespace Bluemagic.TerraSpirit
                 float alpha = num / 24f;
                 color *= alpha;
             }
-            Texture2D texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletPortal");
+            Texture2D texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletPortal").Value;
             foreach (Vector2 pos in blackHoles)
             {
-                spriteBatch.Draw(texture, origin + pos - Main.screenPosition - new Vector2(blackHoleSize / 2, blackHoleSize / 2), color);
+                Main.spriteBatch.Draw(texture, origin + pos - Main.screenPosition - new Vector2(blackHoleSize / 2, blackHoleSize / 2), color);
             }
-            texture = Bluemagic.Instance.GetTexture("TerraSpirit/BulletSingle");
+            texture = Terraria.ModLoader.ModContent.Request<Texture2D>("Bluemagic/TerraSpirit/BulletSingle").Value;
             foreach (Vector2 pos in bulletPos)
             {
-                spriteBatch.Draw(texture, origin + pos - Main.screenPosition - new Vector2(bulletSize / 2, bulletSize / 2), color);
+                Main.spriteBatch.Draw(texture, origin + pos - Main.screenPosition - new Vector2(bulletSize / 2, bulletSize / 2), color);
             }
         }
     }
